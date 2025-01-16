@@ -80,8 +80,58 @@
 ---
 
 ## Windows Users:
-Instructions for Windows users are not specified here. Please ensure you have the necessary software like Android Studio or Visual Studio Code set up, and follow general Expo documentation for Windows setup.
+# Android Studio Installation and Setup Guide for Windows Users
 
----
+## Step 1: Download and Install Android Studio
+1. **Visit the Android Studio Website**:
+   - Go to [https://developer.android.com/studio](https://developer.android.com/studio).
+   - Scroll down and download the executable named: `android-studio-2024.2.2.13-windows.exe`.
+
+2. **Install Android Studio**:
+   - Open the downloaded `.exe` file and follow the installation instructions.
+   - During the installation, make sure to check the **Virtual Device** option.
+   - Specify the default installation path.
+   - Once installation is complete, click **Finish**.
+
+## Step 2: Set Up Android SDK
+1. **Open Android Studio**:
+   - If prompted to download the SDK, select **Android 14.0 (UpsideDownCake) API Level 34 Revision 2**.
+   - If not prompted, go to the **More Actions** menu on the Android Studio welcome page and click **SDK Manager**.
+   - Find and install the aforementioned SDK.
+
+## Step 3: Create a Virtual Device
+1. **Create Virtual Device**:
+   - From the **More Actions** menu, select **Virtual Device Manager**.
+   - Click **Create Virtual Device**.
+   - Select **Pixel 9 Pro** as the device.
+   - Choose **UpsideDownCake** for the release name.
+   - Click **Finish** (keep default settings).
+
+## Step 4: Configure Environment Variables
+1. **Copy Android SDK Location**:
+   - Go back to the **SDK Manager** and copy the Android SDK Location.
+
+2. **Set Environment Variables**:
+   - Search for **Env** in the Windows search bar (bottom left) and select **Edit the system environment variables**.
+   - Click **Environment Variables**.
+   - Under **System Variables**, click **New...** and add the following:
+     - **Variable Name**: `ANDROID_HOME`
+     - **Variable Value**: `SDK_PATH` (paste the path copied from SDK Manager)
+
+## Step 5: Run the Android Application
+1. **Navigate to Project Directory**:
+   - Open **VS Code**.
+   - Navigate to the client directory:
+     ```bash
+     cd client
+     ```
+
+2. **Run the Android Application**:
+   - Execute the following command:
+     ```bash
+     npm run android
+     ```
+
+You're done!
 
 By following these instructions, you should be able to set up and run the ViniMap app on both macOS and Windows.
