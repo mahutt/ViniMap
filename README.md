@@ -10,7 +10,7 @@
 - Annabel Zecchel (40245507)
 - Ambrose McLaughlin (40239754)
 
-Tech Stack  
+## Tech Stack  
   1. React Native with Expo Framework
   2. Typescript (FE)
   3. Node.js & Express.js
@@ -139,4 +139,4 @@ Tech Stack
 
 You're done!
 
-By following these instructions, you should be able to set up and run the ViniMap app on both macOS and Windows.
+By following these instructions, you should be able to set up and run the ViniMap app on both MacOS and Windows via the Emulators!
