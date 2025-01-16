@@ -10,6 +10,11 @@
 - Annabel Zecchel (40245507)
 - Ambrose McLaughlin (40239754)
 
+Tech Stack  
+  1. React Native with Expo Framework
+  2. Typescript (FE)
+  3. Node.js & Express.js
+
 ## Repo Details
 - **GitHub Repository**: [ViniMap](https://github.com/mahutt/ViniMap)
 - **Clone the Repo**:  
