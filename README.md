@@ -37,8 +37,8 @@
    - Click **Xcode** on the top left -> **Settings** -> **Platforms**, and choose **iOS 17.2**.
 
 2. **Setup iPhone Simulator**  
-   - Open Xcode.
-   - Right-click the Xcode icon on the taskbar -> **Devices** -> Select **iPhone 15** (default is iPhone SE, but select iPhone 15 for a better experience).
+   - Open the Simulator (Xcode installs it by default). You can do this by opening a terminal and running `open -a Simulator`.
+   - Right-click the Simulator icon on the taskbar -> **Devices** -> Select **iPhone 15** (default is iPhone SE, but select iPhone 15 for a better experience).
 
 3. **Install Dependencies**  
    - Open the terminal.
@@ -63,7 +63,14 @@
    To run the app on iOS:  
    `npm run ios`
 
-7. **Fixing File Issues**  
+7. **Fixing simctl Issue**
+   If you get this error: `Unable to run simctl: Error: xcrun simctl help exited with non-zero code: 72`, follow these steps:
+   - Open Xcode.
+   - Click **Xcode** on the top left -> **Settings** -> **Locations**.
+   - Go to **Command Line Tools** dropdown. Even if it appears that an option is selected, it is possible no option is selected and you should click on the drop down, and then click the most recent option.
+   - Repeat step 6.
+
+8. **Fixing File Issues**  
    If you encounter file problems, open a new terminal window (press **Command + Space** and search for **Terminal**), then run:  
    `brew services restart watchman`
 
