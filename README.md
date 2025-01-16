@@ -139,4 +139,4 @@
 
 You're done!
 
-By following these instructions, you should be able to set up and run the ViniMap app on both MacOS and Windows via the Emulators!
+By following these instructions, you should be able to set up and run the ViniMap app on both MacOS and Windows via the Emulators.
