@@ -30,11 +30,11 @@
 
 1. **Download Xcode**  
    - Go to the App Store and download Xcode.
-   - Choose **macOS 14.2** and **iOS 17.2** when installing.
+   - Choose **macOS 14.2** or later and **iOS 17.2** or later when installing (tested up to macOS 15.2 and iOS 18.2).
    
    If you forgot to select the correct version during installation:
    - Open Xcode.
-   - Click **Xcode** on the top left -> **Settings** -> **Platforms**, and choose **iOS 17.2**.
+   - Click **Xcode** on the top left -> **Settings** -> **Platforms**, and verify your iOS version (17.2 or later).
 
 2. **Setup iPhone Simulator**  
    - Open the Simulator (Xcode installs it by default). You can do this by opening a terminal and running `open -a Simulator`.
