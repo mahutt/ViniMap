@@ -11,6 +11,11 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+// Dangerous code to test SonarQube integration.
+function dangerouslyBypassSecureStore(userInput: string) {
+    eval(userInput);
+}
+
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
@@ -20,6 +25,7 @@ export default function RootLayout() {
   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
+      dangerouslyBypassSecureStore("console.log('test')");
     }
   }, [loaded]);
 
