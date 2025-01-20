@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`<ThemedText /> CustomText renders correctly 1`] = `
 <Text
   style={
     [
@@ -19,6 +19,6 @@ exports[`renders correctly 1`] = `
     ]
   }
 >
-  Snapshot test!
+  Some text
 </Text>
 `;
