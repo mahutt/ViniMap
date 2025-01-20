@@ -6,6 +6,5 @@ describe('<ThemedText />', () => {
     const tree = render(<ThemedText>Some text</ThemedText>).toJSON();
 
     expect(tree).toMatchSnapshot();
-    expect(true).toBe(false);
   });
 });
