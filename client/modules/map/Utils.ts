@@ -10,32 +10,30 @@ export function filterWithLevel(
     initialFilter,
     [
       'any',
-      showFeaturesWithEmptyLevel ? ['!', ['has', 'level']] : ['literal', false],
+      showFeaturesWithEmptyLevel ? ['!', ['has', 'level']] : false,
       [
         'all',
         ['has', 'level'],
         [
           'any',
-          ['==', ['get', 'level'], level.toString()], // replacing below
-          // ['==', ['get', 'level'], level.toString()],
-          ['literal', true], // replacing below
-          //   [
-          //     'all',
-          //     ['!=', ['index-of', ';', ['get', 'level']], -1],
-          //     [
-          //       '>=',
-          //       level,
-          //       ['to-number', ['slice', ['get', 'level'], 0, ['index-of', ';', ['get', 'level']]]],
-          //     ],
-          //     [
-          //       '<=',
-          //       level,
-          //       [
-          //         'to-number',
-          //         ['slice', ['get', 'level'], ['+', ['index-of', ';', ['get', 'level']], 1]],
-          //       ],
-          //     ],
-          //   ],
+          ['==', ['get', 'level'], level.toString()],
+          [
+            'all',
+            ['!=', ['index-of', ';', ['get', 'level']], -1],
+            [
+              '>=',
+              level,
+              ['to-number', ['slice', ['get', 'level'], 0, ['index-of', ';', ['get', 'level']]]],
+            ],
+            [
+              '<=',
+              level,
+              [
+                'to-number',
+                ['slice', ['get', 'level'], ['+', ['index-of', ';', ['get', 'level']], 1]],
+              ],
+            ],
+          ],
         ],
       ],
     ],
