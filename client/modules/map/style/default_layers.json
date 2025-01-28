@@ -101,7 +101,11 @@
     }
   },
   {
-    "filter": ["any", ["in", "indoor", "room", "area"], ["filter-==", "railway", "platform"]],
+    "filter": [
+      "any",
+      ["in", ["get", "indoor"], ["literal", ["room", "area"]]],
+      ["filter-==", "railway", "platform"]
+    ],
     "id": "indoor-rooms",
     "type": "fill",
     "source": "indoor",
@@ -155,7 +159,7 @@
     "type": "fill",
     "source": "indoor",
     "paint": {
-      "fill-color-deprecatedbyme": {
+      "fill-color-REQUIRES_PORT": {
         "base": 1,
         "stops": [
           [16, "hsl(230, 16%, 94%)"],
@@ -332,7 +336,7 @@
       "any",
       [
         "in",
-        "indoor",
+        ["get", "indoor"],
         [
           "literal",
           ["table", "cupboard", "chair", "kitchen", "sofa", "tv", "shelf", "furniture-item"]
