@@ -2,9 +2,8 @@ import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import Mapbox from '@rnmapbox/maps';
 import { SearchBar } from '@/components/SearchBar';
-import { MAPBOX_ACCESS_TOKEN } from '@env';
 
-Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
+Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
 // downtown concordia campus (sgw)
 const DEFAULT_COORDINATES = {
