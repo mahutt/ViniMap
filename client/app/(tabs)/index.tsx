@@ -2,14 +2,14 @@ import { StyleSheet, View } from 'react-native';
 import React from 'react';
 
 import { SearchBar } from '@/components/SearchBar';
-import Map from '@/modules/map/Map';
+import MapView from '@/modules/map/Map';
 import { MapProvider } from '@/modules/map/MapContext';
 
 export default function HomeScreen() {
   return (
     <MapProvider>
       <View style={styles.container}>
-        <Map />
+        <MapView />
         <View style={styles.searchContainer}>
           <SearchBar onSearch={(query) => console.log(query)} />
         </View>

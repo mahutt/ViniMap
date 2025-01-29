@@ -5,7 +5,7 @@ import { useMap } from './MapContext';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
-export default function Map() {
+export default function MapView() {
   const { mapRef, cameraRef, centerCoordinate, zoomLevel } = useMap();
   return (
     <Mapbox.MapView ref={mapRef} style={styles.map} styleURL={Mapbox.StyleURL.Street}>
