@@ -26,7 +26,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     if (cameraRef.current) {
       cameraRef.current.setCamera({
         centerCoordinate: newCenterCoordinate,
-        zoomLevel: newZoomLevel || zoomLevel,
+        zoomLevel: newZoomLevel ?? zoomLevel,
         animationDuration: 2000,
       });
       setCenterCoordinate(newCenterCoordinate);
