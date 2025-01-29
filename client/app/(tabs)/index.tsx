@@ -2,7 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import React from 'react';
 
 import { SearchBar } from '@/components/SearchBar';
-import MapView from '@/modules/map/Map';
+import MapView from '@/modules/map/MapView';
 import { MapProvider } from '@/modules/map/MapContext';
 
 export default function HomeScreen() {
