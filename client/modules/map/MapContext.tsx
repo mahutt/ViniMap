@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useState } from 'react';
+import React, { createContext, useContext, useRef, useState, useMemo } from 'react';
 import Mapbox from '@rnmapbox/maps';
 
 // downtown concordia campus (sgw)
@@ -22,27 +22,33 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [centerCoordinate, setCenterCoordinate] = useState<[number, number]>(DEFAULT_COORDINATES);
   const [zoomLevel, setZoomLevel] = useState(15);
 
-  const flyTo = (newCenterCoordinate: [number, number], newZoomLevel?: number) => {
-    if (cameraRef.current) {
-      cameraRef.current.setCamera({
-        centerCoordinate: newCenterCoordinate,
-        zoomLevel: newZoomLevel ?? zoomLevel,
-        animationDuration: 2000,
-      });
-      setCenterCoordinate(newCenterCoordinate);
-      if (newZoomLevel) setZoomLevel(newZoomLevel);
-    }
-  };
+  const flyTo = useMemo(
+    () => (newCenterCoordinate: [number, number], newZoomLevel?: number) => {
+      if (cameraRef.current) {
+        cameraRef.current.setCamera({
+          centerCoordinate: newCenterCoordinate,
+          zoomLevel: newZoomLevel ?? zoomLevel,
+          animationDuration: 2000,
+        });
+        setCenterCoordinate(newCenterCoordinate);
+        if (newZoomLevel) setZoomLevel(newZoomLevel);
+      }
+    },
+    [zoomLevel]
+  );
 
-  const value = {
-    mapRef,
-    cameraRef,
-    centerCoordinate,
-    zoomLevel,
-    setCenterCoordinate,
-    setZoomLevel,
-    flyTo,
-  };
+  const value = useMemo(
+    () => ({
+      mapRef,
+      cameraRef,
+      centerCoordinate,
+      zoomLevel,
+      setCenterCoordinate,
+      setZoomLevel,
+      flyTo,
+    }),
+    [centerCoordinate, zoomLevel, flyTo]
+  );
 
   return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
 };
