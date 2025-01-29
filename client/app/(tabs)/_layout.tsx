@@ -8,6 +8,14 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+const TabBarMapIcon = ({ color }: { color: string }) => {
+  return <IconSymbol size={28} name="map.fill" color={color} />;
+};
+
+const TabBarCalendarIcon = ({ color }: { color: string }) => {
+  return <IconSymbol size={28} name="calendar" color={color} />;
+};
+
 const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
   <Tabs
     screenOptions={{
@@ -26,14 +34,14 @@ const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
       name="index"
       options={{
         title: 'Map',
-        tabBarIcon: ({ color }) => <IconSymbol size={28} name="map.fill" color={color} />,
+        tabBarIcon: TabBarMapIcon,
       }}
     />
     <Tabs.Screen
       name="calendar"
       options={{
         title: 'Calendar',
-        tabBarIcon: ({ color }) => <IconSymbol size={28} name="calendar" color={color} />,
+        tabBarIcon: TabBarCalendarIcon,
       }}
     />
   </Tabs>
