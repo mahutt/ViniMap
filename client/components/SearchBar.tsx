@@ -3,8 +3,9 @@ import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
+// will likely need to remove readonly from SearchBarProps
 interface SearchBarProps {
-  onSearch: (query: string) => void;
+  readonly onSearch: (query: string) => void;
 }
 
 export function SearchBar({ onSearch }: SearchBarProps) {
