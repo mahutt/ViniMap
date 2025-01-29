@@ -1,74 +1,64 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import React from 'react';
+import Mapbox from '@rnmapbox/maps';
+import { SearchBar } from '@/components/SearchBar';
+import { MAPBOX_ACCESS_TOKEN } from '@env';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+Mapbox.setAccessToken(MAPBOX_ACCESS_TOKEN);
+
+// downtown concordia campus (sgw)
+const DEFAULT_COORDINATES = {
+  longitude: -73.5789,
+  latitude: 45.4973,
+};
 
 export default function HomeScreen() {
+  const mapRef = React.useRef<Mapbox.MapView | null>(null);
+  const cameraRef = React.useRef<Mapbox.Camera | null>(null);
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+    <View style={styles.container}>
+      <Mapbox.MapView ref={mapRef} style={styles.map} styleURL={Mapbox.StyleURL.Street}>
+        <Mapbox.Camera
+          ref={cameraRef}
+          zoomLevel={15}
+          centerCoordinate={[DEFAULT_COORDINATES.longitude, DEFAULT_COORDINATES.latitude]}
+          animationMode="flyTo"
+          animationDuration={2000}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+      </Mapbox.MapView>
+      <View style={styles.searchContainer}>
+        <SearchBar onSearch={(query) => console.log(query)} />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  map: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
+  searchContainer: {
     position: 'absolute',
+    top: 16,
+    left: 16,
+    right: 16,
+    zIndex: 1,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
