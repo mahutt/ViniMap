@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<SearchBar /> SearchBar renders correctly 1`] = `
+<View
+  style={
+    {
+      "left": 20,
+      "position": "absolute",
+      "right": 20,
+      "top": 60,
+      "zIndex": 1,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "white",
+        "borderRadius": 25,
+        "elevation": 5,
+        "flexDirection": "row",
+        "paddingHorizontal": 15,
+        "paddingVertical": 10,
+        "shadowColor": "#000",
+        "shadowOffset": {
+          "height": 2,
+          "width": 0,
+        },
+        "shadowOpacity": 0.25,
+        "shadowRadius": 3.84,
+      }
+    }
+  >
+    <Ionicons
+      color="#666"
+      name="search"
+      size={20}
+    />
+    <TextInput
+      onChangeText={[Function]}
+      placeholder="Search here"
+      placeholderTextColor="#666"
+      style={
+        {
+          "flex": 1,
+          "fontSize": 16,
+          "marginLeft": 10,
+        }
+      }
+    />
+  </View>
+</View>
+`;
