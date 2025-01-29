@@ -3,15 +3,18 @@ import React from 'react';
 
 import { SearchBar } from '@/components/SearchBar';
 import Map from '@/modules/map/Map';
+import { MapProvider } from '@/modules/map/MapContext';
 
 export default function HomeScreen() {
   return (
-    <View style={styles.container}>
-      <Map />
-      <View style={styles.searchContainer}>
-        <SearchBar onSearch={(query) => console.log(query)} />
+    <MapProvider>
+      <View style={styles.container}>
+        <Map />
+        <View style={styles.searchContainer}>
+          <SearchBar onSearch={(query) => console.log(query)} />
+        </View>
       </View>
-    </View>
+    </MapProvider>
   );
 }
 
