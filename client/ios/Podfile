@@ -13,10 +13,6 @@ install! 'cocoapods',
 
 prepare_react_native_project!
 
-# @generated begin @rnmapbox/maps-rnmapboxmapsimpl - expo prebuild (DO NOT MODIFY) sync-145359293d3b78e7a77c8f0a7fc500c52cf6cfb9
-$RNMapboxMapsDownloadToken = 'pk.eyJ1IjoidmluaXNoYW1hbmVrIiwiYSI6ImNtNjZ5MWx1aDA1ZWcycnB6eHB2aGFuaWQifQ.xvkgYFgWs95edQqIw4_Exw'
-$RNMapboxMapsImpl = 'mapbox'
-# @generated end @rnmapbox/maps-rnmapboxmapsimpl
 target 'client' do
   use_expo_modules!
 
