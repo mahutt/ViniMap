@@ -6,10 +6,12 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 
 export default function PitchButton() {
-  const {  pitchLevel,setPitchLevel ,setZoomLevel,zoomLevel,cameraRef,centerCoordinate, mapRef} = useMap();
+  const {  pitchLevel,setPitchLevel ,setZoomLevel, setCenterCoordinate, zoomLevel,cameraRef,centerCoordinate, mapRef} = useMap();
 
   const pressHandler =async  () =>{
     const currentZoom = await mapRef.current?.getZoom() as number
+    const currentCoordinates = await mapRef.current?.getCenter() as [number,number]
+    setCenterCoordinate(currentCoordinates)
     setZoomLevel(currentZoom )
     const newPitch =(pitchLevel == 75)?0:75
     setPitchLevel( newPitch) 

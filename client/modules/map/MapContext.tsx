@@ -38,7 +38,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (newZoomLevel) setZoomLevel(newZoomLevel);
       }
     },
-    [zoomLevel,pitchLevel]
+    [zoomLevel]
   );
 
   const value = useMemo(
