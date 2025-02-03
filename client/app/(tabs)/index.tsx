@@ -3,18 +3,20 @@ import React from 'react';
 
 import { SearchBar } from '@/components/SearchBar';
 import MapView from '@/modules/map/MapView';
-import { MapProvider } from '@/modules/map/MapContext';
+import { useMap, MapState } from '@/modules/map/MapContext';
 
 export default function HomeScreen() {
+  const { state } = useMap();
   return (
-    <MapProvider>
-      <View style={styles.container}>
-        <MapView />
+    <View style={styles.container}>
+      <MapView />
+      {state === MapState.Idle && (
         <View style={styles.searchContainer}>
           <SearchBar onSearch={(query) => console.log(query)} />
         </View>
-      </View>
-    </MapProvider>
+      )}
+      {state === MapState.RoutePlanning && <View></View>}
+    </View>
   );
 }
 

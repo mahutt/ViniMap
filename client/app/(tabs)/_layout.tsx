@@ -7,6 +7,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { MapProvider } from '@/modules/map/MapContext';
 
 const TabBarMapIcon = ({ color }: { color: string }) => {
   return <IconSymbol size={28} name="map.fill" color={color} />;
@@ -17,34 +18,36 @@ const TabBarCalendarIcon = ({ color }: { color: string }) => {
 };
 
 const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
-  <Tabs
-    screenOptions={{
-      tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-      headerShown: false,
-      tabBarButton: HapticTab,
-      tabBarBackground: TabBarBackground,
-      tabBarStyle: Platform.select({
-        ios: {
-          position: 'absolute',
-        },
-        default: {},
-      }),
-    }}>
-    <Tabs.Screen
-      name="index"
-      options={{
-        title: 'Map',
-        tabBarIcon: TabBarMapIcon,
-      }}
-    />
-    <Tabs.Screen
-      name="calendar"
-      options={{
-        title: 'Calendar',
-        tabBarIcon: TabBarCalendarIcon,
-      }}
-    />
-  </Tabs>
+  <MapProvider>
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        headerShown: false,
+        tabBarButton: HapticTab,
+        tabBarBackground: TabBarBackground,
+        tabBarStyle: Platform.select({
+          ios: {
+            position: 'absolute',
+          },
+          default: {},
+        }),
+      }}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Map',
+          tabBarIcon: TabBarMapIcon,
+        }}
+      />
+      <Tabs.Screen
+        name="calendar"
+        options={{
+          title: 'Calendar',
+          tabBarIcon: TabBarCalendarIcon,
+        }}
+      />
+    </Tabs>
+  </MapProvider>
 );
 
 export default function App() {
