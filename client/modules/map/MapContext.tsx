@@ -57,7 +57,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setState,
       flyTo,
     }),
-    [centerCoordinate, zoomLevel, flyTo]
+    [centerCoordinate, zoomLevel, state, flyTo]
   );
 
   return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
