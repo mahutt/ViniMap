@@ -1,9 +1,11 @@
-import { StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
 import React from 'react';
 
 import { SearchBar } from '@/components/SearchBar';
 import MapView from '@/modules/map/MapView';
+import PitchButton from '@/modules/map/PitchButton';
 import { MapProvider } from '@/modules/map/MapContext';
+
 
 export default function HomeScreen() {
   return (
@@ -13,6 +15,7 @@ export default function HomeScreen() {
         <View style={styles.searchContainer}>
           <SearchBar onSearch={(query) => console.log(query)} />
         </View>
+        <PitchButton></PitchButton>
       </View>
     </MapProvider>
   );

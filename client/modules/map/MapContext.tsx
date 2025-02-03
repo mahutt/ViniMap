@@ -9,6 +9,8 @@ type MapContextType = {
   cameraRef: React.RefObject<Mapbox.Camera>;
   centerCoordinate: [number, number];
   zoomLevel: number;
+  pitchLevel:number;
+  setPitchLevel:(pitchLevel: number) => void;
   setCenterCoordinate: (centerCoordinate: [number, number]) => void;
   setZoomLevel: (zoomLevel: number) => void;
   flyTo: (coords: [number, number], zoomLevel?: number) => void;
@@ -21,6 +23,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const cameraRef = useRef<Mapbox.Camera | null>(null);
   const [centerCoordinate, setCenterCoordinate] = useState<[number, number]>(DEFAULT_COORDINATES);
   const [zoomLevel, setZoomLevel] = useState(15);
+  const [pitchLevel, setPitchLevel] = useState(0)
 
   const flyTo = useMemo(
     () => (newCenterCoordinate: [number, number], newZoomLevel?: number) => {
@@ -29,12 +32,13 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           centerCoordinate: newCenterCoordinate,
           zoomLevel: newZoomLevel ?? zoomLevel,
           animationDuration: 2000,
+          pitch: pitchLevel
         });
         setCenterCoordinate(newCenterCoordinate);
         if (newZoomLevel) setZoomLevel(newZoomLevel);
       }
     },
-    [zoomLevel]
+    [zoomLevel,pitchLevel]
   );
 
   const value = useMemo(
@@ -43,15 +47,19 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       cameraRef,
       centerCoordinate,
       zoomLevel,
+      pitchLevel,
+      setPitchLevel,
       setCenterCoordinate,
       setZoomLevel,
       flyTo,
     }),
-    [centerCoordinate, zoomLevel, flyTo]
+    [centerCoordinate, zoomLevel, flyTo,pitchLevel]
   );
 
   return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
 };
+
+
 
 export const useMap = () => {
   const context = useContext(MapContext);
@@ -60,3 +68,5 @@ export const useMap = () => {
   }
   return context;
 };
+
+
