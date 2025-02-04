@@ -4,13 +4,21 @@ import { Ionicons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
 
 export function RoutePlanner() {
-  const { setState } = useMap();
-  const [startLocationString, setStartLocationString] = React.useState<string>('');
-  const [endLocationString, setEndLocationString] = React.useState<string>('');
-  const swapLocations = () => {
-    setStartLocationString(endLocationString);
-    setEndLocationString(startLocationString);
+  const { setState, loadRoute } = useMap();
+  const [startLocationQuery, setStartLocationQuery] = React.useState<string>('');
+  const [endLocationQuery, setEndLocationQuery] = React.useState<string>('');
+
+  const handleBlur = async () => {
+    if (startLocationQuery && endLocationQuery) {
+      await loadRoute(startLocationQuery, endLocationQuery);
+    }
   };
+
+  const swapLocations = () => {
+    setStartLocationQuery(endLocationQuery);
+    setEndLocationQuery(startLocationQuery);
+  };
+
   return (
     <View style={styles.locationRangeForm}>
       <View style={styles.locationRangeFormRow}>
@@ -20,8 +28,9 @@ export function RoutePlanner() {
             style={styles.input}
             placeholder="Start location"
             placeholderTextColor="#666"
-            value={startLocationString}
-            onChangeText={(query) => setStartLocationString(query)}
+            value={startLocationQuery}
+            onChangeText={(query) => setStartLocationQuery(query)}
+            onBlur={handleBlur}
           />
         </View>
         <Pressable onPress={() => setState(MapState.Idle)}>
@@ -35,8 +44,9 @@ export function RoutePlanner() {
             style={styles.input}
             placeholder="End location"
             placeholderTextColor="#666"
-            value={endLocationString}
-            onChangeText={(query) => setEndLocationString(query)}
+            value={endLocationQuery}
+            onChangeText={(query) => setEndLocationQuery(query)}
+            onBlur={handleBlur}
           />
         </View>
         <Pressable onPress={swapLocations}>
