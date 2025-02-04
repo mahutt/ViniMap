@@ -37,7 +37,9 @@ jobs:
 
       - name: Install dependencies
         working-directory: ./client
-        run: npm ci
+        run: |
+          npm ci
+          npx expo install
 
       - name: Install Maestro
         run: |
@@ -58,13 +60,15 @@ jobs:
 
       - name: Start App
         working-directory: ./client
-        env: ${{ secrets.ENV }}
-        run: npm run ios
+        env:
+          EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}
+        run: |
+          npx expo start --ios &
+          sleep 30  # Give more time for Expo to start and build
 
       - name: Run Maestro Tests
         working-directory: .
         run: |
-          sleep 15
           maestro test -v maestro/flows/app.yml
 
       - name: Upload Test Results
