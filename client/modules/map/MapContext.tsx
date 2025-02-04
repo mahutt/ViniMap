@@ -36,8 +36,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [state, setState] = useState<MapState>(MapState.Idle);
   const [longitude, setLongitude] = useState<number | null>(null);
   const [latitude, setLatitude] = useState<number | null>(null);
-  
-
 
   const flyTo = useMemo(
     () => (newCenterCoordinate: [number, number], newZoomLevel?: number) => {
