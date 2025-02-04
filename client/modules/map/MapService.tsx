@@ -8,7 +8,7 @@ const getLocationCoordinates = async (locationQuery: string): Promise<Location |
     )}&access_token=${ACCESS_TOKEN}`
   );
   const data = await response.json();
-  if (data.features && data.features[0]) {
+  if (data?.features[0]) {
     const feature = data.features[0];
     return {
       name: locationQuery,
@@ -26,7 +26,7 @@ const getRoute = async (
     `https://api.mapbox.com/directions/v5/mapbox/driving/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?geometries=geojson&access_token=${ACCESS_TOKEN}`
   );
   const data = await response.json();
-  if (data.routes && data.routes[0]) {
+  if (data?.routes[0]) {
     return data.routes[0].geometry.coordinates as Coordinates[];
   }
   return null;
