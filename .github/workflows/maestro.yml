@@ -1,13 +1,19 @@
-name: Maestro Mobile Testing
+name: E2E Testing
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
-    branches: [main]
+    types: [opened, synchronize, reopened]
+
+  workflow_dispatch:
 
 jobs:
-  test:
+  e2e-test:
+    name: E2E Tests (${{ matrix.platform }})
+    # Skip running if commit message contains [skip e2e]
+    if: "!contains(github.event.head_commit.message, '[skip e2e]')"
     strategy:
       matrix:
         platform: [android, ios]
@@ -16,31 +22,38 @@ jobs:
             os: macos-latest
           - platform: android
             os: ubuntu-latest
+      fail-fast: false
 
     runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ./client
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: 18
+          cache: 'npm'
+          cache-dependency-path: ./client/package-lock.json
 
       - name: Install dependencies
-        working-directory: ./client
-        run: |
-          npm install
+        run: npm ci
 
       - name: Install Expo CLI
-        run: |
-          npm install -g expo-cli
+        run: npm install --global expo-cli eas-cli
 
       - name: Install Maestro
         run: |
           curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Setup iOS
+      - name: Setup iOS Simulator
         if: matrix.platform == 'ios'
         run: |
           brew tap facebook/fb
@@ -48,20 +61,33 @@ jobs:
           pip3 install fb-idb
           xcrun simctl boot "iPhone 15"
 
-      - name: Setup Android
+      - name: Setup Android Emulator
         if: matrix.platform == 'android'
         uses: reactivecircus/android-emulator-runner@v2
         with:
           api-level: 29
           script: echo "Emulator Started"
+          profile: pixel_6
+          working-directory: ./client
 
-      - name: Start Expo
-        working-directory: ./client
+      - name: Build and Start Expo App
         run: |
-          expo start &
-          sleep 10
+          expo start --no-dev --minify &
+          sleep 30
 
       - name: Run Maestro Tests
         run: |
-          export PATH="$PATH":"$HOME/.maestro/bin"
-          maestro test maestro/flows/
+          if [ "${{ matrix.platform }}" = "android" ]; then
+            maestro test -e "APP_CENTER=true" maestro/flows/
+          else
+            maestro test -e "APP_CENTER=true" --ios maestro/flows/
+          fi
+
+      - name: Upload Test Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: maestro-test-results-${{ matrix.platform }}
+          path: |
+            maestro/flows/*.yaml
+            ~/.maestro/tests/
