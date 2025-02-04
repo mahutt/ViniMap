@@ -5,6 +5,7 @@ import { SearchBar } from '@/components/SearchBar';
 import MapView from '@/modules/map/MapView';
 import { useMap, MapState } from '@/modules/map/MapContext';
 import { LocationInfo } from '@/components/LocationInfo';
+import { RoutePlanner } from '@/components/RoutePlanner';
 
 export default function HomeScreen() {
   const { state } = useMap();
@@ -17,7 +18,7 @@ export default function HomeScreen() {
         </View>
       )}
       {state === MapState.Information && <LocationInfo />}
-      {state === MapState.RoutePlanning && <View></View>}
+      {state === MapState.RoutePlanning && <RoutePlanner />}
     </View>
   );
 }
