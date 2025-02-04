@@ -23,13 +23,9 @@ jobs:
         working-directory: ./client
         run: npm ci
 
-      - name: Install Maestro
+      - name: Install iOS test dependencies
         run: |
-          curl -Ls "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
-
-      - name: Install iOS dependencies
-        run: |
+          brew install maestro
           brew install watchman
           brew tap facebook/fb
           brew install idb-companion
@@ -39,30 +35,22 @@ jobs:
           xcrun simctl list
           UDID=$(xcrun simctl create "iPhone 15" com.apple.CoreSimulator.SimDeviceType.iPhone-15 com.apple.CoreSimulator.SimRuntime.iOS-17-4)
           xcrun simctl boot "$UDID"
-          xcrun simctl list devices | grep "iPhone 15"
 
-      - name: Prebuild & Run App
+      - name: Start App
         working-directory: ./client
-        run: |
-          npx expo prebuild --clean
-          cd ios && pod install && cd ..
-          npm run ios
+        run: npm run ios
 
       - name: Run Maestro Tests
         working-directory: .
         run: |
           sleep 15
-          idb_companion --udid $UDID &
-          sleep 5
-          if [ ! -f "maestro/flows/app.yml" ]; then
-            echo "Test file not found"
-            exit 1
-          fi
-          maestro test maestro/flows/app.yml
+          maestro test -v maestro/flows/app.yml
 
-      - name: Upload Test Logs
+      - name: Upload Test Results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-logs-ios
-          path: ~/.maestro/logs/
+          path: |
+            ~/.maestro/logs/
+            ~/.maestro/videos/
