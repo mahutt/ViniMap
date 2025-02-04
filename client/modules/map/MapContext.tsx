@@ -3,6 +3,7 @@ import Mapbox from '@rnmapbox/maps';
 
 // downtown concordia campus (sgw)
 const DEFAULT_COORDINATES: [number, number] = [-73.5789, 45.4973];
+const LOY_COORDINATES: [number, number] = [-73.6391, 45.4581]; // Loyola campus
 
 export enum MapState {
   Idle,
