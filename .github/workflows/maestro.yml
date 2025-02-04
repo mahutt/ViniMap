@@ -41,9 +41,6 @@ jobs:
         working-directory: ./client
         run: npm ci
 
-      - name: Install Expo CLI
-        run: npm install --global expo-cli eas-cli
-
       - name: Install Maestro
         run: |
           curl -Ls "https://get.maestro.mobile.dev" | bash
@@ -72,20 +69,34 @@ jobs:
         if: matrix.platform == 'ios'
         working-directory: ./client
         run: |
-          expo prebuild -p ios
-          expo build:ios --non-interactive --no-wait
+          npm install react-native
+
+          npm install -g sharp-cli
+
+          npm install expo-cli
+
+          npx expo prebuild -p ios --clean
+
+          npx expo run:ios --device
 
       - name: Build Android App
         if: matrix.platform == 'android'
         working-directory: ./client
         run: |
-          expo prebuild -p android
-          expo build:android --non-interactive --no-wait
+          npm install react-native
+
+          npm install -g sharp-cli
+
+          npm install expo-cli
+
+          npx expo prebuild -p android --clean
+
+          npx expo run:android
 
       - name: Start Expo App
         working-directory: ./client
         run: |
-          expo start --no-dev --minify --non-interactive &
+          npx expo start --no-dev --minify --non-interactive &
           sleep 45  # Increased wait time to ensure app is fully started
 
       - name: Run Maestro Tests
