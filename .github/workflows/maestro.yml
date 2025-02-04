@@ -2,8 +2,7 @@ name: E2E Testing
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
@@ -21,11 +20,9 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: 'npm'
@@ -35,15 +32,26 @@ jobs:
         working-directory: ./client
         run: npm ci
 
-      - name: Install Expo CLI
-        run: npm install -g expo-cli
-
       - name: Install Maestro
         run: |
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Setup Android SDK
+      - name: Install idb & Dependencies
+        if: matrix.platform == 'ios'
+        run: |
+          brew tap facebook/fb
+          brew install idb-companion ffmpeg
+          brew install --cask android-platform-tools
+
+      - name: Setup Ruby & Cocoapods
+        if: matrix.platform == 'ios'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.0'
+          bundler-cache: true
+
+      - name: Setup Android
         if: matrix.platform == 'android'
         uses: android-actions/setup-android@v3
 
@@ -53,7 +61,7 @@ jobs:
         with:
           api-level: 29
           force-avd-creation: true
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           disable-animations: true
           script: echo "Emulator started"
 
@@ -64,49 +72,30 @@ jobs:
           UDID=$(xcrun simctl create "iPhone 14" com.apple.CoreSimulator.SimDeviceType.iPhone-14 com.apple.CoreSimulator.SimRuntime.iOS-16-0)
           xcrun simctl boot "$UDID"
 
-      - name: Install Expo Go on Android
-        if: matrix.platform == 'android'
-        run: |
-          adb install "$(find ~/.maestro/cache -name "Expo.apk" -type f)"
-
-      - name: Install Expo Go on iOS
-        if: matrix.platform == 'ios'
-        run: xcrun simctl install booted ~/.maestro/cache/Expo.app
-
-      - name: Start Expo Server
+      - name: Prebuild & Run App
         working-directory: ./client
         run: |
-          npx expo start --no-dev --non-interactive &
-          sleep 30
-
-      - name: Get Expo URL
-        id: expo-url
-        working-directory: ./client
-        run: |
-          EXPO_URL=$(npx expo url)
-          echo "::set-output name=url::$EXPO_URL"
+          npx expo prebuild
+          if [ "${{ matrix.platform }}" = "ios" ]; then
+            cd ios && pod install && cd ..
+            npm run ios -- --simulator="iPhone 14"
+          else
+            npm run android
+          fi
 
       - name: Run Maestro Tests
         working-directory: .
-        env:
-          EXPO_URL: ${{ steps.expo-url.outputs.url }}
         run: |
-          # Wait for Expo Go to be ready
           sleep 10
-          maestro test -e EXPO_URL=$EXPO_URL maestro/flows/app.yml
-
-      - name: Debug Info
-        if: failure()
-        run: |
-          echo "=== Environment ==="
-          env
-          echo "=== Device List ==="
-          if [ "${{ matrix.platform }}" = "android" ]; then
-            adb devices
-          else
-            xcrun simctl list devices
+          if [ "${{ matrix.platform }}" = "ios" ]; then
+            idb_companion --udid $UDID &
+            sleep 5
           fi
-          echo "=== Expo Status ==="
-          ps aux | grep expo
-          echo "=== Maestro Logs ==="
-          cat ~/.maestro/logs/* || true
+          maestro test maestro/flows/app.yml
+
+      - name: Upload Test Logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-logs-${{ matrix.platform }}
+          path: ~/.maestro/logs/
