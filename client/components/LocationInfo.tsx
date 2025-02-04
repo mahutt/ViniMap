@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 
 export function LocationInfo() {
-    const { longitude, latitude, setState } = useMap();  // Destructure setState directly
+    const { longitude, latitude, setState } = useMap();  
     let apiKey = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string
 
     const [address, setAddress] = useState("15 rue de l'artiste");
