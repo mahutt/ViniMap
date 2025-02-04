@@ -58,7 +58,9 @@ jobs:
         run: |
           brew tap facebook/fb
           brew install idb-companion
-          pip3 install fb-idb
+          brew install pipx
+          pipx ensurepath
+          pipx install fb-idb
           xcrun simctl boot "iPhone 15"
 
       - name: Setup Android Emulator
@@ -89,5 +91,5 @@ jobs:
         with:
           name: maestro-test-results-${{ matrix.platform }}
           path: |
-            maestro/flows/*.yaml
+            maestro/flows/*.yml
             ~/.maestro/tests/
