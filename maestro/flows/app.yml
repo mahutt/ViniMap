@@ -1,5 +1,5 @@
 appId: com.anonymous.client
-
+---
 - launchApp
-- assertVisible: "Map, tab, 1 of 2"
-- assertVisible: "Calendar, tab, 2 of 2"
+- assertVisible: 'Map, tab, 1 of 2'
+- assertVisible: 'Calendar, tab, 2 of 2'
