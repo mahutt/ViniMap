@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
-import React, { useState } from 'react';
+import React from 'react';
 import { MapState, useMap } from './MapContext';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
@@ -42,7 +42,7 @@ export default function MapView() {
       onPress={onMapClick}>
       <Mapbox.Camera
         ref={cameraRef}
-        zoomLevel={14}
+        zoomLevel={zoomLevel}
         centerCoordinate={centerCoordinate}
         animationMode="flyTo"
         animationDuration={2000}
