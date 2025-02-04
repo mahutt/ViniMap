@@ -73,17 +73,12 @@ jobs:
       - name: Build and Start Expo App
         working-directory: ./client
         run: |
-          expo start --no-dev --minify &
+          expo start --no-dev --minify --non-interactive --no-logs &
           sleep 30
 
       - name: Run Maestro Tests
         working-directory: .
-        run: |
-          if [ "${{ matrix.platform }}" = "android" ]; then
-            maestro test -e "APP_CENTER=true" maestro/flows/
-          else
-            maestro test -e "APP_CENTER=true" maestro/flows/
-          fi
+        run: maestro test maestro/flows/app.yml
 
       - name: Upload Test Results
         if: always()
