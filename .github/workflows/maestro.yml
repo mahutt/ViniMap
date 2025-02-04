@@ -78,7 +78,7 @@ jobs:
           npx expo prebuild
           if [ "${{ matrix.platform }}" = "ios" ]; then
             cd ios && pod install && cd ..
-            npm run ios -- --simulator="iPhone 15"
+            npm run ios
           else
             npm run android
           fi
