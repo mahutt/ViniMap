@@ -1,7 +1,6 @@
 name: iOS E2E Testing
 
 on:
-  push:
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
@@ -30,38 +29,20 @@ jobs:
 
       - name: Install iOS dependencies
         run: |
-          brew install watchman
           brew tap facebook/fb
-          brew install idb-companion
+          brew install facebook/fb/idb-companion
 
-      - name: Setup iOS Simulator
+      - name: Install iOS pods
         run: |
-          UDID=$(xcrun simctl create "iPhone 15" "com.apple.CoreSimulator.SimDeviceType.iPhone-15" "com.apple.CoreSimulator.SimRuntime.iOS-17-4")
-          xcrun simctl boot "$UDID"
-          until xcrun simctl list devices | grep -q "$UDID.*Booted"; do
-            sleep 2
-          done
+          cd ios
+          pod install
+          cd ..
 
-      - name: Build iOS app
-        env:
-          EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}
-        run: |
-          npx expo prebuild --platform ios --clean
-          cd ios && pod install && cd ..
-          xcodebuild -workspace ios/*.xcworkspace \
-            -scheme client \
-            -configuration Debug \
-            -sdk iphonesimulator \
-            -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.4' \
-            clean build
-
-      - name: Install and launch app
-        run: |
-          xcrun simctl install booted ./client/ios/build/Build/Products/Debug-iphonesimulator/client.app
-          xcrun simctl launch booted com.anonymous.client
+      - name: Start iOS app
+        run: npm run ios
 
       - name: Run E2E tests
-        run: maestro test maestro/app.yml
+        run: maestro test .maestro/app.yml
 
       - name: Upload test results
         if: always()
