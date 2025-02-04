@@ -78,7 +78,7 @@ jobs:
           npx expo prebuild
           if [ "${{ matrix.platform }}" = "ios" ]; then
             cd ios && pod install && cd ..
-            npm run ios -- --simulator="iPhone 14"
+            npm run ios -- --simulator="iPhone 15"
           else
             npm run android
           fi
@@ -90,6 +90,10 @@ jobs:
           if [ "${{ matrix.platform }}" = "ios" ]; then
             idb_companion --udid $UDID &
             sleep 5
+          fi
+          if [ ! -f "maestro/flows/app.yml" ]; then
+            echo "Test file not found"
+            exit 1
           fi
           maestro test maestro/flows/app.yml
 
