@@ -2,16 +2,47 @@ import React from 'react';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Importing icon library
 import { useState, useEffect } from 'react';
-import { useMap } from '@/modules/map/MapContext';
-
+import { MapState, useMap } from '@/modules/map/MapContext';
+import * as Location from 'expo-location';
 
 
 const ButtonComponent = () => {
 
-const {centerCoordinate,setCenterCoordinate} = useMap();
-  const handlePress = () => {
+var currentLongitude = 0;
+var currentLatitude = 0;
 
-    setCenterCoordinate([-73.86102241473235,45.447682764617575]);
+const {flyTo} = useMap();
+
+        const  getPermissions = async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status !== 'granted') {
+              console.log("Please grant location permissions");
+              return;
+            }
+            let currentLocation = await Location.getCurrentPositionAsync({});
+
+            currentLatitude = currentLocation.coords.latitude;
+            currentLongitude = currentLocation.coords.longitude;
+            
+            console.log(currentLatitude);
+            console.log(currentLongitude)
+            console.log(currentLocation);
+            
+        }
+
+const {centerCoordinate,setCenterCoordinate} = useMap();
+    
+
+const handlePress = async () => {
+    // Wait for getPermissions to complete before executing the following code
+    await getPermissions(); 
+
+    // Once permissions are granted and location is retrieved, move the map
+    console.log("Coordinates:", currentLatitude, currentLongitude);
+
+    // Set the center of the map and fly to the new coordinates
+    setCenterCoordinate([currentLatitude, currentLongitude]);
+    flyTo([currentLongitude, currentLatitude]);
   };
 
   return (
