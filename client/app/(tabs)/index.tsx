@@ -4,18 +4,16 @@ import React from 'react';
 import { SearchBar } from '@/components/SearchBar';
 import MapView from '@/modules/map/MapView';
 import { useMap, MapState } from '@/modules/map/MapContext';
-import ButtonComponent from '@/components/ui/IconCenterLocation';
+import CenterLocationComponent from '@/components/ui/IconCenterLocation';
 
 export default function HomeScreen() {
   const { state } = useMap();
   return (
-    <View style={styles.container}>        
-
-
+    <View style={styles.container}>
       <MapView />
       {state === MapState.Idle && (
         <View style={styles.searchContainer}>
-          <ButtonComponent/>
+          <CenterLocationComponent />
           <SearchBar onSearch={(query) => console.log(query)} />
         </View>
       )}
