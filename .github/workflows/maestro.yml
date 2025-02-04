@@ -1,4 +1,4 @@
-name: E2E Testing
+name: iOS E2E Testing
 
 on:
   push:
@@ -8,17 +8,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  e2e-test:
-    strategy:
-      matrix:
-        platform: [android, ios]
-        include:
-          - platform: ios
-            os: macos-latest
-          - platform: android
-            os: ubuntu-latest
-    runs-on: ${{ matrix.os }}
-
+  ios-e2e:
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -37,41 +28,13 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Setup Java
-        if: matrix.platform == 'android'
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-
-      - name: Setup Android SDK
-        if: matrix.platform == 'android'
-        uses: android-actions/setup-android@v3
-
-      - name: Setup Android Emulator
-        if: matrix.platform == 'android'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          target: default
-          arch: x86_64
-          force-avd-creation: true
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
-          disable-animations: true
-          script: |
-            adb devices
-            adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
-            echo "Emulator ready"
-
       - name: Install iOS dependencies
-        if: matrix.platform == 'ios'
         run: |
           brew install watchman
           brew tap facebook/fb
           brew install idb-companion
 
       - name: Setup iOS Simulator
-        if: matrix.platform == 'ios'
         run: |
           xcrun simctl list
           UDID=$(xcrun simctl create "iPhone 15" com.apple.CoreSimulator.SimDeviceType.iPhone-15 com.apple.CoreSimulator.SimRuntime.iOS-17-4)
@@ -82,22 +45,15 @@ jobs:
         working-directory: ./client
         run: |
           npx expo prebuild --clean
-          if [ "${{ matrix.platform }}" = "ios" ]; then
-            cd ios && pod install && cd ..
-            npm run ios
-          else
-            export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
-            npm run android
-          fi
+          cd ios && pod install && cd ..
+          npm run ios
 
       - name: Run Maestro Tests
         working-directory: .
         run: |
           sleep 15
-          if [ "${{ matrix.platform }}" = "ios" ]; then
-            idb_companion --udid $UDID &
-            sleep 5
-          fi
+          idb_companion --udid $UDID &
+          sleep 5
           if [ ! -f "maestro/flows/app.yml" ]; then
             echo "Test file not found"
             exit 1
@@ -108,5 +64,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-logs-${{ matrix.platform }}
+          name: test-logs-ios
           path: ~/.maestro/logs/
