@@ -37,33 +37,36 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Install idb & Dependencies
-        if: matrix.platform == 'ios'
-        run: |
-          brew tap facebook/fb
-          brew install idb-companion ffmpeg
-          brew install --cask android-platform-tools
-
-      - name: Setup Ruby & Cocoapods
-        if: matrix.platform == 'ios'
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.0'
-          bundler-cache: true
-
-      - name: Setup Android
+      - name: Setup Android SDK
         if: matrix.platform == 'android'
         uses: android-actions/setup-android@v3
+        with:
+          sdk-version: '34'
 
       - name: Setup Android Emulator
         if: matrix.platform == 'android'
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 29
+          api-level: 34
+          target: google_apis
+          arch: x86_64
+          profile: pixel_9_pro
           force-avd-creation: true
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
           disable-animations: true
-          script: echo "Emulator started"
+          script: |
+            adb devices
+            adb shell settings put global window_animation_scale 0.0
+            adb shell settings put global transition_animation_scale 0.0
+            adb shell settings put global animator_duration_scale 0.0
+            echo "Emulator ready"
+
+      - name: Install iOS dependencies
+        if: matrix.platform == 'ios'
+        run: |
+          brew install watchman
+          brew tap facebook/fb
+          brew install idb-companion
 
       - name: Setup iOS Simulator
         if: matrix.platform == 'ios'
@@ -71,22 +74,24 @@ jobs:
           xcrun simctl list
           UDID=$(xcrun simctl create "iPhone 15" com.apple.CoreSimulator.SimDeviceType.iPhone-15 com.apple.CoreSimulator.SimRuntime.iOS-17-4)
           xcrun simctl boot "$UDID"
+          xcrun simctl list devices | grep "iPhone 15"
 
       - name: Prebuild & Run App
         working-directory: ./client
         run: |
-          npx expo prebuild
+          npx expo prebuild --clean
           if [ "${{ matrix.platform }}" = "ios" ]; then
             cd ios && pod install && cd ..
             npm run ios
           else
+            export ANDROID_SDK_ROOT=/usr/local/lib/android/sdk
             npm run android
           fi
 
       - name: Run Maestro Tests
         working-directory: .
         run: |
-          sleep 10
+          sleep 15
           if [ "${{ matrix.platform }}" = "ios" ]; then
             idb_companion --udid $UDID &
             sleep 5
