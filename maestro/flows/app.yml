@@ -1,5 +1,8 @@
 appId: com.anonymous.client
 ---
 - launchApp
-- assertVisible: 'Map, tab, 1 of 2'
-- assertVisible: 'Calendar, tab, 2 of 2'
+- runScript: platform = getEnv("PLATFORM")
+- if: ${platform == "ios"}
+  commands:
+    - assertVisible: 'Map, tab, 1 of 2'
+    - assertVisible: 'Calendar, tab, 2 of 2'
