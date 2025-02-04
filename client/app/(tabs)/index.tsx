@@ -12,7 +12,7 @@ export default function HomeScreen() {
   return (
     <View style={styles.container}>
       <MapView />
-      {state === MapState.Idle && (
+      {(state === MapState.Idle || state === MapState.Information) && (
         <View style={styles.searchContainer}>
           <SearchBar onSearch={(query) => console.log(query)} />
         </View>
