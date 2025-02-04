@@ -19,8 +19,11 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v4
 
+      - name: Environment variables
+        uses: actions/setup-node@v4
+
       - name: Install dependencies
-        run: npm install
+        run: echo "EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN=${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}" > .env
 
       - name: Install Maestro
         run: |
