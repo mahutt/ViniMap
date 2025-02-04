@@ -54,22 +54,56 @@ jobs:
 
       - name: Setup iOS Simulator
         run: |
+          # First, list all available devices and runtimes for debugging
           xcrun simctl list
-          UDID=$(xcrun simctl create "iPhone 15" com.apple.CoreSimulator.SimDeviceType.iPhone-15 com.apple.CoreSimulator.SimRuntime.iOS-17-4)
+
+          # Create and boot simulator with exact identifiers from the list
+          UDID=$(xcrun simctl create "iPhone 15" "com.apple.CoreSimulator.SimDeviceType.iPhone-15" "com.apple.CoreSimulator.SimRuntime.iOS-17-4")
           xcrun simctl boot "$UDID"
 
-      - name: Start App
+          # Wait for simulator to be fully booted
+          echo "Waiting for simulator to boot..."
+          until xcrun simctl list devices | grep -q "$UDID.*Booted"; do
+            sleep 2
+          done
+          echo "Simulator booted successfully"
+
+      - name: Prebuild and Start App
         working-directory: ./client
         env:
           EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}
         run: |
-          npx expo start --ios &
-          sleep 30  # Give more time for Expo to start and build
+          # Run prebuild first
+          echo "Running expo prebuild..."
+          npx expo prebuild --platform ios --clean
+
+          # Install pods
+          echo "Installing pods..."
+          cd ios && pod install && cd ..
+
+          # Start the app using npm script
+          echo "Starting the app..."
+          npm run ios &
+
+          # Give time for the build and installation
+          echo "Waiting for app to start..."
+          sleep 90  # Increased sleep time to account for build
+
+          # List running processes for debugging
+          ps aux | grep -E "expo|metro|ios"
+
+          echo "App should be ready for testing..."
 
       - name: Run Maestro Tests
         working-directory: .
         run: |
-          maestro test -v maestro/flows/app.yml
+          # Add debug output
+          echo "Current directory: $(pwd)"
+          echo "Listing maestro directory:"
+          ls -la maestro/flows/
+
+          # Run tests with debug output
+          maestro test maestro/flows/app.yml --debug-output ./maestro-logs
 
       - name: Upload Test Results
         if: always()
@@ -79,3 +113,4 @@ jobs:
           path: |
             ~/.maestro/logs/
             ~/.maestro/videos/
+            ./maestro-logs/
