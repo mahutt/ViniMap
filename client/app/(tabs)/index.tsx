@@ -16,10 +16,7 @@ export default function HomeScreen() {
           <SearchBar onSearch={(query) => console.log(query)} />
         </View>
       )}
-      {state===MapState.Information &&(
-              <LocationInfo/>
-      )
-      }
+      {state === MapState.Information && <LocationInfo />}
       {state === MapState.RoutePlanning && <View></View>}
     </View>
   );
