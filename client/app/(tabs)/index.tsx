@@ -4,6 +4,7 @@ import React from 'react';
 import { SearchBar } from '@/components/SearchBar';
 import MapView from '@/modules/map/MapView';
 import { useMap, MapState } from '@/modules/map/MapContext';
+import { RoutePlanner } from '@/components/RoutePlanner';
 
 export default function HomeScreen() {
   const { state } = useMap();
@@ -15,7 +16,7 @@ export default function HomeScreen() {
           <SearchBar onSearch={(query) => console.log(query)} />
         </View>
       )}
-      {state === MapState.RoutePlanning && <View></View>}
+      {state === MapState.RoutePlanning && <RoutePlanner />}
     </View>
   );
 }
