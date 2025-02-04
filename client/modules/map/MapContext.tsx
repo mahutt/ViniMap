@@ -39,7 +39,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const cameraRef = useRef<Mapbox.Camera | null>(null);
   const [centerCoordinate, setCenterCoordinate] = useState<[number, number]>(DEFAULT_COORDINATES);
   const [zoomLevel, setZoomLevel] = useState(15);
-  const [state, setState] = useState<MapState>(MapState.RoutePlanning);
+  const [state, setState] = useState<MapState>(MapState.Idle);
 
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);
