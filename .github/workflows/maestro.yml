@@ -66,11 +66,11 @@ jobs:
           script: echo "Emulator started"
 
       - name: Setup iOS Simulator
-        if: matrix.platform == 'ios'
-        run: |
-          xcrun simctl list
-          UDID=$(xcrun simctl create "iPhone 14" com.apple.CoreSimulator.SimDeviceType.iPhone-14 com.apple.CoreSimulator.SimRuntime.iOS-16-0)
-          xcrun simctl boot "$UDID"
+          if: matrix.platform == 'ios'
+          run: |
+            xcrun simctl list
+            UDID=$(xcrun simctl create "iPhone 15" com.apple.CoreSimulator.SimDeviceType.iPhone-15 com.apple.CoreSimulator.SimRuntime.iOS-17-4)
+            xcrun simctl boot "$UDID"
 
       - name: Prebuild & Run App
         working-directory: ./client
