@@ -68,7 +68,7 @@ jobs:
           profile: pixel_6
           working-directory: ./client
 
-        - name: Build iOS App
+      - name: Build iOS App
         if: matrix.platform == 'ios'
         working-directory: ./client
         run: |
