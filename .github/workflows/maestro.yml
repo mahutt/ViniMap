@@ -10,8 +10,6 @@ on:
 
 jobs:
   e2e-test:
-    name: E2E Tests (${{ matrix.platform }})
-    if: "!contains(github.event.head_commit.message, '[skip e2e]')"
     strategy:
       matrix:
         platform: [android, ios]
@@ -20,15 +18,11 @@ jobs:
             os: macos-latest
           - platform: android
             os: ubuntu-latest
-      fail-fast: false
-
     runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -46,68 +40,12 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Setup iOS Simulator
-        if: matrix.platform == 'ios'
-        run: |
-          brew tap facebook/fb
-          brew install idb-companion
-          brew install pipx
-          pipx ensurepath
-          pipx install fb-idb
-          xcrun simctl boot "iPhone 15"
-
-      - name: Setup Android Emulator
-        if: matrix.platform == 'android'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          script: echo "Emulator Started"
-          profile: pixel_6
-          working-directory: ./client
-
-      - name: Build iOS App
-        if: matrix.platform == 'ios'
-        working-directory: ./client
-        run: |
-          npm install react-native
-
-          npm install -g sharp-cli
-
-          npm install expo-cli
-
-          npx expo prebuild -p ios --clean
-
-          npx expo run:ios --device
-
-      - name: Build Android App
-        if: matrix.platform == 'android'
-        working-directory: ./client
-        run: |
-          npm install react-native
-
-          npm install -g sharp-cli
-
-          npm install expo-cli
-
-          npx expo prebuild -p android --clean
-
-          npx expo run:android
-
       - name: Start Expo App
         working-directory: ./client
         run: |
           npx expo start --no-dev --minify --non-interactive &
-          sleep 45  # Increased wait time to ensure app is fully started
+          sleep 30
 
       - name: Run Maestro Tests
         working-directory: .
         run: maestro test maestro/flows/app.yml
-
-      - name: Upload Test Results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: maestro-test-results-${{ matrix.platform }}
-          path: |
-            ./maestro/flows/*.yml
-            ~/.maestro/tests/
