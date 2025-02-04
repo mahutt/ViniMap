@@ -35,17 +35,78 @@ jobs:
         working-directory: ./client
         run: npm ci
 
+      - name: Install Expo CLI
+        run: npm install -g expo-cli
+
       - name: Install Maestro
         run: |
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Start Expo App
+      - name: Setup Android SDK
+        if: matrix.platform == 'android'
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Android Emulator
+        if: matrix.platform == 'android'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          force-avd-creation: true
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: echo "Emulator started"
+
+      - name: Setup iOS Simulator
+        if: matrix.platform == 'ios'
+        run: |
+          xcrun simctl list
+          UDID=$(xcrun simctl create "iPhone 14" com.apple.CoreSimulator.SimDeviceType.iPhone-14 com.apple.CoreSimulator.SimRuntime.iOS-16-0)
+          xcrun simctl boot "$UDID"
+
+      - name: Install Expo Go on Android
+        if: matrix.platform == 'android'
+        run: |
+          adb install "$(find ~/.maestro/cache -name "Expo.apk" -type f)"
+
+      - name: Install Expo Go on iOS
+        if: matrix.platform == 'ios'
+        run: xcrun simctl install booted ~/.maestro/cache/Expo.app
+
+      - name: Start Expo Server
         working-directory: ./client
         run: |
-          npx expo start --no-dev --minify --non-interactive &
+          npx expo start --no-dev --non-interactive &
           sleep 30
+
+      - name: Get Expo URL
+        id: expo-url
+        working-directory: ./client
+        run: |
+          EXPO_URL=$(npx expo url)
+          echo "::set-output name=url::$EXPO_URL"
 
       - name: Run Maestro Tests
         working-directory: .
-        run: maestro test maestro/flows/app.yml
+        env:
+          EXPO_URL: ${{ steps.expo-url.outputs.url }}
+        run: |
+          # Wait for Expo Go to be ready
+          sleep 10
+          maestro test -e EXPO_URL=$EXPO_URL maestro/flows/app.yml
+
+      - name: Debug Info
+        if: failure()
+        run: |
+          echo "=== Environment ==="
+          env
+          echo "=== Device List ==="
+          if [ "${{ matrix.platform }}" = "android" ]; then
+            adb devices
+          else
+            xcrun simctl list devices
+          fi
+          echo "=== Expo Status ==="
+          ps aux | grep expo
+          echo "=== Maestro Logs ==="
+          cat ~/.maestro/logs/* || true
