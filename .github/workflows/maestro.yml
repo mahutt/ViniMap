@@ -23,9 +23,13 @@ jobs:
         working-directory: ./client
         run: npm ci
 
-      - name: Install iOS test dependencies
+      - name: Install Maestro
         run: |
-          brew install maestro
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Install iOS dependencies
+        run: |
           brew install watchman
           brew tap facebook/fb
           brew install idb-companion
