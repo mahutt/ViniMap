@@ -1,4 +1,4 @@
-import { Button, StyleSheet, View } from 'react-native';
+import {  StyleSheet, View } from 'react-native';
 import React from 'react';
 
 import { SearchBar } from '@/components/SearchBar';

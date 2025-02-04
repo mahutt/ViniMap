@@ -1,12 +1,11 @@
-import { StyleSheet,Button,View, TouchableOpacity,Text} from 'react-native';
-import Mapbox from '@rnmapbox/maps';
+import { StyleSheet,View, TouchableOpacity} from 'react-native';
 import React from 'react';
 import { useMap } from './MapContext';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 
 export default function PitchButton() {
-  const {  pitchLevel,setPitchLevel ,setZoomLevel, setCenterCoordinate, zoomLevel,cameraRef,centerCoordinate, mapRef} = useMap();
+  const {  pitchLevel,setPitchLevel ,setZoomLevel, setCenterCoordinate,mapRef} = useMap();
 
   const pressHandler =async  () =>{
     const currentZoom = await mapRef.current?.getZoom() as number
