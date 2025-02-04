@@ -2,30 +2,22 @@ import { MapState, useMap } from '@/modules/map/MapContext';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+let apiKey = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
 export function LocationInfo() {
-  const { longitude, latitude, setState } = useMap();
-  let apiKey = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
+  const { endLocation, setState } = useMap();
 
   const [address, setAddress] = useState("15 rue de l'artiste");
   const [name, setName] = useState('No Name');
-  const [isVisible, setIsVisible] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    console.log('Component Loaded');
-    console.log(latitude, longitude);
     fetchLocationData();
-  }, []);
+  }, [endLocation]);
 
   async function fetchLocationData() {
-    //45.4953
-    //-73.5798
-
     const radius = 50;
-    //const apiUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${45.4953},${-73.5798}&radius=${radius}&key=${apiKey}`;
-    const apiUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=${radius}&key=${apiKey}`;
-
+    const apiUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${endLocation?.coordinates[1]},${endLocation?.coordinates[0]}&radius=${radius}&key=${apiKey}`;
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
@@ -44,20 +36,14 @@ export function LocationInfo() {
     }
   }
 
-  if (!isVisible) {
-    setState(MapState.Idle);
-    return null;
-  }
-
   function getDirections() {
     setState(MapState.RoutePlanning);
-
-    //Logic for Route Planning will go here when we merge with Annabelle's changes
+    // Logic for Route Planning will go here when we merge with Annabelle's changes
   }
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.closeButton} onPress={() => setIsVisible(false)}>
+      <TouchableOpacity style={styles.closeButton} onPress={() => setState(MapState.Idle)}>
         <Text style={styles.closeText}>×</Text>
       </TouchableOpacity>
       <Text style={styles.nameText}>{name}</Text>
