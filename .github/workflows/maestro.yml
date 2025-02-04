@@ -1,0 +1,67 @@
+name: Maestro Mobile Testing
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        platform: [android, ios]
+        include:
+          - platform: ios
+            os: macos-latest
+          - platform: android
+            os: ubuntu-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        working-directory: ./client
+        run: |
+          npm install
+
+      - name: Install Expo CLI
+        run: |
+          npm install -g expo-cli
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+
+      - name: Setup iOS
+        if: matrix.platform == 'ios'
+        run: |
+          brew tap facebook/fb
+          brew install idb-companion
+          pip3 install fb-idb
+          xcrun simctl boot "iPhone 15"
+
+      - name: Setup Android
+        if: matrix.platform == 'android'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 29
+          script: echo "Emulator Started"
+
+      - name: Start Expo
+        working-directory: ./client
+        run: |
+          expo start &
+          sleep 10
+
+      - name: Run Maestro Tests
+        run: |
+          export PATH="$PATH":"$HOME/.maestro/bin"
+          maestro test maestro/flows/
