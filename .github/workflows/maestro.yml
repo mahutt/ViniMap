@@ -25,9 +25,6 @@ jobs:
       fail-fast: false
 
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: ./client
 
     steps:
       - name: Checkout
@@ -43,6 +40,7 @@ jobs:
           cache-dependency-path: ./client/package-lock.json
 
       - name: Install dependencies
+        working-directory: ./client
         run: npm ci
 
       - name: Install Expo CLI
@@ -73,16 +71,18 @@ jobs:
           working-directory: ./client
 
       - name: Build and Start Expo App
+        working-directory: ./client
         run: |
           expo start --no-dev --minify &
           sleep 30
 
       - name: Run Maestro Tests
+        working-directory: .
         run: |
           if [ "${{ matrix.platform }}" = "android" ]; then
             maestro test -e "APP_CENTER=true" maestro/flows/
           else
-            maestro test -e "APP_CENTER=true" --ios maestro/flows/
+            maestro test -e "APP_CENTER=true" maestro/flows/
           fi
 
       - name: Upload Test Results
@@ -91,5 +91,5 @@ jobs:
         with:
           name: maestro-test-results-${{ matrix.platform }}
           path: |
-            maestro/flows/*.yml
+            ./maestro/flows/*.yml
             ~/.maestro/tests/
