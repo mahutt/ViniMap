@@ -2,44 +2,26 @@ name: iOS E2E Testing
 
 on:
   push:
-    branches: [main]
   pull_request:
     types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 jobs:
   ios-e2e:
+    name: Run iOS E2E tests
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./client
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: 'npm'
-          cache-dependency-path: ./client/package-lock.json
-
-      - uses: actions/cache@v4
-        with:
-          path: |
-            ~/Library/Developer/Xcode/DerivedData
-            ./client/ios/build
-          key: ${{ runner.os }}-ios-build-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-ios-build-
-
-      - uses: actions/cache@v4
-        with:
-          path: ./client/ios/Pods
-          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pods-
+      - name: Set up Node
+        uses: actions/setup-node@v4
 
       - name: Install dependencies
-        working-directory: ./client
-        run: |
-          npm ci
-          npx expo install
+        run: npm install
 
       - name: Install Maestro
         run: |
@@ -54,28 +36,18 @@ jobs:
 
       - name: Setup iOS Simulator
         run: |
-          xcrun simctl list
           UDID=$(xcrun simctl create "iPhone 15" "com.apple.CoreSimulator.SimDeviceType.iPhone-15" "com.apple.CoreSimulator.SimRuntime.iOS-17-4")
           xcrun simctl boot "$UDID"
-
-          echo "Waiting for simulator to boot..."
           until xcrun simctl list devices | grep -q "$UDID.*Booted"; do
             sleep 2
           done
-          echo "Simulator booted successfully"
 
-      - name: Prebuild and Build iOS App
-        working-directory: ./client
+      - name: Build iOS app
         env:
           EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}
         run: |
-          echo "Running expo prebuild..."
           npx expo prebuild --platform ios --clean
-
-          echo "Installing pods..."
           cd ios && pod install && cd ..
-
-          echo "Building the app..."
           xcodebuild -workspace ios/*.xcworkspace \
             -scheme client \
             -configuration Debug \
@@ -83,30 +55,19 @@ jobs:
             -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.4' \
             clean build
 
-      - name: Install App on Simulator
+      - name: Install and launch app
         run: |
-          echo "Installing the app..."
           xcrun simctl install booted ./client/ios/build/Build/Products/Debug-iphonesimulator/client.app
-          echo "Verifying installed apps..."
-          xcrun simctl listapps booted | grep "com.anonymous.client" || echo "App installation failed"
+          xcrun simctl launch booted com.anonymous.client
 
-      - name: Start App Manually
-        run: |
-          echo "Manually launching the app..."
-          xcrun simctl launch booted com.anonymous.client || echo "App launch failed"
+      - name: Run E2E tests
+        run: maestro test maestro/app.yml
 
-      - name: Run Maestro Tests
-        working-directory: ./client
-        run: |
-          echo "Running Maestro tests..."
-          maestro test maestro/app.yml --debug-output ./maestro-logs
-
-      - name: Upload Test Results
+      - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-logs-ios
+          name: ios-e2e-results
           path: |
             ~/.maestro/logs/
             ~/.maestro/videos/
-            ./maestro-logs/
