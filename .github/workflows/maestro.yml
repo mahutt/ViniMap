@@ -54,56 +54,52 @@ jobs:
 
       - name: Setup iOS Simulator
         run: |
-          # First, list all available devices and runtimes for debugging
           xcrun simctl list
-
-          # Create and boot simulator with exact identifiers from the list
           UDID=$(xcrun simctl create "iPhone 15" "com.apple.CoreSimulator.SimDeviceType.iPhone-15" "com.apple.CoreSimulator.SimRuntime.iOS-17-4")
           xcrun simctl boot "$UDID"
 
-          # Wait for simulator to be fully booted
           echo "Waiting for simulator to boot..."
           until xcrun simctl list devices | grep -q "$UDID.*Booted"; do
             sleep 2
           done
           echo "Simulator booted successfully"
 
-      - name: Prebuild and Start App
+      - name: Prebuild and Build iOS App
         working-directory: ./client
         env:
           EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}
         run: |
-          # Run prebuild first
           echo "Running expo prebuild..."
           npx expo prebuild --platform ios --clean
 
-          # Install pods
           echo "Installing pods..."
           cd ios && pod install && cd ..
 
-          # Start the app using npm script
-          echo "Starting the app..."
-          npm run ios &
+          echo "Building the app..."
+          xcodebuild -workspace ios/*.xcworkspace \
+            -scheme client \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'platform=iOS Simulator,name=iPhone 15,OS=17.4' \
+            clean build
 
-          # Give time for the build and installation
-          echo "Waiting for app to start..."
-          sleep 90  # Increased sleep time to account for build
+      - name: Install App on Simulator
+        run: |
+          echo "Installing the app..."
+          xcrun simctl install booted ./client/ios/build/Build/Products/Debug-iphonesimulator/client.app
+          echo "Verifying installed apps..."
+          xcrun simctl listapps booted | grep "com.anonymous.client" || echo "App installation failed"
 
-          # List running processes for debugging
-          ps aux | grep -E "expo|metro|ios"
-
-          echo "App should be ready for testing..."
+      - name: Start App Manually
+        run: |
+          echo "Manually launching the app..."
+          xcrun simctl launch booted com.anonymous.client || echo "App launch failed"
 
       - name: Run Maestro Tests
-        working-directory: .
+        working-directory: ./client
         run: |
-          # Add debug output
-          echo "Current directory: $(pwd)"
-          echo "Listing maestro directory:"
-          ls -la maestro/flows/
-
-          # Run tests with debug output
-          maestro test maestro/flows/app.yml --debug-output ./maestro-logs
+          echo "Running Maestro tests..."
+          maestro test maestro/app.yml --debug-output ./maestro-logs
 
       - name: Upload Test Results
         if: always()
