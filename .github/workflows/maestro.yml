@@ -6,13 +6,11 @@ on:
       - main
   pull_request:
     types: [opened, synchronize, reopened]
-
   workflow_dispatch:
 
 jobs:
   e2e-test:
     name: E2E Tests (${{ matrix.platform }})
-    # Skip running if commit message contains [skip e2e]
     if: "!contains(github.event.head_commit.message, '[skip e2e]')"
     strategy:
       matrix:
@@ -70,11 +68,25 @@ jobs:
           profile: pixel_6
           working-directory: ./client
 
-      - name: Build and Start Expo App
+        - name: Build iOS App
+        if: matrix.platform == 'ios'
         working-directory: ./client
         run: |
-          expo start --no-dev --minify --non-interactive --no-logs &
-          sleep 30
+          expo prebuild -p ios
+          expo build:ios --non-interactive --no-wait
+
+      - name: Build Android App
+        if: matrix.platform == 'android'
+        working-directory: ./client
+        run: |
+          expo prebuild -p android
+          expo build:android --non-interactive --no-wait
+
+      - name: Start Expo App
+        working-directory: ./client
+        run: |
+          expo start --no-dev --minify --non-interactive &
+          sleep 45  # Increased wait time to ensure app is fully started
 
       - name: Run Maestro Tests
         working-directory: .
