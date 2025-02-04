@@ -19,6 +19,22 @@ jobs:
           cache: 'npm'
           cache-dependency-path: ./client/package-lock.json
 
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/Library/Developer/Xcode/DerivedData
+            ./client/ios/build
+          key: ${{ runner.os }}-ios-build-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-ios-build-
+
+      - uses: actions/cache@v3
+        with:
+          path: ./client/ios/Pods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+
       - name: Install dependencies
         working-directory: ./client
         run: npm ci
@@ -42,6 +58,12 @@ jobs:
 
       - name: Start App
         working-directory: ./client
+        env:
+          MAPBOX_ACCESS_TOKEN: ${{ secrets.MAPBOX_ACCESS_TOKEN }}
+          API_URL: ${{ secrets.API_URL }}
+          API_KEY: ${{ secrets.API_KEY }}
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+          MAPBOX_DOWNLOADS_TOKEN: ${{ secrets.MAPBOX_DOWNLOADS_TOKEN }}
         run: npm run ios
 
       - name: Run Maestro Tests
