@@ -98,7 +98,11 @@ export function RoutePlanner() {
 
 const styles = StyleSheet.create({
   container: {
+    position: 'absolute',
     flex: 0,
+    top:0,
+    paddingTop: 70,
+    backgroundColor: 'white',
   },
   inputContainer: {
     position: 'relative',
@@ -106,8 +110,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 10, 
-    backgroundColor: 'white',
-    paddingVertical: 10,
+    
   },
   mapContainer: {
     flex: 1,
