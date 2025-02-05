@@ -11,6 +11,7 @@ export interface Location {
 export enum MapState {
   Idle,
   RoutePlanning,
+  Information,
 }
 
 // downtown concordia campus (sgw)
@@ -33,6 +34,8 @@ type MapContextType = {
   setCenterCoordinate: (centerCoordinate: [number, number]) => void;
   setZoomLevel: (zoomLevel: number) => void;
   setState: (state: MapState) => void;
+  setStartLocation: (startLocation: Location) => void;
+  setEndLocation: (endLocation: Location) => void;
   flyTo: (coords: [number, number], zoomLevel?: number) => void;
   loadRoute: (startLocationQuery: string, endLocationQuery: string) => Promise<void>;
 };
@@ -107,6 +110,8 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setCenterCoordinate,
       setZoomLevel,
       setState,
+      setStartLocation,
+      setEndLocation,
       flyTo,
       loadRoute,
     }),

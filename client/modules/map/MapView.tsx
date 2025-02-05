@@ -1,26 +1,46 @@
 import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import React from 'react';
-import { useMap, MapState } from './MapContext';
+import { MapState, useMap } from './MapContext';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
 export default function MapView() {
-
   const {
+    state,
+    setState,
+    startLocation,
+    endLocation,
+    setEndLocation,
     mapRef,
     cameraRef,
     centerCoordinate,
     zoomLevel,
     pitchLevel,
-    state,
-    startLocation,
-    endLocation,
     routeCoordinates,
   } = useMap();
 
+  function onMapClick(event: any) {
+    const { geometry } = event;
+
+    if (geometry?.coordinates) {
+      const [longitude, latitude] = geometry.coordinates;
+      setEndLocation({ name: null, coordinates: [longitude, latitude] });
+      setState(MapState.Information);
+      if (cameraRef.current) {
+        cameraRef.current.flyTo([longitude, latitude], 1000);
+      }
+    } else {
+      console.warn('No coordinates found in the event.');
+    }
+  }
+
   return (
-    <Mapbox.MapView ref={mapRef} style={styles.map} styleURL='mapbox://styles/ambrose821/cm6g7anat00kv01qmbxkze6i8'>
+    <Mapbox.MapView
+      ref={mapRef}
+      style={styles.map}
+      styleURL="mapbox://styles/ambrose821/cm6g7anat00kv01qmbxkze6i8"
+      onPress={onMapClick}>
       <Mapbox.Camera
         ref={cameraRef}
         zoomLevel={zoomLevel}
@@ -30,13 +50,20 @@ export default function MapView() {
         pitch={pitchLevel}
       />
 
+      {endLocation?.coordinates && (
+        <Mapbox.PointAnnotation
+          key="selected-location"
+          id="selected-location"
+          coordinate={[endLocation?.coordinates[0], endLocation?.coordinates[1]]}>
+          <View style={[styles.marker, styles.endMarker]} />
+          <Mapbox.Callout title="Selected Location" />
+        </Mapbox.PointAnnotation>
+      )}
+
       {state === MapState.RoutePlanning && startLocation !== null && endLocation !== null && (
         <>
           <Mapbox.MarkerView id="start" coordinate={startLocation.coordinates}>
             <View style={[styles.marker, styles.startMarker]} />
-          </Mapbox.MarkerView>
-          <Mapbox.MarkerView id="end" coordinate={endLocation.coordinates}>
-            <View style={[styles.marker, styles.endMarker]} />
           </Mapbox.MarkerView>
           {routeCoordinates.length > 0 && (
             <Mapbox.ShapeSource
@@ -73,16 +100,16 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   marker: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
-    borderWidth: 2,
+    width: 25,
+    height: 25,
+    borderRadius: 15,
     borderColor: 'white',
+    borderWidth: 2,
   },
   startMarker: {
-    backgroundColor: '#00B800',
+    backgroundColor: '#852C3A',
   },
   endMarker: {
-    backgroundColor: '#FF0000',
+    backgroundColor: '#852C3A',
   },
 });
