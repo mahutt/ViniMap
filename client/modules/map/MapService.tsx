@@ -18,6 +18,22 @@ const getLocationCoordinates = async (locationQuery: string): Promise<Location |
   return null;
 };
 
+const getLocations = async (locationQuery: string): Promise<Location[]> => {
+  const response = await fetch(
+    `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
+      locationQuery
+    )}&access_token=${ACCESS_TOKEN}`
+  );
+  const data = await response.json();
+  if (data?.features) {
+    return data.features.map((feature: any) => ({
+      name: `${feature.properties.name}, ${feature.properties.place_formatted ?? ''}`,
+      coordinates: feature.geometry.coordinates as Coordinates,
+    }));
+  }
+  return [];
+};
+
 const getRoute = async (
   startCoordinates: Coordinates,
   endCoordinates: Coordinates
@@ -32,4 +48,4 @@ const getRoute = async (
   return null;
 };
 
-export { getLocationCoordinates, getRoute };
+export { getLocationCoordinates, getLocations, getRoute };
