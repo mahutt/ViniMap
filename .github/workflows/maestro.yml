@@ -3,15 +3,6 @@ name: Maestro E2E Tests
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-    paths:
-      - 'client/**/*.ts'
-      - 'client/**/*.tsx'
-      - 'client/**/*.js'
-      - 'client/**/*.jsx'
-      - 'client/maestro/**'
-      - 'client/package.json'
-      - 'client/app.json'
-      - 'client/package-lock.json'
 
 jobs:
   e2e-tests:
