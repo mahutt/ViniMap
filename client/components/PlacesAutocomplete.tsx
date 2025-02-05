@@ -6,10 +6,10 @@ import { getLocations } from '@/modules/map/MapService';
 export default function LocationsAutocomplete({
   query,
   callback,
-}: {
+}: Readonly<{
   query: string;
   callback: (location: Location) => void;
-}) {
+}>) {
   const [locations, setLocations] = useState<Location[]>([]);
   useEffect(() => {
     if (query) {
@@ -29,7 +29,7 @@ export default function LocationsAutocomplete({
     <View style={styles.locationsContainer}>
       {locations.map((location, index) => (
         <View
-          key={index}
+          key={`location-${index}`}
           style={styles.locationItem}
           onTouchEnd={() => {
             callback(location);

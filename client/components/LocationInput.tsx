@@ -9,12 +9,12 @@ export default function LocationInput({
   setLocation,
   ionIconName,
   placeholder,
-}: {
+}: Readonly<{
   location: Location | null;
   setLocation: (location: Location) => void;
   ionIconName: 'pin-outline' | 'pin';
   placeholder: string;
-}) {
+}>) {
   const inputRef = React.useRef<TextInput>(null);
   const [query, setQuery] = React.useState<string>('');
 

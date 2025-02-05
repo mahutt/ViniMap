@@ -60,7 +60,7 @@ const fetchLocationData = async (coordinates: Coordinates) => {
       return {
         address: data.results[0]?.name || 'Address not available',
         name: data.results[1]?.name || 'Name not available',
-        isOpen: data.results[1].opening_hours ? true : false,
+        isOpen: Boolean(data.results[1].opening_hours),
       };
     }
   } catch (error) {
