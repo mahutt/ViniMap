@@ -29,11 +29,12 @@ export function LocationInfo() {
       ] as [number, number];
 
       if (data.results.length > 0) {
+        const locationName = data.results[1]?.name || 'Name not available';
         setAddress(data.results[0]?.name || 'Address not available');
-        setName(data.results[1]?.name || 'Name not available');
+        setName(locationName);
 
         setDestLocation({
-          name: name,
+          name: locationName, // from the api directly
           coordinates: coords || 'Coordinates not available',
         });
 
