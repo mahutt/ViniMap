@@ -1,10 +1,16 @@
-import { StyleSheet, View } from 'react-native';
+import {  StyleSheet, View } from 'react-native';
 import React from 'react';
 
 import { SearchBar } from '@/components/SearchBar';
 import MapView from '@/modules/map/MapView';
+
+import PitchButton from '@/modules/map/PitchButton';
+
+
 import { useMap, MapState } from '@/modules/map/MapContext';
 import { RoutePlanner } from '@/components/RoutePlanner';
+
+
 
 export default function HomeScreen() {
   const { state } = useMap();
@@ -14,10 +20,17 @@ export default function HomeScreen() {
       {state === MapState.Idle && (
         <View style={styles.searchContainer}>
           <SearchBar onSearch={(query) => console.log(query)} />
+          <PitchButton></PitchButton>
         </View>
+
+       
+    
+ 
+
       )}
       {state === MapState.RoutePlanning && <RoutePlanner />}
     </View>
+
   );
 }
 
