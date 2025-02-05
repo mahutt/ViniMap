@@ -6,6 +6,7 @@ export type Coordinates = [number, number];
 export interface Location {
   name: string | null;
   coordinates: Coordinates;
+  data?: any;
 }
 
 export enum MapState {

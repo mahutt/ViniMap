@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import React from 'react';
 import { MapState, useMap } from './MapContext';
+import { fetchLocationData } from './MapService';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -24,12 +25,21 @@ export default function MapView() {
     const { geometry } = event;
 
     if (geometry?.coordinates) {
-      const [longitude, latitude] = geometry.coordinates;
-      setEndLocation({ name: null, coordinates: [longitude, latitude] });
-      setState(MapState.Information);
-      if (cameraRef.current) {
-        cameraRef.current.flyTo([longitude, latitude], 1000);
-      }
+      const coordinates = geometry.coordinates;
+      setEndLocation({ name: null, coordinates: coordinates });
+      fetchLocationData(coordinates).then((data) => {
+        if (data) {
+          setEndLocation({ name: data.name, coordinates: coordinates, data });
+          setState(MapState.Information);
+          if (cameraRef.current) {
+            cameraRef.current.flyTo(coordinates, 1000);
+          }
+        }
+        if (cameraRef.current) {
+          cameraRef.current.flyTo(coordinates, 1000);
+        }
+        setState(MapState.Information);
+      });
     } else {
       console.warn('No coordinates found in the event.');
     }
