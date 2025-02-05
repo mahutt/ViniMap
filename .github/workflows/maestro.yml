@@ -38,8 +38,6 @@ jobs:
           flow: client/maestro/flows
           report: client/test-reports/report.xml
           screenshot-dir: client/.maestro/screenshots
-          env: |
-            EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN=${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}
 
       - name: Upload Test Artifacts
         if: always()
