@@ -4,19 +4,23 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - '**/*.ts'
-      - '**/*.tsx'
-      - '**/*.js'
-      - '**/*.jsx'
-      - 'maestro/**'
-      - 'package.json'
-      - 'app.json'
-      - 'package-lock.json'
+      - 'client/**/*.ts'
+      - 'client/**/*.tsx'
+      - 'client/**/*.js'
+      - 'client/**/*.jsx'
+      - 'client/maestro/**'
+      - 'client/package.json'
+      - 'client/app.json'
+      - 'client/package-lock.json'
 
 jobs:
   e2e-tests:
     name: Maestro E2E Tests
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./client
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -26,6 +30,7 @@ jobs:
         with:
           node-version: 18
           cache: 'npm'
+          cache-dependency-path: './client/package-lock.json'
 
       - name: Install dependencies
         run: npm install
@@ -34,19 +39,19 @@ jobs:
         uses: expo/expo-github-action@v8
         with:
           expo-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Prebuild iOS
         run: |
           npx expo prebuild
           npm run ios
 
-      # Here's the marketplace action
       - name: Run Maestro Tests
         uses: dniHze/maestro-test-action@v1
         with:
-          flow: maestro/flows
-          report: test-reports/report.xml
-          screenshot-dir: .maestro/screenshots
+          flow: client/maestro/flows
+          report: client/test-reports/report.xml
+          screenshot-dir: client/.maestro/screenshots
           env: |
             APP_ENV=testing
             EXPO_USE_CUSTOM_PORTS=true
@@ -57,15 +62,15 @@ jobs:
         with:
           name: test-artifacts
           path: |
-            test-reports/
-            .maestro/screenshots/
+            client/test-reports/
+            client/.maestro/screenshots/
           retention-days: 14
 
       - name: Post Test Results to PR
-        uses: dorny/test-reporter@v1
         if: always()
+        uses: dorny/test-reporter@v1
         with:
           name: E2E Test Results
-          path: test-reports/report.xml
+          path: client/test-reports/report.xml
           reporter: jest-junit
           fail-on-error: true
