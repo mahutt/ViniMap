@@ -25,15 +25,14 @@ export default function PitchButton() {
 
 const styles = StyleSheet.create({
   pitchButtonContainer: {
+    top: 130,
+    right: 36,
     position: 'absolute',
     zIndex: 100,
-    right: '4%',
-    top: '92%',
     backgroundColor: '#912338',
     borderRadius: 50,
     height: 50,
     width: 50,
-
     justifyContent: 'center',
     alignItems: 'center',
     opacity: 0.89,
