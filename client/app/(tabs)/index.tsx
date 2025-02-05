@@ -3,21 +3,33 @@ import React from 'react';
 
 import { SearchBar } from '@/components/SearchBar';
 import MapView from '@/modules/map/MapView';
+
 import PitchButton from '@/modules/map/PitchButton';
-import { MapProvider } from '@/modules/map/MapContext';
+
+
+import { useMap, MapState } from '@/modules/map/MapContext';
+import { RoutePlanner } from '@/components/RoutePlanner';
+
 
 
 export default function HomeScreen() {
+  const { state } = useMap();
   return (
-    <MapProvider>
-      <View style={styles.container}>
-        <MapView />
+    <View style={styles.container}>
+      <MapView />
+      {state === MapState.Idle && (
         <View style={styles.searchContainer}>
           <SearchBar onSearch={(query) => console.log(query)} />
         </View>
+
         <PitchButton></PitchButton>
-      </View>
-    </MapProvider>
+    
+ 
+
+      )}
+      {state === MapState.RoutePlanning && <RoutePlanner />}
+    </View>
+
   );
 }
 
