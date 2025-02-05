@@ -30,7 +30,7 @@ type MapContextType = {
   setZoomLevel: (zoomLevel: number) => void;
   setState: (state: MapState) => void;
   setStartLocation: (startLocation: Location) => void;
-  setEndLocation: (endLocation: Location) => void;
+  setEndLocation: (endLocation: Location | null) => void;
   flyTo: (coords: [number, number], zoomLevel?: number) => void;
   loadRoute: (startLocationQuery: string, endLocationQuery: string) => Promise<void>;
 };
