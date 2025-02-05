@@ -4,10 +4,14 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     paths:
-      - 'src/**'
+      - '**/*.ts'
+      - '**/*.tsx'
+      - '**/*.js'
+      - '**/*.jsx'
       - 'maestro/**'
       - 'package.json'
       - 'app.json'
+      - 'package-lock.json'
 
 jobs:
   e2e-tests:
@@ -36,27 +40,26 @@ jobs:
           npx expo prebuild
           npm run ios
 
+      # Here's the marketplace action
       - name: Run Maestro Tests
-        run: |
-          curl -Ls "https://get.maestro.mobile.dev" | bash
-          export PATH="$PATH":"$HOME/.maestro/bin"
-          maestro --version
-          maestro test \
-            --format=junit \
-            --output=test-reports/report.xml \
-            --video-recording=on \
-            maestro/flows
+        uses: dniHze/maestro-test-action@v1
+        with:
+          flow: maestro/flows
+          report: test-reports/report.xml
+          screenshot-dir: .maestro/screenshots
+          env: |
+            APP_ENV=testing
+            EXPO_USE_CUSTOM_PORTS=true
 
-      # Upload both test results AND media artifacts
       - name: Upload Test Artifacts
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-artifacts
           path: |
             test-reports/
-            .maestro/videos/
             .maestro/screenshots/
+          retention-days: 14
 
       - name: Post Test Results to PR
         uses: dorny/test-reporter@v1
@@ -66,48 +69,3 @@ jobs:
           path: test-reports/report.xml
           reporter: jest-junit
           fail-on-error: true
-
-      # Add media files to PR comment
-      - name: Comment PR with Test Media
-        if: always()
-        uses: actions/github-script@v6
-        with:
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-
-            // Function to get all files from directory
-            const getFiles = (dir) => {
-              const files = fs.readdirSync(dir);
-              return files.map(file => path.join(dir, file));
-            };
-
-            try {
-              const screenshots = getFiles('.maestro/screenshots');
-              const videos = getFiles('.maestro/videos');
-              
-              let comment = '### Test Run Media\n\n';
-              
-              if (screenshots.length > 0) {
-                comment += '#### Screenshots:\n';
-                screenshots.forEach(screenshot => {
-                  comment += `![Screenshot](${screenshot})\n`;
-                });
-              }
-              
-              if (videos.length > 0) {
-                comment += '#### Test Recordings:\n';
-                videos.forEach(video => {
-                  comment += `[Download Test Recording](${video})\n`;
-                });
-              }
-              
-              github.rest.issues.createComment({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.name,
-                body: comment
-              });
-            } catch (error) {
-              console.log('Error creating media comment:', error);
-            }
