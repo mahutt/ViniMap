@@ -1,56 +1,113 @@
-name: iOS E2E Testing
+name: Maestro E2E Tests
 
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-  workflow_dispatch:
+    paths:
+      - 'src/**'
+      - 'maestro/**'
+      - 'package.json'
+      - 'app.json'
 
 jobs:
-  ios-e2e:
-    name: Run iOS E2E tests
+  e2e-tests:
+    name: Maestro E2E Tests
     runs-on: macos-latest
-    defaults:
-      run:
-        working-directory: ./client
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'npm'
 
       - name: Install dependencies
-        run: |
-          echo "EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN=${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}" > .env
-          npm install
+        run: npm install
 
-      - name: Install Maestro
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+
+      - name: Prebuild iOS
+        run: |
+          npx expo prebuild
+          npm run ios
+
+      - name: Run Maestro Tests
         run: |
           curl -Ls "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+          export PATH="$PATH":"$HOME/.maestro/bin"
+          maestro --version
+          maestro test \
+            --format=junit \
+            --output=test-reports/report.xml \
+            --video-recording=on \
+            maestro/flows
 
-      - name: Install iOS dependencies
-        run: |
-          brew tap facebook/fb
-          brew install facebook/fb/idb-companion
-
-      - name: Install iOS pods
-        run: |
-          cd ios
-          pod install
-          cd ..
-
-      - name: Start iOS app
-        run: npm run ios
-
-      - name: Run E2E tests
-        run: maestro test .maestro/app.yml
-
-      - name: Upload test results
+      # Upload both test results AND media artifacts
+      - name: Upload Test Artifacts
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
-          name: ios-e2e-results
+          name: test-artifacts
           path: |
-            ~/.maestro/logs/
-            ~/.maestro/videos/
+            test-reports/
+            .maestro/videos/
+            .maestro/screenshots/
+
+      - name: Post Test Results to PR
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: E2E Test Results
+          path: test-reports/report.xml
+          reporter: jest-junit
+          fail-on-error: true
+
+      # Add media files to PR comment
+      - name: Comment PR with Test Media
+        if: always()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Function to get all files from directory
+            const getFiles = (dir) => {
+              const files = fs.readdirSync(dir);
+              return files.map(file => path.join(dir, file));
+            };
+
+            try {
+              const screenshots = getFiles('.maestro/screenshots');
+              const videos = getFiles('.maestro/videos');
+              
+              let comment = '### Test Run Media\n\n';
+              
+              if (screenshots.length > 0) {
+                comment += '#### Screenshots:\n';
+                screenshots.forEach(screenshot => {
+                  comment += `![Screenshot](${screenshot})\n`;
+                });
+              }
+              
+              if (videos.length > 0) {
+                comment += '#### Test Recordings:\n';
+                videos.forEach(video => {
+                  comment += `[Download Test Recording](${video})\n`;
+                });
+              }
+              
+              github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.name,
+                body: comment
+              });
+            } catch (error) {
+              console.log('Error creating media comment:', error);
+            }
