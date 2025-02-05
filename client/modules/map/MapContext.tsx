@@ -23,8 +23,8 @@ type MapContextType = {
   centerCoordinate: [number, number];
   zoomLevel: number;
 
-  pitchLevel:number;
-  setPitchLevel:(pitchLevel: number) => void;
+  pitchLevel: number;
+  setPitchLevel: (pitchLevel: number) => void;
 
   state: MapState;
   startLocation: Location | null;
@@ -48,14 +48,13 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [centerCoordinate, setCenterCoordinate] = useState<[number, number]>(DEFAULT_COORDINATES);
   const [zoomLevel, setZoomLevel] = useState(15);
 
-  const [pitchLevel, setPitchLevel] = useState(0)
+  const [pitchLevel, setPitchLevel] = useState(0);
 
   const [state, setState] = useState<MapState>(MapState.Idle);
 
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);
   const [routeCoordinates, setRouteCoordinates] = useState<Coordinates[]>([]);
-
 
   const flyTo = useMemo(
     () => (newCenterCoordinate: [number, number], newZoomLevel?: number) => {
@@ -64,7 +63,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           centerCoordinate: newCenterCoordinate,
           zoomLevel: newZoomLevel ?? zoomLevel,
           animationDuration: 2000,
-          pitch: pitchLevel
+          pitch: pitchLevel,
         });
         setCenterCoordinate(newCenterCoordinate);
         if (newZoomLevel) setZoomLevel(newZoomLevel);
@@ -116,15 +115,20 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       loadRoute,
     }),
 
-
-    [centerCoordinate, zoomLevel, state, startLocation, endLocation, routeCoordinates, flyTo,pitchLevel]
-
+    [
+      centerCoordinate,
+      zoomLevel,
+      state,
+      startLocation,
+      endLocation,
+      routeCoordinates,
+      flyTo,
+      pitchLevel,
+    ]
   );
 
   return <MapContext.Provider value={value}>{children}</MapContext.Provider>;
 };
-
-
 
 export const useMap = () => {
   const context = useContext(MapContext);
@@ -133,5 +137,3 @@ export const useMap = () => {
   }
   return context;
 };
-
-
