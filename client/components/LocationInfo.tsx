@@ -1,13 +1,14 @@
-import { MapState, useMap } from '@/modules/map/MapContext';
+import { MapState, useMap, Location } from '@/modules/map/MapContext';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react';
-import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Text, StyleSheet, View, TouchableOpacity, DevSettings } from 'react-native';
 let apiKey = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
 export function LocationInfo() {
-  const { endLocation, setState } = useMap();
+  const { endLocation, setState, setEndLocation } = useMap();
 
   const [address, setAddress] = useState("15 rue de l'artiste");
+  const [destLocation, setDestLocation] = useState<Location | null>(null);
   const [name, setName] = useState('No Name');
   const [isOpen, setIsOpen] = useState(false);
 
@@ -16,15 +17,25 @@ export function LocationInfo() {
   }, [endLocation]);
 
   async function fetchLocationData() {
-    const radius = 50;
+    const radius = 40;
     const apiUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${endLocation?.coordinates[1]},${endLocation?.coordinates[0]}&radius=${radius}&key=${apiKey}`;
+
     try {
       const response = await fetch(apiUrl);
       const data = await response.json();
+      let coords = [
+        data.results[0].geometry.location.lat,
+        data.results[0].geometry.location.lng,
+      ] as [number, number];
 
       if (data.results.length > 0) {
         setAddress(data.results[0]?.name || 'Address not available');
         setName(data.results[1]?.name || 'Name not available');
+
+        setDestLocation({
+          name: name,
+          coordinates: coords || 'Coordinates not available',
+        });
 
         let openOrNah = data.results[1].opening_hours;
         if (openOrNah) {
@@ -38,7 +49,7 @@ export function LocationInfo() {
 
   function getDirections() {
     setState(MapState.RoutePlanning);
-    // Logic for Route Planning will go here when we merge with Annabelle's changes
+    setEndLocation(destLocation);
   }
 
   return (

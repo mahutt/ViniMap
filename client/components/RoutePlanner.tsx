@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, TextInput, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
 
 export function RoutePlanner() {
-  const { setState, loadRoute } = useMap();
+  const { setState, loadRoute, setEndLocation, endLocation } = useMap();
   const [startLocationQuery, setStartLocationQuery] = React.useState<string>('');
   const [endLocationQuery, setEndLocationQuery] = React.useState<string>('');
 
@@ -18,6 +18,14 @@ export function RoutePlanner() {
     setStartLocationQuery(endLocationQuery);
     setEndLocationQuery(startLocationQuery);
   };
+
+  useEffect(() => {
+    if (endLocation) {
+      console.log('doing a thing');
+      console.log(endLocation);
+      setEndLocationQuery(endLocation.name as string);
+    }
+  }, [endLocation]);
 
   return (
     <View style={styles.locationRangeForm}>
