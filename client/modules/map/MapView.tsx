@@ -15,8 +15,9 @@ export default function MapView() {
     mapRef,
     cameraRef,
     centerCoordinate,
-    routeCoordinates,
     zoomLevel,
+    pitchLevel,
+    routeCoordinates,
   } = useMap();
 
   function onMapClick(event: any) {
@@ -38,7 +39,7 @@ export default function MapView() {
     <Mapbox.MapView
       ref={mapRef}
       style={styles.map}
-      styleURL={Mapbox.StyleURL.Street}
+      styleURL="mapbox://styles/ambrose821/cm6g7anat00kv01qmbxkze6i8"
       onPress={onMapClick}>
       <Mapbox.Camera
         ref={cameraRef}
@@ -46,6 +47,7 @@ export default function MapView() {
         centerCoordinate={centerCoordinate}
         animationMode="flyTo"
         animationDuration={2000}
+        pitch={pitchLevel}
       />
 
       {endLocation?.coordinates && (
