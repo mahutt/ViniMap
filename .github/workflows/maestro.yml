@@ -11,6 +11,8 @@ jobs:
     defaults:
       run:
         working-directory: ./client
+      env:
+        EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}
 
     steps:
       - name: Checkout code
@@ -18,19 +20,12 @@ jobs:
 
       - name: Setup Node
         uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
-          cache-dependency-path: './client/package-lock.json'
 
       - name: Install dependencies
         run: npm install
 
       - name: Setup Expo
         uses: expo/expo-github-action@v8
-        with:
-          expo-version: latest
-          token: ${{ secrets.EXPO_TOKEN }}
 
       - name: Prebuild iOS
         run: |
@@ -44,9 +39,7 @@ jobs:
           report: client/test-reports/report.xml
           screenshot-dir: client/.maestro/screenshots
           env: |
-            APP_ENV=testing
-            EXPO_USE_CUSTOM_PORTS=true
-            EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN=${{ secrets.MAPBOX_ACCESS_TOKEN }}
+            EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN=${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}
 
       - name: Upload Test Artifacts
         if: always()
