@@ -20,9 +20,10 @@ export default function HomeScreen() {
       {state === MapState.Idle && (
         <View style={styles.searchContainer}>
           <SearchBar onSearch={(query) => console.log(query)} />
+          <PitchButton></PitchButton>
         </View>
 
-        <PitchButton></PitchButton>
+       
     
  
 
