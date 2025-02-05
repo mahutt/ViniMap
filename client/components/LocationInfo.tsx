@@ -1,40 +1,10 @@
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
-let apiKey = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
 export function LocationInfo() {
   const { endLocation, setState } = useMap();
-
-  const [address, setAddress] = useState("15 rue de l'artiste");
-  const [name, setName] = useState('No Name');
-  const [isOpen, setIsOpen] = useState(false);
-
-  useEffect(() => {
-    fetchLocationData();
-  }, [endLocation]);
-
-  async function fetchLocationData() {
-    const radius = 50;
-    const apiUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${endLocation?.coordinates[1]},${endLocation?.coordinates[0]}&radius=${radius}&key=${apiKey}`;
-    try {
-      const response = await fetch(apiUrl);
-      const data = await response.json();
-
-      if (data.results.length > 0) {
-        setAddress(data.results[0]?.name || 'Address not available');
-        setName(data.results[1]?.name || 'Name not available');
-
-        let openOrNah = data.results[1].opening_hours;
-        if (openOrNah) {
-          setIsOpen(true);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  }
 
   function getDirections() {
     setState(MapState.RoutePlanning);
@@ -46,10 +16,10 @@ export function LocationInfo() {
       <TouchableOpacity style={styles.closeButton} onPress={() => setState(MapState.Idle)}>
         <Text style={styles.closeText}>×</Text>
       </TouchableOpacity>
-      <Text style={styles.nameText}>{name}</Text>
-      <Text style={styles.addressText}>{address}</Text>
-      <Text style={[styles.isOpen, { color: isOpen ? 'green' : 'red' }]}>
-        {isOpen ? 'Open Now' : 'Closed Now'}
+      <Text style={styles.nameText}>{endLocation?.name}</Text>
+      <Text style={styles.addressText}>{endLocation?.data?.address}</Text>
+      <Text style={[styles.isOpen, { color: endLocation?.data?.address ? 'green' : 'red' }]}>
+        {endLocation?.data?.address ? 'Open Now' : 'Closed Now'}
       </Text>
       <TouchableOpacity style={styles.button} onPress={getDirections}>
         <Ionicons name="arrow-forward-outline" size={24} color="#fff" style={styles.icon} />

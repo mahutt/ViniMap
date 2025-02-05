@@ -1,54 +1,51 @@
-import React from 'react';
-import { View, TextInput, StyleSheet, Pressable } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet, Pressable } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
+import LocationInput from './LocationInput';
 
 export function RoutePlanner() {
-  const { setState, loadRoute } = useMap();
-  const [startLocationQuery, setStartLocationQuery] = React.useState<string>('');
-  const [endLocationQuery, setEndLocationQuery] = React.useState<string>('');
+  const {
+    setState,
+    loadRouteFromCoordinates,
+    startLocation,
+    setStartLocation,
+    endLocation,
+    setEndLocation,
+  } = useMap();
 
-  const handleBlur = async () => {
-    if (startLocationQuery && endLocationQuery) {
-      await loadRoute(startLocationQuery, endLocationQuery);
+  useEffect(() => {
+    if (startLocation && endLocation) {
+      loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates);
     }
-  };
+  }, [startLocation, endLocation]);
 
   const swapLocations = () => {
-    setStartLocationQuery(endLocationQuery);
-    setEndLocationQuery(startLocationQuery);
+    setStartLocation(endLocation);
+    setEndLocation(startLocation);
   };
 
   return (
     <View style={styles.locationRangeForm}>
       <View style={styles.locationRangeFormRow}>
-        <View style={styles.locationInputContainer}>
-          <Ionicons name="pin-outline" size={16} color="#666" />
-          <TextInput
-            style={styles.input}
-            placeholder="Start location"
-            placeholderTextColor="#666"
-            value={startLocationQuery}
-            onChangeText={(query) => setStartLocationQuery(query)}
-            onBlur={handleBlur}
-          />
-        </View>
+        <LocationInput
+          location={startLocation}
+          setLocation={setStartLocation}
+          ionIconName="pin-outline"
+          placeholder="Start location"
+        />
         <Pressable onPress={() => setState(MapState.Idle)}>
           <Ionicons name="close-outline" size={28} color="#666" />
         </Pressable>
       </View>
+
       <View style={styles.locationRangeFormRow}>
-        <View style={styles.locationInputContainer}>
-          <Ionicons name="pin" size={16} color="#666" />
-          <TextInput
-            style={styles.input}
-            placeholder="End location"
-            placeholderTextColor="#666"
-            value={endLocationQuery}
-            onChangeText={(query) => setEndLocationQuery(query)}
-            onBlur={handleBlur}
-          />
-        </View>
+        <LocationInput
+          location={endLocation}
+          setLocation={setEndLocation}
+          ionIconName="pin"
+          placeholder="End location"
+        />
         <Pressable onPress={swapLocations}>
           <Ionicons name="swap-vertical-outline" size={28} color="#666" />
         </Pressable>
@@ -77,21 +74,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-  },
-  locationInputContainer: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-    paddingHorizontal: 10,
-    borderColor: '#999',
-    borderWidth: 1,
-    borderRadius: 12,
-  },
-  input: {
-    flex: 1,
-    paddingVertical: 10,
-    fontSize: 16,
   },
 });
