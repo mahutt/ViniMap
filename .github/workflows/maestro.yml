@@ -8,11 +8,11 @@ jobs:
   e2e-tests:
     name: Maestro E2E Tests
     runs-on: macos-latest
+    env:
+      EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}
     defaults:
       run:
         working-directory: ./client
-      env:
-        EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN: ${{ secrets.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN }}
 
     steps:
       - name: Checkout code
