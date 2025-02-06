@@ -15,11 +15,6 @@ export function RoutePlanner() {
   } = useMap();
 
   useEffect(() => {
-    if (endLocation && !startLocation) {
-    }
-  }, [endLocation, startLocation]);
-
-  useEffect(() => {
     if (startLocation && endLocation) {
       loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates);
     }
