@@ -1,8 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useState, useEffect } from 'react';
-import { MapState, useMap } from '@/modules/map/MapContext';
+import { useMap } from '@/modules/map/MapContext';
 import * as Location from 'expo-location';
 
 const CenterLocationComponent = () => {
