@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useRef, useState, useMemo } from 'react';
 import Mapbox from '@rnmapbox/maps';
-import { getLocationCoordinates, getRoute } from './MapService';
+import { getRoute } from './MapService';
 
 export type Coordinates = [number, number];
 export interface Location {
@@ -31,17 +31,16 @@ type MapContextType = {
   startLocation: Location | null;
   endLocation: Location | null;
   routeCoordinates: Coordinates[];
-
   setCenterCoordinate: (centerCoordinate: [number, number]) => void;
   setZoomLevel: (zoomLevel: number) => void;
   setState: (state: MapState) => void;
   setStartLocation: (startLocation: Location | null) => void;
   setEndLocation: (endLocation: Location | null) => void;
   flyTo: (coords: [number, number], zoomLevel?: number) => void;
-  loadRoute: (startLocationQuery: string, endLocationQuery: string) => Promise<void>;
   loadRouteFromCoordinates: (
     startCoordinates: Coordinates,
-    endCoordinates: Coordinates
+    endCoordinates: Coordinates,
+    mode?: string
   ) => Promise<void>;
 };
 
@@ -52,9 +51,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const cameraRef = useRef<Mapbox.Camera | null>(null);
   const [centerCoordinate, setCenterCoordinate] = useState<[number, number]>(DEFAULT_COORDINATES);
   const [zoomLevel, setZoomLevel] = useState(15);
-
   const [pitchLevel, setPitchLevel] = useState(0);
-
   const [state, setState] = useState<MapState>(MapState.Idle);
 
   const [startLocation, setStartLocation] = useState<Location | null>(null);
@@ -77,36 +74,18 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     [zoomLevel]
   );
 
-  const loadRoute = async (startLocationQuery: string, endLocationQuery: string): Promise<void> => {
-    return Promise.all([
-      getLocationCoordinates(startLocationQuery),
-      getLocationCoordinates(endLocationQuery),
-    ])
-      .then(([newStartLocation, newEndLocation]) => {
-        if (newStartLocation && newEndLocation) {
-          setStartLocation(newStartLocation);
-          setEndLocation(newEndLocation);
-          return getRoute(newStartLocation.coordinates, newEndLocation.coordinates);
-        }
-      })
-      .then((newRouteCoordinates) => {
-        if (newRouteCoordinates) {
-          setRouteCoordinates(newRouteCoordinates);
-        }
-      })
-      .catch((error) => {
-        console.error('Error setting route:', error);
-      });
-  };
-
   const loadRouteFromCoordinates = async (
     startCoordinates: Coordinates,
-    endCoordinates: Coordinates
+    endCoordinates: Coordinates,
+    mode = 'walking'
   ): Promise<void> => {
-    return getRoute(startCoordinates, endCoordinates)
-      .then((newRouteCoordinates) => {
-        if (newRouteCoordinates) {
-          setRouteCoordinates(newRouteCoordinates);
+    return getRoute(startCoordinates, endCoordinates, mode)
+      .then((data) => {
+        if (data.coordinates) {
+          if (data.coordinates.length > 0) {
+            flyTo(data.coordinates[0], zoomLevel);
+          }
+          setRouteCoordinates(data.coordinates);
         }
       })
       .catch((error) => {
@@ -132,7 +111,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setStartLocation,
       setEndLocation,
       flyTo,
-      loadRoute,
       loadRouteFromCoordinates,
     }),
 

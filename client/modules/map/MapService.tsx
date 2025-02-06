@@ -3,11 +3,10 @@ const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as strin
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
 const getLocationCoordinates = async (locationQuery: string): Promise<Location | null> => {
-  const response = await fetch(
-    `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
-      locationQuery
-    )}&access_token=${MAPBOX_ACCESS_TOKEN}`
-  );
+  const url = `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
+    locationQuery
+  )}&access_token=${MAPBOX_ACCESS_TOKEN}`;
+  const response = await fetch(url);
   const data = await response.json();
   if (data?.features[0]) {
     const feature = data.features[0];
@@ -37,16 +36,25 @@ const getLocations = async (locationQuery: string): Promise<Location[]> => {
 
 const getRoute = async (
   startCoordinates: Coordinates,
-  endCoordinates: Coordinates
-): Promise<Coordinates[] | null> => {
-  const response = await fetch(
-    `https://api.mapbox.com/directions/v5/mapbox/driving/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?geometries=geojson&access_token=${MAPBOX_ACCESS_TOKEN}`
-  );
+  endCoordinates: Coordinates,
+  mode: string
+): Promise<{
+  coordinates: Coordinates[] | null;
+  duration: number | null;
+  distance: number | null;
+}> => {
+  const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?alternatives=false&annotations=duration,distance&continue_straight=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_ACCESS_TOKEN}`;
+  const response = await fetch(url);
   const data = await response.json();
   if (data?.routes[0]) {
-    return data.routes[0].geometry.coordinates as Coordinates[];
+    const route = data.routes[0];
+    return {
+      coordinates: route.geometry.coordinates as Coordinates[],
+      duration: route.duration,
+      distance: route.distance,
+    };
   }
-  return null;
+  return { coordinates: null, duration: null, distance: null };
 };
 
 const fetchLocationData = async (coordinates: Coordinates) => {
