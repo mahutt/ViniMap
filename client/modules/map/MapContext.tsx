@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useRef, useState, useMemo } from 'react';
 import Mapbox from '@rnmapbox/maps';
 import { getRoute } from './MapService';
+import { Coordinates } from '@/Types/Coordinate';
+import RouteService from '@/Services/RouteService';
 
-export type Coordinates = [number, number];
 export interface Location {
   name: string | null;
   coordinates: Coordinates;
@@ -15,7 +16,6 @@ export enum MapState {
   Information,
 }
 
-// downtown concordia campus (sgw)
 const DEFAULT_COORDINATES: Coordinates = [-73.5789, 45.4973];
 
 type MapContextType = {
@@ -71,7 +71,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         if (newZoomLevel) setZoomLevel(newZoomLevel);
       }
     },
-    [zoomLevel]
+    [zoomLevel, pitchLevel]
   );
 
   const loadRouteFromCoordinates = async (
@@ -113,7 +113,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       flyTo,
       loadRouteFromCoordinates,
     }),
-
     [
       centerCoordinate,
       zoomLevel,
@@ -136,3 +135,4 @@ export const useMap = () => {
   }
   return context;
 };
+export { Coordinates };

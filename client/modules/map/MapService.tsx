@@ -1,3 +1,4 @@
+import RouteService from '@/Services/RouteService';
 import { Coordinates, Location } from './MapContext';
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
@@ -43,6 +44,10 @@ const getRoute = async (
   duration: number | null;
   distance: number | null;
 }> => {
+  if (mode === 'shuttle') {
+    return RouteService.getRouteForShuttle(startCoordinates, endCoordinates);
+  }
+
   const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?alternatives=false&annotations=duration,distance&continue_straight=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_ACCESS_TOKEN}`;
   const response = await fetch(url);
   const data = await response.json();
