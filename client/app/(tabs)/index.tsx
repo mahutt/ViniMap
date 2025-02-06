@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
 
-//keep ../../comp... b/c it is needed to compile on irl iphone
+// Relative import for iPhone build
 import { SearchBar } from '../../components/SearchBar';
 import MapView from '@/modules/map/MapView';
 
@@ -20,12 +20,12 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <MapView />
       {(state === MapState.Idle || state === MapState.Information) && (
-        <View>
-          <CenterLocationComponent />
+        <>
           <SearchBar onSearch={(query) => console.log(query)} />
           <PitchButton />
-        </View> 
+        </>
       )}
+      {state === MapState.Idle && <CenterLocationComponent />}
       {state === MapState.Information && <LocationInfo />}
       {state === MapState.RoutePlanning && <RoutePlanner />}
     </View>

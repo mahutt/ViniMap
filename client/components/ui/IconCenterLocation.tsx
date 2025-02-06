@@ -18,14 +18,9 @@ const CenterLocationComponent = () => {
     currentLatitude = currentLocation.coords.latitude;
     currentLongitude = currentLocation.coords.longitude;
   };
-  const { centerCoordinate, setCenterCoordinate } = useMap();
+  const { setCenterCoordinate } = useMap();
   const handlePress = async () => {
-    // Wait for getPermissions to complete before executing the following code
     await getPermissions();
-
-    // Once permissions are granted and location is retrieved, move the map
-    console.log('Coordinates:', currentLatitude, currentLongitude);
-    // Set the center of the map and fly to the new coordinates
     setCenterCoordinate([currentLatitude, currentLongitude]);
     flyTo([currentLongitude, currentLatitude]);
   };
@@ -33,7 +28,7 @@ const CenterLocationComponent = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.button} onPress={handlePress}>
-        <Ionicons name="locate" size={24} color="white" /> {}
+        <Ionicons name="locate" size={24} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -42,8 +37,8 @@ const CenterLocationComponent = () => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    top: 700,
-    right: 0,
+    bottom: 100,
+    right: 36,
     backgroundColor: '#852C3A',
     zIndex: 100,
     borderRadius: 50,
