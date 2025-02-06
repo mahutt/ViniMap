@@ -264,7 +264,7 @@ export function RoutePlanner() {
                     : 0}{' '}
                 </Text>
                 <Text style={styles.infoText}>
-                  ({durations[selectedMode] ? (durations[selectedMode] / 1000).toFixed(2) : 0} km){' '}
+                  ({(Number(distances[selectedMode]) / 1000).toFixed(2)} km){' '}
                 </Text>
                 <View style={styles.modeIcon2}>{getModeIcon(selectedMode)}</View>
               </Text>
