@@ -56,7 +56,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const cameraRef = useRef<Mapbox.Camera | null>(null);
   const [centerCoordinate, setCenterCoordinate] = useState<[number, number]>(DEFAULT_COORDINATES);
   const [zoomLevel, setZoomLevel] = useState(15);
-  const [mode, setMode] = useState<string>('walking');
   const [pitchLevel, setPitchLevel] = useState(0);
   const [state, setState] = useState<MapState>(MapState.RoutePlanning);
 
@@ -150,11 +149,9 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       startLocation,
       endLocation,
       routeCoordinates,
-      mode,
       setCenterCoordinate,
       setZoomLevel,
       setState,
-      setMode,
       setStartLocation,
       setEndLocation,
       flyTo,
@@ -170,7 +167,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       endLocation,
       routeCoordinates,
       flyTo,
-      mode,
       pitchLevel,
     ]
   );
