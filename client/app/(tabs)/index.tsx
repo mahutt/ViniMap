@@ -20,12 +20,11 @@ export default function HomeScreen() {
         <>
           <SearchBar onSearch={(query) => console.log(query)} />
           <PitchButton></PitchButton>
-          <ToggleCampusButton/>
+          <ToggleCampusButton />
         </>
       )}
       {state === MapState.Information && <LocationInfo />}
       {state === MapState.RoutePlanning && <RoutePlanner />}
-  
     </View>
   );
 }
@@ -35,6 +34,4 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-
 });
-
