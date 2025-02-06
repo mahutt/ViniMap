@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import {
   View,
-  TextInput,
   StyleSheet,
   Pressable,
   ScrollView,
@@ -11,13 +10,10 @@ import {
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
-import MapView from '@/modules/map/MapView';
 import { getRoute } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
 
 export function RoutePlanner() {
-  const [startLocationQuery, setStartLocationQuery] = React.useState<string>('');
-  const [endLocationQuery, setEndLocationQuery] = React.useState<string>('');
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
     walking: null,
     cycling: null,
@@ -28,29 +24,26 @@ export function RoutePlanner() {
   const slideAnim = React.useRef(new Animated.Value(500)).current;
   const {
     setState,
-    loadRoute,
-    setMode,
     loadRouteFromCoordinates,
     startLocation,
     setStartLocation,
     endLocation,
     setEndLocation,
-    duration,
-    distance,
   } = useMap();
 
   useEffect(() => {
     if (startLocation && endLocation) {
-      loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates);
+      loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates, selectedMode);
+      calculateOptions();
     }
-  }, [startLocation, endLocation]);
+  }, [startLocation, endLocation, selectedMode]);
 
   const swapLocations = () => {
     setStartLocation(endLocation);
     setEndLocation(startLocation);
   };
 
-  const handleBlur = async () => {
+  const calculateOptions = async () => {
     if (startLocation !== null && endLocation !== null) {
       try {
         const cyclingRoute = await getRoute(
@@ -77,8 +70,6 @@ export function RoutePlanner() {
 
         if (walkingRoute || cyclingRoute || drivingRoute) {
           setIsRouteFound(true);
-          setSelectedMode('walking');
-          setMode('walking');
           slideDown();
         } else {
           setIsRouteFound(false);
@@ -90,19 +81,7 @@ export function RoutePlanner() {
   };
 
   const handleTransportMode = async (profile: string) => {
-    setMode(profile);
     setSelectedMode(profile);
-    if (startLocationQuery && endLocationQuery) {
-      try {
-        const route = await loadRoute(startLocationQuery, endLocationQuery, profile);
-        if (route) {
-          setIsRouteFound(true);
-          slideDown();
-        }
-      } catch (error) {
-        console.error('Error setting route:', error);
-      }
-    }
   };
 
   const slideUp = () => {
@@ -162,79 +141,79 @@ export function RoutePlanner() {
   };
 
   return (
-    <View style={styles.container}>
-      {/* <View style={styles.inputContainer}> */}
+    <>
+      <View style={styles.inputContainer}>
+        <View style={styles.locationRangeForm}>
+          <View style={styles.locationRangeFormRow}>
+            <LocationInput
+              location={startLocation}
+              setLocation={setStartLocation}
+              ionIconName="pin-outline"
+              placeholder="Start location"
+            />
+            <Pressable onPress={() => setState(MapState.Idle)}>
+              <Ionicons name="close-outline" size={28} color="#666" />
+            </Pressable>
+          </View>
 
-      <View style={styles.locationRangeForm}>
-        <View style={styles.locationRangeFormRow}>
-          <LocationInput
-            location={startLocation}
-            setLocation={setStartLocation}
-            ionIconName="pin-outline"
-            placeholder="Start location"
-          />
-          <Pressable onPress={() => setState(MapState.Idle)}>
-            <Ionicons name="close-outline" size={28} color="#666" />
-          </Pressable>
+          <View style={styles.locationRangeFormRow}>
+            <LocationInput
+              location={endLocation}
+              setLocation={setEndLocation}
+              ionIconName="pin"
+              placeholder="End location"
+            />
+            <Pressable onPress={swapLocations}>
+              <Ionicons name="swap-vertical-outline" size={28} color="#666" />
+            </Pressable>
+          </View>
+
+          <ScrollView horizontal contentContainerStyle={styles.transportModeContainer}>
+            <Pressable
+              style={[
+                styles.transportButton,
+                isRouteFound && selectedMode === 'walking' && styles.activeTransportButton,
+              ]}
+              onPress={() => handleTransportMode('walking')}>
+              <Ionicons name="walk-outline" size={24} color="#666" />
+              {durations.walking !== null && <Text>{Math.round(durations.walking / 60)} min</Text>}
+            </Pressable>
+            <Pressable
+              style={[
+                styles.transportButton,
+                isRouteFound && selectedMode === 'cycling' && styles.activeTransportButton,
+              ]}
+              onPress={() => handleTransportMode('cycling')}>
+              <Ionicons name="bicycle-outline" size={24} color="#666" />
+              {durations.cycling !== null && <Text>{Math.round(durations.cycling / 60)} min</Text>}
+            </Pressable>
+            <Pressable
+              style={[
+                styles.transportButton,
+                isRouteFound && selectedMode === 'driving' && styles.activeTransportButton,
+              ]}
+              onPress={() => handleTransportMode('driving')}>
+              <Ionicons name="car-outline" size={24} color="#666" />
+              {durations.driving !== null && <Text>{Math.round(durations.driving / 60)} min</Text>}
+            </Pressable>
+            <Pressable
+              style={[
+                styles.transportButton,
+                isRouteFound && selectedMode === 'wheelchair' && styles.activeTransportButton,
+              ]}
+              onPress={() => handleTransportMode('wheelchair')}>
+              <MaterialCommunityIcons name="wheelchair-accessibility" size={24} color="#666" />
+            </Pressable>
+            <Pressable
+              style={[
+                styles.transportButton,
+                isRouteFound && selectedMode === 'shuttle' && styles.activeTransportButton,
+              ]}
+              onPress={() => handleTransportMode('shuttle')}>
+              <Ionicons name="bus-outline" size={24} color="#666" />
+            </Pressable>
+          </ScrollView>
         </View>
-
-        <View style={styles.locationRangeFormRow}>
-          <LocationInput
-            location={endLocation}
-            setLocation={setEndLocation}
-            ionIconName="pin"
-            placeholder="End location"
-          />
-          <Pressable onPress={swapLocations}>
-            <Ionicons name="swap-vertical-outline" size={28} color="#666" />
-          </Pressable>
-        </View>
-
-        <ScrollView horizontal contentContainerStyle={styles.transportModeContainer}>
-          <Pressable
-            style={[
-              styles.transportButton,
-              isRouteFound && selectedMode === 'walking' && styles.activeTransportButton,
-            ]}
-            onPress={() => handleTransportMode('walking')}>
-            <Ionicons name="walk-outline" size={24} color="#666" />
-            {durations.walking !== null && <Text>{Math.round(durations.walking / 60)} min</Text>}
-          </Pressable>
-          <Pressable
-            style={[
-              styles.transportButton,
-              isRouteFound && selectedMode === 'cycling' && styles.activeTransportButton,
-            ]}
-            onPress={() => handleTransportMode('cycling')}>
-            <Ionicons name="bicycle-outline" size={24} color="#666" />
-            {durations.cycling !== null && <Text>{Math.round(durations.cycling / 60)} min</Text>}
-          </Pressable>
-          <Pressable
-            style={[
-              styles.transportButton,
-              isRouteFound && selectedMode === 'driving' && styles.activeTransportButton,
-            ]}
-            onPress={() => handleTransportMode('driving')}>
-            <Ionicons name="car-outline" size={24} color="#666" />
-            {durations.driving !== null && <Text>{Math.round(durations.driving / 60)} min</Text>}
-          </Pressable>
-          <Pressable
-            style={[
-              styles.transportButton,
-              isRouteFound && selectedMode === 'wheelchair' && styles.activeTransportButton,
-            ]}
-            onPress={() => handleTransportMode('wheelchair')}>
-            <MaterialCommunityIcons name="wheelchair-accessibility" size={24} color="#666" />
-          </Pressable>
-          <Pressable
-            style={[
-              styles.transportButton,
-              isRouteFound && selectedMode === 'shuttle' && styles.activeTransportButton,
-            ]}
-            onPress={() => handleTransportMode('shuttle')}>
-            <Ionicons name="bus-outline" size={24} color="#666" />
-          </Pressable>
-        </ScrollView>
       </View>
 
       {isRouteFound && (
@@ -271,22 +250,14 @@ export function RoutePlanner() {
           </View>
         </Animated.View>
       )}
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    flex: 0,
-    top: 0,
-    paddingTop: 70,
-    backgroundColor: 'white',
-    width: '100%',
-  },
   inputContainer: {
     position: 'absolute',
-    top: 70,
+    paddingTop: 70,
     left: 0,
     right: 0,
     zIndex: 10,
@@ -353,8 +324,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -2 },
     shadowRadius: 5,
     elevation: 5,
-    top: 750, //change to 500 when we want drawer functionality
-    height: 2000,
+    height: 220,
   },
   boldText: {
     fontWeight: 'bold',
@@ -374,12 +344,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   infoContent: {
-    alignItems: 'center', // Ensures vertical alignment
+    alignItems: 'center',
     paddingHorizontal: 10,
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%',
-    paddingVertical: 10, // Add padding to prevent clipping
+    paddingVertical: 10,
   },
 
   modeIcon2: {

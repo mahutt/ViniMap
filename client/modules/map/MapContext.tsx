@@ -31,10 +31,8 @@ type MapContextType = {
   startLocation: Location | null;
   endLocation: Location | null;
   routeCoordinates: Coordinates[];
-  mode: string;
   duration: number | null;
   distance: number | null;
-  setMode: (mode: string) => void;
   setCenterCoordinate: (centerCoordinate: [number, number]) => void;
   setZoomLevel: (zoomLevel: number) => void;
   setState: (state: MapState) => void;
@@ -48,7 +46,8 @@ type MapContextType = {
   ) => Promise<{ duration: number; distance: number } | void>;
   loadRouteFromCoordinates: (
     startCoordinates: Coordinates,
-    endCoordinates: Coordinates
+    endCoordinates: Coordinates,
+    mode?: string
   ) => Promise<void>;
 };
 
@@ -61,7 +60,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [zoomLevel, setZoomLevel] = useState(15);
   const [mode, setMode] = useState<string>('walking');
   const [pitchLevel, setPitchLevel] = useState(0);
-  const [state, setState] = useState<MapState>(MapState.Idle);
+  const [state, setState] = useState<MapState>(MapState.RoutePlanning);
 
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);
@@ -128,11 +127,15 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const loadRouteFromCoordinates = async (
     startCoordinates: Coordinates,
-    endCoordinates: Coordinates
+    endCoordinates: Coordinates,
+    mode = 'walking'
   ): Promise<void> => {
     return getRoute(startCoordinates, endCoordinates, mode)
       .then((data) => {
         if (data.coordinates) {
+          if (data.coordinates.length > 0) {
+            flyTo(data.coordinates[0], zoomLevel);
+          }
           setRouteCoordinates(data.coordinates);
         }
       })
