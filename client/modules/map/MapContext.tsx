@@ -57,7 +57,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [centerCoordinate, setCenterCoordinate] = useState<[number, number]>(DEFAULT_COORDINATES);
   const [zoomLevel, setZoomLevel] = useState(15);
   const [pitchLevel, setPitchLevel] = useState(0);
-  const [state, setState] = useState<MapState>(MapState.RoutePlanning);
+  const [state, setState] = useState<MapState>(MapState.Idle);
 
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);

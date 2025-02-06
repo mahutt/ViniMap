@@ -100,21 +100,22 @@ export function RoutePlanner() {
     }).start();
   };
 
-  const panResponder = React.useRef(
-    PanResponder.create({
-      onMoveShouldSetPanResponder: (_, gestureState) => true,
-      onPanResponderMove: (_, gestureState) => {
-        slideAnim.setValue(Math.min(gestureState.dy, 500));
-      },
-      onPanResponderRelease: (_, gestureState) => {
-        if (gestureState.dy > 100) {
-          slideDown();
-        } else {
-          slideUp();
-        }
-      },
-    })
-  ).current;
+  //   Future code for drawer slide up and down
+  //   const panResponder = React.useRef(
+  //     PanResponder.create({
+  //       onMoveShouldSetPanResponder: (_, gestureState) => true,
+  //       onPanResponderMove: (_, gestureState) => {
+  //         slideAnim.setValue(Math.min(gestureState.dy, 500));
+  //       },
+  //       onPanResponderRelease: (_, gestureState) => {
+  //         if (gestureState.dy > 100) {
+  //           slideDown();
+  //         } else {
+  //           slideUp();
+  //         }
+  //       },
+  //     })
+  //   ).current;
 
   const getModeIcon = (mode: string) => {
     switch (mode) {
