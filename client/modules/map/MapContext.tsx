@@ -37,11 +37,6 @@ type MapContextType = {
   setStartLocation: (startLocation: Location | null) => void;
   setEndLocation: (endLocation: Location | null) => void;
   flyTo: (coords: [number, number], zoomLevel?: number) => void;
-  loadRoute: (
-    startLocationQuery: string,
-    endLocationQuery: string,
-    mode: string
-  ) => Promise<{ duration: number; distance: number } | void>;
   loadRouteFromCoordinates: (
     startCoordinates: Coordinates,
     endCoordinates: Coordinates,
@@ -78,45 +73,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     },
     [zoomLevel]
   );
-
-  const loadRoute = async (
-    startLocationQuery: string,
-    endLocationQuery: string,
-    mode: string
-  ): Promise<{ duration: number; distance: number } | void> => {
-    try {
-      const [newStartLocation, newEndLocation] = await Promise.all([
-        getLocationCoordinates(startLocationQuery),
-        getLocationCoordinates(endLocationQuery),
-      ]);
-
-      if (newStartLocation && newEndLocation) {
-        setStartLocation(newStartLocation);
-        setEndLocation(newEndLocation);
-
-        try {
-          const { coordinates, duration, distance } = await getRoute(
-            newStartLocation.coordinates,
-            newEndLocation.coordinates,
-            mode
-          );
-          if (coordinates) {
-            setRouteCoordinates(coordinates);
-            if (coordinates.length > 0) {
-              flyTo(coordinates[0], zoomLevel);
-            }
-            return { duration: duration ?? 0, distance: distance ?? 0 };
-          } else {
-            console.error('No route found between the specified locations.');
-          }
-        } catch (routeError) {
-          console.error('Error fetching route coordinates:', routeError);
-        }
-      }
-    } catch (locationError) {
-      console.error('Error fetching location coordinates:', locationError);
-    }
-  };
 
   const loadRouteFromCoordinates = async (
     startCoordinates: Coordinates,
@@ -155,7 +111,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setStartLocation,
       setEndLocation,
       flyTo,
-      loadRoute,
       loadRouteFromCoordinates,
     }),
 
