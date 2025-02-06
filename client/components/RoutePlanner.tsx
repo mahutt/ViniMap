@@ -84,6 +84,7 @@ export function RoutePlanner() {
     setSelectedMode(profile);
   };
 
+  //   Future code for drawer slide up and down
   //   const slideUp = () => {
   //     Animated.timing(slideAnim, {
   //       toValue: 0,
