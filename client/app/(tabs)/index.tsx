@@ -9,6 +9,7 @@ import PitchButton from '@/modules/map/PitchButton';
 import { useMap, MapState } from '@/modules/map/MapContext';
 import { LocationInfo } from '@/components/LocationInfo';
 import { RoutePlanner } from '@/components/RoutePlanner';
+import ToggleCampusButton from '@/components/ui/ToggleCampusButton';
 
 export default function HomeScreen() {
   const { state } = useMap();
@@ -19,10 +20,12 @@ export default function HomeScreen() {
         <>
           <SearchBar onSearch={(query) => console.log(query)} />
           <PitchButton></PitchButton>
+          <ToggleCampusButton/>
         </>
       )}
       {state === MapState.Information && <LocationInfo />}
       {state === MapState.RoutePlanning && <RoutePlanner />}
+  
     </View>
   );
 }
@@ -32,4 +35,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+
 });
+
