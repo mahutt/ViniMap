@@ -14,18 +14,17 @@ import CenterLocationComponent from '@/components/ui/IconCenterLocation';
 import { LocationInfo } from '@/components/LocationInfo';
 import { RoutePlanner } from '@/components/RoutePlanner';
 
-
 export default function HomeScreen() {
   const { state } = useMap();
   return (
     <View style={styles.container}>
       <MapView />
       {(state === MapState.Idle || state === MapState.Information) && (
-        <View style={styles.searchContainer}>
+        <View>
           <CenterLocationComponent />
           <SearchBar onSearch={(query) => console.log(query)} />
-          <PitchButton></PitchButton>
-        </>
+          <PitchButton />
+        </View> 
       )}
       {state === MapState.Information && <LocationInfo />}
       {state === MapState.RoutePlanning && <RoutePlanner />}
