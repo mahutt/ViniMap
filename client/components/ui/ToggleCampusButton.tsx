@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, StyleProp, ViewStyle } from "react-native";
-import { useMap } from "@/modules/map/MapContext"; // Import the hook to access map functions
+import { useMap } from "@/modules/map/MapContext"; 
 
 interface ToggleCampusButtonProps {
-  style?: StyleProp<ViewStyle>; // Properly type the style prop
+  style?: StyleProp<ViewStyle>; 
 }
 
 const ToggleCampusButton: React.FC<ToggleCampusButtonProps> = ({ style }) => {
   const [selectedLocation, setSelectedLocation] = useState<"SGW" | "LOY">("SGW");
-  const { flyTo } = useMap(); // Access the flyTo function
+  const { flyTo } = useMap();
 
   const SGW_COORDINATES: [number, number] = [-73.5789, 45.4973];
   const LOY_COORDINATES: [number, number] = [-73.6391, 45.4581];
