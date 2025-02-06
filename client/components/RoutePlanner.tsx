@@ -1,5 +1,14 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Pressable, ScrollView, Text, Animated, PanResponder } from 'react-native';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  Text,
+  Animated,
+  PanResponder,
+} from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import MapView from '@/modules/map/MapView';
@@ -80,7 +89,6 @@ export function RoutePlanner() {
     }).start();
   };
 
-
   const panResponder = React.useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (_, gestureState) => true,
@@ -106,7 +114,14 @@ export function RoutePlanner() {
       case 'driving':
         return <Ionicons name="car-outline" size={24} color="#666" style={styles.modeIcon} />;
       case 'wheelchair':
-        return <MaterialCommunityIcons name="wheelchair-accessibility" size={24} color="#666" style={styles.modeIcon} />;
+        return (
+          <MaterialCommunityIcons
+            name="wheelchair-accessibility"
+            size={24}
+            color="#666"
+            style={styles.modeIcon}
+          />
+        );
       case 'shuttle':
         return <Ionicons name="bus-outline" size={24} color="#666" style={styles.modeIcon} />;
       default:
@@ -157,8 +172,7 @@ export function RoutePlanner() {
               styles.transportButton,
               isRouteFound && selectedMode === 'walking' && styles.activeTransportButton,
             ]}
-            onPress={() => handleTransportMode('walking')}
-          >
+            onPress={() => handleTransportMode('walking')}>
             <Ionicons name="walk-outline" size={24} color="#666" />
             {durations.walking !== null && <Text>{Math.round(durations.walking / 60)} min</Text>}
           </Pressable>
@@ -167,8 +181,7 @@ export function RoutePlanner() {
               styles.transportButton,
               isRouteFound && selectedMode === 'cycling' && styles.activeTransportButton,
             ]}
-            onPress={() => handleTransportMode('cycling')}
-          >
+            onPress={() => handleTransportMode('cycling')}>
             <Ionicons name="bicycle-outline" size={24} color="#666" />
             {durations.cycling !== null && <Text>{Math.round(durations.cycling / 60)} min</Text>}
           </Pressable>
@@ -177,8 +190,7 @@ export function RoutePlanner() {
               styles.transportButton,
               isRouteFound && selectedMode === 'driving' && styles.activeTransportButton,
             ]}
-            onPress={() => handleTransportMode('driving')}
-          >
+            onPress={() => handleTransportMode('driving')}>
             <Ionicons name="car-outline" size={24} color="#666" />
             {durations.driving !== null && <Text>{Math.round(durations.driving / 60)} min</Text>}
           </Pressable>
@@ -187,8 +199,7 @@ export function RoutePlanner() {
               styles.transportButton,
               isRouteFound && selectedMode === 'wheelchair' && styles.activeTransportButton,
             ]}
-            onPress={() => handleTransportMode('wheelchair')}
-          >
+            onPress={() => handleTransportMode('wheelchair')}>
             <MaterialCommunityIcons name="wheelchair-accessibility" size={24} color="#666" />
           </Pressable>
           <Pressable
@@ -196,8 +207,7 @@ export function RoutePlanner() {
               styles.transportButton,
               isRouteFound && selectedMode === 'shuttle' && styles.activeTransportButton,
             ]}
-            onPress={() => handleTransportMode('shuttle')}
-          >
+            onPress={() => handleTransportMode('shuttle')}>
             <Ionicons name="bus-outline" size={24} color="#666" />
           </Pressable>
         </ScrollView>
@@ -207,26 +217,34 @@ export function RoutePlanner() {
         <Animated.View
           style={[
             styles.infoContainer,
-           // { transform: [{ translateY: slideAnim }] },
+            // { transform: [{ translateY: slideAnim }] },
           ]}
           //{...panResponder.panHandlers}
         >
-         <View style={styles.infoWrapper}>
-          <View style={styles.slideIndicator} />
+          <View style={styles.infoWrapper}>
+            <View style={styles.slideIndicator} />
             <View style={styles.infoContent}>
-                <Text style={styles.infoText}>
-                  <Text style={styles.boldText}>{durations[selectedMode] !== null ? Math.round(durations[selectedMode] / 60) : 0} min  </Text> 
-                  <Text style={styles.infoText}>({durations[selectedMode] ? (durations[selectedMode] / 1000).toFixed(2) : 0} km)  </Text> 
-                    <View style={styles.modeIcon2}>
-                      {getModeIcon(selectedMode)}
-                    </View>
+              <Text style={styles.infoText}>
+                <Text style={styles.boldText}>
+                  {durations[selectedMode] !== null ? Math.round(durations[selectedMode] / 60) : 0}{' '}
+                  min{' '}
                 </Text>
+                <Text style={styles.infoText}>
+                  ({durations[selectedMode] ? (durations[selectedMode] / 1000).toFixed(2) : 0} km){' '}
+                </Text>
+                <View style={styles.modeIcon2}>{getModeIcon(selectedMode)}</View>
+              </Text>
               <Pressable style={styles.startButton} onPress={() => {}}>
-                <Ionicons name="navigate-outline" size={16} color="white" style={styles.startButtonIcon} />
+                <Ionicons
+                  name="navigate-outline"
+                  size={16}
+                  color="white"
+                  style={styles.startButtonIcon}
+                />
                 <Text style={styles.startButtonText}>Start</Text>
               </Pressable>
             </View>
-        </View>
+          </View>
         </Animated.View>
       )}
     </View>
@@ -247,7 +265,7 @@ const styles = StyleSheet.create({
     top: 70,
     left: 0,
     right: 0,
-    zIndex: 10, 
+    zIndex: 10,
     backgroundColor: 'white',
     paddingVertical: 10,
   },
@@ -283,14 +301,14 @@ const styles = StyleSheet.create({
     padding: 15,
     marginTop: 5,
     flexDirection: 'row',
-    justifyContent: 'space-evenly', 
+    justifyContent: 'space-evenly',
     alignItems: 'center',
-    width: '100%'
+    width: '100%',
   },
   transportButton: {
-    flex: 1, 
+    flex: 1,
     alignItems: 'center',
-    paddingVertical: 5, 
+    paddingVertical: 5,
   },
   activeTransportButton: {
     backgroundColor: '#ddd',
@@ -301,7 +319,7 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    zIndex: 10, 
+    zIndex: 10,
     backgroundColor: 'white',
     padding: 20,
     borderTopLeftRadius: 20,
@@ -318,7 +336,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   infoWrapper: {
-    alignItems: 'flex-start', 
+    alignItems: 'flex-start',
     width: '100%',
     marginBottom: 0,
     padding: 10,
@@ -339,12 +357,12 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 10, // Add padding to prevent clipping
   },
-  
+
   modeIcon2: {
-    marginTop: 5, 
+    marginTop: 5,
     alignSelf: 'center',
   },
-  
+
   infoText: {
     fontSize: 20,
     color: '#333',

@@ -31,7 +31,11 @@ const getRoute = async (
   startCoordinates: Coordinates,
   endCoordinates: Coordinates,
   mode: string
-): Promise<{ coordinates: Coordinates[] | null, duration: number | null, distance: number | null }> => {
+): Promise<{
+  coordinates: Coordinates[] | null;
+  duration: number | null;
+  distance: number | null;
+}> => {
   try {
     const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?alternatives=false&annotations=duration,distance&continue_straight=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${ACCESS_TOKEN}`;
     console.log('Fetching route:', url);
