@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   View,
   TextInput,
@@ -12,9 +12,10 @@ import {
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import MapView from '@/modules/map/MapView';
+import { getRoute } from '@/modules/map/MapService';
+import LocationInput from './LocationInput';
 
 export function RoutePlanner() {
-  const { setState, loadRoute, setMode, duration, distance } = useMap();
   const [startLocationQuery, setStartLocationQuery] = React.useState<string>('');
   const [endLocationQuery, setEndLocationQuery] = React.useState<string>('');
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
@@ -25,13 +26,49 @@ export function RoutePlanner() {
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
   const slideAnim = React.useRef(new Animated.Value(500)).current;
+  const {
+    setState,
+    loadRoute,
+    setMode,
+    loadRouteFromCoordinates,
+    startLocation,
+    setStartLocation,
+    endLocation,
+    setEndLocation,
+    duration,
+    distance,
+  } = useMap();
+
+  useEffect(() => {
+    if (startLocation && endLocation) {
+      loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates);
+    }
+  }, [startLocation, endLocation]);
+
+  const swapLocations = () => {
+    setStartLocation(endLocation);
+    setEndLocation(startLocation);
+  };
 
   const handleBlur = async () => {
-    if (startLocationQuery && endLocationQuery) {
+    if (startLocation !== null && endLocation !== null) {
       try {
-        const cyclingRoute = await loadRoute(startLocationQuery, endLocationQuery, 'cycling');
-        const drivingRoute = await loadRoute(startLocationQuery, endLocationQuery, 'driving');
-        const walkingRoute = await loadRoute(startLocationQuery, endLocationQuery, 'walking');
+        const cyclingRoute = await getRoute(
+          startLocation.coordinates,
+          endLocation.coordinates,
+          'cycling'
+        );
+        const drivingRoute = await getRoute(
+          startLocation.coordinates,
+          endLocation.coordinates,
+          'driving'
+        );
+        const walkingRoute = await getRoute(
+          startLocation.coordinates,
+          endLocation.coordinates,
+          'walking'
+        );
+
         setDurations({
           walking: walkingRoute ? walkingRoute.duration : null,
           cycling: cyclingRoute ? cyclingRoute.duration : null,
@@ -50,11 +87,6 @@ export function RoutePlanner() {
         console.error('Error setting route:', error);
       }
     }
-  };
-
-  const swapLocations = () => {
-    setStartLocationQuery(endLocationQuery);
-    setEndLocationQuery(startLocationQuery);
   };
 
   const handleTransportMode = async (profile: string) => {
@@ -131,41 +163,33 @@ export function RoutePlanner() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <View style={styles.locationRangeForm}>
-          <View style={styles.locationRangeFormRow}>
-            <View style={styles.locationInputContainer}>
-              <Ionicons name="pin-outline" size={16} color="#666" />
-              <TextInput
-                style={styles.input}
-                placeholder="Start location"
-                placeholderTextColor="#666"
-                value={startLocationQuery}
-                onChangeText={(query) => setStartLocationQuery(query)}
-                onBlur={handleBlur}
-              />
-            </View>
-            <Pressable onPress={() => setState(MapState.Idle)}>
-              <Ionicons name="close-outline" size={28} color="#666" />
-            </Pressable>
-          </View>
-          <View style={styles.locationRangeFormRow}>
-            <View style={styles.locationInputContainer}>
-              <Ionicons name="pin" size={16} color="#666" />
-              <TextInput
-                style={styles.input}
-                placeholder="End location"
-                placeholderTextColor="#666"
-                value={endLocationQuery}
-                onChangeText={(query) => setEndLocationQuery(query)}
-                onBlur={handleBlur}
-              />
-            </View>
-            <Pressable onPress={swapLocations}>
-              <Ionicons name="swap-vertical-outline" size={28} color="#666" />
-            </Pressable>
-          </View>
+      {/* <View style={styles.inputContainer}> */}
+
+      <View style={styles.locationRangeForm}>
+        <View style={styles.locationRangeFormRow}>
+          <LocationInput
+            location={startLocation}
+            setLocation={setStartLocation}
+            ionIconName="pin-outline"
+            placeholder="Start location"
+          />
+          <Pressable onPress={() => setState(MapState.Idle)}>
+            <Ionicons name="close-outline" size={28} color="#666" />
+          </Pressable>
         </View>
+
+        <View style={styles.locationRangeFormRow}>
+          <LocationInput
+            location={endLocation}
+            setLocation={setEndLocation}
+            ionIconName="pin"
+            placeholder="End location"
+          />
+          <Pressable onPress={swapLocations}>
+            <Ionicons name="swap-vertical-outline" size={28} color="#666" />
+          </Pressable>
+        </View>
+
         <ScrollView horizontal contentContainerStyle={styles.transportModeContainer}>
           <Pressable
             style={[

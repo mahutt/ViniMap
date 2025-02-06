@@ -27,9 +27,9 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 const styles = StyleSheet.create({
   searchContainer: {
     position: 'absolute',
-    top: 60,
-    left: 20,
-    right: 20,
+    top: 76,
+    left: 36,
+    right: 36,
     zIndex: 1,
   },
   searchBar: {
