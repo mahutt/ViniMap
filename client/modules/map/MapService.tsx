@@ -31,20 +31,25 @@ const getRoute = async (
   startCoordinates: Coordinates,
   endCoordinates: Coordinates,
   mode: string
-): Promise<Coordinates[] | null> => {
+): Promise<{ coordinates: Coordinates[] | null, duration: number | null, distance: number | null }> => {
   try {
-    const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?geometries=geojson&access_token=${ACCESS_TOKEN}`;
+    const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?alternatives=false&annotations=duration,distance&continue_straight=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${ACCESS_TOKEN}`;
     console.log('Fetching route:', url);
     const response = await fetch(url);
     const data = await response.json();
     console.log('Route response:', data);
     if (data?.routes[0]) {
-      return data.routes[0].geometry.coordinates as Coordinates[];
+      const route = data.routes[0];
+      return {
+        coordinates: route.geometry.coordinates as Coordinates[],
+        duration: route.duration,
+        distance: route.distance,
+      };
     }
-    return null;
+    return { coordinates: null, duration: null, distance: null };
   } catch (error) {
     console.error('Error fetching route:', error);
-    return null;
+    return { coordinates: null, duration: null, distance: null };
   }
 };
 
