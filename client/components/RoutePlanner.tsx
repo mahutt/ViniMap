@@ -6,7 +6,7 @@ import {
   ScrollView,
   Text,
   Animated,
-  PanResponder,
+  //   PanResponder,
 } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
@@ -84,13 +84,13 @@ export function RoutePlanner() {
     setSelectedMode(profile);
   };
 
-  const slideUp = () => {
-    Animated.timing(slideAnim, {
-      toValue: 0,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  };
+  //   const slideUp = () => {
+  //     Animated.timing(slideAnim, {
+  //       toValue: 0,
+  //       duration: 500,
+  //       useNativeDriver: true,
+  //     }).start();
+  //   };
 
   const slideDown = () => {
     Animated.timing(slideAnim, {

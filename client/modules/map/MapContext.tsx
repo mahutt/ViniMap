@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useRef, useState, useMemo } from 'react';
 import Mapbox from '@rnmapbox/maps';
-import { getLocationCoordinates, getRoute } from './MapService';
+import { getRoute } from './MapService';
 
 export type Coordinates = [number, number];
 export interface Location {
