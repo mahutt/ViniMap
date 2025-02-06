@@ -1,14 +1,17 @@
-import { MapState, useMap, Location } from '@/modules/map/MapContext';
+import { MapState, useMap } from '@/modules/map/MapContext';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 
 export function LocationInfo() {
-  const { endLocation, setState } = useMap();
+  const { endLocation, setState, setEndLocation } = useMap();
 
   function getDirections() {
+    const selectedBuilding = endLocation;
     setState(MapState.RoutePlanning);
-    setEndLocation(destLocation);
+    setTimeout(() => {
+      setEndLocation(selectedBuilding);
+    }, 100);
   }
 
   return (

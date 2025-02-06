@@ -24,8 +24,8 @@ type MapContextType = {
   centerCoordinate: [number, number];
   zoomLevel: number;
 
-  pitchLevel:  number;
-  setPitchLevel:  (pitchLevel: number) => void;
+  pitchLevel: number;
+  setPitchLevel: (pitchLevel: number) => void;
 
   state: MapState;
   startLocation: Location | null;
@@ -53,7 +53,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [centerCoordinate, setCenterCoordinate] = useState<[number, number]>(DEFAULT_COORDINATES);
   const [zoomLevel, setZoomLevel] = useState(15);
 
-  const [pitchLevel, setPitchLevel] = useState(0);;
+  const [pitchLevel, setPitchLevel] = useState(0);
 
   const [state, setState] = useState<MapState>(MapState.Idle);
 
@@ -68,7 +68,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           centerCoordinate: newCenterCoordinate,
           zoomLevel: newZoomLevel ?? zoomLevel,
           animationDuration: 2000,
-          pitch: pitchLevel,,
+          pitch: pitchLevel,
         });
         setCenterCoordinate(newCenterCoordinate);
         if (newZoomLevel) setZoomLevel(newZoomLevel);
@@ -136,16 +136,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       loadRouteFromCoordinates,
     }),
 
-    [
-      centerCoordinate,
-      zoomLevel,
-      state,
-      startLocation,
-      endLocation,
-      routeCoordinates,
-      flyTo,
-      pitchLevel,
-    ]
     [
       centerCoordinate,
       zoomLevel,

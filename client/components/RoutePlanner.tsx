@@ -15,6 +15,11 @@ export function RoutePlanner() {
   } = useMap();
 
   useEffect(() => {
+    if (endLocation && !startLocation) {
+    }
+  }, [endLocation, startLocation]);
+
+  useEffect(() => {
     if (startLocation && endLocation) {
       loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates);
     }
@@ -24,14 +29,6 @@ export function RoutePlanner() {
     setStartLocation(endLocation);
     setEndLocation(startLocation);
   };
-
-  useEffect(() => {
-    if (endLocation) {
-      console.log('doing a thing');
-      console.log(endLocation);
-      setEndLocationQuery(endLocation.name as string);
-    }
-  }, [endLocation]);
 
   return (
     <View style={styles.locationRangeForm}>
