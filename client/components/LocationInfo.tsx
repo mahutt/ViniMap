@@ -4,11 +4,14 @@ import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 
 export function LocationInfo() {
-  const { endLocation, setState } = useMap();
+  const { endLocation, setState, setEndLocation } = useMap();
 
   function getDirections() {
+    const selectedBuilding = endLocation;
     setState(MapState.RoutePlanning);
-    // Logic for Route Planning will go here when we merge with Annabelle's changes
+    setTimeout(() => {
+      setEndLocation(selectedBuilding);
+    }, 100);
   }
 
   return (
