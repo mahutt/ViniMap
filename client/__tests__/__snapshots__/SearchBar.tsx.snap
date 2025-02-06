@@ -4,10 +4,10 @@ exports[`<SearchBar /> SearchBar renders correctly 1`] = `
 <View
   style={
     {
-      "left": 20,
+      "left": 36,
       "position": "absolute",
-      "right": 20,
-      "top": 60,
+      "right": 36,
+      "top": 76,
       "zIndex": 1,
     }
   }
