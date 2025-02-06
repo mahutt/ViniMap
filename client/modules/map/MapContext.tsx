@@ -31,8 +31,6 @@ type MapContextType = {
   startLocation: Location | null;
   endLocation: Location | null;
   routeCoordinates: Coordinates[];
-  duration: number | null;
-  distance: number | null;
   setCenterCoordinate: (centerCoordinate: [number, number]) => void;
   setZoomLevel: (zoomLevel: number) => void;
   setState: (state: MapState) => void;
@@ -65,8 +63,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);
   const [routeCoordinates, setRouteCoordinates] = useState<Coordinates[]>([]);
-  const [duration, setDuration] = useState<number | null>(null);
-  const [distance, setDistance] = useState<number | null>(null);
 
   const flyTo = useMemo(
     () => (newCenterCoordinate: [number, number], newZoomLevel?: number) => {
@@ -107,8 +103,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           );
           if (coordinates) {
             setRouteCoordinates(coordinates);
-            setDuration(duration);
-            setDistance(distance);
             if (coordinates.length > 0) {
               flyTo(coordinates[0], zoomLevel);
             }
@@ -157,8 +151,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       endLocation,
       routeCoordinates,
       mode,
-      duration: duration ?? 0,
-      distance: distance ?? 0,
       setCenterCoordinate,
       setZoomLevel,
       setState,
@@ -179,8 +171,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       routeCoordinates,
       flyTo,
       mode,
-      duration,
-      distance,
       pitchLevel,
     ]
   );
