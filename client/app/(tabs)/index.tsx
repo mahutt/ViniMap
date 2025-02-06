@@ -1,7 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
 
-import { SearchBar } from '@/components/SearchBar';
+//keep ../../comp... b/c it is needed to compile on irl iphone
+import { SearchBar } from '../../components/SearchBar';
 import MapView from '@/modules/map/MapView';
 import { useMap, MapState } from '@/modules/map/MapContext';
 import CenterLocationComponent from '@/components/ui/IconCenterLocation';

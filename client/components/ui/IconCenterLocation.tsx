@@ -26,7 +26,6 @@ const CenterLocationComponent = () => {
 
     // Once permissions are granted and location is retrieved, move the map
     console.log('Coordinates:', currentLatitude, currentLongitude);
-
     // Set the center of the map and fly to the new coordinates
     setCenterCoordinate([currentLatitude, currentLongitude]);
     flyTo([currentLongitude, currentLatitude]);
