@@ -1,0 +1,8 @@
+appId: com.anonymous.client
+---
+- tapOn:
+    point: '50%,46%'
+- tapOn: ', Directions'
+- tapOn: 'Start location'
+- inputText: '347 victoria Av'
+- tapOn: '347 Victoria Av, Westmount, Quebec H3Z 2N1, Canada'
