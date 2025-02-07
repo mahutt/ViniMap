@@ -323,8 +323,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   transportModeContainer: {
-    padding: 15,
-    marginTop: 5,
+    paddingVertical: 2,
+    paddingHorizontal: 15,
+    marginTop: 2,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     alignItems: 'center',
@@ -333,7 +334,7 @@ const styles = StyleSheet.create({
   transportButton: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 5,
+    paddingVertical: 1,
   },
   activeTransportButton: {
     backgroundColor: '#ddd',
@@ -354,7 +355,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -2 },
     shadowRadius: 5,
     elevation: 5,
-    height: 240,
+    height: 160,
     alignItems: 'flex-start',
   },
   boldText: {
@@ -414,7 +415,7 @@ const styles = StyleSheet.create({
   durationText: {
     fontSize: 14,
     color: '#333',
-    marginTop: 2,
+    marginTop: 1,
     textAlign: 'center',
   },
   unavailableText: {
