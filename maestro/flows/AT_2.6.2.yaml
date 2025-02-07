@@ -1,0 +1,12 @@
+appId: com.anonymous.client
+---
+- tapOn:
+    point: '50%,46%'
+- tapOn: ', Directions'
+- tapOn: 'Start location'
+- inputText: '347 victoria Av'
+- tapOn:
+    point: '46%,15%'
+- tapOn: ', 13 min'
+- tapOn: ', 10 min'
+- tapOn: ', 36 min'

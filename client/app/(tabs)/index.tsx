@@ -1,12 +1,16 @@
 import { StyleSheet, View } from 'react-native';
 import React from 'react';
 
-import { SearchBar } from '@/components/SearchBar';
+// Relative import for iPhone build
+import { SearchBar } from '../../components/SearchBar';
 import MapView from '@/modules/map/MapView';
 
 import PitchButton from '@/modules/map/PitchButton';
 
 import { useMap, MapState } from '@/modules/map/MapContext';
+
+import CenterLocationComponent from '@/components/ui/IconCenterLocation';
+
 import { LocationInfo } from '@/components/LocationInfo';
 import { RoutePlanner } from '@/components/RoutePlanner';
 import ToggleCampusButton from '@/components/ui/ToggleCampusButton';
@@ -19,10 +23,11 @@ export default function HomeScreen() {
       {(state === MapState.Idle || state === MapState.Information) && (
         <>
           <SearchBar onSearch={(query) => console.log(query)} />
-          <PitchButton></PitchButton>
+          <PitchButton />
           <ToggleCampusButton />
         </>
       )}
+      {state === MapState.Idle && <CenterLocationComponent />}
       {state === MapState.Information && <LocationInfo />}
       {state === MapState.RoutePlanning && <RoutePlanner />}
     </View>

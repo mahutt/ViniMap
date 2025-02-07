@@ -1,0 +1,9 @@
+appId: com.anonymous.client
+---
+- tapOn:
+    point: '50%,50%'
+- tapOn: ' Directions'
+- tapOn: 'Start location'
+- inputText: '2175 Crescent St, Montreal'
+- tapOn: '2175 Crescent Street, Montréal, Quebec H3G 1J1, Canada'
+- tapOn: ''
