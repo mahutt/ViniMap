@@ -63,17 +63,17 @@ export function RoutePlanner() {
       const [walkingRoute, cyclingRoute, drivingRoute, shuttleRoute] = routes;
 
       setDurations({
-        walking: walkingRoute?.duration || null,
-        cycling: cyclingRoute?.duration || null,
-        driving: drivingRoute?.duration || null,
-        shuttle: shuttleRoute?.duration || null,
+        walking: walkingRoute?.duration ?? null,
+        cycling: cyclingRoute?.duration ?? null,
+        driving: drivingRoute?.duration ?? null,
+        shuttle: shuttleRoute?.duration ?? null,
       });
 
       setDistances({
-        walking: walkingRoute?.distance || null,
-        cycling: cyclingRoute?.distance || null,
-        driving: drivingRoute?.distance || null,
-        shuttle: shuttleRoute?.distance || null,
+        walking: walkingRoute?.distance ?? null,
+        cycling: cyclingRoute?.distance ?? null,
+        driving: drivingRoute?.distance ?? null,
+        shuttle: shuttleRoute?.distance ?? null,
       });
 
       setIsRouteFound(!!(walkingRoute || cyclingRoute || drivingRoute));
