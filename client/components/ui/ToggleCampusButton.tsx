@@ -25,17 +25,17 @@ const ToggleCampusButton: React.FC<ToggleCampusButtonProps> = ({ style }) => {
   return (
     <View style={[styles.container, styles.toggleButton, style]}>
       <TouchableOpacity
-        style={[styles.button, selectedLocation === 'SGW' ? styles.activeButton : null]}
-        onPress={() => handleToggle('SGW')}>
-        <Text style={[styles.text, selectedLocation === 'SGW' ? styles.activeText : null]}>
-          SGW
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
         style={[styles.button, selectedLocation === 'LOY' ? styles.activeButton : null]}
         onPress={() => handleToggle('LOY')}>
         <Text style={[styles.text, selectedLocation === 'LOY' ? styles.activeText : null]}>
           LOY
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[styles.button, selectedLocation === 'SGW' ? styles.activeButton : null]}
+        onPress={() => handleToggle('SGW')}>
+        <Text style={[styles.text, selectedLocation === 'SGW' ? styles.activeText : null]}>
+          SGW
         </Text>
       </TouchableOpacity>
     </View>
