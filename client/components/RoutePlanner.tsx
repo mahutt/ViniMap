@@ -1,24 +1,26 @@
 import React, { useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  Pressable,
-  ScrollView,
-  Text,
-  Animated,
-  //   PanResponder,
-} from 'react-native';
+import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
+import RouteService from '@/Services/RouteService';
 
 export function RoutePlanner() {
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
     walking: null,
     cycling: null,
     driving: null,
+    shuttle: null,
   });
+
+  const [distances, setDistances] = React.useState<{ [key: string]: number | null }>({
+    walking: null,
+    cycling: null,
+    driving: null,
+    shuttle: null,
+  });
+
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
   const slideAnim = React.useRef(new Animated.Value(500)).current;
@@ -38,45 +40,46 @@ export function RoutePlanner() {
     }
   }, [startLocation, endLocation, selectedMode]);
 
+  useEffect(() => {
+    if (durations.shuttle == null && selectedMode == 'shuttle') {
+      setSelectedMode('driving');
+    }
+  }, [durations, distances]);
+
   const swapLocations = () => {
     setStartLocation(endLocation);
     setEndLocation(startLocation);
   };
 
   const calculateOptions = async () => {
-    if (startLocation !== null && endLocation !== null) {
-      try {
-        const cyclingRoute = await getRoute(
-          startLocation.coordinates,
-          endLocation.coordinates,
-          'cycling'
-        );
-        const drivingRoute = await getRoute(
-          startLocation.coordinates,
-          endLocation.coordinates,
-          'driving'
-        );
-        const walkingRoute = await getRoute(
-          startLocation.coordinates,
-          endLocation.coordinates,
-          'walking'
-        );
+    if (!startLocation || !endLocation) return;
 
-        setDurations({
-          walking: walkingRoute ? walkingRoute.duration : null,
-          cycling: cyclingRoute ? cyclingRoute.duration : null,
-          driving: drivingRoute ? drivingRoute.duration : null,
-        });
+    try {
+      const modes = ['walking', 'cycling', 'driving', 'shuttle'];
+      const routes = await Promise.all(
+        modes.map((mode) => getRoute(startLocation.coordinates, endLocation.coordinates, mode))
+      );
 
-        if (walkingRoute || cyclingRoute || drivingRoute) {
-          setIsRouteFound(true);
-          slideDown();
-        } else {
-          setIsRouteFound(false);
-        }
-      } catch (error) {
-        console.error('Error setting route:', error);
-      }
+      const [walkingRoute, cyclingRoute, drivingRoute, shuttleRoute] = routes;
+
+      setDurations({
+        walking: walkingRoute?.duration ?? null,
+        cycling: cyclingRoute?.duration ?? null,
+        driving: drivingRoute?.duration ?? null,
+        shuttle: shuttleRoute?.duration ?? null,
+      });
+
+      setDistances({
+        walking: walkingRoute?.distance ?? null,
+        cycling: cyclingRoute?.distance ?? null,
+        driving: drivingRoute?.distance ?? null,
+        shuttle: shuttleRoute?.distance ?? null,
+      });
+
+      setIsRouteFound(!!(walkingRoute || cyclingRoute || drivingRoute));
+      if (isRouteFound) slideDown();
+    } catch (error) {
+      console.error('Error setting route:', error);
     }
   };
 
@@ -178,8 +181,11 @@ export function RoutePlanner() {
               ]}
               onPress={() => handleTransportMode('walking')}>
               <Ionicons name="walk-outline" size={24} color="#666" />
-              {durations.walking !== null && <Text>{Math.round(durations.walking / 60)} min</Text>}
+              <Text>
+                {durations.walking !== null ? RouteService.formatDuration(durations.walking) : ''}
+              </Text>
             </Pressable>
+
             <Pressable
               style={[
                 styles.transportButton,
@@ -187,8 +193,11 @@ export function RoutePlanner() {
               ]}
               onPress={() => handleTransportMode('cycling')}>
               <Ionicons name="bicycle-outline" size={24} color="#666" />
-              {durations.cycling !== null && <Text>{Math.round(durations.cycling / 60)} min</Text>}
+              <Text>
+                {durations.cycling !== null ? RouteService.formatDuration(durations.cycling) : ''}
+              </Text>
             </Pressable>
+
             <Pressable
               style={[
                 styles.transportButton,
@@ -196,23 +205,42 @@ export function RoutePlanner() {
               ]}
               onPress={() => handleTransportMode('driving')}>
               <Ionicons name="car-outline" size={24} color="#666" />
-              {durations.driving !== null && <Text>{Math.round(durations.driving / 60)} min</Text>}
+              <Text>
+                {durations.driving !== null ? RouteService.formatDuration(durations.driving) : ''}
+              </Text>
             </Pressable>
+
             <Pressable
               style={[
                 styles.transportButton,
                 isRouteFound && selectedMode === 'wheelchair' && styles.activeTransportButton,
+                { opacity: 0.5 },
               ]}
-              onPress={() => handleTransportMode('wheelchair')}>
+              onPress={() => handleTransportMode('wheelchair')}
+              disabled={true}>
               <MaterialCommunityIcons name="wheelchair-accessibility" size={24} color="#666" />
+              <Text></Text>
             </Pressable>
+
             <Pressable
               style={[
                 styles.transportButton,
                 isRouteFound && selectedMode === 'shuttle' && styles.activeTransportButton,
+                durations.shuttle === null && styles.disabledTransportButton,
               ]}
-              onPress={() => handleTransportMode('shuttle')}>
-              <Ionicons name="bus-outline" size={24} color="#666" />
+              onPress={() => handleTransportMode('shuttle')}
+              disabled={durations.shuttle === null}>
+              <Ionicons
+                name="bus-outline"
+                size={24}
+                color={durations.shuttle === null ? '#999' : '#666'}
+              />
+              <Text
+                style={[styles.durationText, durations.shuttle === null && styles.unavailableText]}>
+                {durations.shuttle !== null
+                  ? RouteService.formatDuration(Number(durations.shuttle))
+                  : ''}
+              </Text>
             </Pressable>
           </ScrollView>
         </View>
@@ -231,11 +259,12 @@ export function RoutePlanner() {
             <View style={styles.infoContent}>
               <Text style={styles.infoText}>
                 <Text style={styles.boldText}>
-                  {durations[selectedMode] !== null ? Math.round(durations[selectedMode] / 60) : 0}{' '}
-                  min{' '}
+                  {durations[selectedMode] !== null
+                    ? RouteService.formatDuration(durations[selectedMode])
+                    : 0}{' '}
                 </Text>
                 <Text style={styles.infoText}>
-                  ({durations[selectedMode] ? (durations[selectedMode] / 1000).toFixed(2) : 0} km){' '}
+                  ({(Number(distances[selectedMode]) / 1000).toFixed(2)} km){' '}
                 </Text>
                 <View style={styles.modeIcon2}>{getModeIcon(selectedMode)}</View>
               </Text>
@@ -255,7 +284,6 @@ export function RoutePlanner() {
     </>
   );
 }
-
 const styles = StyleSheet.create({
   inputContainer: {
     position: 'absolute',
@@ -313,7 +341,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 20,
     left: 0,
     right: 0,
     zIndex: 10,
@@ -326,7 +354,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: -2 },
     shadowRadius: 5,
     elevation: 5,
-    height: 220,
+    height: 240,
+    alignItems: 'flex-start',
   },
   boldText: {
     fontWeight: 'bold',
@@ -346,42 +375,55 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   infoContent: {
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
     width: '100%',
-    paddingVertical: 10,
   },
-
   modeIcon2: {
     marginTop: 5,
     alignSelf: 'center',
   },
-
   infoText: {
     fontSize: 20,
     color: '#333',
     textAlign: 'left',
+    marginBottom: 10,
   },
   modeIcon: {
     alignSelf: 'center',
   },
   startButton: {
-    backgroundColor: '#007AFF',
-    padding: 10,
-    paddingHorizontal: 20,
-    borderRadius: 20,
     flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#852C3A',
+    paddingVertical: '3%',
+    paddingHorizontal: '5%',
+    borderRadius: 25,
+    justifyContent: 'center',
+    marginTop: '4%',
   },
   startButtonIcon: {
-    marginRight: 5,
+    marginRight: 10,
   },
   startButtonText: {
-    fontSize: 16,
-    color: 'white',
+    color: '#fff',
+    fontSize: 18,
     fontWeight: 'bold',
+  },
+
+  durationText: {
+    fontSize: 14,
+    color: '#333',
+    marginTop: 2,
+    textAlign: 'center',
+  },
+  unavailableText: {
+    color: 'red',
+    fontWeight: 'bold',
+    fontSize: 10,
+  },
+  disabledTransportButton: {
+    opacity: 0.5,
   },
 });
 
