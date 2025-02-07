@@ -117,33 +117,17 @@ class RouteService {
       endBusStop = LoyolaCoords;
     }
 
-    console.log('isStartSgw ', isStartSgw);
-    console.log('isStartLoyola ', isStartLoyola);
-    console.log('isEndSgw ', isEndSgw);
-    console.log('isEndLoyola ', isEndLoyola);
-
     if ((isStartSgw || isStartLoyola) && (isEndSgw || isEndLoyola)) {
       const start_Walk_ShuttleStart = await getRoute(startCoordinates, startBusStop, 'walking');
-      console.log(start_Walk_ShuttleStart);
 
       const shuttleStart_Drive_shuttleEnd = await getRoute(startBusStop, endBusStop, 'driving');
-      console.log(shuttleStart_Drive_shuttleEnd);
 
       const shuttleEnd_Walk_end = await getRoute(endBusStop, endCoordinates, 'walking');
-      console.log(shuttleEnd_Walk_end);
 
       const middleCoords: Coordinates[] = (start_Walk_ShuttleStart.coordinates ?? []).concat(
         shuttleStart_Drive_shuttleEnd.coordinates ?? []
       );
       const finalCoords: Coordinates[] = middleCoords.concat(shuttleEnd_Walk_end.coordinates ?? []);
-
-      console.log(
-        start_Walk_ShuttleStart.duration,
-        ' ',
-        shuttleStart_Drive_shuttleEnd.duration,
-        ' ',
-        shuttleEnd_Walk_end.duration
-      );
 
       const daysMap: { [key: number]: string } = {
         1: 'Monday-Thursday',
@@ -163,8 +147,6 @@ class RouteService {
         departureCampus
       );
 
-      console.log('NEXT SHUTTLE TIME: ', nextShuttleDuration);
-
       const shuttleDurationInSeconds =
         Number(nextShuttleDuration.replace('m', '').replace('h', '')) *
         (nextShuttleDuration.includes('h') ? 3600 : 60);
@@ -183,9 +165,6 @@ class RouteService {
         Number(start_Walk_ShuttleStart.distance) +
         Number(shuttleStart_Drive_shuttleEnd.distance) +
         Number(shuttleEnd_Walk_end.distance);
-
-      console.log('\n\nFinal Duration (minutes):', finalDuration);
-      console.log('Final Distance (km):', finalDistance);
 
       return {
         coordinates: finalCoords,

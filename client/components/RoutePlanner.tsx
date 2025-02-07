@@ -76,9 +76,6 @@ export function RoutePlanner() {
         shuttle: shuttleRoute?.distance || null,
       });
 
-      console.log('Durations:', JSON.stringify(durations, null, 2));
-      console.log('Distances:', JSON.stringify(distances, null, 2));
-
       setIsRouteFound(!!(walkingRoute || cyclingRoute || drivingRoute));
       if (isRouteFound) slideDown();
     } catch (error) {
