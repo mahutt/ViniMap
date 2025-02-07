@@ -52,56 +52,37 @@ export function RoutePlanner() {
   };
 
   const calculateOptions = async () => {
-    if (startLocation !== null && endLocation !== null) {
-      try {
-        const cyclingRoute = await getRoute(
-          startLocation.coordinates,
-          endLocation.coordinates,
-          'cycling'
-        );
-        const drivingRoute = await getRoute(
-          startLocation.coordinates,
-          endLocation.coordinates,
-          'driving'
-        );
-        const walkingRoute = await getRoute(
-          startLocation.coordinates,
-          endLocation.coordinates,
-          'walking'
-        );
+    if (!startLocation || !endLocation) return;
 
-        const shuttleRoute = await getRoute(
-          startLocation.coordinates,
-          endLocation.coordinates,
-          'shuttle'
-        );
+    try {
+      const modes = ['walking', 'cycling', 'driving', 'shuttle'];
+      const routes = await Promise.all(
+        modes.map((mode) => getRoute(startLocation.coordinates, endLocation.coordinates, mode))
+      );
 
-        setDurations({
-          walking: walkingRoute ? walkingRoute.duration : null,
-          cycling: cyclingRoute ? cyclingRoute.duration : null,
-          driving: drivingRoute ? drivingRoute.duration : null,
-          shuttle: drivingRoute ? shuttleRoute.duration : null,
-        });
+      const [walkingRoute, cyclingRoute, drivingRoute, shuttleRoute] = routes;
 
-        setDistances({
-          walking: walkingRoute ? walkingRoute.distance : null,
-          cycling: cyclingRoute ? cyclingRoute.distance : null,
-          driving: drivingRoute ? drivingRoute.distance : null,
-          shuttle: drivingRoute ? shuttleRoute.distance : null,
-        });
+      setDurations({
+        walking: walkingRoute?.duration || null,
+        cycling: cyclingRoute?.duration || null,
+        driving: drivingRoute?.duration || null,
+        shuttle: shuttleRoute?.duration || null,
+      });
 
-        console.log('Durations: ' + JSON.stringify(durations, null, 2));
-        console.log('Distances: ' + JSON.stringify(distances, null, 2));
+      setDistances({
+        walking: walkingRoute?.distance || null,
+        cycling: cyclingRoute?.distance || null,
+        driving: drivingRoute?.distance || null,
+        shuttle: shuttleRoute?.distance || null,
+      });
 
-        if (walkingRoute || cyclingRoute || drivingRoute) {
-          setIsRouteFound(true);
-          slideDown();
-        } else {
-          setIsRouteFound(false);
-        }
-      } catch (error) {
-        console.error('Error setting route:', error);
-      }
+      console.log('Durations:', JSON.stringify(durations, null, 2));
+      console.log('Distances:', JSON.stringify(distances, null, 2));
+
+      setIsRouteFound(!!(walkingRoute || cyclingRoute || drivingRoute));
+      if (isRouteFound) slideDown();
+    } catch (error) {
+      console.error('Error setting route:', error);
     }
   };
 

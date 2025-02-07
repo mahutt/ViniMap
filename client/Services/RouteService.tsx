@@ -3,7 +3,7 @@ import { Coordinates } from '@/Types/Coordinate';
 import ShuttleCalculatorService from '../Services/ShuttleCalculatorService';
 
 class RouteService {
-  private static GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
+  private static readonly GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
   static async distanceOf2Coords(coord1: Coordinates, coord2: Coordinates): Promise<number> {
     const origin = `${coord1[1]},${coord1[0]}`;
@@ -197,7 +197,7 @@ class RouteService {
     return { coordinates: null, duration: null, distance: null };
   }
 
-  static formatDuration = (seconds: number | null) => {
+  public static formatDuration = (seconds: number | null) => {
     if (seconds === null) return 'Unavailable';
     const minutes = Math.round(seconds / 60);
     if (minutes >= 60) {

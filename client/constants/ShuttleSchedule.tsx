@@ -1,5 +1,5 @@
 class ShuttleSchedule {
-  static schedule: Record<string, { LOY: string[]; SGW: string[] }> = {
+  static readonly schedule: Record<string, { LOY: string[]; SGW: string[] }> = {
     'Monday-Thursday': {
       LOY: [
         '9:15',
