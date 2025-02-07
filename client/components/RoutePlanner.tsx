@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { MapState, useMap } from '@/modules/map/MapContext';
+import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
 import RouteService from '@/Services/RouteService';
+import * as Location from 'expo-location';
 
 export function RoutePlanner() {
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
@@ -24,6 +25,7 @@ export function RoutePlanner() {
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
   const slideAnim = React.useRef(new Animated.Value(500)).current;
+
   const {
     setState,
     loadRouteFromCoordinates,
@@ -33,10 +35,34 @@ export function RoutePlanner() {
     setEndLocation,
   } = useMap();
 
+  const centerMapOnUserLocation = async () => {
+    // Request location permissions
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Please grant location permissions');
+      return;
+      XPathResult;
+    }
+
+    // Get the current location
+    const currentLocation = await Location.getCurrentPositionAsync({});
+    const { latitude, longitude } = currentLocation.coords;
+
+    let tempCoordinates: Coordinates = [longitude, latitude];
+
+    setStartLocation({
+      name: 'Current location',
+      coordinates: tempCoordinates,
+    });
+    console.log('got to the end here');
+  };
+
   useEffect(() => {
     if (startLocation && endLocation) {
       loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates, selectedMode);
       calculateOptions();
+    } else if (!startLocation) {
+      centerMapOnUserLocation();
     }
   }, [startLocation, endLocation, selectedMode]);
 

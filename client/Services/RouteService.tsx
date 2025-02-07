@@ -186,6 +186,8 @@ class RouteService {
     }
     return `${minutes} min`;
   };
+
+  
 }
 
 export default RouteService;
