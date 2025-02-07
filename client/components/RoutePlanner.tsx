@@ -41,7 +41,6 @@ export function RoutePlanner() {
     if (status !== 'granted') {
       console.log('Please grant location permissions');
       return;
-      XPathResult;
     }
 
     // Get the current location
