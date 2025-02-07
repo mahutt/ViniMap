@@ -1,0 +1,13 @@
+appId: com.anonymous.client
+---
+- tapOn: 'Start location'
+- inputText: '7141 Sherbrooke Street West'
+- tapOn: '7141 Sherbrooke Street West, Montréal, Quebec H4B 1R6, Canada'
+- tapOn: 'End location'
+- inputText: '1455 De Maisonneuve Boul E, Montréal, Quebec'
+- tapOn: '1455 De Maisonneuve Boul E, Montréal, Quebec H2L 2B2, Canada'
+- assertVisible: ' 1h 56m'
+- assertVisible: ' 45 min'
+- assertVisible: ' 23 min'
+- assertVisible: '󰖤'
+- assertVisible: ''
