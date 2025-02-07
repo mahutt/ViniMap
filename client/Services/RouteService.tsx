@@ -176,7 +176,7 @@ class RouteService {
     return { coordinates: null, duration: null, distance: null };
   }
 
-  public static formatDuration = (seconds: number | null) => {
+  public static readonly formatDuration = (seconds: number | null) => {
     if (seconds === null) return 'Unavailable';
     const minutes = Math.round(seconds / 60);
     if (minutes >= 60) {
