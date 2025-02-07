@@ -58,6 +58,7 @@ export function RoutePlanner() {
 
   useEffect(() => {
     if (startLocation && endLocation) {
+      centerMapOnUserLocation();
       loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates, selectedMode);
       calculateOptions();
     } else if (!startLocation) {
