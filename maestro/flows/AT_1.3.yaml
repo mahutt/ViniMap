@@ -1,0 +1,8 @@
+appId: com.anonymous.client
+---
+- tapOn: "SGW"
+- tapOn: "LOY"
+- tapOn:
+    point: "19%,16%"
+- tapOn:
+    point: "35%,16%"
