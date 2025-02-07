@@ -13,6 +13,7 @@ import CenterLocationComponent from '@/components/ui/IconCenterLocation';
 
 import { LocationInfo } from '@/components/LocationInfo';
 import { RoutePlanner } from '@/components/RoutePlanner';
+import ToggleCampusButton from '@/components/ui/ToggleCampusButton';
 
 export default function HomeScreen() {
   const { state } = useMap();
@@ -23,6 +24,7 @@ export default function HomeScreen() {
         <>
           <SearchBar onSearch={(query) => console.log(query)} />
           <PitchButton />
+          <ToggleCampusButton />
         </>
       )}
       {state === MapState.Idle && <CenterLocationComponent />}
