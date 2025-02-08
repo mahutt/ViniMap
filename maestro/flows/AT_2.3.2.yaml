@@ -1,0 +1,6 @@
+appId: com.anonymous.client   
+
+---
+- tapOn:
+    point: "50%,38%"
+- tapOn: " Directions"
