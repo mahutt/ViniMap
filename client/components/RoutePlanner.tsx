@@ -47,12 +47,12 @@ export function RoutePlanner() {
   };
 
   useEffect(() => {
-    if (startLocation && endLocation) {
+    if (!startLocation) {
       centerMapOnUserLocation();
+    } else if (startLocation && endLocation) {
+      //centerMapOnUserLocation();
       loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates, selectedMode);
       calculateOptions();
-    } else if (!startLocation) {
-      centerMapOnUserLocation();
     }
   }, [startLocation, endLocation, selectedMode]);
 
