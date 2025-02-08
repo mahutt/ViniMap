@@ -50,7 +50,6 @@ export function RoutePlanner() {
     if (!startLocation) {
       centerMapOnUserLocation();
     } else if (startLocation && endLocation) {
-      //centerMapOnUserLocation();
       loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates, selectedMode);
       calculateOptions();
     }
