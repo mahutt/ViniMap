@@ -20,7 +20,7 @@ class ShuttleCalculatorService {
         return this.formatTimeDifference(currentMinutes, departureMinutes);
       }
     }
-    return 'No more departures today';
+    return '24h 0m';
   }
 
   private static convertToMinutes(time: string): number {

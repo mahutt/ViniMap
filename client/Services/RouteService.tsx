@@ -189,5 +189,4 @@ class RouteService {
 
   
 }
-
 export default RouteService;

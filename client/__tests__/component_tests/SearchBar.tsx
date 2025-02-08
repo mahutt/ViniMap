@@ -1,7 +1,6 @@
 import { render, fireEvent } from '@testing-library/react-native';
 import { SearchBar } from '@/components/SearchBar';
 
-// Mock the @expo/vector-icons
 jest.mock('@expo/vector-icons', () => ({
   Ionicons: 'Ionicons',
 }));
