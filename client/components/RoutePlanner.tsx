@@ -5,7 +5,6 @@ import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
 import RouteService from '@/Services/RouteService';
-import * as Location from 'expo-location';
 import CoordinateService from '@/Services/CoordinateService';
 
 export function RoutePlanner() {
