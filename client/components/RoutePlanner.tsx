@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
-import { MapState, useMap } from '@/modules/map/MapContext';
+import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
 import RouteService from '@/Services/RouteService';
+import CoordinateService from '@/Services/CoordinateService';
 
 export function RoutePlanner() {
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
@@ -24,6 +25,7 @@ export function RoutePlanner() {
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
   const slideAnim = React.useRef(new Animated.Value(500)).current;
+
   const {
     setState,
     loadRouteFromCoordinates,
@@ -33,8 +35,21 @@ export function RoutePlanner() {
     setEndLocation,
   } = useMap();
 
+  const centerMapOnUserLocation = async () => {
+    const tempCoordinates: Coordinates = (await CoordinateService.getCurrentCoordinates()) ?? [
+      0, 0,
+    ];
+
+    setStartLocation({
+      name: 'Current location',
+      coordinates: tempCoordinates,
+    });
+  };
+
   useEffect(() => {
-    if (startLocation && endLocation) {
+    if (!startLocation) {
+      centerMapOnUserLocation();
+    } else if (startLocation && endLocation) {
       loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates, selectedMode);
       calculateOptions();
     }
