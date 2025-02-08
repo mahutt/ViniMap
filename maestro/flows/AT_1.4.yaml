@@ -1,7 +1,7 @@
-appId: null
+appId: com.anonymous.client
 ---
 - assertVisible:
-    text: "My Button"
+    text: 'My Button'
     enabled: true
 - tapOn:
-    point: "85%,86%"
+    point: '85%,86%'
