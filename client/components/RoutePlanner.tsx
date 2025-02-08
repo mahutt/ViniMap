@@ -6,6 +6,7 @@ import { getRoute } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
 import RouteService from '@/Services/RouteService';
 import * as Location from 'expo-location';
+import CoordinateService from '@/Services/CoordinateService';
 
 export function RoutePlanner() {
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
@@ -36,24 +37,14 @@ export function RoutePlanner() {
   } = useMap();
 
   const centerMapOnUserLocation = async () => {
-    // Request location permissions
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      console.log('Please grant location permissions');
-      return;
-    }
-
-    // Get the current location
-    const currentLocation = await Location.getCurrentPositionAsync({});
-    const { latitude, longitude } = currentLocation.coords;
-
-    let tempCoordinates: Coordinates = [longitude, latitude];
+    const tempCoordinates: Coordinates = (await CoordinateService.getCurrentCoordinates()) ?? [
+      0, 0,
+    ];
 
     setStartLocation({
       name: 'Current location',
       coordinates: tempCoordinates,
     });
-    console.log('got to the end here');
   };
 
   useEffect(() => {
