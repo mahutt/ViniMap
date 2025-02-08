@@ -1,5 +1,4 @@
-import { render } from '@testing-library/react-native';
-import { fireEvent } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import React from 'react';
 import { Collapsible } from '@/components/Collapsible';
 
