@@ -1,0 +1,7 @@
+appId: null
+---
+- assertVisible:
+    text: "My Button"
+    enabled: true
+- tapOn:
+    point: "85%,86%"
