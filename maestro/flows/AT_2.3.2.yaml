@@ -1,6 +1,9 @@
-appId: com.anonymous.client   
-
+appId: com.anonymous.client
 ---
 - tapOn:
-    point: "50%,38%"
-- tapOn: " Directions"
+    point: '50%,38%'
+- tapOn: ' Directions'
+- extendedWaitUntil:
+    visible: 'Current location'
+    timeout: 10000
+- assertVisible: 'Current location'
