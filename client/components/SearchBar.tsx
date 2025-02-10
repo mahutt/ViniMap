@@ -9,12 +9,6 @@ export function SearchBar() {
   const [query, setQuery] = React.useState<string>('');
   const textInputRef = React.useRef<TextInput>(null);
 
-  React.useEffect(() => {
-    if (endLocation) {
-      setQuery(endLocation?.name ?? '');
-    }
-  }, [endLocation]);
-
   return (
     <View style={styles.searchContainer}>
       <View style={styles.searchBar}>
@@ -25,17 +19,20 @@ export function SearchBar() {
           placeholder="Search here"
           placeholderTextColor="#666"
           value={query}
-          onChangeText={(query) => setQuery(query)}
+          onChangeText={(newQuery) => setQuery(newQuery)}
           autoCorrect={false}
         />
         {query !== '' && query !== endLocation?.name && (
           <LocationsAutocomplete
             query={query}
             callback={(location) => {
+              setQuery(location.name ?? '');
               setEndLocation(location);
-              textInputRef.current?.blur();
               setState(MapState.Information);
               flyTo(location.coordinates, 17);
+              setTimeout(() => {
+                textInputRef.current?.blur();
+              }, 0);
             }}
           />
         )}
