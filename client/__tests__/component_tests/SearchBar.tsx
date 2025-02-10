@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 import { SearchBar } from '@/components/SearchBar';
 import { MapProvider } from '@/modules/map/MapContext';
 
