@@ -1,0 +1,6 @@
+appId: com.anonymous.client
+---
+- tapOn: 'Search here'
+- inputText: '7141 Sherbrooke St W, Montreal'
+- tapOn: '7141 Sherbrooke Street West, Montréal, Quebec H4B 1R6, Canada'
+- tapOn: '×'
