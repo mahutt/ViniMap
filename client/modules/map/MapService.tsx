@@ -104,28 +104,6 @@ const distanceOf2Coords = async (coord1: Coordinates, coord2: Coordinates): Prom
   }
 };
 
-const getShuttleProximity = async (
-  startCoordinates: Coordinates,
-  endCoordinates: Coordinates
-): Promise<[boolean, boolean, boolean, boolean]> => {
-  const MAX_DISTANCE_FROM_BUS = 1.5;
-
-  const SgwCoords: Coordinates = [-73.5784711, 45.4970661];
-  const LoyolaCoords: Coordinates = [-73.6393324, 45.4577857];
-
-  const distanceToShuttleSgwFromStart = await distanceOf2Coords(SgwCoords, startCoordinates);
-  const distanceToShuttleLoyolaFromStart = await distanceOf2Coords(LoyolaCoords, startCoordinates);
-  const distanceToShuttleSgwFromEnd = await distanceOf2Coords(SgwCoords, endCoordinates);
-  const distanceToShuttleLoyolaFromEnd = await distanceOf2Coords(LoyolaCoords, endCoordinates);
-
-  const isStartSgw = distanceToShuttleSgwFromStart <= MAX_DISTANCE_FROM_BUS;
-  const isStartLoyola = distanceToShuttleLoyolaFromStart <= MAX_DISTANCE_FROM_BUS;
-  const isEndSgw = distanceToShuttleSgwFromEnd <= MAX_DISTANCE_FROM_BUS;
-  const isEndLoyola = distanceToShuttleLoyolaFromEnd <= MAX_DISTANCE_FROM_BUS;
-
-  return [isStartSgw, isStartLoyola, isEndSgw, isEndLoyola];
-};
-
 const getRouteForShuttle = async (
   startCoordinates: Coordinates,
   endCoordinates: Coordinates
