@@ -2,7 +2,7 @@ import { Location } from '@/modules/map/MapContext';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { TextInput, View, StyleSheet } from 'react-native';
-import LocationsAutocomplete from './PlacesAutocomplete';
+import LocationsAutocomplete from './LocationsAutocomplete';
 
 export default function LocationInput({
   location,
