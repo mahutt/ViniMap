@@ -33,6 +33,7 @@ export default function LocationInput({
         placeholder={placeholder}
         placeholderTextColor="#666"
         value={query}
+        autoCorrect={false}
         onChangeText={(query) => setQuery(query)}
       />
       {query !== location?.name && (
@@ -40,7 +41,9 @@ export default function LocationInput({
           query={query}
           callback={(location) => {
             setLocation(location);
-            inputRef.current?.blur();
+            setTimeout(() => {
+              inputRef.current?.blur();
+            }, 0);
           }}
         />
       )}
