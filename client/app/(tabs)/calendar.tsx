@@ -1,23 +1,29 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 
 // to be implemented
 export default function CalendarScreen() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Calendar View</Text>
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.header}>
+        <Text style={styles.title}> Your Schedule</Text>
+      </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    paddingVertical: 24,
   },
-  text: {
-    fontSize: 20,
-    fontWeight: '500',
+  header: {
+    paddingHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#1d1d1d',
+    marginBottom: 12,
   },
 });
