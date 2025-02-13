@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
-import { handleCalendarAccess } from '@/Services/GoogleAuthService';
 
 const { width } = Dimensions.get('window');
 
@@ -22,9 +21,7 @@ const scheduleData = {
   '2025-02-14': [{ className: 'History 301', location: 'Room C3', time: '1:00 PM - 2:30 PM' }],
 };
 
-async function buttonPress() {
-  const result = await handleCalendarAccess();
-}
+async function buttonPress() {}
 
 export default function Schedule() {
   const swiper = useRef();
