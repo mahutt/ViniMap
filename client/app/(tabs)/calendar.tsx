@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
+import { handleCalendarAccess } from '@/Services/GoogleAuthService';
 
 const { width } = Dimensions.get('window');
 
@@ -20,6 +21,10 @@ const scheduleData = {
   ],
   '2025-02-14': [{ className: 'History 301', location: 'Room C3', time: '1:00 PM - 2:30 PM' }],
 };
+
+async function buttonPress() {
+  const result = await handleCalendarAccess();
+}
 
 export default function Schedule() {
   const swiper = useRef();
@@ -49,6 +54,11 @@ export default function Schedule() {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Your Schedule</Text>
+          <View style={styles.uploadButton}>
+            <TouchableOpacity onPress={buttonPress}>
+              <Text style={styles.uploadButtonText}>Upload</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         <View style={styles.picker}>
@@ -209,5 +219,22 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontSize: 20,
+  },
+  uploadButtonText: {
+    color: 'white',
+  },
+  uploadButton: {
+    backgroundColor: '#852C3A',
+    display: 'flex',
+    width: '20%',
+    minHeight: 40, // Use a fixed height instead of a percentage
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8, // Use `8` instead of percentage for a more natural rounded look
+    paddingHorizontal: '2.5%',
+    textAlign: 'center',
+    position: 'absolute', // Prevents it from affecting other elements' layout
+    right: 16, // Instead of `left: '80%'`
+    top: 0, // Adjust this if needed
   },
 });
