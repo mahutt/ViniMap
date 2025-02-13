@@ -77,10 +77,10 @@ export default function Schedule() {
                           styles.item,
                           isActive && { backgroundColor: '#111', borderColor: '#111' },
                         ]}>
-                        <Text style={[styles.itemWeekday, isActive && { color: '#fff' }]}>
+                        <Text style={[styles.weekDatText, isActive && { color: '#fff' }]}>
                           {item.weekday}
                         </Text>
-                        <Text style={[styles.itemDate, isActive && { color: '#fff' }]}>
+                        <Text style={[styles.dateText, isActive && { color: '#fff' }]}>
                           {item.date.getDate()}
                         </Text>
                       </View>
@@ -118,7 +118,7 @@ export default function Schedule() {
                 </Text>
                 <View style={styles.scheduleContainer}>
                   {schedule.length > 0 ? (
-                    schedule.map((item, idx) => (
+                    schedule.map((item: any, idx: any) => (
                       <View key={idx} style={styles.scheduleBlock}>
                         <Text style={styles.className}>{item.className}</Text>
                         <Text style={styles.classDetails}>
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   scheduleBlock: {
-    backgroundColor: '#007aff',
+    backgroundColor: '#852C3A',
     padding: 12,
     borderRadius: 8,
     marginBottom: 8,
@@ -202,5 +202,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#e3e3e3',
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  weekDatText: {
+    fontSize: 12,
+  },
+  dateText: {
+    fontSize: 20,
   },
 });

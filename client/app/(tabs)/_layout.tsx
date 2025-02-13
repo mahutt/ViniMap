@@ -47,7 +47,7 @@ const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
       <Tabs.Screen
         name="calendar"
         options={{
-          title: 'Calendar',
+          title: 'Schedule',
           tabBarIcon: TabBarCalendarIcon,
         }}
       />
