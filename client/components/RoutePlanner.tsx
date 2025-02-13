@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
-import { getRoute } from '@/modules/map/MapService';
+import { getRoute, formatDuration } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
-import RouteService from '@/Services/RouteService';
 import CoordinateService from '@/Services/CoordinateService';
 
 export function RoutePlanner() {
@@ -197,9 +196,7 @@ export function RoutePlanner() {
               ]}
               onPress={() => handleTransportMode('walking')}>
               <Ionicons name="walk-outline" size={24} color="#666" />
-              <Text>
-                {durations.walking !== null ? RouteService.formatDuration(durations.walking) : ''}
-              </Text>
+              <Text>{durations.walking !== null ? formatDuration(durations.walking) : ''}</Text>
             </Pressable>
 
             <Pressable
@@ -209,9 +206,7 @@ export function RoutePlanner() {
               ]}
               onPress={() => handleTransportMode('cycling')}>
               <Ionicons name="bicycle-outline" size={24} color="#666" />
-              <Text>
-                {durations.cycling !== null ? RouteService.formatDuration(durations.cycling) : ''}
-              </Text>
+              <Text>{durations.cycling !== null ? formatDuration(durations.cycling) : ''}</Text>
             </Pressable>
 
             <Pressable
@@ -221,9 +216,7 @@ export function RoutePlanner() {
               ]}
               onPress={() => handleTransportMode('driving')}>
               <Ionicons name="car-outline" size={24} color="#666" />
-              <Text>
-                {durations.driving !== null ? RouteService.formatDuration(durations.driving) : ''}
-              </Text>
+              <Text>{durations.driving !== null ? formatDuration(durations.driving) : ''}</Text>
             </Pressable>
 
             <Pressable
@@ -253,9 +246,7 @@ export function RoutePlanner() {
               />
               <Text
                 style={[styles.durationText, durations.shuttle === null && styles.unavailableText]}>
-                {durations.shuttle !== null
-                  ? RouteService.formatDuration(Number(durations.shuttle))
-                  : ''}
+                {durations.shuttle !== null ? formatDuration(Number(durations.shuttle)) : ''}
               </Text>
             </Pressable>
           </ScrollView>
@@ -275,9 +266,7 @@ export function RoutePlanner() {
             <View style={styles.infoContent}>
               <Text style={styles.infoText}>
                 <Text style={styles.boldText}>
-                  {durations[selectedMode] !== null
-                    ? RouteService.formatDuration(durations[selectedMode])
-                    : 0}{' '}
+                  {durations[selectedMode] !== null ? formatDuration(durations[selectedMode]) : 0}{' '}
                 </Text>
                 <Text style={styles.infoText}>
                   ({(Number(distances[selectedMode]) / 1000).toFixed(2)} km){' '}

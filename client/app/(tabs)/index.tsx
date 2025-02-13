@@ -22,7 +22,7 @@ export default function HomeScreen() {
       <MapView />
       {(state === MapState.Idle || state === MapState.Information) && (
         <>
-          <SearchBar onSearch={(query) => console.log(query)} />
+          <SearchBar />
           <PitchButton />
           <ToggleCampusButton />
         </>

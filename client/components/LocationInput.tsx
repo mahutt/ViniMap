@@ -2,7 +2,7 @@ import { Location } from '@/modules/map/MapContext';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { TextInput, View, StyleSheet } from 'react-native';
-import LocationsAutocomplete from './PlacesAutocomplete';
+import LocationsAutocomplete from './LocationsAutocomplete';
 import { StartLocationSelector } from './StartLocation';
 
 export default function LocationInput({
@@ -37,6 +37,7 @@ export default function LocationInput({
         placeholder={placeholder}
         placeholderTextColor="#666"
         value={query}
+        autoCorrect={false}
         onChangeText={(query) => setQuery(query)}
         onFocus={() => {
           if (isStartLocation) {
@@ -53,7 +54,9 @@ export default function LocationInput({
           query={query}
           callback={(location) => {
             setLocation(location);
-            inputRef.current?.blur();
+            setTimeout(() => {
+              inputRef.current?.blur();
+            }, 0);
           }}
         />
       )}
