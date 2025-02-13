@@ -170,6 +170,7 @@ export function RoutePlanner() {
               setLocation={setStartLocation}
               ionIconName="pin-outline"
               placeholder="Start location"
+              isStartLocation={true}
             />
             <Pressable onPress={() => setState(MapState.Idle)}>
               <Ionicons name="close-outline" size={28} color="#666" />

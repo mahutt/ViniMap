@@ -13,6 +13,7 @@ export enum MapState {
   Idle,
   RoutePlanning,
   Information,
+  SelectingStartLocation,
 }
 
 const DEFAULT_COORDINATES: Coordinates = [-73.5789, 45.4973];

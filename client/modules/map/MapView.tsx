@@ -12,6 +12,7 @@ export default function MapView() {
     setState,
     startLocation,
     endLocation,
+    setStartLocation,
     setEndLocation,
     mapRef,
     cameraRef,
@@ -24,27 +25,51 @@ export default function MapView() {
   function onMapClick(event: any) {
     const { geometry } = event;
 
-    if (geometry?.coordinates) {
-      const coordinates = geometry.coordinates;
+    if (!geometry?.coordinates) {
+      console.warn('No coordinates found in the event.');
+      return;
+    }
+
+    const coordinates = geometry.coordinates;
+
+    if (state === MapState.SelectingStartLocation) {
+      setStartLocation({ name: null, coordinates: coordinates });
+      fetchLocationData(coordinates)
+        .then((data) => {
+          if (data) {
+            setStartLocation({ name: data.name, coordinates: coordinates, data });
+            setState(MapState.RoutePlanning);
+          }
+        })
+        .catch((error) => {
+          console.warn('Error fetching location data:', error);
+        });
+    } else {
       setEndLocation({ name: null, coordinates: coordinates });
-      fetchLocationData(coordinates).then((data) => {
-        if (data) {
-          setEndLocation({ name: data.name, coordinates: coordinates, data });
-          setState(MapState.Information);
+      fetchLocationData(coordinates)
+        .then((data) => {
+          if (data) {
+            setEndLocation({ name: data.name, coordinates: coordinates, data });
+            setState(MapState.Information);
+            if (cameraRef.current) {
+              cameraRef.current.flyTo(coordinates, 1000);
+            }
+          }
           if (cameraRef.current) {
             cameraRef.current.flyTo(coordinates, 1000);
           }
-        }
-        if (cameraRef.current) {
-          cameraRef.current.flyTo(coordinates, 1000);
-        }
-        setState(MapState.Information);
-      });
-    } else {
-      console.warn('No coordinates found in the event.');
+          setState(MapState.Information);
+        })
+        .catch((error) => {
+          console.warn('Error fetching location data:', error);
+
+          if (cameraRef.current) {
+            cameraRef.current.flyTo(coordinates, 1000);
+          }
+          setState(MapState.Information);
+        });
     }
   }
-
   return (
     <Mapbox.MapView
       ref={mapRef}

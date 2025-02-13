@@ -3,20 +3,24 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { TextInput, View, StyleSheet } from 'react-native';
 import LocationsAutocomplete from './PlacesAutocomplete';
+import { StartLocationSelector } from './StartLocation';
 
 export default function LocationInput({
   location,
   setLocation,
   ionIconName,
   placeholder,
+  isStartLocation = false,
 }: Readonly<{
   location: Location | null;
   setLocation: (location: Location) => void;
   ionIconName: 'pin-outline' | 'pin';
   placeholder: string;
+  isStartLocation?: boolean;
 }>) {
   const inputRef = React.useRef<TextInput>(null);
   const [query, setQuery] = React.useState<string>('');
+  const [showSelector, setShowSelector] = React.useState(false);
 
   useEffect(() => {
     if (location) {
@@ -34,8 +38,17 @@ export default function LocationInput({
         placeholderTextColor="#666"
         value={query}
         onChangeText={(query) => setQuery(query)}
+        onFocus={() => {
+          if (isStartLocation) {
+            setShowSelector(true);
+            inputRef.current?.blur();
+          }
+        }}
       />
-      {query !== location?.name && (
+      {isStartLocation && showSelector && (
+        <StartLocationSelector onClose={() => setShowSelector(false)} />
+      )}
+      {!showSelector && query !== location?.name && (
         <LocationsAutocomplete
           query={query}
           callback={(location) => {
