@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   StyleSheet,
   Dimensions,
@@ -10,28 +10,52 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
+import { extractScheduleData, fetchCalendarEvents } from '@/Services/GoogleScheduleService';
 
 const { width } = Dimensions.get('window');
 
-const scheduleData = {
-  '2025-02-13': [
-    { className: 'Math 101', location: 'Room A1', time: '9:00 AM - 10:30 AM' },
-    { className: 'Physics 202', location: 'Room B2', time: '11:00 AM - 12:30 PM' },
-  ],
-  '2025-02-14': [{ className: 'History 301', location: 'Room C3', time: '1:00 PM - 2:30 PM' }],
-};
-
-async function buttonPress() {}
-
 export default function Schedule() {
-  const swiper = useRef();
-  const contentSwiper = useRef();
+  const swiper = useRef<Swiper | null>(null);
+  const contentSwiper = useRef<Swiper | null>(null);
   const [week, setWeek] = useState(0);
   const [value, setValue] = useState(new Date());
+  const [scheduleData, setScheduleData] = useState<
+    Record<string, { className: string; location: string; time: string }[]>
+  >({});
+
+  async function buttonPress() {
+    const calendarId =
+      '8e24ffd353dbbd1d749f9cc0b0f3ca08289fd2370ba839bac051266eac333377@group.calendar.google.com';
+
+    try {
+      const calendarJson = await fetchCalendarEvents(calendarId);
+      const newScheduleData = extractScheduleData(calendarJson);
+
+      const updatedScheduleData: Record<
+        string,
+        { className: string; location: string; time: string }[]
+      > = {};
+
+      // Populate data for current week and 4 weeks ahead
+      for (let i = 0; i <= 4; i++) {
+        Object.keys(newScheduleData).forEach((date) => {
+          const momentDate = moment(date)
+            .add(i * 7, 'days')
+            .format('YYYY-MM-DD');
+          updatedScheduleData[momentDate] = newScheduleData[date];
+        });
+      }
+
+      setScheduleData(updatedScheduleData);
+    } catch (error) {
+      console.error('Error fetching schedule:', error);
+    }
+  }
 
   const weeks = React.useMemo(() => {
-    const start = moment().add(week, 'weeks').startOf('week');
-    return [-1, 0, 1].map((adj) => {
+    const start = moment().startOf('week'); // Always start from this week
+    return Array.from({ length: 5 }).map((_, adj) => {
+      // Generate weeks 0-4
       return Array.from({ length: 7 }).map((_, index) => {
         const date = moment(start).add(adj, 'week').add(index, 'day');
         return {
@@ -40,7 +64,7 @@ export default function Schedule() {
         };
       });
     });
-  }, [week]);
+  }, []);
 
   const days = React.useMemo(() => {
     return [moment(value).subtract(1, 'day').toDate(), value, moment(value).add(1, 'day').toDate()];
@@ -60,17 +84,23 @@ export default function Schedule() {
 
         <View style={styles.picker}>
           <Swiper
-            index={1}
+            index={0}
             ref={swiper}
             loop={false}
             showsPagination={false}
             onIndexChanged={(ind) => {
-              if (ind === 1) return;
-              const index = ind - 1;
-              setValue(moment(value).add(index, 'week').toDate());
+              if (ind < 0 || ind > 4) return; // Prevent scrolling past bounds
+              setValue(
+                moment(value)
+                  .add(ind - week, 'week')
+                  .toDate()
+              );
               setTimeout(() => {
-                setWeek(week + index);
-                swiper.current.scrollTo(1, false);
+                setWeek(ind);
+
+                if (swiper.current) {
+                  swiper.current.scrollTo(ind, false);
+                }
               }, 10);
             }}>
             {weeks.map((dates, index) => (
@@ -109,10 +139,14 @@ export default function Schedule() {
             setTimeout(() => {
               const nextValue = moment(value).add(ind - 1, 'days');
               if (moment(value).week() !== nextValue.week()) {
-                setWeek(moment(value).isBefore(nextValue) ? week + 1 : week - 1);
+                const nextWeek = moment(value).isBefore(nextValue) ? week + 1 : week - 1;
+                if (nextWeek < 0 || nextWeek > 4) return; // Prevent exceeding week bounds
+                setWeek(nextWeek);
               }
               setValue(nextValue.toDate());
-              contentSwiper.current.scrollTo(1, false);
+              if (swiper.current) {
+                swiper.current.scrollTo(ind, false);
+              }
             }, 10);
           }}>
           {days.map((day, index) => {
@@ -125,7 +159,7 @@ export default function Schedule() {
                 </Text>
                 <View style={styles.scheduleContainer}>
                   {schedule.length > 0 ? (
-                    schedule.map((item: any, idx: any) => (
+                    schedule.map((item, idx) => (
                       <View key={idx} style={styles.scheduleBlock}>
                         <Text style={styles.className}>{item.className}</Text>
                         <Text style={styles.classDetails}>
@@ -222,16 +256,13 @@ const styles = StyleSheet.create({
   },
   uploadButton: {
     backgroundColor: '#852C3A',
-    display: 'flex',
     width: '20%',
-    minHeight: 40, // Use a fixed height instead of a percentage
+    minHeight: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 8, // Use `8` instead of percentage for a more natural rounded look
-    paddingHorizontal: '2.5%',
-    textAlign: 'center',
-    position: 'absolute', // Prevents it from affecting other elements' layout
-    right: 16, // Instead of `left: '80%'`
-    top: 0, // Adjust this if needed
+    borderRadius: 8,
+    position: 'absolute',
+    right: 16,
+    top: 0,
   },
 });
