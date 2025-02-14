@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { MMKV } from 'react-native-mmkv';
 import {
   StyleSheet,
   Dimensions,
@@ -27,6 +28,7 @@ export default function Schedule() {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const storage = new MMKV();
 
   const handleSave = async (value: string): Promise<void> => {
     try {
@@ -39,11 +41,18 @@ export default function Schedule() {
   };
 
   useEffect(() => {
+    const calendarId = storage.getString('calendarId') ?? '';
+    setInputValue(calendarId);
+  }, []);
+
+  useEffect(() => {
     console.log('Updated inputValue:', inputValue);
 
     if (inputValue === '') {
       return;
     }
+
+    storage.set('calendarId', inputValue);
 
     fetchAndSetSchedule(inputValue);
   }, [inputValue]);

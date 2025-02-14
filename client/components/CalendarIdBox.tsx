@@ -29,7 +29,8 @@ const SimpleModal: React.FC<SimpleModalProps> = ({ visible, onClose, onSave }) =
         <View style={styles.modalBackground}>
           <TouchableWithoutFeedback onPress={() => {}}>
             <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Enter Something</Text>
+              <Text style={styles.modalTitle}>Enter Google Calendar Id</Text>
+
               <TextInput
                 style={styles.input}
                 placeholder="Type here..."
