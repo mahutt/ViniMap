@@ -12,15 +12,15 @@ import {
 interface SimpleModalProps {
   visible: boolean;
   onClose: () => void;
-  onSave: (value: string) => void; // ✅ Callback to pass data back
+  onSave: (value: string) => void;
 }
 
 const SimpleModal: React.FC<SimpleModalProps> = ({ visible, onClose, onSave }) => {
-  const [localInput, setLocalInput] = useState(''); // ✅ Local state for input
+  const [localInput, setLocalInput] = useState('');
 
   const handleSave = () => {
-    onSave(localInput); // ✅ Send input back to parent
-    onClose(); // ✅ Close modal after saving
+    onSave(localInput);
+    onClose();
   };
 
   return (
