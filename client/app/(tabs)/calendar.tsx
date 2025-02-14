@@ -7,10 +7,12 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Modal,
 } from 'react-native';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
 import { extractScheduleData, fetchCalendarEvents } from '@/Services/GoogleScheduleService';
+import SimpleModal from '@/components/CalendarIdBox';
 
 const { width } = Dimensions.get('window');
 
@@ -23,7 +25,25 @@ export default function Schedule() {
     Record<string, { className: string; location: string; time: string }[]>
   >({});
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+
+  const handleSave = async (value: string): Promise<void> => {
+    try {
+      console.log('I AM IN HANDLE SAVE!!!');
+      setInputValue(value);
+      console.log('input Value: ', inputValue);
+    } catch (error) {
+      console.error('Error in handleSave:', error);
+    }
+  };
+
+  useEffect(() => {
+    console.log('Updated inputValue:', inputValue);
+  }, [inputValue, scheduleData]); // ✅ Runs whenever inputValue changes
+
   async function buttonPress() {
+    setModalVisible(true);
     const calendarId =
       '8e24ffd353dbbd1d749f9cc0b0f3ca08289fd2370ba839bac051266eac333377@group.calendar.google.com';
 
@@ -36,7 +56,6 @@ export default function Schedule() {
         { className: string; location: string; time: string }[]
       > = {};
 
-      // Populate data for current week and 4 weeks ahead
       for (let i = 0; i <= 4; i++) {
         Object.keys(newScheduleData).forEach((date) => {
           const momentDate = moment(date)
@@ -55,7 +74,6 @@ export default function Schedule() {
   const weeks = React.useMemo(() => {
     const start = moment().startOf('week'); // Always start from this week
     return Array.from({ length: 5 }).map((_, adj) => {
-      // Generate weeks 0-4
       return Array.from({ length: 7 }).map((_, index) => {
         const date = moment(start).add(adj, 'week').add(index, 'day');
         return {
@@ -72,6 +90,12 @@ export default function Schedule() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
+      <SimpleModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSave={handleSave}
+      />
+
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Your Schedule</Text>
@@ -264,5 +288,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 16,
     top: 0,
+  },
+  modal: {
+    display: 'flex',
   },
 });
