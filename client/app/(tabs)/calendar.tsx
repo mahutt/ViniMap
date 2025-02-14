@@ -50,6 +50,10 @@ export default function Schedule() {
 
   useEffect(() => {}, [scheduleData]);
 
+  const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
+    console.log('Class Clicked:', classItem);
+  };
+
   const fetchAndSetSchedule = async (calendarId: string) => {
     try {
       console.log('Fetching schedule for calendar ID:', calendarId);
@@ -193,12 +197,14 @@ export default function Schedule() {
                 <View style={styles.scheduleContainer}>
                   {schedule.length > 0 ? (
                     schedule.map((item, idx) => (
-                      <View key={idx} style={styles.scheduleBlock}>
-                        <Text style={styles.className}>{item.className}</Text>
-                        <Text style={styles.classDetails}>
-                          {item.location} - {item.time}
-                        </Text>
-                      </View>
+                      <TouchableOpacity key={idx} onPress={() => handleClassClick(item)}>
+                        <View style={styles.scheduleBlock}>
+                          <Text style={styles.className}>{item.className}</Text>
+                          <Text style={styles.classDetails}>
+                            {item.location} - {item.time}
+                          </Text>
+                        </View>
+                      </TouchableOpacity>
                     ))
                   ) : (
                     <Text style={styles.noSchedule}>No classes scheduled</Text>
