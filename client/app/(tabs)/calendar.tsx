@@ -40,14 +40,19 @@ export default function Schedule() {
 
   useEffect(() => {
     console.log('Updated inputValue:', inputValue);
-  }, [inputValue, scheduleData]); // ✅ Runs whenever inputValue changes
 
-  async function buttonPress() {
-    setModalVisible(true);
-    const calendarId =
-      '8e24ffd353dbbd1d749f9cc0b0f3ca08289fd2370ba839bac051266eac333377@group.calendar.google.com';
+    if (inputValue === '') {
+      return;
+    }
 
+    fetchAndSetSchedule(inputValue);
+  }, [inputValue]);
+
+  useEffect(() => {}, [scheduleData]);
+
+  const fetchAndSetSchedule = async (calendarId: string) => {
     try {
+      console.log('Fetching schedule for calendar ID:', calendarId);
       const calendarJson = await fetchCalendarEvents(calendarId);
       const newScheduleData = extractScheduleData(calendarJson);
 
@@ -69,6 +74,10 @@ export default function Schedule() {
     } catch (error) {
       console.error('Error fetching schedule:', error);
     }
+  };
+
+  async function buttonPress() {
+    setModalVisible(true);
   }
 
   const weeks = React.useMemo(() => {
