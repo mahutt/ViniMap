@@ -1,9 +1,8 @@
-import { Location } from '@/modules/map/MapContext';
+import { Location, MapState, useMap } from '@/modules/map/MapContext';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
-import { TextInput, View, StyleSheet } from 'react-native';
+import { TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import LocationsAutocomplete from './LocationsAutocomplete';
-import { StartLocationSelector } from './StartLocation';
 
 export default function LocationInput({
   location,
@@ -20,13 +19,30 @@ export default function LocationInput({
 }>) {
   const inputRef = React.useRef<TextInput>(null);
   const [query, setQuery] = React.useState<string>('');
-  const [showSelector, setShowSelector] = React.useState(false);
+  const [isFocused, setIsFocused] = React.useState(false);
+  const { setState } = useMap();
 
   useEffect(() => {
+    if (location && !isFocused) {
+      setQuery(location.name ?? '');
+    }
+  }, [location, isFocused]);
+
+  // to clear the input when its focused.
+  const handleFocus = () => {
+    setIsFocused(true);
+    if (isStartLocation) {
+      setQuery('');
+    }
+  };
+
+  // will restore the location name when its blurred
+  const handleBlur = () => {
+    setIsFocused(false);
     if (location) {
       setQuery(location.name ?? '');
     }
-  }, [location]);
+  };
 
   return (
     <View style={styles.locationInputContainer}>
@@ -34,29 +50,36 @@ export default function LocationInput({
       <TextInput
         ref={inputRef}
         style={styles.input}
-        placeholder={placeholder}
+        placeholder={isStartLocation ? 'Tap to change from current location' : placeholder}
         placeholderTextColor="#666"
         value={query}
         autoCorrect={false}
-        onChangeText={(query) => setQuery(query)}
-        onFocus={() => {
-          if (isStartLocation) {
-            setShowSelector(true);
-            inputRef.current?.blur();
-          }
-        }}
+        onChangeText={setQuery}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
-      {isStartLocation && showSelector && (
-        <StartLocationSelector onClose={() => setShowSelector(false)} />
+
+      {isStartLocation && isFocused && query.length === 0 && (
+        <View style={styles.optionsContainer}>
+          <TouchableOpacity
+            style={styles.optionItem}
+            onPress={() => {
+              setState(MapState.SelectingStartLocation);
+              inputRef.current?.blur();
+            }}>
+            <Ionicons name="map-outline" size={20} color="#666" />
+            <Text style={styles.optionText}>Choose on map</Text>
+          </TouchableOpacity>
+        </View>
       )}
-      {!showSelector && query !== location?.name && (
+
+      {isFocused && query.length > 0 && (
         <LocationsAutocomplete
           query={query}
-          callback={(location) => {
-            setLocation(location);
-            setTimeout(() => {
-              inputRef.current?.blur();
-            }, 0);
+          callback={(selectedLocation) => {
+            setLocation(selectedLocation);
+            setQuery(selectedLocation.name ?? '');
+            inputRef.current?.blur();
           }}
         />
       )}
@@ -81,5 +104,27 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     fontSize: 16,
+  },
+  optionsContainer: {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 12,
+    zIndex: 2,
+    marginTop: 4,
+  },
+  optionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    padding: 16,
+  },
+  optionText: {
+    fontSize: 16,
+    color: '#666',
   },
 });
