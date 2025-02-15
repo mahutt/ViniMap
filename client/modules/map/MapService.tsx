@@ -5,6 +5,11 @@ import { calculateEuclideanDistance } from './MapUtils';
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
+const PROXIMITY_COORDINTATES = {
+  longitude: -73.57791396549962, // Concordia's Longitude
+  latitude: 45.495102086770814, // Concordia's Latitude
+};
+
 const getLocationCoordinates = async (locationQuery: string): Promise<Location | null> => {
   const url = `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
     locationQuery
@@ -25,7 +30,9 @@ const getLocations = async (locationQuery: string): Promise<Location[]> => {
   const response = await fetch(
     `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
       locationQuery
-    )}&proximity=-73.5673,45.5017&access_token=${MAPBOX_ACCESS_TOKEN}` // Proximity set to Montreal (Longitude, Latitude)
+    )}&proximity=${PROXIMITY_COORDINTATES.longitude},${
+      PROXIMITY_COORDINTATES.latitude
+    }&access_token=${MAPBOX_ACCESS_TOKEN}`
   );
 
   const data = await response.json();
