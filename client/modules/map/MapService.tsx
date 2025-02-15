@@ -25,8 +25,7 @@ const getLocations = async (locationQuery: string): Promise<Location[]> => {
   const response = await fetch(
     `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
       locationQuery
-    )}&bbox=-73.9,45.3,-73.4,45.7&access_token=${MAPBOX_ACCESS_TOKEN}` //bbox=minLongitude,minLatitude,maxLongitude,maxLatitude, The bbox returns addresses within the specified coordinate range
-    //The bbox range includes addresses in the greater Montreal Area, so it can still return addresses off island.
+    )}&proximity=-73.5673,45.5017&access_token=${MAPBOX_ACCESS_TOKEN}` // Proximity set to Montreal (Longitude, Latitude)
   );
 
   const data = await response.json();
