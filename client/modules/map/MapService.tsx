@@ -1,5 +1,7 @@
 import ShuttleCalculatorService from '@/Services/ShuttleCalculatorService';
 import { Coordinates, Location } from './MapContext';
+import { calculateEuclideanDistance } from './MapUtils';
+
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
@@ -81,29 +83,6 @@ const fetchLocationData = async (coordinates: Coordinates) => {
   }
 };
 
-const distanceOf2Coords = async (coord1: Coordinates, coord2: Coordinates): Promise<number> => {
-  const origin = `${coord1[1]},${coord1[0]}`;
-  const destination = `${coord2[1]},${coord2[0]}`;
-
-  const url = `https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin}&destinations=${destination}&key=${GOOGLE_API_KEY}`;
-
-  try {
-    const response = await fetch(url);
-    const data = await response.json();
-
-    if (data.status === 'OK' && data.rows[0].elements[0].status === 'OK') {
-      const distanceValue = data.rows[0].elements[0].distance.value;
-      return Number(distanceValue / 1000);
-    } else {
-      console.error('Error fetching distance:', data);
-      return -1;
-    }
-  } catch (error) {
-    console.error('Fetch error:', error);
-    return -1;
-  }
-};
-
 const getRouteForShuttle = async (
   startCoordinates: Coordinates,
   endCoordinates: Coordinates
@@ -112,7 +91,7 @@ const getRouteForShuttle = async (
   duration: number | null;
   distance: number | null;
 }> => {
-  const MAX_DISTANCE_FROM_BUS = 1.5;
+  const MAX_EUCLIDEAN_DISTANCE = 0.01508;
 
   const SgwCoords: Coordinates = [-73.5784711, 45.4970661];
   const LoyolaCoords: Coordinates = [-73.6393324, 45.4577857];
@@ -125,24 +104,27 @@ const getRouteForShuttle = async (
   let isEndSgw = false;
   let isEndLoyola = false;
 
-  const distanceToShuttleSgwFromStart = await distanceOf2Coords(SgwCoords, startCoordinates);
-  const distanceToShuttleLoyolaFromStart = await distanceOf2Coords(LoyolaCoords, startCoordinates);
-  const distanceToShuttleSgwFromEnd = await distanceOf2Coords(SgwCoords, endCoordinates);
-  const distanceToShuttleLoyolaFromEnd = await distanceOf2Coords(LoyolaCoords, endCoordinates);
+  const distanceToShuttleSgwFromStart = calculateEuclideanDistance(SgwCoords, startCoordinates);
+  const distanceToShuttleLoyolaFromStart = calculateEuclideanDistance(
+    LoyolaCoords,
+    startCoordinates
+  );
+  const distanceToShuttleSgwFromEnd = calculateEuclideanDistance(SgwCoords, endCoordinates);
+  const distanceToShuttleLoyolaFromEnd = calculateEuclideanDistance(LoyolaCoords, endCoordinates);
 
-  if (distanceToShuttleSgwFromStart <= MAX_DISTANCE_FROM_BUS) {
+  if (distanceToShuttleSgwFromStart <= MAX_EUCLIDEAN_DISTANCE) {
     isStartSgw = true;
     startBusStop = SgwCoords;
   }
-  if (distanceToShuttleLoyolaFromStart <= MAX_DISTANCE_FROM_BUS) {
+  if (distanceToShuttleLoyolaFromStart <= MAX_EUCLIDEAN_DISTANCE) {
     isStartLoyola = true;
     startBusStop = LoyolaCoords;
   }
-  if (distanceToShuttleSgwFromEnd <= MAX_DISTANCE_FROM_BUS) {
+  if (distanceToShuttleSgwFromEnd <= MAX_EUCLIDEAN_DISTANCE) {
     isEndSgw = true;
     endBusStop = SgwCoords;
   }
-  if (distanceToShuttleLoyolaFromEnd <= MAX_DISTANCE_FROM_BUS) {
+  if (distanceToShuttleLoyolaFromEnd <= MAX_EUCLIDEAN_DISTANCE) {
     isEndLoyola = true;
     endBusStop = LoyolaCoords;
   }
