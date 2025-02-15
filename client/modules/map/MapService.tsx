@@ -25,7 +25,7 @@ const getLocations = async (locationQuery: string): Promise<Location[]> => {
   const response = await fetch(
     `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
       locationQuery
-    )}&bbox=-73.9,45.3,-73.4,45.7&access_token=${MAPBOX_ACCESS_TOKEN}`
+    )}&bbox=-73.9,45.3,-73.4,45.7&access_token=${MAPBOX_ACCESS_TOKEN}` //bbox=minLongitude,minLatitude,maxLongitude,maxLatitude, The bbox returns addresses within the specified coordinate range
   );
 
   const data = await response.json();
