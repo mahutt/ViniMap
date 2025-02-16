@@ -6,8 +6,8 @@ const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as strin
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
 const PROXIMITY_COORDINTATES = {
-  longitude: -73.57791396549962, // Concordia's Longitude
-  latitude: 45.495102086770814, // Concordia's Latitude
+  longitude: -73.57791396549962, // Concordia SGW Campus Longitude
+  latitude: 45.495102086770814, // Concordia SGW Campus  Latitude
 };
 
 const getLocationCoordinates = async (locationQuery: string): Promise<Location | null> => {
