@@ -48,18 +48,21 @@ export function RoutePlanner() {
           console.log('Start location not set, waiting for user input');
         }
       }
-
       if (startLocation && endLocation) {
-        try {
-          loadRouteFromCoordinates(
-            startLocation.coordinates,
-            endLocation.coordinates,
-            selectedMode
-          );
-          calculateOptions();
-        } catch (error) {
-          console.error('Error loading route:', error);
-        }
+        const loadRoute = async () => {
+          try {
+            await loadRouteFromCoordinates(
+              startLocation.coordinates,
+              endLocation.coordinates,
+              selectedMode
+            );
+            calculateOptions();
+          } catch (error) {
+            console.error('Error loading route:', error);
+          }
+        };
+
+        loadRoute();
       }
     }
   }, [startLocation, endLocation, selectedMode, state]);
