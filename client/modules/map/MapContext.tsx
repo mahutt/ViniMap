@@ -56,17 +56,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [pitchLevel, setPitchLevel] = useState(0);
   const [state, setState] = useState<MapState>(MapState.Idle);
 
-  const centerMapOnUserLocation = async () => {
-    const tempCoordinates: Coordinates = (await CoordinateService.getCurrentCoordinates()) ?? [
-      0, 0,
-    ];
-
-    setStartLocation({
-      name: 'Current location',
-      coordinates: tempCoordinates,
-    });
-  };
-
   const setStateWithLogging = (newState: MapState) => {
     console.log('State changing from', state, 'to', newState);
 
