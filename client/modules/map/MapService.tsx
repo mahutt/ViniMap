@@ -10,22 +10,6 @@ const PROXIMITY_COORDINTATES = {
   latitude: 45.495102086770814, // Concordia SGW Campus  Latitude
 };
 
-const getLocationCoordinates = async (locationQuery: string): Promise<Location | null> => {
-  const url = `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
-    locationQuery
-  )}&access_token=${MAPBOX_ACCESS_TOKEN}`;
-  const response = await fetch(url);
-  const data = await response.json();
-  if (data?.features[0]) {
-    const feature = data.features[0];
-    return {
-      name: locationQuery,
-      coordinates: feature.geometry.coordinates as Coordinates,
-    };
-  }
-  return null;
-};
-
 const getLocations = async (locationQuery: string): Promise<Location[]> => {
   const response = await fetch(
     `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
@@ -207,4 +191,4 @@ const formatDuration = (seconds: number | null): string => {
   return `${minutes} min`;
 };
 
-export { getLocationCoordinates, getLocations, getRoute, fetchLocationData, formatDuration };
+export { getLocations, getRoute, fetchLocationData, formatDuration };
