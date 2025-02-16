@@ -2,6 +2,7 @@ import React, { createContext, useContext, useRef, useState, useMemo } from 'rea
 import Mapbox from '@rnmapbox/maps';
 import { getRoute } from './MapService';
 import { Coordinates } from './Types';
+import CoordinateService from '@/Services/CoordinateService';
 
 export interface Location {
   name: string | null;
@@ -14,6 +15,7 @@ export enum MapState {
   RoutePlanning,
   Information,
   SelectingStartLocation,
+  SelectingEndLocation,
 }
 
 const DEFAULT_COORDINATES: Coordinates = [-73.5789, 45.4973];
@@ -54,6 +56,34 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [pitchLevel, setPitchLevel] = useState(0);
   const [state, setState] = useState<MapState>(MapState.Idle);
 
+  const centerMapOnUserLocation = async () => {
+    const tempCoordinates: Coordinates = (await CoordinateService.getCurrentCoordinates()) ?? [
+      0, 0,
+    ];
+
+    setStartLocation({
+      name: 'Current location',
+      coordinates: tempCoordinates,
+    });
+  };
+
+  const setStateWithLogging = (newState: MapState) => {
+    console.log('State changing from', state, 'to', newState);
+
+    switch (newState) {
+      case MapState.SelectingStartLocation:
+        setStartLocation(null);
+        break;
+      case MapState.RoutePlanning:
+        if (!startLocation) {
+          console.log('Start location not set, user will need to set it');
+        }
+        break;
+    }
+
+    setState(newState);
+  };
+
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);
   const [routeCoordinates, setRouteCoordinates] = useState<Coordinates[]>([]);
@@ -79,9 +109,14 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     endCoordinates: Coordinates,
     mode = 'walking'
   ): Promise<void> => {
+    if (!startCoordinates || !endCoordinates) {
+      // null checks
+      console.warn('Invalid coordinates for route calculation');
+      return;
+    }
     return getRoute(startCoordinates, endCoordinates, mode)
       .then((data) => {
-        if (data.coordinates) {
+        if (data?.coordinates) {
           if (data.coordinates.length > 0) {
             flyTo(data.coordinates[0], zoomLevel);
           }
@@ -107,7 +142,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       routeCoordinates,
       setCenterCoordinate,
       setZoomLevel,
-      setState,
+      setState: setStateWithLogging,
       setStartLocation,
       setEndLocation,
       flyTo,

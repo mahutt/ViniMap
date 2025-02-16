@@ -28,7 +28,7 @@ export function SearchBar() {
             callback={(location) => {
               setQuery(location.name ?? '');
               setEndLocation(location);
-              setState(MapState.Information);
+              // setState(MapState.Information);
               flyTo(location.coordinates, 17);
               setTimeout(() => {
                 textInputRef.current?.blur();

@@ -7,11 +7,8 @@ export function LocationInfo() {
   const { endLocation, setState, setEndLocation } = useMap();
 
   function getDirections() {
-    const selectedBuilding = endLocation;
     setState(MapState.RoutePlanning);
-    setTimeout(() => {
-      setEndLocation(selectedBuilding);
-    }, 100);
+    setEndLocation(endLocation);
   }
 
   return (

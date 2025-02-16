@@ -1,8 +1,9 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import React from 'react';
 import { MapState, useMap } from './MapContext';
 import { fetchLocationData } from './MapService';
+import { LocationInfo } from '@/components/LocationInfo';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -25,6 +26,7 @@ export default function MapView() {
   function onMapClick(event: any) {
     const { geometry } = event;
 
+    console.log('Current Map State:', state);
     if (!geometry?.coordinates) {
       console.warn('No coordinates found in the event.');
       return;
@@ -38,6 +40,20 @@ export default function MapView() {
         .then((data) => {
           if (data) {
             setStartLocation({ name: data.name, coordinates: coordinates, data });
+            if (endLocation) {
+              setState(MapState.RoutePlanning);
+            }
+          }
+        })
+        .catch((error) => {
+          console.warn('Error fetching location data:', error);
+        });
+    } else if (state === MapState.SelectingEndLocation) {
+      setEndLocation({ name: null, coordinates: coordinates });
+      fetchLocationData(coordinates)
+        .then((data) => {
+          if (data) {
+            setEndLocation({ name: data.name, coordinates: coordinates, data });
             setState(MapState.RoutePlanning);
           }
         })
@@ -45,86 +61,104 @@ export default function MapView() {
           console.warn('Error fetching location data:', error);
         });
     } else {
-      setEndLocation({ name: null, coordinates: coordinates });
       fetchLocationData(coordinates)
         .then((data) => {
           if (data) {
             setEndLocation({ name: data.name, coordinates: coordinates, data });
             setState(MapState.Information);
-            if (cameraRef.current) {
-              cameraRef.current.flyTo(coordinates, 1000);
-            }
           }
-          if (cameraRef.current) {
-            cameraRef.current.flyTo(coordinates, 1000);
-          }
-          setState(MapState.Information);
         })
         .catch((error) => {
           console.warn('Error fetching location data:', error);
-
-          if (cameraRef.current) {
-            cameraRef.current.flyTo(coordinates, 1000);
-          }
-          setState(MapState.Information);
         });
     }
+
+    if (cameraRef.current) {
+      cameraRef.current.flyTo(coordinates, 17);
+    }
   }
+
+  // pop up messaged to help guide user
+  function getHelperText() {
+    switch (state) {
+      case MapState.SelectingStartLocation:
+        return 'Tap anywhere on the map to set your start location';
+      case MapState.SelectingEndLocation:
+        return 'Tap anywhere on the map to set your destination';
+      case MapState.RoutePlanning:
+        return 'Tap input boxes to search by address or choose on map';
+      default:
+        return null;
+    }
+  }
+
   return (
-    <Mapbox.MapView
-      ref={mapRef}
-      style={styles.map}
-      styleURL="mapbox://styles/ambrose821/cm6g7anat00kv01qmbxkze6i8"
-      onPress={onMapClick}>
-      <Mapbox.Camera
-        ref={cameraRef}
-        zoomLevel={zoomLevel}
-        centerCoordinate={centerCoordinate}
-        animationMode="flyTo"
-        animationDuration={2000}
-        pitch={pitchLevel}
-      />
-
-      {endLocation?.coordinates && (
-        <Mapbox.PointAnnotation
-          key="selected-location"
-          id="selected-location"
-          coordinate={[endLocation?.coordinates[0], endLocation?.coordinates[1]]}>
-          <View style={[styles.marker, styles.endMarker]} />
-          <Mapbox.Callout title="Selected Location" />
-        </Mapbox.PointAnnotation>
+    <>
+      {getHelperText() && (
+        <View
+          style={[
+            styles.helperTextContainer,
+            state === MapState.RoutePlanning ? styles.routePlanningHelper : undefined,
+          ]}>
+          <Text style={styles.helperText}>{getHelperText()}</Text>
+        </View>
       )}
+      <Mapbox.MapView
+        ref={mapRef}
+        style={styles.map}
+        styleURL="mapbox://styles/ambrose821/cm6g7anat00kv01qmbxkze6i8"
+        onPress={onMapClick}>
+        <Mapbox.Camera
+          ref={cameraRef}
+          zoomLevel={zoomLevel}
+          centerCoordinate={centerCoordinate}
+          animationMode="flyTo"
+          animationDuration={2000}
+          pitch={pitchLevel}
+        />
 
-      {state === MapState.RoutePlanning && startLocation !== null && endLocation !== null && (
-        <>
-          <Mapbox.MarkerView id="start" coordinate={startLocation.coordinates}>
-            <View style={[styles.marker, styles.startMarker]} />
-          </Mapbox.MarkerView>
-          {routeCoordinates.length > 0 && (
-            <Mapbox.ShapeSource
-              id="routeSource"
-              shape={{
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  type: 'LineString',
-                  coordinates: routeCoordinates,
-                },
-              }}>
-              <Mapbox.LineLayer
-                id="routeFill"
-                style={{
-                  lineColor: '#007AFF',
-                  lineWidth: 4,
-                  lineCap: 'round',
-                  lineJoin: 'round',
-                }}
-              />
-            </Mapbox.ShapeSource>
-          )}
-        </>
-      )}
-    </Mapbox.MapView>
+        {endLocation?.coordinates && (
+          <Mapbox.PointAnnotation
+            key="selected-location"
+            id="selected-location"
+            coordinate={[endLocation?.coordinates[0], endLocation?.coordinates[1]]}>
+            <View style={[styles.marker, styles.endMarker]} />
+            <Mapbox.Callout title="Selected Location" />
+          </Mapbox.PointAnnotation>
+        )}
+
+        {state === MapState.RoutePlanning && startLocation !== null && endLocation !== null && (
+          <>
+            <Mapbox.MarkerView id="start" coordinate={startLocation.coordinates}>
+              <View style={[styles.marker, styles.startMarker]} />
+            </Mapbox.MarkerView>
+            {routeCoordinates.length > 0 && (
+              <Mapbox.ShapeSource
+                id="routeSource"
+                shape={{
+                  type: 'Feature',
+                  properties: {},
+                  geometry: {
+                    type: 'LineString',
+                    coordinates: routeCoordinates,
+                  },
+                }}>
+                <Mapbox.LineLayer
+                  id="routeFill"
+                  style={{
+                    lineColor: '#007AFF',
+                    lineWidth: 4,
+                    lineCap: 'round',
+                    lineJoin: 'round',
+                  }}
+                />
+              </Mapbox.ShapeSource>
+            )}
+          </>
+        )}
+      </Mapbox.MapView>
+      {state === MapState.Information && <LocationInfo />}
+    </>
   );
 }
 
@@ -146,5 +180,24 @@ const styles = StyleSheet.create({
   },
   endMarker: {
     backgroundColor: '#852C3A',
+  },
+  helperTextContainer: {
+    position: 'absolute',
+    top: 140,
+    left: 20,
+    right: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    padding: 12,
+    borderRadius: 8,
+    zIndex: 1000,
+  },
+  routePlanningHelper: {
+    top: 300,
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+  },
+  helperText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });

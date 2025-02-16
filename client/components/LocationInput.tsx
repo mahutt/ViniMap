@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import LocationsAutocomplete from './LocationsAutocomplete';
+import CoordinateService from '@/Services/CoordinateService';
 
 export default function LocationInput({
   location,
@@ -28,20 +29,47 @@ export default function LocationInput({
     }
   }, [location, isFocused]);
 
-  // to clear the input when its focused.
   const handleFocus = () => {
     setIsFocused(true);
-    if (isStartLocation) {
-      setQuery('');
-    }
+    setQuery('');
   };
 
-  // will restore the location name when its blurred
   const handleBlur = () => {
     setIsFocused(false);
     if (location) {
       setQuery(location.name ?? '');
     }
+  };
+
+  const handleCurrentLocation = async () => {
+    if (isStartLocation) {
+      try {
+        const tempCoordinates = await CoordinateService.getCurrentCoordinates();
+        if (tempCoordinates) {
+          setLocation({
+            name: 'Current location',
+            coordinates: tempCoordinates,
+          });
+          inputRef.current?.blur();
+        }
+      } catch (error) {
+        console.error('Error getting current location:', error);
+      }
+    }
+  };
+
+  // helper functions
+  const shouldShowMapPrompt = () => {
+    if (!isFocused) return false;
+    if (query === '') return true;
+    if (query === location?.name) return true;
+    return false;
+  };
+
+  const shouldShowAutocomplete = () => {
+    if (!isFocused) return false;
+    if (query !== '' && query !== location?.name) return true;
+    return false;
   };
 
   return (
@@ -59,21 +87,29 @@ export default function LocationInput({
         onBlur={handleBlur}
       />
 
-      {isStartLocation && isFocused && query.length === 0 && (
+      {shouldShowMapPrompt() && (
         <View style={styles.optionsContainer}>
           <TouchableOpacity
             style={styles.optionItem}
             onPress={() => {
-              setState(MapState.SelectingStartLocation);
+              setState(
+                isStartLocation ? MapState.SelectingStartLocation : MapState.SelectingEndLocation
+              );
               inputRef.current?.blur();
             }}>
             <Ionicons name="map-outline" size={20} color="#666" />
             <Text style={styles.optionText}>Choose on map</Text>
           </TouchableOpacity>
+          {isStartLocation && (
+            <TouchableOpacity style={styles.optionItem} onPress={handleCurrentLocation}>
+              <Ionicons name="locate-outline" size={20} color="#666" />
+              <Text style={styles.optionText}>Use Current Location</Text>
+            </TouchableOpacity>
+          )}
         </View>
       )}
 
-      {isFocused && query.length > 0 && (
+      {shouldShowAutocomplete() && (
         <LocationsAutocomplete
           query={query}
           callback={(selectedLocation) => {
@@ -86,7 +122,6 @@ export default function LocationInput({
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   locationInputContainer: {
     position: 'relative',
