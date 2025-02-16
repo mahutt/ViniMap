@@ -1,28 +1,76 @@
-import { Location } from '@/modules/map/MapContext';
+import { Location, MapState, useMap } from '@/modules/map/MapContext';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
-import { TextInput, View, StyleSheet } from 'react-native';
+import { TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import LocationsAutocomplete from './LocationsAutocomplete';
+import CoordinateService from '@/Services/CoordinateService';
 
 export default function LocationInput({
   location,
   setLocation,
   ionIconName,
   placeholder,
+  isStartLocation = false,
 }: Readonly<{
   location: Location | null;
   setLocation: (location: Location) => void;
   ionIconName: 'pin-outline' | 'pin';
   placeholder: string;
+  isStartLocation?: boolean;
 }>) {
   const inputRef = React.useRef<TextInput>(null);
   const [query, setQuery] = React.useState<string>('');
+  const [isFocused, setIsFocused] = React.useState(false);
+  const { setState } = useMap();
 
   useEffect(() => {
+    if (location && !isFocused) {
+      setQuery(location.name ?? '');
+    }
+  }, [location, isFocused]);
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    setQuery('');
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
     if (location) {
       setQuery(location.name ?? '');
     }
-  }, [location]);
+  };
+
+  const handleCurrentLocation = async () => {
+    if (isStartLocation) {
+      try {
+        const tempCoordinates = await CoordinateService.getCurrentCoordinates();
+        if (tempCoordinates) {
+          setLocation({
+            name: 'Current location',
+            coordinates: tempCoordinates,
+          });
+          inputRef.current?.blur();
+        }
+      } catch (error) {
+        console.error('Error getting current location:', error);
+      }
+    }
+  };
+
+  // helper functions
+  const shouldShowMapPrompt = () => {
+    if (!isFocused) return false;
+    if (query === '') return true;
+    if (query === location?.name) return true;
+    return false;
+  };
+
+  const shouldShowAutocomplete = () => {
+    if (!isFocused) return false;
+    if (query !== '' && query !== location?.name) return true;
+    return false;
+  };
 
   return (
     <View style={styles.locationInputContainer}>
@@ -30,27 +78,50 @@ export default function LocationInput({
       <TextInput
         ref={inputRef}
         style={styles.input}
-        placeholder={placeholder}
+        placeholder={isStartLocation ? 'Tap to set Start Location' : placeholder}
         placeholderTextColor="#666"
         value={query}
         autoCorrect={false}
-        onChangeText={(query) => setQuery(query)}
+        onChangeText={setQuery}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
       />
-      {query !== location?.name && (
+
+      {shouldShowMapPrompt() && (
+        <View style={styles.optionsContainer}>
+          <TouchableOpacity
+            style={styles.optionItem}
+            onPress={() => {
+              setState(
+                isStartLocation ? MapState.SelectingStartLocation : MapState.SelectingEndLocation
+              );
+              inputRef.current?.blur();
+            }}>
+            <Ionicons name="map-outline" size={20} color="#666" />
+            <Text style={styles.optionText}>Choose on map</Text>
+          </TouchableOpacity>
+          {isStartLocation && (
+            <TouchableOpacity style={styles.optionItem} onPress={handleCurrentLocation}>
+              <Ionicons name="locate-outline" size={20} color="#666" />
+              <Text style={styles.optionText}>Use Current Location</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
+
+      {shouldShowAutocomplete() && (
         <LocationsAutocomplete
           query={query}
-          callback={(location) => {
-            setLocation(location);
-            setTimeout(() => {
-              inputRef.current?.blur();
-            }, 0);
+          callback={(selectedLocation) => {
+            setLocation(selectedLocation);
+            setQuery(selectedLocation.name ?? '');
+            inputRef.current?.blur();
           }}
         />
       )}
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   locationInputContainer: {
     position: 'relative',
@@ -68,5 +139,27 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
     fontSize: 16,
+  },
+  optionsContainer: {
+    position: 'absolute',
+    top: '100%',
+    left: 0,
+    right: 0,
+    backgroundColor: 'white',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 12,
+    zIndex: 2,
+    marginTop: 4,
+  },
+  optionItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    padding: 16,
+  },
+  optionText: {
+    fontSize: 16,
+    color: '#666',
   },
 });
