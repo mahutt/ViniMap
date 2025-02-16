@@ -221,18 +221,6 @@ export function RoutePlanner() {
             <Pressable
               style={[
                 styles.transportButton,
-                isRouteFound && selectedMode === 'wheelchair' && styles.activeTransportButton,
-                { opacity: 0.5 },
-              ]}
-              onPress={() => handleTransportMode('wheelchair')}
-              disabled={true}>
-              <MaterialCommunityIcons name="wheelchair-accessibility" size={24} color="#666" />
-              <Text></Text>
-            </Pressable>
-
-            <Pressable
-              style={[
-                styles.transportButton,
                 isRouteFound && selectedMode === 'shuttle' && styles.activeTransportButton,
                 durations.shuttle === null && styles.disabledTransportButton,
               ]}
