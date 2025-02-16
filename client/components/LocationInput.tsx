@@ -78,7 +78,7 @@ export default function LocationInput({
       <TextInput
         ref={inputRef}
         style={styles.input}
-        placeholder={isStartLocation ? 'Tap to change from current location' : placeholder}
+        placeholder={isStartLocation ? 'Tap to set Start Location' : placeholder}
         placeholderTextColor="#666"
         value={query}
         autoCorrect={false}
