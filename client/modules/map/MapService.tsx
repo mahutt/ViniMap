@@ -5,28 +5,20 @@ import { calculateEuclideanDistance } from './MapUtils';
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
 
-const getLocationCoordinates = async (locationQuery: string): Promise<Location | null> => {
-  const url = `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
-    locationQuery
-  )}&access_token=${MAPBOX_ACCESS_TOKEN}`;
-  const response = await fetch(url);
-  const data = await response.json();
-  if (data?.features[0]) {
-    const feature = data.features[0];
-    return {
-      name: locationQuery,
-      coordinates: feature.geometry.coordinates as Coordinates,
-    };
-  }
-  return null;
+const PROXIMITY_COORDINTATES = {
+  longitude: -73.57791396549962, // Concordia SGW Campus Longitude
+  latitude: 45.495102086770814, // Concordia SGW Campus  Latitude
 };
 
 const getLocations = async (locationQuery: string): Promise<Location[]> => {
   const response = await fetch(
     `https://api.mapbox.com/search/geocode/v6/forward?q=${encodeURIComponent(
       locationQuery
-    )}&access_token=${MAPBOX_ACCESS_TOKEN}`
+    )}&proximity=${PROXIMITY_COORDINTATES.longitude},${
+      PROXIMITY_COORDINTATES.latitude
+    }&access_token=${MAPBOX_ACCESS_TOKEN}`
   );
+
   const data = await response.json();
   if (data?.features) {
     return data.features.map((feature: any) => ({
@@ -199,4 +191,4 @@ const formatDuration = (seconds: number | null): string => {
   return `${minutes} min`;
 };
 
-export { getLocationCoordinates, getLocations, getRoute, fetchLocationData, formatDuration };
+export { getLocations, getRoute, fetchLocationData, formatDuration };
