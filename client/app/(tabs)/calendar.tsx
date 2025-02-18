@@ -8,7 +8,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Modal,
 } from 'react-native';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
@@ -34,30 +33,37 @@ export default function Schedule() {
     try {
       console.log('I AM IN HANDLE SAVE!!!');
       setInputValue(value);
-      console.log('input Value: ', inputValue);
     } catch (error) {
       console.error('Error in handleSave:', error);
     }
   };
 
   useEffect(() => {
-    const calendarId = storage.getString('calendarId') ?? '';
-    setInputValue(calendarId);
+    const calendarData = storage.getString('calendarData');
+
+    if (calendarData) {
+      try {
+        const parsedData = JSON.parse(calendarData);
+        setScheduleData(parsedData);
+      } catch (error) {
+        console.error('Error parsing stored calendar data:', error);
+      }
+    }
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(scheduleData).length === 0) return;
+
+    storage.set('calendarData', JSON.stringify(scheduleData));
+  }, [scheduleData]);
 
   useEffect(() => {
     console.log('Updated inputValue:', inputValue);
 
-    if (inputValue === '') {
-      return;
-    }
-
-    storage.set('calendarId', inputValue);
+    if (inputValue.trim() === '') return;
 
     fetchAndSetSchedule(inputValue);
   }, [inputValue]);
-
-  useEffect(() => {}, [scheduleData]);
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
     console.log('Class Clicked:', classItem);
