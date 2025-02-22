@@ -181,54 +181,27 @@ export default function Schedule() {
           </Swiper>
         </View>
 
-        <Swiper
-          index={1}
-          ref={contentSwiper}
-          loop={false}
-          showsPagination={false}
-          onIndexChanged={(ind) => {
-            if (ind === 1) return;
-            setTimeout(() => {
-              const nextValue = moment(value).add(ind - 1, 'days');
-              if (moment(value).week() !== nextValue.week()) {
-                const nextWeek = moment(value).isBefore(nextValue) ? week + 1 : week - 1;
-                if (nextWeek < 0 || nextWeek > 4) return; // Prevent exceeding week bounds
-                setWeek(nextWeek);
-              }
-              setValue(nextValue.toDate());
-              if (swiper.current) {
-                swiper.current.scrollTo(ind, false);
-              }
-            }, 10);
-          }}>
-          {days.map((day, index) => {
-            const dateString = moment(day).format('YYYY-MM-DD');
-            const schedule = scheduleData[dateString] || [];
-            return (
-              <View key={index} style={{ flex: 1, paddingHorizontal: 16, paddingVertical: 24 }}>
-                <Text style={styles.subtitle}>
-                  {day.toLocaleDateString('en-US', { dateStyle: 'full' })}
-                </Text>
-                <View style={styles.scheduleContainer}>
-                  {schedule.length > 0 ? (
-                    schedule.map((item, idx) => (
-                      <TouchableOpacity key={idx} onPress={() => handleClassClick(item)}>
-                        <View style={styles.scheduleBlock}>
-                          <Text style={styles.className}>{item.className}</Text>
-                          <Text style={styles.classDetails}>
-                            {item.location} - {item.time}
-                          </Text>
-                        </View>
-                      </TouchableOpacity>
-                    ))
-                  ) : (
-                    <Text style={styles.noSchedule}>No classes scheduled</Text>
-                  )}
-                </View>
-              </View>
-            );
-          })}
-        </Swiper>
+        <View style={styles.calendarItemCard}>
+          <Text style={styles.subtitle}>
+            {value.toLocaleDateString('en-US', { dateStyle: 'full' })}
+          </Text>
+          <View style={styles.scheduleContainer}>
+            {scheduleData[moment(value).format('YYYY-MM-DD')]?.length > 0 ? (
+              scheduleData[moment(value).format('YYYY-MM-DD')].map((item, idx) => (
+                <TouchableOpacity key={idx} onPress={() => handleClassClick(item)}>
+                  <View style={styles.scheduleBlock}>
+                    <Text style={styles.className}>{item.className}</Text>
+                    <Text style={styles.classDetails}>
+                      {item.location} - {item.time}
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              ))
+            ) : (
+              <Text style={styles.noSchedule}>No classes scheduled</Text>
+            )}
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -321,5 +294,10 @@ const styles = StyleSheet.create({
   },
   modal: {
     display: 'flex',
+  },
+  calendarItemCard: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 24,
   },
 });
