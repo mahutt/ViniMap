@@ -18,7 +18,6 @@ const { width } = Dimensions.get('window');
 
 export default function Schedule() {
   const swiper = useRef<Swiper | null>(null);
-  const contentSwiper = useRef<Swiper | null>(null);
   const [week, setWeek] = useState(0);
   const [value, setValue] = useState(new Date());
   const [scheduleData, setScheduleData] = useState<
@@ -110,10 +109,6 @@ export default function Schedule() {
     });
   }, []);
 
-  const days = React.useMemo(() => {
-    return [moment(value).subtract(1, 'day').toDate(), value, moment(value).add(1, 'day').toDate()];
-  }, [value]);
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SimpleModal
@@ -155,10 +150,12 @@ export default function Schedule() {
             }}>
             {weeks.map((dates, index) => (
               <View style={styles.itemRow} key={index}>
-                {dates.map((item, dateIndex) => {
+                {dates.map((item) => {
                   const isActive = value.toDateString() === item.date.toDateString();
                   return (
-                    <TouchableWithoutFeedback key={dateIndex} onPress={() => setValue(item.date)}>
+                    <TouchableWithoutFeedback
+                      key={item.date.toISOString()}
+                      onPress={() => setValue(item.date)}>
                       <View
                         style={[
                           styles.item,
@@ -185,8 +182,8 @@ export default function Schedule() {
           </Text>
           <View style={styles.scheduleContainer}>
             {scheduleData[moment(value).format('YYYY-MM-DD')]?.length > 0 ? (
-              scheduleData[moment(value).format('YYYY-MM-DD')].map((item, idx) => (
-                <TouchableOpacity key={idx} onPress={() => handleClassClick(item)}>
+              scheduleData[moment(value).format('YYYY-MM-DD')].map((item) => (
+                <TouchableOpacity key={item.time} onPress={() => handleClassClick(item)}>
                   <View style={styles.scheduleBlock}>
                     <Text style={styles.className}>{item.className}</Text>
                     <Text style={styles.classDetails}>
