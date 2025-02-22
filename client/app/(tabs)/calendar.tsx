@@ -23,27 +23,23 @@ export default function Schedule() {
   const [scheduleData, setScheduleData] = useState<
     Record<string, { className: string; location: string; time: string }[]>
   >({});
-
   const [modalVisible, setModalVisible] = useState(false);
-  const [inputValue, setInputValue] = useState('');
 
   const handleSave = async (value: string): Promise<void> => {
-    try {
-      setInputValue(value);
-    } catch (error) {
-      console.error('Error in handleSave:', error);
-    }
+    const trimmedValue = value.trim();
+    if (trimmedValue === '') return;
+    fetchAndSetSchedule(trimmedValue);
   };
 
   useEffect(() => {
     const calendarData = storage.getString('calendarData');
-
     if (calendarData) {
       try {
         const parsedData = JSON.parse(calendarData);
         setScheduleData(parsedData);
       } catch (error) {
-        console.error('Error parsing stored calendar data:', error);
+        console.error("Couldn't parse stored calendar data:", calendarData);
+        storage.delete('calendarData');
       }
     }
   }, []);
@@ -53,11 +49,6 @@ export default function Schedule() {
 
     storage.set('calendarData', JSON.stringify(scheduleData));
   }, [scheduleData]);
-
-  useEffect(() => {
-    if (inputValue.trim() === '') return;
-    fetchAndSetSchedule(inputValue);
-  }, [inputValue]);
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
     console.log('Class Clicked:', classItem);
