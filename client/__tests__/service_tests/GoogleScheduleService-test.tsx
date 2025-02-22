@@ -67,12 +67,12 @@ describe('fetchCalendarEvents', () => {
 
     // Test error response
     fetchMock.mockRejectOnce(new Error('Network error'));
-    result = await fetchCalendarEvents('test-calendar-id');
-    expect(result).toEqual([]);
+    await expect(fetchCalendarEvents('test-calendar-id')).rejects.toThrow('Network error');
 
     // Test non-ok response
     fetchMock.mockResponseOnce('', { status: 404, statusText: 'Not Found' });
-    result = await fetchCalendarEvents('test-calendar-id');
-    expect(result).toEqual([]);
+    await expect(fetchCalendarEvents('test-calendar-id')).rejects.toThrow(
+      'Error fetching calendar events: Not Found'
+    );
   });
 });
