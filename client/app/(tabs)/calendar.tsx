@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Location } from '@/modules/map/MapContext';
 import { MMKV } from 'react-native-mmkv';
+import { useRouter } from 'expo-router';
+
 import {
   StyleSheet,
   Dimensions,
@@ -30,6 +32,7 @@ export default function Schedule() {
 
   const { endLocation, setEndLocation } = useMap();
   const { state, setState } = useMap();
+  const router = useRouter();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -76,16 +79,17 @@ export default function Schedule() {
     console.log(buildingCoordinates);
 
     const location: Location = {
-      name: classItem.location,
+      name: classItem.className,
       coordinates: buildingCoordinates,
       data: {
-        address: '123 Molson St',
+        address: classItem.location,
       },
     };
-
     setEndLocation(location);
 
     setState(MapState.Information);
+
+    router.push('/');
   };
 
   const fetchAndSetSchedule = async (calendarId: string) => {
