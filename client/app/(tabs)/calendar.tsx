@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Location } from '@/modules/map/MapContext';
 import { MMKV } from 'react-native-mmkv';
 import {
   StyleSheet,
@@ -13,6 +14,8 @@ import moment from 'moment';
 import Swiper from 'react-native-swiper';
 import { extractScheduleData, fetchCalendarEvents } from '@/Services/GoogleScheduleService';
 import SimpleModal from '@/components/CalendarIdBox';
+import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
+import { getBuildingCoordinates } from '@/Services/buildingService';
 
 const { width } = Dimensions.get('window');
 
@@ -24,6 +27,9 @@ export default function Schedule() {
   const [scheduleData, setScheduleData] = useState<
     Record<string, { className: string; location: string; time: string }[]>
   >({});
+
+  const { endLocation, setEndLocation } = useMap();
+  const { state, setState } = useMap();
 
   const [modalVisible, setModalVisible] = useState(false);
   const [inputValue, setInputValue] = useState('');
@@ -65,7 +71,21 @@ export default function Schedule() {
   }, [inputValue]);
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
-    console.log('Class Clicked:', classItem);
+    const buildingCoordinates: Coordinates = getBuildingCoordinates(classItem.location);
+
+    console.log(buildingCoordinates);
+
+    const location: Location = {
+      name: classItem.location,
+      coordinates: buildingCoordinates,
+      data: {
+        address: '123 Molson St',
+      },
+    };
+
+    setEndLocation(location);
+
+    setState(MapState.Information);
   };
 
   const fetchAndSetSchedule = async (calendarId: string) => {
