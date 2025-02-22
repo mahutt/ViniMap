@@ -55,10 +55,7 @@ export default function Schedule() {
   }, [scheduleData]);
 
   useEffect(() => {
-    console.log('Updated inputValue:', inputValue);
-
     if (inputValue.trim() === '') return;
-
     fetchAndSetSchedule(inputValue);
   }, [inputValue]);
 
@@ -68,7 +65,6 @@ export default function Schedule() {
 
   const fetchAndSetSchedule = async (calendarId: string) => {
     try {
-      console.log('Fetching schedule for calendar ID:', calendarId);
       const calendarJson = await fetchCalendarEvents(calendarId);
       const newScheduleData = extractScheduleData(calendarJson);
 
