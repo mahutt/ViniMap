@@ -26,9 +26,27 @@ export default function Calendar() {
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleSave = async (value: string): Promise<void> => {
-    const trimmedValue = value.trim();
-    if (trimmedValue === '') return;
-    fetchAndSetSchedule(trimmedValue);
+    const calendarId = value.trim();
+    if (calendarId === '') return;
+    const calendarJson = await fetchCalendarEvents(calendarId);
+    console.log('Calendar Data:', calendarJson);
+    const newScheduleData = extractScheduleData(calendarJson);
+
+    const updatedScheduleData: Record<
+      string,
+      { className: string; location: string; time: string }[]
+    > = {};
+
+    for (let i = 0; i <= 4; i++) {
+      Object.keys(newScheduleData).forEach((date) => {
+        const momentDate = moment(date)
+          .add(i * 7, 'days')
+          .format('YYYY-MM-DD');
+        updatedScheduleData[momentDate] = newScheduleData[date];
+      });
+    }
+
+    setScheduleData(updatedScheduleData);
   };
 
   useEffect(() => {
@@ -51,31 +69,6 @@ export default function Calendar() {
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
     console.log('Class Clicked:', classItem);
-  };
-
-  const fetchAndSetSchedule = async (calendarId: string) => {
-    try {
-      const calendarJson = await fetchCalendarEvents(calendarId);
-      const newScheduleData = extractScheduleData(calendarJson);
-
-      const updatedScheduleData: Record<
-        string,
-        { className: string; location: string; time: string }[]
-      > = {};
-
-      for (let i = 0; i <= 4; i++) {
-        Object.keys(newScheduleData).forEach((date) => {
-          const momentDate = moment(date)
-            .add(i * 7, 'days')
-            .format('YYYY-MM-DD');
-          updatedScheduleData[momentDate] = newScheduleData[date];
-        });
-      }
-
-      setScheduleData(updatedScheduleData);
-    } catch (error) {
-      console.error('Error fetching schedule:', error);
-    }
   };
 
   async function buttonPress() {
