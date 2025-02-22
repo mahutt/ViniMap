@@ -31,7 +31,6 @@ export default function Schedule() {
 
   const handleSave = async (value: string): Promise<void> => {
     try {
-      console.log('I AM IN HANDLE SAVE!!!');
       setInputValue(value);
     } catch (error) {
       console.error('Error in handleSave:', error);
@@ -100,7 +99,7 @@ export default function Schedule() {
   }
 
   const weeks = React.useMemo(() => {
-    const start = moment().startOf('week'); // Always start from this week
+    const start = moment().startOf('week');
     return Array.from({ length: 5 }).map((_, adj) => {
       return Array.from({ length: 7 }).map((_, index) => {
         const date = moment(start).add(adj, 'week').add(index, 'day');
@@ -141,7 +140,7 @@ export default function Schedule() {
             loop={false}
             showsPagination={false}
             onIndexChanged={(ind) => {
-              if (ind < 0 || ind > 4) return; // Prevent scrolling past bounds
+              if (ind < 0 || ind > 4) return;
               setValue(
                 moment(value)
                   .add(ind - week, 'week')
@@ -291,9 +290,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 16,
     top: 0,
-  },
-  modal: {
-    display: 'flex',
   },
   calendarItemCard: {
     flex: 1,

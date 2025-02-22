@@ -24,7 +24,7 @@ const SimpleModal: React.FC<SimpleModalProps> = ({ visible, onClose, onSave }) =
   };
 
   return (
-    <Modal transparent={true} visible={visible} animationType="slide">
+    <Modal transparent={true} visible={visible}>
       <TouchableWithoutFeedback onPress={onClose}>
         <View style={styles.modalBackground}>
           <TouchableWithoutFeedback onPress={() => {}}>
