@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Ionicons } from '@expo/vector-icons';
 import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute, formatDuration } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
@@ -143,15 +143,6 @@ export function RoutePlanner() {
         return <Ionicons name="bicycle-outline" size={24} color="#666" style={styles.modeIcon} />;
       case 'driving':
         return <Ionicons name="car-outline" size={24} color="#666" style={styles.modeIcon} />;
-      case 'wheelchair':
-        return (
-          <MaterialCommunityIcons
-            name="wheelchair-accessibility"
-            size={24}
-            color="#666"
-            style={styles.modeIcon}
-          />
-        );
       case 'shuttle':
         return <Ionicons name="bus-outline" size={24} color="#666" style={styles.modeIcon} />;
       default:
@@ -216,18 +207,6 @@ export function RoutePlanner() {
               onPress={() => handleTransportMode('driving')}>
               <Ionicons name="car-outline" size={24} color="#666" />
               <Text>{durations.driving !== null ? formatDuration(durations.driving) : ''}</Text>
-            </Pressable>
-
-            <Pressable
-              style={[
-                styles.transportButton,
-                isRouteFound && selectedMode === 'wheelchair' && styles.activeTransportButton,
-                { opacity: 0.5 },
-              ]}
-              onPress={() => handleTransportMode('wheelchair')}
-              disabled={true}>
-              <MaterialCommunityIcons name="wheelchair-accessibility" size={24} color="#666" />
-              <Text></Text>
             </Pressable>
 
             <Pressable
