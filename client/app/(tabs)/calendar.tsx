@@ -16,7 +16,7 @@ import SimpleModal from '@/components/CalendarIdBox';
 
 const { width } = Dimensions.get('window');
 
-export default function Schedule() {
+export default function Calendar() {
   const swiper = useRef<Swiper | null>(null);
   const [week, setWeek] = useState(0);
   const [value, setValue] = useState(new Date());
@@ -38,7 +38,6 @@ export default function Schedule() {
         const parsedData = JSON.parse(calendarData);
         setScheduleData(parsedData);
       } catch (error) {
-        console.error("Couldn't parse stored calendar data:", calendarData);
         storage.delete('calendarData');
       }
     }
