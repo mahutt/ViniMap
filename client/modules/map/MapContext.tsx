@@ -13,6 +13,8 @@ export enum MapState {
   Idle,
   RoutePlanning,
   Information,
+  SelectingStartLocation,
+  SelectingEndLocation,
 }
 
 const DEFAULT_COORDINATES: Coordinates = [-73.5789, 45.4973];
@@ -78,9 +80,12 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     endCoordinates: Coordinates,
     mode = 'walking'
   ): Promise<void> => {
+    if (!startCoordinates || !endCoordinates) {
+      return;
+    }
     return getRoute(startCoordinates, endCoordinates, mode)
       .then((data) => {
-        if (data.coordinates) {
+        if (data?.coordinates) {
           if (data.coordinates.length > 0) {
             flyTo(data.coordinates[0], zoomLevel);
           }

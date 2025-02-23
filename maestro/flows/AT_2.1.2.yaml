@@ -1,0 +1,14 @@
+appId: com.anonymous.client
+---
+- launchApp
+- tapOn:
+    point: '65%,71%'
+- tapOn: ' Directions'
+- tapOn: 'End location'
+- tapOn: ' Choose on map'
+- tapOn:
+    point: '91%,23%'
+- tapOn: 'End location'
+- tapOn: ' Choose on map'
+- tapOn:
+    point: '75%,74%'
