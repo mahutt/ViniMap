@@ -3,7 +3,7 @@ import {
   HALL_BUILDING_COORDINATES,
   MOLSON_BUILDING_COORDINATES,
   FAUBOURG_BUILDING_COORDINATES,
-} from '@/constants/CoordinateConstants';
+} from '@/constants/CampusBuildingCoordinates';
 
 export function getBuildingCoordinates(building: string): Coordinates {
   if (building === null) {

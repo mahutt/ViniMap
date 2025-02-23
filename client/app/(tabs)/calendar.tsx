@@ -17,7 +17,7 @@ import Swiper from 'react-native-swiper';
 import { extractScheduleData, fetchCalendarEvents } from '@/Services/GoogleScheduleService';
 import SimpleModal from '@/components/CalendarIdBox';
 import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
-import { getBuildingCoordinates } from '@/Services/buildingService';
+import { getBuildingCoordinates } from '@/Services/BuildingService';
 
 const { width } = Dimensions.get('window');
 
@@ -79,9 +79,7 @@ export default function Calendar() {
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
     const buildingCoordinates: Coordinates = getBuildingCoordinates(classItem.location);
-
     console.log(buildingCoordinates);
-
     const location: Location = {
       name: classItem.className,
       coordinates: buildingCoordinates,
@@ -90,9 +88,7 @@ export default function Calendar() {
       },
     };
     setEndLocation(location);
-
     setState(MapState.Information);
-
     router.push('/');
   };
 
