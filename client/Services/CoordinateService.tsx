@@ -4,18 +4,22 @@ type Coordinates = [number, number];
 
 export default class CoordinateService {
   static async getCurrentCoordinates(): Promise<Coordinates | null> {
-    const { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      console.log('Please grant location permissions');
-      return null;
-    }
-
     try {
-      const currentLocation = await Location.getCurrentPositionAsync({});
+      const { status } = await Location.requestForegroundPermissionsAsync();
+
+      if (status !== 'granted') {
+        return null;
+      }
+
+      const currentLocation = await Location.getCurrentPositionAsync({
+        accuracy: Location.Accuracy.High,
+      });
+
       const { latitude, longitude } = currentLocation.coords;
+
       return [longitude, latitude];
     } catch (error) {
-      console.error('Error getting location:', error);
+      console.error('Error getting current location:', error);
       return null;
     }
   }
