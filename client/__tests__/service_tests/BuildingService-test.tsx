@@ -1,4 +1,4 @@
-import { getBuildingCoordinates } from '../../services/BuildingService';
+import { getBuildingCoordinates } from '@/services/BuildingService';
 import {
   HALL_BUILDING_COORDINATES,
   MOLSON_BUILDING_COORDINATES,
