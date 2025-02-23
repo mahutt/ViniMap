@@ -4,7 +4,8 @@ import React, { useEffect } from 'react';
 import { TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import LocationsAutocomplete from './LocationsAutocomplete';
 import CoordinateService from '@/Services/CoordinateService';
-import { getCurrentLocationAsStart } from '@/modules/map/LocationHelper';
+
+const CURRENT_LOCATION_NAME = 'Current location';
 
 export default function LocationInput({
   location,
@@ -25,10 +26,10 @@ export default function LocationInput({
   const { setState } = useMap();
 
   useEffect(() => {
-    if (location && !isFocused) {
+    if (location) {
       setQuery(location.name ?? '');
     }
-  }, [location, isFocused]);
+  }, [location]);
 
   const handleFocus = () => {
     setIsFocused(true);
@@ -44,8 +45,18 @@ export default function LocationInput({
 
   const handleCurrentLocation = async () => {
     if (isStartLocation) {
-      await getCurrentLocationAsStart(setLocation);
-      inputRef.current?.blur();
+      try {
+        const tempCoordinates = await CoordinateService.getCurrentCoordinates();
+        if (tempCoordinates) {
+          setLocation({
+            name: CURRENT_LOCATION_NAME,
+            coordinates: tempCoordinates,
+          });
+          inputRef.current?.blur();
+        }
+      } catch (error) {
+        console.error('Error getting current location:', error);
+      }
     }
   };
 
@@ -91,7 +102,7 @@ export default function LocationInput({
             <Ionicons name="map-outline" size={20} color="#666" />
             <Text style={styles.optionText}>Choose on map</Text>
           </TouchableOpacity>
-          {isStartLocation && (
+          {isStartLocation && location?.name !== CURRENT_LOCATION_NAME && (
             <TouchableOpacity style={styles.optionItem} onPress={handleCurrentLocation}>
               <Ionicons name="locate-outline" size={20} color="#666" />
               <Text style={styles.optionText}>Use Current Location</Text>
@@ -106,7 +117,9 @@ export default function LocationInput({
           callback={(selectedLocation) => {
             setLocation(selectedLocation);
             setQuery(selectedLocation.name ?? '');
-            inputRef.current?.blur();
+            setTimeout(() => {
+              inputRef.current?.blur();
+            }, 0);
           }}
         />
       )}

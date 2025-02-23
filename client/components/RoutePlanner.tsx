@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { MapState, useMap } from '@/modules/map/MapContext';
+import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute, formatDuration } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
 import CoordinateService from '@/Services/CoordinateService';
@@ -36,6 +36,17 @@ export function RoutePlanner() {
     state,
   } = useMap();
 
+  const centerMapOnUserLocation = async () => {
+    const tempCoordinates: Coordinates = (await CoordinateService.getCurrentCoordinates()) ?? [
+      0, 0,
+    ];
+
+    setStartLocation({
+      name: 'Current location',
+      coordinates: tempCoordinates,
+    });
+  };
+
   useEffect(() => {
     if (state === MapState.RoutePlanning && !startLocation) {
       getCurrentLocationAsStart(setStartLocation);
@@ -60,7 +71,7 @@ export function RoutePlanner() {
         loadRoute();
       }
     }
-  }, [startLocation, endLocation, selectedMode, state]);
+  }, [startLocation, endLocation, selectedMode]);
 
   useEffect(() => {
     if (durations.shuttle == null && selectedMode == 'shuttle') {
