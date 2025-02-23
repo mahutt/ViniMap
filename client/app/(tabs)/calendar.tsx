@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { storage } from '@/Services/StorageService';
+import { useRouter } from 'expo-router';
+import { storage } from '@/services/StorageService';
+
 import {
   StyleSheet,
   Dimensions,
@@ -11,8 +13,10 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
-import { extractScheduleData, fetchCalendarEvents } from '@/Services/GoogleScheduleService';
+import { extractScheduleData, fetchCalendarEvents } from '@/services/GoogleScheduleService';
 import SimpleModal from '@/components/CalendarIdBox';
+import { Coordinates, MapState, useMap, Location } from '@/modules/map/MapContext';
+import { getBuildingCoordinates } from '@/services/BuildingService';
 
 const { width } = Dimensions.get('window');
 
@@ -23,6 +27,11 @@ export default function Calendar() {
   const [scheduleData, setScheduleData] = useState<
     Record<string, { className: string; location: string; time: string }[]>
   >({});
+
+  const { setEndLocation } = useMap();
+  const { setState } = useMap();
+  const router = useRouter();
+
   const [modalVisible, setModalVisible] = useState(false);
 
   const handleSave = async (value: string): Promise<void> => {
@@ -68,7 +77,18 @@ export default function Calendar() {
   }, [scheduleData]);
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
-    console.log('Class Clicked:', classItem);
+    const buildingCoordinates: Coordinates = getBuildingCoordinates(classItem.location);
+    console.log(buildingCoordinates);
+    const location: Location = {
+      name: classItem.className,
+      coordinates: buildingCoordinates,
+      data: {
+        address: classItem.location,
+      },
+    };
+    setEndLocation(location);
+    setState(MapState.Information);
+    router.push('/');
   };
 
   async function buttonPress() {

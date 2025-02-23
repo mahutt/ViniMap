@@ -3,7 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import LocationsAutocomplete from './LocationsAutocomplete';
-import CoordinateService from '@/Services/CoordinateService';
+import CoordinateService from '@/services/CoordinateService';
 
 const CURRENT_LOCATION_NAME = 'Current location';
 
@@ -33,7 +33,6 @@ export default function LocationInput({
 
   const handleFocus = () => {
     setIsFocused(true);
-    setQuery('');
   };
 
   const handleBlur = () => {

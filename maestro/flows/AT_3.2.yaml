@@ -1,0 +1,6 @@
+appId: com.anonymous.client
+---
+- tapOn: 'Schedule, tab, 2 of 3'
+- tapOn: 'Wed 26'
+- tapOn: 'COMP 445 LAB H963 - 11:00 AM - 1:15 PM'
+- tapOn: ' Directions'

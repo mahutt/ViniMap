@@ -1,4 +1,4 @@
-import ShuttleCalculatorService from '@/Services/ShuttleCalculatorService';
+import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { Coordinates, Location } from './MapContext';
 import { calculateEuclideanDistance } from './MapUtils';
 

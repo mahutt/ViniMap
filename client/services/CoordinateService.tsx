@@ -11,12 +11,9 @@ export default class CoordinateService {
         return null;
       }
 
-      const currentLocation = await Location.getCurrentPositionAsync({
-        accuracy: Location.Accuracy.High,
-      });
+      const currentLocation = await Location.getCurrentPositionAsync({});
 
       const { latitude, longitude } = currentLocation.coords;
-
       return [longitude, latitude];
     } catch (error) {
       console.error('Error getting current location:', error);
