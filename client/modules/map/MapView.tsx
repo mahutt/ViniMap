@@ -31,52 +31,61 @@ export default function MapView() {
 
     const coordinates = geometry.coordinates;
 
-    if (state === MapState.SelectingStartLocation) {
-      setStartLocation({ name: null, coordinates: coordinates });
-      fetchLocationData(coordinates)
-        .then((data) => {
-          if (data) {
-            setStartLocation({ name: data.name, coordinates: coordinates, data });
+    fetchLocationData(coordinates)
+      .then((data) => {
+        switch (state) {
+          case MapState.SelectingStartLocation:
+            setStartLocation({
+              name: data?.name || null,
+              coordinates: coordinates,
+              data: data || undefined,
+            });
             if (endLocation) {
               setState(MapState.RoutePlanning);
             }
-          }
-        })
-        .catch((error) => {
-          console.warn('Error fetching location data:', error);
-        });
-    } else if (state === MapState.SelectingEndLocation) {
-      setEndLocation({ name: null, coordinates: coordinates });
-      fetchLocationData(coordinates)
-        .then((data) => {
-          if (data) {
-            setEndLocation({ name: data.name, coordinates: coordinates, data });
+            break;
+
+          case MapState.SelectingEndLocation:
+            setEndLocation({
+              name: data?.name || 'Selected Location',
+              coordinates: coordinates,
+              data: data || { address: 'Location', isOpen: false },
+            });
             setState(MapState.RoutePlanning);
-          }
-        })
-        .catch((error) => {
-          console.warn('Error fetching location data:', error);
-        });
-    } else {
-      fetchLocationData(coordinates)
-        .then((data) => {
-          setEndLocation({
-            name: data?.name || 'Selected Location',
-            coordinates: coordinates,
-            data: data || { address: 'Location', isOpen: false },
-          });
-          setState(MapState.Information);
-        })
-        .catch((error) => {
-          console.warn('Error fetching location data:', error);
-          setEndLocation({
-            name: 'Selected Location',
-            coordinates: coordinates,
-            data: { address: 'Location', isOpen: false },
-          });
-          setState(MapState.Information);
-        });
-    }
+            break;
+
+          default:
+            setEndLocation({
+              name: data?.name || 'Selected Location',
+              coordinates: coordinates,
+              data: data || { address: 'Location', isOpen: false },
+            });
+            setState(MapState.Information);
+            break;
+        }
+      })
+      .catch((error) => {
+        console.warn('Error fetching location data:', error);
+
+        switch (state) {
+          case MapState.SelectingStartLocation:
+            setStartLocation({
+              name: null,
+              coordinates: coordinates,
+            });
+            break;
+
+          case MapState.SelectingEndLocation:
+          default:
+            setEndLocation({
+              name: 'Selected Location',
+              coordinates: coordinates,
+              data: { address: 'Location', isOpen: false },
+            });
+            setState(MapState.Information);
+            break;
+        }
+      });
 
     if (cameraRef.current) {
       cameraRef.current.flyTo(coordinates, 17);
@@ -159,9 +168,5 @@ const styles = StyleSheet.create({
   },
   endMarker: {
     backgroundColor: '#852C3A',
-  },
-  routePlanningHelper: {
-    top: 300,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
   },
 });

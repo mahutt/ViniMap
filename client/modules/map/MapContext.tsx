@@ -55,18 +55,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [pitchLevel, setPitchLevel] = useState(0);
   const [state, setState] = useState<MapState>(MapState.Idle);
 
-  const setStateWithLogging = (newState: MapState) => {
-    switch (newState) {
-      case MapState.SelectingStartLocation:
-        setStartLocation(null);
-        break;
-      case MapState.RoutePlanning:
-        break;
-    }
-
-    setState(newState);
-  };
-
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);
   const [routeCoordinates, setRouteCoordinates] = useState<Coordinates[]>([]);
@@ -123,7 +111,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       routeCoordinates,
       setCenterCoordinate,
       setZoomLevel,
-      setState: setStateWithLogging,
+      setState,
       setStartLocation,
       setEndLocation,
       flyTo,

@@ -97,7 +97,6 @@ export default function LocationInput({
               setState(
                 isStartLocation ? MapState.SelectingStartLocation : MapState.SelectingEndLocation
               );
-              inputRef.current?.blur();
             }}>
             <Ionicons name="map-outline" size={20} color="#666" />
             <Text style={styles.optionText}>Choose on map</Text>

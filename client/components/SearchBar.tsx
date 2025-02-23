@@ -2,10 +2,10 @@ import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import LocationsAutocomplete from './LocationsAutocomplete';
-import { useMap } from '@/modules/map/MapContext';
+import { MapState, useMap } from '@/modules/map/MapContext';
 
 export function SearchBar() {
-  const { endLocation, setEndLocation, flyTo } = useMap();
+  const { endLocation, setEndLocation, flyTo, setState } = useMap();
   const [query, setQuery] = React.useState<string>('');
   const textInputRef = React.useRef<TextInput>(null);
 
@@ -28,6 +28,7 @@ export function SearchBar() {
             callback={(location) => {
               setQuery(location.name ?? '');
               setEndLocation(location);
+              setState(MapState.Information);
               flyTo(location.coordinates, 17);
               setTimeout(() => {
                 textInputRef.current?.blur();
