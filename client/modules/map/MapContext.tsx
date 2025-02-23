@@ -57,6 +57,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const setStateWithLogging = (newState: MapState) => {
     console.log('State changing from', state, 'to', newState);
+    console.log('Stack trace:', new Error().stack);
 
     switch (newState) {
       case MapState.SelectingStartLocation:

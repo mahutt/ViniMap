@@ -4,6 +4,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute, formatDuration } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
+import CoordinateService from '@/Services/CoordinateService';
+import { getCurrentLocationAsStart } from '@/modules/map/LocationHelper';
 
 export function RoutePlanner() {
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
@@ -35,17 +37,13 @@ export function RoutePlanner() {
   } = useMap();
 
   useEffect(() => {
-    console.log('RoutePlanner Effect - Triggered');
-    console.log('Start Location:', startLocation);
-    console.log('End Location:', endLocation);
-    console.log('Current State:', state);
+    if (state === MapState.RoutePlanning && !startLocation) {
+      getCurrentLocationAsStart(setStartLocation);
+    }
+  }, [state, startLocation]);
 
+  useEffect(() => {
     if (state === MapState.RoutePlanning) {
-      if (endLocation) {
-        if (!startLocation) {
-          console.log('Start location not set, waiting for user input');
-        }
-      }
       if (startLocation && endLocation) {
         const loadRoute = async () => {
           try {
@@ -59,7 +57,6 @@ export function RoutePlanner() {
             console.error('Error loading route:', error);
           }
         };
-
         loadRoute();
       }
     }

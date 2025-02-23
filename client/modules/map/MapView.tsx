@@ -24,6 +24,7 @@ export default function MapView() {
   } = useMap();
 
   function onMapClick(event: any) {
+    console.log('Map clicked, current state:', state);
     const { geometry } = event;
 
     console.log('Current Map State:', state);
@@ -61,15 +62,27 @@ export default function MapView() {
           console.warn('Error fetching location data:', error);
         });
     } else {
+      console.log('Attempting to fetch location data');
       fetchLocationData(coordinates)
         .then((data) => {
-          if (data) {
-            setEndLocation({ name: data.name, coordinates: coordinates, data });
-            setState(MapState.Information);
-          }
+          console.log('fetchLocationData response:', data);
+          // Set end location and change state regardless of data
+          setEndLocation({
+            name: data?.name || 'Selected Location',
+            coordinates: coordinates,
+            data: data || { address: 'Location', isOpen: false },
+          });
+          setState(MapState.Information);
         })
         .catch((error) => {
           console.warn('Error fetching location data:', error);
+          // Still set location and state even on error
+          setEndLocation({
+            name: 'Selected Location',
+            coordinates: coordinates,
+            data: { address: 'Location', isOpen: false },
+          });
+          setState(MapState.Information);
         });
     }
 

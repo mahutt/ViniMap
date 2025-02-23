@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import { TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import LocationsAutocomplete from './LocationsAutocomplete';
 import CoordinateService from '@/Services/CoordinateService';
+import { getCurrentLocationAsStart } from '@/modules/map/LocationHelper';
 
 export default function LocationInput({
   location,
@@ -43,18 +44,8 @@ export default function LocationInput({
 
   const handleCurrentLocation = async () => {
     if (isStartLocation) {
-      try {
-        const tempCoordinates = await CoordinateService.getCurrentCoordinates();
-        if (tempCoordinates) {
-          setLocation({
-            name: 'Current location',
-            coordinates: tempCoordinates,
-          });
-          inputRef.current?.blur();
-        }
-      } catch (error) {
-        console.error('Error getting current location:', error);
-      }
+      await getCurrentLocationAsStart(setLocation);
+      inputRef.current?.blur();
     }
   };
 
