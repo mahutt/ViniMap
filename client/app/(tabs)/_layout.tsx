@@ -18,6 +18,10 @@ const TabBarCalendarIcon = ({ color }: { color: string }) => {
   return <IconSymbol size={28} name="calendar" color={color} />;
 };
 
+const TabBarSettingsIcon = ({ color }: { color: string }) => {
+  return <IconSymbol size={28} name="gear" color={color} />;
+};
+
 const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
   <MapProvider>
     <Tabs
@@ -43,8 +47,15 @@ const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
       <Tabs.Screen
         name="calendar"
         options={{
-          title: 'Calendar',
+          title: 'Schedule',
           tabBarIcon: TabBarCalendarIcon,
+        }}
+      />
+      <Tabs.Screen
+        name="settings/index"
+        options={{
+          title: 'Settings',
+          tabBarIcon: TabBarSettingsIcon,
         }}
       />
     </Tabs>

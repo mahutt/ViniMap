@@ -1,0 +1,11 @@
+appId: com.anonymous.client
+---
+- launchApp
+- tapOn: 'Schedule, tab, 2 of 3'
+- tapOn: 'Upload'
+- tapOn:
+    id: 'card:com.anonymous.client:sceneID:com.anonymous.client-default'
+- inputText: '8e24ffd353dbbd1d749f9cc0b0f3ca08289fd2370ba839bac051266eac333377@group.calendar.google.com'
+- tapOn:
+    point: '75%,55%'
+- tapOn: 'Mon 17'
