@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
+import { MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute, formatDuration } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
-import CoordinateService from '@/Services/CoordinateService';
+
 import { getCurrentLocationAsStart } from '@/modules/map/LocationHelper';
 
 export function RoutePlanner() {
