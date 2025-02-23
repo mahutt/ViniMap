@@ -12,7 +12,6 @@ export default function MapView() {
     setState,
     startLocation,
     endLocation,
-    setStartLocation,
     setEndLocation,
     mapRef,
     cameraRef,
@@ -25,70 +24,24 @@ export default function MapView() {
   function onMapClick(event: any) {
     const { geometry } = event;
 
-    if (!geometry?.coordinates) {
-      return;
-    }
-
-    const coordinates = geometry.coordinates;
-
-    fetchLocationData(coordinates)
-      .then((data) => {
-        switch (state) {
-          case MapState.SelectingStartLocation:
-            setStartLocation({
-              name: data?.name || null,
-              coordinates: coordinates,
-              data: data || undefined,
-            });
-            if (endLocation) {
-              setState(MapState.RoutePlanning);
-            }
-            break;
-
-          case MapState.SelectingEndLocation:
-            setEndLocation({
-              name: data?.name || 'Selected Location',
-              coordinates: coordinates,
-              data: data || { address: 'Location', isOpen: false },
-            });
-            setState(MapState.RoutePlanning);
-            break;
-
-          default:
-            setEndLocation({
-              name: data?.name || 'Selected Location',
-              coordinates: coordinates,
-              data: data || { address: 'Location', isOpen: false },
-            });
-            setState(MapState.Information);
-            break;
+    if (geometry?.coordinates) {
+      const coordinates = geometry.coordinates;
+      setEndLocation({ name: null, coordinates: coordinates });
+      fetchLocationData(coordinates).then((data) => {
+        if (data) {
+          setEndLocation({ name: data.name, coordinates: coordinates, data });
+          setState(MapState.Information);
+          if (cameraRef.current) {
+            cameraRef.current.flyTo(coordinates, 1000);
+          }
         }
-      })
-      .catch((error) => {
-        console.warn('Error fetching location data:', error);
-
-        switch (state) {
-          case MapState.SelectingStartLocation:
-            setStartLocation({
-              name: null,
-              coordinates: coordinates,
-            });
-            break;
-
-          case MapState.SelectingEndLocation:
-          default:
-            setEndLocation({
-              name: 'Selected Location',
-              coordinates: coordinates,
-              data: { address: 'Location', isOpen: false },
-            });
-            setState(MapState.Information);
-            break;
+        if (cameraRef.current) {
+          cameraRef.current.flyTo(coordinates, 1000);
         }
+        setState(MapState.Information);
       });
-
-    if (cameraRef.current) {
-      cameraRef.current.flyTo(coordinates, 17);
+    } else {
+      console.warn('No coordinates found in the event.');
     }
   }
 

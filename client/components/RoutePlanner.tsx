@@ -1,11 +1,10 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { MapState, useMap } from '@/modules/map/MapContext';
+import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute, formatDuration } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
-
-import { getCurrentLocationAsStart } from '@/modules/map/LocationHelper';
+import CoordinateService from '@/Services/CoordinateService';
 
 export function RoutePlanner() {
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
@@ -33,32 +32,25 @@ export function RoutePlanner() {
     setStartLocation,
     endLocation,
     setEndLocation,
-    state,
   } = useMap();
 
-  useEffect(() => {
-    if (state === MapState.RoutePlanning && !startLocation) {
-      getCurrentLocationAsStart(setStartLocation);
-    }
-  }, [state, startLocation]);
+  const centerMapOnUserLocation = async () => {
+    const tempCoordinates: Coordinates = (await CoordinateService.getCurrentCoordinates()) ?? [
+      0, 0,
+    ];
+
+    setStartLocation({
+      name: 'Current location',
+      coordinates: tempCoordinates,
+    });
+  };
 
   useEffect(() => {
-    if (state === MapState.RoutePlanning) {
-      if (startLocation && endLocation) {
-        const loadRoute = async () => {
-          try {
-            await loadRouteFromCoordinates(
-              startLocation.coordinates,
-              endLocation.coordinates,
-              selectedMode
-            );
-            calculateOptions();
-          } catch (error) {
-            console.error('Error loading route:', error);
-          }
-        };
-        loadRoute();
-      }
+    if (!startLocation) {
+      centerMapOnUserLocation();
+    } else if (startLocation && endLocation) {
+      loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates, selectedMode);
+      calculateOptions();
     }
   }, [startLocation, endLocation, selectedMode]);
 
@@ -168,7 +160,6 @@ export function RoutePlanner() {
               setLocation={setStartLocation}
               ionIconName="pin-outline"
               placeholder="Start location"
-              isStartLocation={true}
             />
             <Pressable onPress={() => setState(MapState.Idle)}>
               <Ionicons name="close-outline" size={28} color="#666" />

@@ -2,10 +2,10 @@ import React from 'react';
 import { View, TextInput, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import LocationsAutocomplete from './LocationsAutocomplete';
-import { MapState, useMap } from '@/modules/map/MapContext';
+import { useMap, MapState } from '@/modules/map/MapContext';
 
 export function SearchBar() {
-  const { endLocation, setEndLocation, flyTo, setState } = useMap();
+  const { endLocation, setEndLocation, setState, flyTo } = useMap();
   const [query, setQuery] = React.useState<string>('');
   const textInputRef = React.useRef<TextInput>(null);
 
