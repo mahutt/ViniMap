@@ -127,8 +127,8 @@ export default function Calendar() {
                 }
               }, 10);
             }}>
-            {weeks.map((dates, index) => (
-              <View style={styles.itemRow} key={index}>
+            {weeks.map((dates) => (
+              <View style={styles.itemRow} key={dates[0].date.toISOString()}>
                 {dates.map((item) => {
                   const isActive = value.toDateString() === item.date.toDateString();
                   return (
