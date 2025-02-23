@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Location } from '@/modules/map/MapContext';
-import { MMKV } from 'react-native-mmkv';
 import { useRouter } from 'expo-router';
+import { storage } from '@/Services/StorageService';
 
 import {
   StyleSheet,
@@ -21,9 +21,8 @@ import { getBuildingCoordinates } from '@/Services/buildingService';
 
 const { width } = Dimensions.get('window');
 
-export default function Schedule() {
+export default function Calendar() {
   const swiper = useRef<Swiper | null>(null);
-  const contentSwiper = useRef<Swiper | null>(null);
   const [week, setWeek] = useState(0);
   const [value, setValue] = useState(new Date());
   const [scheduleData, setScheduleData] = useState<
@@ -35,26 +34,39 @@ export default function Schedule() {
   const router = useRouter();
 
   const [modalVisible, setModalVisible] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const storage = new MMKV();
 
   const handleSave = async (value: string): Promise<void> => {
-    try {
-      setInputValue(value);
-    } catch (error) {
-      console.error('Error in handleSave:', error);
+    const calendarId = value.trim();
+    if (calendarId === '') return;
+    const calendarJson = await fetchCalendarEvents(calendarId);
+    console.log('Calendar Data:', calendarJson);
+    const newScheduleData = extractScheduleData(calendarJson);
+
+    const updatedScheduleData: Record<
+      string,
+      { className: string; location: string; time: string }[]
+    > = {};
+
+    for (let i = 0; i <= 4; i++) {
+      Object.keys(newScheduleData).forEach((date) => {
+        const momentDate = moment(date)
+          .add(i * 7, 'days')
+          .format('YYYY-MM-DD');
+        updatedScheduleData[momentDate] = newScheduleData[date];
+      });
     }
+
+    setScheduleData(updatedScheduleData);
   };
 
   useEffect(() => {
     const calendarData = storage.getString('calendarData');
-
     if (calendarData) {
       try {
         const parsedData = JSON.parse(calendarData);
         setScheduleData(parsedData);
       } catch (error) {
-        console.error('Error parsing stored calendar data:', error);
+        storage.delete('calendarData');
       }
     }
   }, []);
@@ -64,14 +76,6 @@ export default function Schedule() {
 
     storage.set('calendarData', JSON.stringify(scheduleData));
   }, [scheduleData]);
-
-  useEffect(() => {
-    console.log('Updated inputValue:', inputValue);
-
-    if (inputValue.trim() === '') return;
-
-    fetchAndSetSchedule(inputValue);
-  }, [inputValue]);
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
     const buildingCoordinates: Coordinates = getBuildingCoordinates(classItem.location);
@@ -92,32 +96,6 @@ export default function Schedule() {
     router.push('/');
   };
 
-  const fetchAndSetSchedule = async (calendarId: string) => {
-    try {
-      console.log('Fetching schedule for calendar ID:', calendarId);
-      const calendarJson = await fetchCalendarEvents(calendarId);
-      const newScheduleData = extractScheduleData(calendarJson);
-
-      const updatedScheduleData: Record<
-        string,
-        { className: string; location: string; time: string }[]
-      > = {};
-
-      for (let i = 0; i <= 4; i++) {
-        Object.keys(newScheduleData).forEach((date) => {
-          const momentDate = moment(date)
-            .add(i * 7, 'days')
-            .format('YYYY-MM-DD');
-          updatedScheduleData[momentDate] = newScheduleData[date];
-        });
-      }
-
-      setScheduleData(updatedScheduleData);
-    } catch (error) {
-      console.error('Error fetching schedule:', error);
-    }
-  };
-
   async function buttonPress() {
     setModalVisible(true);
   }
@@ -134,10 +112,6 @@ export default function Schedule() {
       });
     });
   }, []);
-
-  const days = React.useMemo(() => {
-    return [moment(value).subtract(1, 'day').toDate(), value, moment(value).add(1, 'day').toDate()];
-  }, [value]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -178,12 +152,14 @@ export default function Schedule() {
                 }
               }, 10);
             }}>
-            {weeks.map((dates, index) => (
-              <View style={styles.itemRow} key={index}>
-                {dates.map((item, dateIndex) => {
+            {weeks.map((dates) => (
+              <View style={styles.itemRow} key={dates[0].date.toISOString()}>
+                {dates.map((item) => {
                   const isActive = value.toDateString() === item.date.toDateString();
                   return (
-                    <TouchableWithoutFeedback key={dateIndex} onPress={() => setValue(item.date)}>
+                    <TouchableWithoutFeedback
+                      key={item.date.toISOString()}
+                      onPress={() => setValue(item.date)}>
                       <View
                         style={[
                           styles.item,
@@ -210,8 +186,8 @@ export default function Schedule() {
           </Text>
           <View style={styles.scheduleContainer}>
             {scheduleData[moment(value).format('YYYY-MM-DD')]?.length > 0 ? (
-              scheduleData[moment(value).format('YYYY-MM-DD')].map((item, idx) => (
-                <TouchableOpacity key={idx} onPress={() => handleClassClick(item)}>
+              scheduleData[moment(value).format('YYYY-MM-DD')].map((item) => (
+                <TouchableOpacity key={item.time} onPress={() => handleClassClick(item)}>
                   <View style={styles.scheduleBlock}>
                     <Text style={styles.className}>{item.className}</Text>
                     <Text style={styles.classDetails}>
