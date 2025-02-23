@@ -56,17 +56,11 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [state, setState] = useState<MapState>(MapState.Idle);
 
   const setStateWithLogging = (newState: MapState) => {
-    console.log('State changing from', state, 'to', newState);
-    console.log('Stack trace:', new Error().stack);
-
     switch (newState) {
       case MapState.SelectingStartLocation:
         setStartLocation(null);
         break;
       case MapState.RoutePlanning:
-        if (!startLocation) {
-          console.log('Start location not set, user will need to set it');
-        }
         break;
     }
 
@@ -99,8 +93,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     mode = 'walking'
   ): Promise<void> => {
     if (!startCoordinates || !endCoordinates) {
-      // null checks
-      console.warn('Invalid coordinates for route calculation');
       return;
     }
     return getRoute(startCoordinates, endCoordinates, mode)
