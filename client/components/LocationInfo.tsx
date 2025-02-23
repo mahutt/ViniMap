@@ -2,7 +2,6 @@ import { MapState, useMap } from '@/modules/map/MapContext';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
-import CoordinateService from '@/Services/CoordinateService';
 
 export function LocationInfo() {
   const { setState, endLocation } = useMap();

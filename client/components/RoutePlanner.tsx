@@ -36,17 +36,6 @@ export function RoutePlanner() {
     state,
   } = useMap();
 
-  const centerMapOnUserLocation = async () => {
-    const tempCoordinates: Coordinates = (await CoordinateService.getCurrentCoordinates()) ?? [
-      0, 0,
-    ];
-
-    setStartLocation({
-      name: 'Current location',
-      coordinates: tempCoordinates,
-    });
-  };
-
   useEffect(() => {
     if (state === MapState.RoutePlanning && !startLocation) {
       getCurrentLocationAsStart(setStartLocation);
