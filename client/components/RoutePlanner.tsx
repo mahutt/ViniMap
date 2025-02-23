@@ -32,7 +32,6 @@ export function RoutePlanner() {
     setStartLocation,
     endLocation,
     setEndLocation,
-    state,
   } = useMap();
 
   const centerMapOnUserLocation = async () => {
