@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { MapState, useMap } from '@/modules/map/MapContext';
+import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute, formatDuration } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
+import CoordinateService from '@/Services/CoordinateService';
 
 export function RoutePlanner() {
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
@@ -31,39 +32,27 @@ export function RoutePlanner() {
     setStartLocation,
     endLocation,
     setEndLocation,
-    state,
   } = useMap();
 
+  const centerMapOnUserLocation = async () => {
+    const tempCoordinates: Coordinates = (await CoordinateService.getCurrentCoordinates()) ?? [
+      0, 0,
+    ];
+
+    setStartLocation({
+      name: 'Current location',
+      coordinates: tempCoordinates,
+    });
+  };
+
   useEffect(() => {
-    console.log('RoutePlanner Effect - Triggered');
-    console.log('Start Location:', startLocation);
-    console.log('End Location:', endLocation);
-    console.log('Current State:', state);
-
-    if (state === MapState.RoutePlanning) {
-      if (endLocation) {
-        if (!startLocation) {
-          console.log('Start location not set, waiting for user input');
-        }
-      }
-      if (startLocation && endLocation) {
-        const loadRoute = async () => {
-          try {
-            await loadRouteFromCoordinates(
-              startLocation.coordinates,
-              endLocation.coordinates,
-              selectedMode
-            );
-            calculateOptions();
-          } catch (error) {
-            console.error('Error loading route:', error);
-          }
-        };
-
-        loadRoute();
-      }
+    if (!startLocation) {
+      centerMapOnUserLocation();
+    } else if (startLocation && endLocation) {
+      loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates, selectedMode);
+      calculateOptions();
     }
-  }, [startLocation, endLocation, selectedMode, state]);
+  }, [startLocation, endLocation, selectedMode]);
 
   useEffect(() => {
     if (durations.shuttle == null && selectedMode == 'shuttle') {
