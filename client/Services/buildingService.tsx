@@ -18,5 +18,5 @@ export function getBuildingCoordinates(building: string): Coordinates {
 }
 
 function getBuildingAcronym(building: string) {
-  return building.match(/^[A-Za-z]+/)?.[0].toUpperCase() || '';
+  return /^[A-Za-z]+/.exec(building)?.[0].toUpperCase() ?? '';
 }

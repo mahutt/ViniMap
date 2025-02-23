@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Location } from '@/modules/map/MapContext';
 import { useRouter } from 'expo-router';
 import { storage } from '@/services/StorageService';
 
@@ -16,7 +15,7 @@ import moment from 'moment';
 import Swiper from 'react-native-swiper';
 import { extractScheduleData, fetchCalendarEvents } from '@/services/GoogleScheduleService';
 import SimpleModal from '@/components/CalendarIdBox';
-import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
+import { Coordinates, MapState, useMap, Location } from '@/modules/map/MapContext';
 import { getBuildingCoordinates } from '@/services/BuildingService';
 
 const { width } = Dimensions.get('window');
@@ -29,8 +28,8 @@ export default function Calendar() {
     Record<string, { className: string; location: string; time: string }[]>
   >({});
 
-  const { endLocation, setEndLocation } = useMap();
-  const { state, setState } = useMap();
+  const { setEndLocation } = useMap();
+  const { setState } = useMap();
   const router = useRouter();
 
   const [modalVisible, setModalVisible] = useState(false);
