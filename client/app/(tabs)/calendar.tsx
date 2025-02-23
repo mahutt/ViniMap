@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Location } from '@/modules/map/MapContext';
 import { useRouter } from 'expo-router';
-import { storage } from '@/Services/StorageService';
+import { storage } from '@/services/StorageService';
 
 import {
   StyleSheet,
@@ -14,10 +14,10 @@ import {
 } from 'react-native';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
-import { extractScheduleData, fetchCalendarEvents } from '@/Services/GoogleScheduleService';
+import { extractScheduleData, fetchCalendarEvents } from '@/services/GoogleScheduleService';
 import SimpleModal from '@/components/CalendarIdBox';
 import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
-import { getBuildingCoordinates } from '@/Services/BuildingService';
+import { getBuildingCoordinates } from '@/services/BuildingService';
 
 const { width } = Dimensions.get('window');
 

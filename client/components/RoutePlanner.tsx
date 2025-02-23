@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute, formatDuration } from '@/modules/map/MapService';
 import LocationInput from './LocationInput';
-import CoordinateService from '@/Services/CoordinateService';
+import CoordinateService from '@/services/CoordinateService';
 
 export function RoutePlanner() {
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({

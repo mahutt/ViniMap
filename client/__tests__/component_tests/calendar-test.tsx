@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react-native';
 import Schedule from '@/app/(tabs)/calendar';
-import { storage } from '@/Services/StorageService';
+import { storage } from '@/services/StorageService';
 import { MMKV } from 'react-native-mmkv';
 
 // Mock the date to a specific value

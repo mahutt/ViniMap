@@ -1,4 +1,4 @@
-import { extractScheduleData, fetchCalendarEvents } from '../../Services/GoogleScheduleService';
+import { extractScheduleData, fetchCalendarEvents } from '../../services/GoogleScheduleService';
 
 describe('extractScheduleData', () => {
   const mockCalendarData = {
