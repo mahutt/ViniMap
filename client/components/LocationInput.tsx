@@ -33,7 +33,6 @@ export default function LocationInput({
 
   const handleFocus = () => {
     setIsFocused(true);
-    setQuery('');
   };
 
   const handleBlur = () => {
