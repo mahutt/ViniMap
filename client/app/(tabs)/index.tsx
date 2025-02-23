@@ -14,6 +14,7 @@ import CenterLocationComponent from '@/components/ui/IconCenterLocation';
 import { LocationInfo } from '@/components/LocationInfo';
 import { RoutePlanner } from '@/components/RoutePlanner';
 import ToggleCampusButton from '@/components/ui/ToggleCampusButton';
+import MapHint from '@/components/MapHint';
 
 export default function HomeScreen() {
   const { state } = useMap();
@@ -30,6 +31,7 @@ export default function HomeScreen() {
       {state === MapState.Idle && <CenterLocationComponent />}
       {state === MapState.Information && <LocationInfo />}
       {state === MapState.RoutePlanning && <RoutePlanner />}
+      <MapHint />
     </View>
   );
 }
