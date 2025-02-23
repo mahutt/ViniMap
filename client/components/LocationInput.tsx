@@ -5,6 +5,8 @@ import { TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-nativ
 import LocationsAutocomplete from './LocationsAutocomplete';
 import CoordinateService from '@/Services/CoordinateService';
 
+const CURRENT_LOCATION_NAME = 'Current location';
+
 export default function LocationInput({
   location,
   setLocation,
@@ -24,21 +26,17 @@ export default function LocationInput({
   const { setState } = useMap();
 
   useEffect(() => {
-    if (location && !isFocused) {
+    if (location) {
       setQuery(location.name ?? '');
     }
-  }, [location, isFocused]);
+  }, [location]);
 
   const handleFocus = () => {
     setIsFocused(true);
-    setQuery('');
   };
 
   const handleBlur = () => {
     setIsFocused(false);
-    if (location) {
-      setQuery(location.name ?? '');
-    }
   };
 
   const handleCurrentLocation = async () => {
@@ -47,7 +45,7 @@ export default function LocationInput({
         const tempCoordinates = await CoordinateService.getCurrentCoordinates();
         if (tempCoordinates) {
           setLocation({
-            name: 'Current location',
+            name: CURRENT_LOCATION_NAME,
             coordinates: tempCoordinates,
           });
           inputRef.current?.blur();
@@ -100,7 +98,7 @@ export default function LocationInput({
             <Ionicons name="map-outline" size={20} color="#666" />
             <Text style={styles.optionText}>Choose on map</Text>
           </TouchableOpacity>
-          {isStartLocation && (
+          {isStartLocation && location?.name !== CURRENT_LOCATION_NAME && (
             <TouchableOpacity style={styles.optionItem} onPress={handleCurrentLocation}>
               <Ionicons name="locate-outline" size={20} color="#666" />
               <Text style={styles.optionText}>Use Current Location</Text>
