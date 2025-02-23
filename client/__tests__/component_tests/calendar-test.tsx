@@ -17,7 +17,7 @@ jest.mock('react-native-mmkv', () => ({
   })),
 }));
 
-jest.mock('@/Services/StorageService', () => ({
+jest.mock('@/services/StorageService', () => ({
   storage: {
     getString: jest.fn(),
     set: jest.fn(),
@@ -25,7 +25,7 @@ jest.mock('@/Services/StorageService', () => ({
   } as jest.Mocked<Partial<MMKV>>,
 }));
 
-jest.mock('@/Services/GoogleScheduleService', () => ({
+jest.mock('@/services/GoogleScheduleService', () => ({
   extractScheduleData: jest.fn(),
   fetchCalendarEvents: jest.fn(),
 }));
