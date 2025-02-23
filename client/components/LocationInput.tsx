@@ -113,7 +113,9 @@ export default function LocationInput({
           callback={(selectedLocation) => {
             setLocation(selectedLocation);
             setQuery(selectedLocation.name ?? '');
-            inputRef.current?.blur();
+            setTimeout(() => {
+              inputRef.current?.blur();
+            }, 0);
           }}
         />
       )}
