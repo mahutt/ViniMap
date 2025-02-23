@@ -2,6 +2,7 @@ import { render } from '@testing-library/react-native';
 import Schedule from '@/app/(tabs)/calendar';
 import { storage } from '@/services/StorageService';
 import { MMKV } from 'react-native-mmkv';
+import { MapProvider } from '@/modules/map/MapContext';
 
 // Mock the date to a specific value
 const mockDate = new Date(2025, 1, 22);
@@ -61,13 +62,21 @@ describe('<Schedule />', () => {
   });
 
   test('renders correctly with mocked calendar data', () => {
-    const { getByText } = render(<Schedule />);
+    const { getByText } = render(
+      <MapProvider>
+        <Schedule />
+      </MapProvider>
+    );
     expect(getByText('Your Schedule')).toBeTruthy();
     expect(getByText('Upload')).toBeTruthy();
   });
 
   test('displays stored calendar data correctly', () => {
-    const { getByText } = render(<Schedule />);
+    const { getByText } = render(
+      <MapProvider>
+        <Schedule />
+      </MapProvider>
+    );
     expect(mockedStorage.getString).toHaveBeenCalledWith('calendarData');
     expect(getByText('Mathematics 101')).toBeTruthy();
     expect(getByText('Physics Lab')).toBeTruthy();
@@ -77,7 +86,11 @@ describe('<Schedule />', () => {
     // Mock empty storage
     mockedStorage.getString.mockReturnValue(undefined);
 
-    const { getByText } = render(<Schedule />);
+    const { getByText } = render(
+      <MapProvider>
+        <Schedule />
+      </MapProvider>
+    );
     expect(getByText('No classes scheduled')).toBeTruthy();
   });
 
@@ -85,7 +98,11 @@ describe('<Schedule />', () => {
     // Mock invalid JSON in storage
     mockedStorage.getString.mockReturnValue('invalid-json');
 
-    const { getByText } = render(<Schedule />);
+    const { getByText } = render(
+      <MapProvider>
+        <Schedule />
+      </MapProvider>
+    );
     expect(getByText('No classes scheduled')).toBeTruthy();
 
     // Verify that storage.delete was called to clean up invalid data
