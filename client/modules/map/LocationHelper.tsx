@@ -1,5 +1,5 @@
 import { Location } from './MapContext';
-import CoordinateService from '@/Services/CoordinateService';
+import CoordinateService from '@/services/CoordinateService';
 
 export const getCurrentLocationAsStart = async (setLocation: (location: Location) => void) => {
   try {
