@@ -58,16 +58,14 @@ export function BottomFrame({ selectedMode, modeIcon, durations, distances }: Bo
       <View>
         {/* <View style={styles.slideIndicator} />  uncomment to show slide indicator */}
         <View style={styles.infoContent}>
-          <View>
-            <Text style={styles.infoText}>
-              <Text style={styles.boldText}>
-                {durations[selectedMode] !== null ? formatDuration(durations[selectedMode]) : 0}{' '}
-              </Text>
-              <Text style={styles.infoText}>
-                ({(Number(distances[selectedMode]) / 1000).toFixed(2)} km){' '}
-              </Text>
-              <View>{modeIcon}</View>
+          <View style={styles.infoText}>
+            <Text style={styles.boldText}>
+              {durations[selectedMode] !== null ? formatDuration(durations[selectedMode]) : 0}{' '}
             </Text>
+            <Text style={styles.infoText}>
+              ({(Number(distances[selectedMode]) / 1000).toFixed(2)} km){' '}
+            </Text>
+            {/* {modeIcon} */}
           </View>
           <Pressable style={styles.startButton} onPress={() => {}}>
             <Ionicons
@@ -97,6 +95,7 @@ const styles = StyleSheet.create({
   },
   boldText: {
     fontWeight: 'bold',
+    fontSize: 30,
   },
   slideIndicator: {
     width: 40,
@@ -113,9 +112,12 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   infoText: {
-    fontSize: 20,
     color: '#333',
     textAlign: 'left',
+    display: 'flex',
+    alignItems: 'center',
+    flexDirection: 'row',
+    fontSize: 25,
   },
   startButton: {
     flexDirection: 'row',
