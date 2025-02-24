@@ -13,7 +13,9 @@ interface BottomFrameProps {
 export function BottomFrame({ selectedMode, modeIcon, durations, distances }: BottomFrameProps) {
   const slideAnim = React.useRef(new Animated.Value(500)).current;
 
+  //
   //   Future code for drawer slide up and down
+  //
   //   const slideUp = () => {
   //     Animated.timing(slideAnim, {
   //       toValue: 0,
@@ -22,13 +24,13 @@ export function BottomFrame({ selectedMode, modeIcon, durations, distances }: Bo
   //     }).start();
   //   };
 
-  const slideDown = () => {
-    Animated.timing(slideAnim, {
-      toValue: 250,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
-  };
+  // const slideDown = () => {
+  //   Animated.timing(slideAnim, {
+  //     toValue: 250,
+  //     duration: 500,
+  //     useNativeDriver: true,
+  //   }).start();
+  // };
 
   //   Future code for drawer slide up and down
   //   const panResponder = React.useRef(
