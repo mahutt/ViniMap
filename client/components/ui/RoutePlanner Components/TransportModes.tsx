@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Pressable, ScrollView, Text } from 'react-native';
+import { View, StyleSheet, Pressable, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { formatDuration } from '@/modules/map/MapService';
 
@@ -19,36 +19,32 @@ export function TransportModes({
   modes,
 }: Readonly<TransportModesProps>) {
   return (
-    <ScrollView horizontal contentContainerStyle={styles.transportModeContainer}>
-      <View style={styles.transportModeContainer}>
-        {modes.map((mode) => {
-          const isDisabled = isRouteFound && durations[mode.name] === null;
-          return (
-            <Pressable
-              key={mode.name}
-              style={[
-                styles.transportButton,
-                isRouteFound && selectedMode === mode.name && styles.activeTransportButton,
-                isDisabled && styles.disabledTransportButton,
-              ]}
-              onPress={isDisabled ? null : () => onMode(mode.name)}>
-              <Ionicons
-                name={
-                  mode.icon as 'walk-outline' | 'bicycle-outline' | 'car-outline' | 'bus-outline'
-                }
-                size={24}
-                color="#666"
-              />
-              {isRouteFound && durations[mode.name] !== null && (
-                <Text>
-                  {durations[mode.name] !== null ? formatDuration(durations[mode.name]) : ''}
-                </Text>
-              )}
-            </Pressable>
-          );
-        })}
-      </View>
-    </ScrollView>
+    <View style={styles.transportModeContainer}>
+      {modes.map((mode) => {
+        const isDisabled = isRouteFound && durations[mode.name] === null;
+        return (
+          <Pressable
+            key={mode.name}
+            style={[
+              styles.transportButton,
+              isRouteFound && selectedMode === mode.name && styles.activeTransportButton,
+              isDisabled && styles.disabledTransportButton,
+            ]}
+            onPress={isDisabled ? null : () => onMode(mode.name)}>
+            <Ionicons
+              name={mode.icon as 'walk-outline' | 'bicycle-outline' | 'car-outline' | 'bus-outline'}
+              size={24}
+              color="#666"
+            />
+            {isRouteFound && durations[mode.name] !== null && (
+              <Text>
+                {durations[mode.name] !== null ? formatDuration(durations[mode.name]) : ''}
+              </Text>
+            )}
+          </Pressable>
+        );
+      })}
+    </View>
   );
 }
 
