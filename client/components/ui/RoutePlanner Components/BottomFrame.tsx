@@ -4,15 +4,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { formatDuration } from '@/modules/map/MapService';
 
 interface BottomFrameProps {
-  selectedMode: string;
-  modeIcon: React.ReactNode;
-  durations: { [key: string]: number | null };
-  distances: { [key: string]: number | null };
+  readonly selectedMode: string;
+  readonly modeIcon: React.ReactNode;
+  readonly durations: { [key: string]: number | null };
+  readonly distances: { [key: string]: number | null };
 }
 
 export function BottomFrame({ selectedMode, modeIcon, durations, distances }: BottomFrameProps) {
-  const slideAnim = React.useRef(new Animated.Value(500)).current;
-
   return (
     <Animated.View style={[styles.infoContainer]}>
       <View>
