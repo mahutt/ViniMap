@@ -13,52 +13,9 @@ interface BottomFrameProps {
 export function BottomFrame({ selectedMode, modeIcon, durations, distances }: BottomFrameProps) {
   const slideAnim = React.useRef(new Animated.Value(500)).current;
 
-  //
-  //   Future code for drawer slide up and down
-  //
-  //   const slideUp = () => {
-  //     Animated.timing(slideAnim, {
-  //       toValue: 0,
-  //       duration: 500,
-  //       useNativeDriver: true,
-  //     }).start();
-  //   };
-
-  // const slideDown = () => {
-  //   Animated.timing(slideAnim, {
-  //     toValue: 250,
-  //     duration: 500,
-  //     useNativeDriver: true,
-  //   }).start();
-  // };
-
-  //   Future code for drawer slide up and down
-  //   const panResponder = React.useRef(
-  //     PanResponder.create({
-  //       onMoveShouldSetPanResponder: (_, gestureState) => true,
-  //       onPanResponderMove: (_, gestureState) => {
-  //         slideAnim.setValue(Math.min(gestureState.dy, 500));
-  //       },
-  //       onPanResponderRelease: (_, gestureState) => {
-  //         if (gestureState.dy > 100) {
-  //           slideDown();
-  //         } else {
-  //           slideUp();
-  //         }
-  //       },
-  //     })
-  //   ).current;
-
   return (
-    <Animated.View
-      style={[
-        styles.infoContainer,
-        // { transform: [{ translateY: slideAnim }] },
-      ]}
-      //{...panResponder.panHandlers}
-    >
+    <Animated.View style={[styles.infoContainer]}>
       <View>
-        {/* <View style={styles.slideIndicator} />  uncomment to show slide indicator */}
         <View style={styles.infoContent}>
           <View style={styles.infoText}>
             <Text style={styles.boldText}>
@@ -98,14 +55,6 @@ const styles = StyleSheet.create({
   boldText: {
     fontWeight: 'bold',
     fontSize: 30,
-  },
-  slideIndicator: {
-    width: 40,
-    height: 5,
-    backgroundColor: '#ccc',
-    borderRadius: 2.5,
-    marginBottom: 20,
-    alignSelf: 'center',
   },
   infoContent: {
     flexDirection: 'row',

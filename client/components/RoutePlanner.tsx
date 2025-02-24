@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute } from '@/modules/map/MapService';
@@ -32,8 +32,6 @@ export function RoutePlanner() {
 
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
-
-  // const slideAnim = React.useRef(new Animated.Value(500)).current; Will be used when sliding drawer feature is implemented (requires navigation steps)
 
   const { loadRouteFromCoordinates, startLocation, setStartLocation, endLocation, state } =
     useMap();
