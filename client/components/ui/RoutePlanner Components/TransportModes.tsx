@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
+import { View, StyleSheet, Pressable, ScrollView, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { formatDuration } from '@/modules/map/MapService';
 
@@ -17,7 +17,7 @@ export function TransportModes({
   durations,
   isRouteFound,
   modes,
-}: TransportModesProps) {
+}: Readonly<TransportModesProps>) {
   return (
     <ScrollView horizontal contentContainerStyle={styles.transportModeContainer}>
       <View style={styles.transportModeContainer}>
