@@ -86,8 +86,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  disabledTransportButton: {
-    opacity: 0.5,
-  },
 });
 export default BottomFrame;
