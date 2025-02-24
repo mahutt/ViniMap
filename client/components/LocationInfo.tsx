@@ -4,14 +4,10 @@ import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 
 export function LocationInfo() {
-  const { endLocation, setState, setEndLocation } = useMap();
+  const { setState, endLocation } = useMap();
 
   function getDirections() {
-    const selectedBuilding = endLocation;
     setState(MapState.RoutePlanning);
-    setTimeout(() => {
-      setEndLocation(selectedBuilding);
-    }, 100);
   }
 
   return (
@@ -21,8 +17,8 @@ export function LocationInfo() {
       </TouchableOpacity>
       <Text style={styles.nameText}>{endLocation?.name}</Text>
       <Text style={styles.addressText}>{endLocation?.data?.address}</Text>
-      <Text style={[styles.isOpen, { color: endLocation?.data?.address ? 'green' : 'red' }]}>
-        {endLocation?.data?.address ? 'Open Now' : 'Closed Now'}
+      <Text style={[styles.isOpen, { color: endLocation?.data?.isOpen ? 'green' : 'red' }]}>
+        {endLocation?.data?.isOpen ? 'Open Now' : 'Closed Now'}
       </Text>
       <TouchableOpacity style={styles.button} onPress={getDirections}>
         <Ionicons name="arrow-forward-outline" size={24} color="#fff" style={styles.icon} />

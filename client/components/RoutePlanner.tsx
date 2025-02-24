@@ -1,12 +1,16 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Animated } from 'react-native';
-import { Coordinates, useMap } from '@/modules/map/MapContext';
-import { getRoute } from '@/modules/map/MapService';
-import CoordinateService from '@/Services/CoordinateService';
+import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { MapState, useMap } from '@/modules/map/MapContext';
+import { getRoute, formatDuration } from '@/modules/map/MapService';
+import LocationInput from './LocationInput';
+
+import { getCurrentLocationAsStart } from '@/modules/map/LocationHelper';
+import { Coordinates } from '@/modules/map/MapContext';
+import CoordinateService from '@/services/CoordinateService';
 import TransportModes from './ui/RoutePlanner Components/TransportModes';
 import BottomFrame from './ui/RoutePlanner Components/BottomFrame';
 import InputFields from './ui/RoutePlanner Components/InputFields';
-import { Ionicons } from '@expo/vector-icons';
 
 export function RoutePlanner() {
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
@@ -34,25 +38,39 @@ export function RoutePlanner() {
   const [isRouteFound, setIsRouteFound] = React.useState(false);
   const slideAnim = React.useRef(new Animated.Value(500)).current;
 
-  const { loadRouteFromCoordinates, startLocation, setStartLocation, endLocation } = useMap();
-
-  const centerMapOnUserLocation = async () => {
-    const tempCoordinates: Coordinates = (await CoordinateService.getCurrentCoordinates()) ?? [
-      0, 0,
-    ];
-
-    setStartLocation({
-      name: 'Current location',
-      coordinates: tempCoordinates,
-    });
-  };
+  const {
+    setState,
+    loadRouteFromCoordinates,
+    startLocation,
+    setStartLocation,
+    endLocation,
+    setEndLocation,
+    state,
+  } = useMap();
 
   useEffect(() => {
-    if (!startLocation) {
-      centerMapOnUserLocation();
-    } else if (startLocation && endLocation) {
-      loadRouteFromCoordinates(startLocation.coordinates, endLocation.coordinates, selectedMode);
-      calculateOptions();
+    if (state === MapState.RoutePlanning && !startLocation) {
+      getCurrentLocationAsStart(setStartLocation);
+    }
+  }, [state, startLocation]);
+
+  useEffect(() => {
+    if (state === MapState.RoutePlanning) {
+      if (startLocation && endLocation) {
+        const loadRoute = async () => {
+          try {
+            await loadRouteFromCoordinates(
+              startLocation.coordinates,
+              endLocation.coordinates,
+              selectedMode
+            );
+            calculateOptions();
+          } catch (error) {
+            console.error('Error loading route:', error);
+          }
+        };
+        loadRoute();
+      }
     }
   }, [startLocation, endLocation, selectedMode]);
 
