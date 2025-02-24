@@ -65,7 +65,7 @@ export function BottomFrame({ selectedMode, modeIcon, durations, distances }: Bo
             <Text style={styles.infoText}>
               ({(Number(distances[selectedMode]) / 1000).toFixed(2)} km){' '}
             </Text>
-            {/* {modeIcon} */}
+            {modeIcon}
           </View>
           <Pressable style={styles.startButton} onPress={() => {}}>
             <Ionicons
