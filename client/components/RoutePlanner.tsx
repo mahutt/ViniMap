@@ -1,13 +1,9 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Pressable, ScrollView, Text, Animated } from 'react-native';
+import { View, StyleSheet, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
-import { getRoute, formatDuration } from '@/modules/map/MapService';
-import LocationInput from './LocationInput';
-
+import { getRoute } from '@/modules/map/MapService';
 import { getCurrentLocationAsStart } from '@/modules/map/LocationHelper';
-import { Coordinates } from '@/modules/map/MapContext';
-import CoordinateService from '@/services/CoordinateService';
 import TransportModes from './ui/RoutePlanner Components/TransportModes';
 import BottomFrame from './ui/RoutePlanner Components/BottomFrame';
 import InputFields from './ui/RoutePlanner Components/InputFields';
@@ -38,15 +34,8 @@ export function RoutePlanner() {
   const [isRouteFound, setIsRouteFound] = React.useState(false);
   const slideAnim = React.useRef(new Animated.Value(500)).current;
 
-  const {
-    setState,
-    loadRouteFromCoordinates,
-    startLocation,
-    setStartLocation,
-    endLocation,
-    setEndLocation,
-    state,
-  } = useMap();
+  const { loadRouteFromCoordinates, startLocation, setStartLocation, endLocation, state } =
+    useMap();
 
   useEffect(() => {
     if (state === MapState.RoutePlanning && !startLocation) {
