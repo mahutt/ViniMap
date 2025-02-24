@@ -41,7 +41,7 @@ export function BottomFrame({ selectedMode, modeIcon, durations, distances }: Bo
 const styles = StyleSheet.create({
   infoContainer: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 20,
     zIndex: 10,
     backgroundColor: 'white',
     padding: 30,
@@ -52,7 +52,7 @@ const styles = StyleSheet.create({
   },
   boldText: {
     fontWeight: 'bold',
-    fontSize: 30,
+    fontSize: 25,
   },
   infoContent: {
     flexDirection: 'row',
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     flexDirection: 'row',
-    fontSize: 25,
+    fontSize: 20,
   },
   startButton: {
     flexDirection: 'row',
