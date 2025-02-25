@@ -20,7 +20,8 @@ export default function PitchButton() {
         <MaterialCommunityIcons name="angle-obtuse" size={35} color="white" />
       </TouchableOpacity>
     </View>
-  );
+  ;
+    // The above error (missing parenthesis) is introduced to test our CI/CD pipeline
 }
 
 const styles = StyleSheet.create({
