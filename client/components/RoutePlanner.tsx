@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
@@ -8,6 +8,13 @@ import TransportModes from './ui/RoutePlanner Components/TransportModes';
 import BottomFrame from './ui/RoutePlanner Components/BottomFrame';
 import InputFields from './ui/RoutePlanner Components/InputFields';
 
+const MODES = [
+  { name: 'walking', icon: 'walk-outline' },
+  { name: 'cycling', icon: 'bicycle-outline' },
+  { name: 'driving', icon: 'car-outline' },
+  { name: 'shuttle', icon: 'bus-outline' },
+];
+
 export function RoutePlanner() {
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
     walking: null,
@@ -15,13 +22,6 @@ export function RoutePlanner() {
     driving: null,
     shuttle: null,
   });
-
-  const modes = [
-    { name: 'walking', icon: 'walk-outline' },
-    { name: 'cycling', icon: 'bicycle-outline' },
-    { name: 'driving', icon: 'car-outline' },
-    { name: 'shuttle', icon: 'bus-outline' },
-  ];
 
   const [distances, setDistances] = React.useState<{ [key: string]: number | null }>({
     walking: null,
@@ -36,44 +36,12 @@ export function RoutePlanner() {
   const { loadRouteFromCoordinates, startLocation, setStartLocation, endLocation, state } =
     useMap();
 
-  useEffect(() => {
-    if (state === MapState.RoutePlanning && !startLocation) {
-      getCurrentLocationAsStart(setStartLocation);
-    }
-  }, [state, startLocation]);
-
-  useEffect(() => {
-    if (state === MapState.RoutePlanning) {
-      if (startLocation && endLocation) {
-        const loadRoute = async () => {
-          try {
-            await loadRouteFromCoordinates(
-              startLocation.coordinates,
-              endLocation.coordinates,
-              selectedMode
-            );
-            calculateOptions();
-          } catch (error) {
-            console.error('Error loading route:', error);
-          }
-        };
-        loadRoute();
-      }
-    }
-  }, [startLocation, endLocation, selectedMode]);
-
-  useEffect(() => {
-    if (durations.shuttle == null && selectedMode == 'shuttle') {
-      setSelectedMode('driving');
-    }
-  }, [durations, distances]);
-
-  const calculateOptions = async () => {
+  const calculateOptions = useCallback(async () => {
     if (!startLocation || !endLocation) return;
 
     try {
       const routes = await Promise.all(
-        modes.map((mode) => getRoute(startLocation.coordinates, endLocation.coordinates, mode.name))
+        MODES.map((mode) => getRoute(startLocation.coordinates, endLocation.coordinates, mode.name))
       );
 
       const [walkingRoute, cyclingRoute, drivingRoute, shuttleRoute] = routes;
@@ -96,10 +64,42 @@ export function RoutePlanner() {
     } catch (error) {
       console.error('Error setting route:', error);
     }
-  };
+  }, [startLocation, endLocation]);
+
+  useEffect(() => {
+    if (state === MapState.RoutePlanning && !startLocation) {
+      getCurrentLocationAsStart(setStartLocation);
+    }
+  }, [state, startLocation, setStartLocation]);
+
+  useEffect(() => {
+    if (state === MapState.RoutePlanning) {
+      if (startLocation && endLocation) {
+        const loadRoute = async () => {
+          try {
+            await loadRouteFromCoordinates(
+              startLocation.coordinates,
+              endLocation.coordinates,
+              selectedMode
+            );
+            calculateOptions();
+          } catch (error) {
+            console.error('Error loading route:', error);
+          }
+        };
+        loadRoute();
+      }
+    }
+  }, [startLocation, endLocation, selectedMode, calculateOptions, loadRouteFromCoordinates, state]);
+
+  useEffect(() => {
+    if (durations.shuttle == null && selectedMode === 'shuttle') {
+      setSelectedMode('driving');
+    }
+  }, [durations, distances, selectedMode]);
 
   const getModeIcon = (modeName: string) => {
-    const mode = modes.find((m) => m.name === modeName);
+    const mode = MODES.find((m) => m.name === modeName);
     if (!mode) return null;
     return (
       <Ionicons
@@ -124,7 +124,7 @@ export function RoutePlanner() {
             onMode={handleTransportMode}
             durations={durations}
             isRouteFound={isRouteFound}
-            modes={modes}
+            modes={MODES}
           />
         </View>
       </View>

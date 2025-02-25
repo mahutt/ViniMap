@@ -8,7 +8,7 @@ interface TransportModesProps {
   onMode: (mode: string) => void;
   durations: { [key: string]: number | null };
   isRouteFound: boolean;
-  modes: Array<{ name: string; icon: string }>;
+  modes: { name: string; icon: string }[];
 }
 
 export function TransportModes({
