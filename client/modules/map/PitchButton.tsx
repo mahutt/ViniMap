@@ -11,7 +11,7 @@ export default function PitchButton() {
     const currentCoordinates = (await mapRef.current?.getCenter()) as [number, number];
     setCenterCoordinate(currentCoordinates);
     setZoomLevel(currentZoom);
-    const newPitch = pitchLevel == 75 ? 0 : 75;
+    const newPitch = pitchLevel === 75 ? 0 : 75;
     setPitchLevel(newPitch);
   };
   return (

@@ -64,7 +64,7 @@ export default function Calendar() {
       try {
         const parsedData = JSON.parse(calendarData);
         setScheduleData(parsedData);
-      } catch (error) {
+      } catch {
         storage.delete('calendarData');
       }
     }

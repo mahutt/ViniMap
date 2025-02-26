@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useRef, useState, useMemo } from 'react';
+import React, { createContext, useContext, useRef, useState, useMemo, useCallback } from 'react';
 import Mapbox from '@rnmapbox/maps';
 import { getRoute } from './MapService';
 import { Coordinates } from './Types';
@@ -75,27 +75,30 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     [zoomLevel, pitchLevel]
   );
 
-  const loadRouteFromCoordinates = async (
-    startCoordinates: Coordinates,
-    endCoordinates: Coordinates,
-    mode = 'walking'
-  ): Promise<void> => {
-    if (!startCoordinates || !endCoordinates) {
-      return;
-    }
-    return getRoute(startCoordinates, endCoordinates, mode)
-      .then((data) => {
-        if (data?.coordinates) {
-          if (data.coordinates.length > 0) {
-            flyTo(data.coordinates[0], zoomLevel);
+  const loadRouteFromCoordinates = useCallback(
+    async (
+      startCoordinates: Coordinates,
+      endCoordinates: Coordinates,
+      mode = 'walking'
+    ): Promise<void> => {
+      if (!startCoordinates || !endCoordinates) {
+        return;
+      }
+      return getRoute(startCoordinates, endCoordinates, mode)
+        .then((data) => {
+          if (data?.coordinates) {
+            if (data.coordinates.length > 0) {
+              flyTo(data.coordinates[0], zoomLevel);
+            }
+            setRouteCoordinates(data.coordinates);
           }
-          setRouteCoordinates(data.coordinates);
-        }
-      })
-      .catch((error) => {
-        console.error('Error setting route:', error);
-      });
-  };
+        })
+        .catch((error) => {
+          console.error('Error setting route:', error);
+        });
+    },
+    [flyTo, zoomLevel]
+  );
 
   const value = useMemo(
     () => ({
@@ -126,6 +129,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       routeCoordinates,
       flyTo,
       pitchLevel,
+      loadRouteFromCoordinates,
     ]
   );
 
