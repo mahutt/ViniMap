@@ -28,6 +28,12 @@ type MapContextType = {
   pitchLevel: number;
   setPitchLevel: (pitchLevel: number) => void;
 
+  isDotted: boolean;
+  setIsDotted: (isDotted: boolean) => void;
+
+  isShuttle: boolean;
+  setIsShuttle: (isShuttle: boolean) => void;
+
   state: MapState;
   startLocation: Location | null;
   endLocation: Location | null;
@@ -58,6 +64,8 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);
   const [routeCoordinates, setRouteCoordinates] = useState<Coordinates[]>([]);
+  const [isDotted, setIsDotted] = useState<boolean>(false);
+  const [isShuttle, setIsShuttle] = useState<boolean>(false);
 
   const flyTo = useMemo(
     () => (newCenterCoordinate: [number, number], newZoomLevel?: number) => {
@@ -84,6 +92,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (!startCoordinates || !endCoordinates) {
         return;
       }
+
       return getRoute(startCoordinates, endCoordinates, mode)
         .then((data) => {
           if (data?.coordinates) {
@@ -119,6 +128,10 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setEndLocation,
       flyTo,
       loadRouteFromCoordinates,
+      isDotted,
+      setIsDotted,
+      isShuttle,
+      setIsShuttle,
     }),
     [
       centerCoordinate,
@@ -130,6 +143,10 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       flyTo,
       pitchLevel,
       loadRouteFromCoordinates,
+      isDotted,
+      setIsDotted,
+      isShuttle,
+      setIsShuttle,
     ]
   );
 

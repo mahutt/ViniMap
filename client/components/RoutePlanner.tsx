@@ -7,7 +7,6 @@ import { getCurrentLocationAsStart } from '@/modules/map/LocationHelper';
 import TransportModes from './ui/RoutePlanner Components/TransportModes';
 import BottomFrame from './ui/RoutePlanner Components/BottomFrame';
 import InputFields from './ui/RoutePlanner Components/InputFields';
-
 const MODES = [
   { name: 'walking', icon: 'walk-outline' },
   { name: 'cycling', icon: 'bicycle-outline' },
@@ -33,8 +32,16 @@ export function RoutePlanner() {
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
 
-  const { loadRouteFromCoordinates, startLocation, setStartLocation, endLocation, state } =
-    useMap();
+  const {
+    loadRouteFromCoordinates,
+    startLocation,
+    setStartLocation,
+    endLocation,
+    state,
+    setIsDotted,
+    isDotted,
+    setIsShuttle,
+  } = useMap();
 
   const calculateOptions = useCallback(async () => {
     if (!startLocation || !endLocation) return;
@@ -75,6 +82,17 @@ export function RoutePlanner() {
   useEffect(() => {
     if (state === MapState.RoutePlanning) {
       if (startLocation && endLocation) {
+        console.log(selectedMode);
+        if (selectedMode === 'shuttle') {
+          setIsShuttle(true);
+          setIsDotted(false);
+        } else if (selectedMode === 'walking') {
+          setIsShuttle(false);
+          setIsDotted(true);
+        } else {
+          setIsShuttle(false);
+          setIsDotted(false);
+        }
         const loadRoute = async () => {
           try {
             await loadRouteFromCoordinates(
@@ -90,7 +108,15 @@ export function RoutePlanner() {
         loadRoute();
       }
     }
-  }, [startLocation, endLocation, selectedMode, calculateOptions, loadRouteFromCoordinates, state]);
+  }, [
+    startLocation,
+    endLocation,
+    selectedMode,
+    calculateOptions,
+    loadRouteFromCoordinates,
+    state,
+    isDotted,
+  ]);
 
   useEffect(() => {
     if (durations.shuttle == null && selectedMode === 'shuttle') {

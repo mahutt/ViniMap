@@ -1,6 +1,6 @@
 import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MapState, useMap } from './MapContext';
 import { fetchLocationData } from './MapService';
 
@@ -20,6 +20,8 @@ export default function MapView() {
     zoomLevel,
     pitchLevel,
     routeCoordinates,
+    isDotted,
+    isShuttle,
   } = useMap();
 
   function onMapClick(event: any) {
@@ -124,6 +126,7 @@ export default function MapView() {
           </Mapbox.MarkerView>
           {routeCoordinates.length > 0 && (
             <Mapbox.ShapeSource
+              key={isDotted ? 'dotted' : 'solid'}
               id="routeSource"
               shape={{
                 type: 'Feature',
@@ -136,10 +139,11 @@ export default function MapView() {
               <Mapbox.LineLayer
                 id="routeFill"
                 style={{
-                  lineColor: '#007AFF',
+                  lineColor: isShuttle ? '#852C3A' : '#007AFF',
                   lineWidth: 4,
                   lineCap: 'round',
                   lineJoin: 'round',
+                  lineDasharray: isDotted ? [3, 3] : undefined,
                 }}
               />
             </Mapbox.ShapeSource>
