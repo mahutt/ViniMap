@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
-import React, { useEffect } from 'react';
 import { MapState, useMap } from './MapContext';
 import { fetchLocationData } from './MapService';
 

@@ -116,6 +116,8 @@ export function RoutePlanner() {
     loadRouteFromCoordinates,
     state,
     isDotted,
+    setIsDotted,
+    setIsShuttle,
   ]);
 
   useEffect(() => {
