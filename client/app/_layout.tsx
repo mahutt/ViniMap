@@ -5,6 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
+import RNUxcam from 'react-native-ux-cam';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -22,6 +23,26 @@ export default function RootLayout() {
       SplashScreen.hideAsync();
     }
   }, [loaded]);
+
+  useEffect(() => {
+    const uxcam_api_key = process.env.EXPO_PUBLIC_UXCAM_API_KEY;
+
+    if (uxcam_api_key) {
+      RNUxcam.optIntoSchematicRecordings(); // enable ios screen recordings
+
+      const configuration = {
+        userAppKey: uxcam_api_key,
+        enableAutomaticScreenNameTagging: true,
+        enableAdvancedGestureRecognition: true,
+        enableImprovedScreenCapture: true,
+        disableAutoRecord: true,
+      };
+
+      RNUxcam.startWithConfiguration(configuration);
+    } else {
+      console.warn('api key for UXCam undefined');
+    }
+  }, []);
 
   if (!loaded) {
     return null;

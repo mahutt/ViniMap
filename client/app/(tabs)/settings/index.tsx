@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
 import SettingsItem from '../../../components/SettingsItem';
+import RecordingButton from '../../../components/RecordingButton';
 
 export default function SettingsScreen() {
+  const [isRecording, setIsRecording] = useState(false);
+
   return (
     <>
       <Stack.Screen
@@ -20,6 +23,7 @@ export default function SettingsScreen() {
           <SettingsItem title="Language" route="/settings/language" />
           <SettingsItem title="Text Size" route="/settings/textsize" />
           <SettingsItem title="Color Blindness" route="/settings/colorblind" />
+          <RecordingButton isRecording={isRecording} setIsRecording={setIsRecording} />
         </View>
       </View>
     </>
