@@ -2,6 +2,18 @@ import React, { useCallback } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import RNUxcam from 'react-native-ux-cam';
 
+interface ActionButtonProps {
+  onPress: () => void;
+  buttonStyle: object;
+  label: string;
+}
+
+const ActionButton: React.FC<ActionButtonProps> = ({ onPress, buttonStyle, label }) => (
+  <TouchableOpacity style={[styles.button, buttonStyle]} onPress={onPress}>
+    <Text style={styles.buttonText}>{label}</Text>
+  </TouchableOpacity>
+);
+
 interface RecordingButtonProps {
   isRecording: boolean;
   setIsRecording: (isRecording: boolean) => void;
@@ -22,19 +34,19 @@ const RecordingButton: React.FC<RecordingButtonProps> = ({ isRecording, setIsRec
     setIsRecording(false);
   }, [setIsRecording]);
 
-  const StartRecordingButton = () => (
-    <TouchableOpacity style={[styles.button, styles.startButton]} onPress={startRecording}>
-      <Text style={styles.buttonText}>Start Recording (Usability test)</Text>
-    </TouchableOpacity>
+  return isRecording ? (
+    <ActionButton
+      onPress={stopRecording}
+      buttonStyle={styles.stopButton}
+      label="Stop Recording (Usability test)"
+    />
+  ) : (
+    <ActionButton
+      onPress={startRecording}
+      buttonStyle={styles.startButton}
+      label="Start Recording (Usability test)"
+    />
   );
-
-  const StopRecordingButton = () => (
-    <TouchableOpacity style={[styles.button, styles.stopButton]} onPress={stopRecording}>
-      <Text style={styles.buttonText}>Stop Recording (Usability test)</Text>
-    </TouchableOpacity>
-  );
-
-  return isRecording ? <StopRecordingButton /> : <StartRecordingButton />;
 };
 
 const styles = StyleSheet.create({
