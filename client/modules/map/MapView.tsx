@@ -22,8 +22,8 @@ export default function MapView() {
     isDotted,
     isShuttle,
     firstWalkCoordinates,
-    shuttleCoordimates,
-    secondWalkCoordimates,
+    shuttleCoordinates,
+    secondWalkCoordinates,
   } = useMap();
 
   function onMapClick(event: any) {
@@ -181,7 +181,7 @@ export default function MapView() {
               )}
 
               {/* Shuttle Route */}
-              {shuttleCoordimates.length > 0 && (
+              {shuttleCoordinates.length > 0 && (
                 <Mapbox.ShapeSource
                   key="shuttle"
                   id="shuttleRoute"
@@ -190,7 +190,7 @@ export default function MapView() {
                     properties: {},
                     geometry: {
                       type: 'LineString',
-                      coordinates: shuttleCoordimates,
+                      coordinates: shuttleCoordinates,
                     },
                   }}>
                   <Mapbox.LineLayer
@@ -206,7 +206,7 @@ export default function MapView() {
               )}
 
               {/* Second Walk*/}
-              {secondWalkCoordimates.length > 0 && (
+              {secondWalkCoordinates.length > 0 && (
                 <Mapbox.ShapeSource
                   key="secondWalk"
                   id="secondWalkRoute"
@@ -215,7 +215,7 @@ export default function MapView() {
                     properties: {},
                     geometry: {
                       type: 'LineString',
-                      coordinates: secondWalkCoordimates,
+                      coordinates: secondWalkCoordinates,
                     },
                   }}>
                   <Mapbox.LineLayer
