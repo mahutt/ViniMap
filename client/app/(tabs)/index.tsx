@@ -20,10 +20,6 @@ import RNUxcam from 'react-native-ux-cam';
 export default function HomeScreen() {
   const { state } = useMap();
 
-  useEffect(() => {
-    RNUxcam.tagScreenName('MapScreen');
-  }, []);
-
   return (
     <View style={styles.container}>
       <MapView />

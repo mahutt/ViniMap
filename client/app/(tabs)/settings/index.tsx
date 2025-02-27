@@ -8,10 +8,6 @@ import RNUxcam from 'react-native-ux-cam';
 export default function SettingsScreen() {
   const [isRecording, setIsRecording] = useState(false);
 
-  useEffect(() => {
-    RNUxcam.tagScreenName('SettingsScreen');
-  }, []);
-
   return (
     <>
       <Stack.Screen
