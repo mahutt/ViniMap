@@ -22,7 +22,7 @@ interface UXCamProviderProps {
   children: ReactNode;
 }
 
-export function UXCamProvider({ children }: UXCamProviderProps): JSX.Element {
+export function UXCamProvider({ children }: Readonly<UXCamProviderProps>): JSX.Element {
   const pathname = usePathname();
   const [isRecording, setIsRecording] = useState(false);
 
