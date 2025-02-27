@@ -1,6 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
-import RNUxcam from 'react-native-ux-cam';
+import { useUXCam } from '@/usability/UXCamContext';
 
 interface ActionButtonProps {
   onPress: () => void;
@@ -15,21 +15,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({ onPress, buttonStyle, label
 );
 
 const RecordingButton: React.FC = () => {
-  const [isRecording, setIsRecording] = useState(false);
-
-  const startRecording = useCallback(() => {
-    console.log('Starting new UXCam session...');
-    RNUxcam.startNewSession();
-    console.log('UXCam session started');
-    setIsRecording(true);
-  }, [setIsRecording]);
-
-  const stopRecording = useCallback(() => {
-    console.log('Stopping UXCam session...');
-    RNUxcam.stopSessionAndUploadData();
-    console.log('UXCam session stopped and upload requested');
-    setIsRecording(false);
-  }, [setIsRecording]);
+  const { isRecording, startRecording, stopRecording } = useUXCam();
 
   return isRecording ? (
     <ActionButton

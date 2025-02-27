@@ -1,8 +1,21 @@
-import React, { createContext, ReactNode, useEffect } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useEffect,
+  useState,
+  useCallback,
+  useContext,
+} from 'react';
 import { usePathname } from 'expo-router';
 import RNUxcam from 'react-native-ux-cam';
 
-const UXCamContext = createContext<null>(null);
+interface UXCamContextType {
+  isRecording: boolean;
+  startRecording: () => void;
+  stopRecording: () => void;
+}
+
+const UXCamContext = createContext<UXCamContextType | null>(null);
 
 interface UXCamProviderProps {
   children: ReactNode;
@@ -10,6 +23,7 @@ interface UXCamProviderProps {
 
 export function UXCamProvider({ children }: UXCamProviderProps): JSX.Element {
   const pathname = usePathname();
+  const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     const uxcam_api_key = process.env.EXPO_PUBLIC_UXCAM_API_KEY;
@@ -57,5 +71,36 @@ export function UXCamProvider({ children }: UXCamProviderProps): JSX.Element {
     }
   }, [pathname]);
 
-  return <UXCamContext.Provider value={null}>{children}</UXCamContext.Provider>;
+  const startRecording = useCallback(() => {
+    console.log('Starting new UXCam session...');
+    RNUxcam.startNewSession();
+    console.log('UXCam session started');
+    setIsRecording(true);
+  }, []);
+
+  const stopRecording = useCallback(() => {
+    console.log('Stopping UXCam session...');
+    RNUxcam.stopSessionAndUploadData();
+    console.log('UXCam session stopped and upload requested');
+    setIsRecording(false);
+  }, []);
+
+  return (
+    <UXCamContext.Provider
+      value={{
+        isRecording,
+        startRecording,
+        stopRecording,
+      }}>
+      {children}
+    </UXCamContext.Provider>
+  );
+}
+
+export function useUXCam() {
+  const context = useContext(UXCamContext);
+  if (context === null) {
+    throw new Error('useUXCam must be used within an UXCamProvider');
+  }
+  return context;
 }
