@@ -88,7 +88,14 @@ export function RoutePlanner() {
     if (state === MapState.RoutePlanning && !startLocation) {
       getCurrentLocationAsStart(setStartLocation);
     }
-  }, [state, startLocation, setStartLocation]);
+  }, [
+    state,
+    startLocation,
+    setStartLocation,
+    setFirstWalkCoordinates,
+    setSecondWalkCoordinates,
+    setShuttleCoordinates,
+  ]);
 
   useEffect(() => {
     if (state === MapState.RoutePlanning) {
