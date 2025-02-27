@@ -1,11 +1,11 @@
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import { Stack, usePathname } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import RNUxcam from 'react-native-ux-cam';
+import RNUxcam, { OcclusionType } from 'react-native-ux-cam';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -17,6 +17,38 @@ export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
+
+  const pathname = usePathname();
+
+  // handling screen name changes for usability testing
+  useEffect(() => {
+    if (pathname) {
+      let screenName = 'Unknown';
+
+      if (pathname === '/') {
+        screenName = 'HomeScreen';
+      } else if (pathname.startsWith('/')) {
+        screenName = pathname
+          .substring(1)
+          .replace(/\//g, '_')
+          .replace(/[^a-zA-Z0-9_]/g, '');
+
+        screenName = screenName
+          .split('_')
+          .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+          .join('_');
+
+        if (screenName.length === 0) {
+          screenName = 'HomeScreen';
+        } else {
+          screenName += 'Screen';
+        }
+      }
+
+      console.log(`UXCam: Path changed to ${pathname}, tagging as ${screenName}`);
+      RNUxcam.tagScreenName(screenName);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     if (loaded) {
@@ -32,10 +64,11 @@ export default function RootLayout() {
 
       const configuration = {
         userAppKey: uxcam_api_key,
-        enableAutomaticScreenNameTagging: true,
+        enableAutomaticScreenNameTagging: false,
         enableAdvancedGestureRecognition: true,
         enableImprovedScreenCapture: true,
         disableAutoRecord: true,
+        occlusionType: 0,
       };
 
       RNUxcam.startWithConfiguration(configuration);

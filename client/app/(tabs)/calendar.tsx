@@ -17,6 +17,7 @@ import { extractScheduleData, fetchCalendarEvents } from '@/services/GoogleSched
 import SimpleModal from '@/components/CalendarIdBox';
 import { Coordinates, MapState, useMap, Location } from '@/modules/map/MapContext';
 import { getBuildingCoordinates } from '@/services/BuildingService';
+import RNUxcam from 'react-native-ux-cam';
 
 const { width } = Dimensions.get('window');
 
@@ -57,6 +58,10 @@ export default function Calendar() {
 
     setScheduleData(updatedScheduleData);
   };
+
+  useEffect(() => {
+    RNUxcam.tagScreenName('Calendar');
+  }, []);
 
   useEffect(() => {
     const calendarData = storage.getString('calendarData');
