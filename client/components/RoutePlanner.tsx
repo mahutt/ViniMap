@@ -82,7 +82,13 @@ export function RoutePlanner() {
     } catch (error) {
       console.error('Error setting route:', error);
     }
-  }, [startLocation, endLocation]);
+  }, [
+    startLocation,
+    endLocation,
+    setFirstWalkCoordinates,
+    setSecondWalkCoordinates,
+    setShuttleCoordinates,
+  ]);
 
   useEffect(() => {
     if (state === MapState.RoutePlanning && !startLocation) {
