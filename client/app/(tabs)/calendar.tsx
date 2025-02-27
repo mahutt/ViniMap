@@ -60,7 +60,7 @@ export default function Calendar() {
   };
 
   useEffect(() => {
-    RNUxcam.tagScreenName('Calendar');
+    RNUxcam.tagScreenName('CalendarScreen');
   }, []);
 
   useEffect(() => {

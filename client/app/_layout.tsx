@@ -5,7 +5,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import 'react-native-reanimated';
-import RNUxcam, { OcclusionType } from 'react-native-ux-cam';
+import RNUxcam from 'react-native-ux-cam';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -28,10 +28,7 @@ export default function RootLayout() {
       if (pathname === '/') {
         screenName = 'HomeScreen';
       } else if (pathname.startsWith('/')) {
-        screenName = pathname
-          .substring(1)
-          .replace(/\//g, '_')
-          .replace(/[^a-zA-Z0-9_]/g, '');
+        screenName = pathname.substring(1).replace(/\//g, '_').replace(/\W/g, '');
 
         screenName = screenName
           .split('_')
@@ -44,8 +41,6 @@ export default function RootLayout() {
           screenName += 'Screen';
         }
       }
-
-      console.log(`UXCam: Path changed to ${pathname}, tagging as ${screenName}`);
       RNUxcam.tagScreenName(screenName);
     }
   }, [pathname]);

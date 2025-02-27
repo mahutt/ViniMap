@@ -9,7 +9,7 @@ export default function SettingsScreen() {
   const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
-    RNUxcam.tagScreenName('Settings');
+    RNUxcam.tagScreenName('SettingsScreen');
   }, []);
 
   return (

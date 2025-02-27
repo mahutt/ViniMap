@@ -21,7 +21,7 @@ export default function HomeScreen() {
   const { state } = useMap();
 
   useEffect(() => {
-    RNUxcam.tagScreenName('Map');
+    RNUxcam.tagScreenName('MapScreen');
   }, []);
 
   return (
