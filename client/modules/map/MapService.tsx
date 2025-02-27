@@ -37,9 +37,21 @@ const getRoute = async (
   coordinates: Coordinates[] | null;
   duration: number | null;
   distance: number | null;
+  firstWalkCoords?: Coordinates[];
+  shuttleCoordinates?: Coordinates[];
+  secondWalkCoordinates?: Coordinates[];
 }> => {
   if (mode === 'shuttle') {
-    return getRouteForShuttle(startCoordinates, endCoordinates);
+    const shuttleRoute = await getRouteForShuttle(startCoordinates, endCoordinates);
+
+    return {
+      coordinates: shuttleRoute.coordinates,
+      duration: shuttleRoute.duration,
+      distance: shuttleRoute.distance,
+      firstWalkCoords: shuttleRoute.firstWalkCoords,
+      shuttleCoordinates: shuttleRoute.shuttleCoordinates,
+      secondWalkCoordinates: shuttleRoute.secondWalkCoordinates,
+    };
   }
 
   const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?alternatives=false&annotations=duration,distance&continue_straight=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_ACCESS_TOKEN}`;
@@ -82,6 +94,9 @@ const getRouteForShuttle = async (
   coordinates: Coordinates[] | null;
   duration: number | null;
   distance: number | null;
+  firstWalkCoords?: Coordinates[];
+  shuttleCoordinates?: Coordinates[];
+  secondWalkCoordinates?: Coordinates[];
 }> => {
   const MAX_EUCLIDEAN_DISTANCE = 0.01508;
 
@@ -127,6 +142,10 @@ const getRouteForShuttle = async (
     const shuttleStart_Drive_shuttleEnd = await getRoute(startBusStop, endBusStop, 'driving');
 
     const shuttleEnd_Walk_end = await getRoute(endBusStop, endCoordinates, 'walking');
+
+    const firstWalkCoords = start_Walk_ShuttleStart.coordinates ?? [];
+    const shuttleCoordinates = shuttleStart_Drive_shuttleEnd.coordinates ?? [];
+    const secondWalkCoordinates = shuttleEnd_Walk_end.coordinates ?? [];
 
     const middleCoords: Coordinates[] = (start_Walk_ShuttleStart.coordinates ?? []).concat(
       shuttleStart_Drive_shuttleEnd.coordinates ?? []
@@ -174,10 +193,20 @@ const getRouteForShuttle = async (
       coordinates: finalCoords,
       duration: finalDuration,
       distance: finalDistance,
+      firstWalkCoords,
+      shuttleCoordinates,
+      secondWalkCoordinates,
     };
   }
 
-  return { coordinates: null, duration: null, distance: null };
+  return {
+    coordinates: null,
+    duration: null,
+    distance: null,
+    firstWalkCoords: [],
+    shuttleCoordinates: [],
+    secondWalkCoordinates: [],
+  };
 };
 
 const formatDuration = (seconds: number | null): string => {

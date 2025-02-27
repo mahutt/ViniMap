@@ -21,6 +21,9 @@ export default function MapView() {
     routeCoordinates,
     isDotted,
     isShuttle,
+    firstWalkCoordinates,
+    shuttleCoordimates,
+    secondWalkCoordimates,
   } = useMap();
 
   function onMapClick(event: any) {
@@ -123,10 +126,11 @@ export default function MapView() {
           <Mapbox.MarkerView id="start" coordinate={startLocation.coordinates}>
             <View style={[styles.marker, styles.startMarker]} />
           </Mapbox.MarkerView>
-          {routeCoordinates.length > 0 && (
+
+          {!isShuttle && routeCoordinates.length > 0 && (
             <Mapbox.ShapeSource
               key={isDotted ? 'dotted' : 'solid'}
-              id="routeSource"
+              id="normalRoute"
               shape={{
                 type: 'Feature',
                 properties: {},
@@ -136,9 +140,9 @@ export default function MapView() {
                 },
               }}>
               <Mapbox.LineLayer
-                id="routeFill"
+                id="normalRouteLine"
                 style={{
-                  lineColor: isShuttle ? '#852C3A' : '#007AFF',
+                  lineColor: '#007AFF',
                   lineWidth: 4,
                   lineCap: 'round',
                   lineJoin: 'round',
@@ -146,6 +150,87 @@ export default function MapView() {
                 }}
               />
             </Mapbox.ShapeSource>
+          )}
+
+          {isShuttle && (
+            <>
+              {/* First Walk */}
+              {firstWalkCoordinates.length > 0 && (
+                <Mapbox.ShapeSource
+                  key="firstWalk"
+                  id="firstWalkRoute"
+                  shape={{
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                      type: 'LineString',
+                      coordinates: firstWalkCoordinates,
+                    },
+                  }}>
+                  <Mapbox.LineLayer
+                    id="firstWalkLine"
+                    style={{
+                      lineColor: '#007AFF',
+                      lineWidth: 4,
+                      lineCap: 'round',
+                      lineJoin: 'round',
+                      lineDasharray: [3, 3],
+                    }}
+                  />
+                </Mapbox.ShapeSource>
+              )}
+
+              {/* Shuttle Route */}
+              {shuttleCoordimates.length > 0 && (
+                <Mapbox.ShapeSource
+                  key="shuttle"
+                  id="shuttleRoute"
+                  shape={{
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                      type: 'LineString',
+                      coordinates: shuttleCoordimates,
+                    },
+                  }}>
+                  <Mapbox.LineLayer
+                    id="shuttleLine"
+                    style={{
+                      lineColor: '#007AFF',
+                      lineWidth: 4,
+                      lineCap: 'round',
+                      lineJoin: 'round',
+                    }}
+                  />
+                </Mapbox.ShapeSource>
+              )}
+
+              {/* Second Walk*/}
+              {secondWalkCoordimates.length > 0 && (
+                <Mapbox.ShapeSource
+                  key="secondWalk"
+                  id="secondWalkRoute"
+                  shape={{
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                      type: 'LineString',
+                      coordinates: secondWalkCoordimates,
+                    },
+                  }}>
+                  <Mapbox.LineLayer
+                    id="secondWalkLine"
+                    style={{
+                      lineColor: '#007AFF',
+                      lineWidth: 4,
+                      lineCap: 'round',
+                      lineJoin: 'round',
+                      lineDasharray: [1, 2],
+                    }}
+                  />
+                </Mapbox.ShapeSource>
+              )}
+            </>
           )}
         </>
       )}

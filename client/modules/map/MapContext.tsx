@@ -30,9 +30,15 @@ type MapContextType = {
 
   isDotted: boolean;
   setIsDotted: (isDotted: boolean) => void;
-
   isShuttle: boolean;
   setIsShuttle: (isShuttle: boolean) => void;
+
+  firstWalkCoordinates: Coordinates[];
+  shuttleCoordimates: Coordinates[];
+  secondWalkCoordimates: Coordinates[];
+  setFirstWalkCoordinates: (coords: Coordinates[]) => void;
+  setShuttleCoordinates: (coords: Coordinates[]) => void;
+  setSecondWalkCoordinates: (coords: Coordinates[]) => void;
 
   state: MapState;
   startLocation: Location | null;
@@ -66,6 +72,10 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [routeCoordinates, setRouteCoordinates] = useState<Coordinates[]>([]);
   const [isDotted, setIsDotted] = useState<boolean>(false);
   const [isShuttle, setIsShuttle] = useState<boolean>(false);
+
+  const [firstWalkCoordinates, setFirstWalkCoordinates] = useState<Coordinates[]>([]);
+  const [shuttleCoordimates, setShuttleCoordinates] = useState<Coordinates[]>([]);
+  const [secondWalkCoordimates, setSecondWalkCoordinates] = useState<Coordinates[]>([]);
 
   const flyTo = useMemo(
     () => (newCenterCoordinate: [number, number], newZoomLevel?: number) => {
@@ -132,6 +142,12 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setIsDotted,
       isShuttle,
       setIsShuttle,
+      firstWalkCoordinates,
+      setFirstWalkCoordinates,
+      shuttleCoordimates,
+      setShuttleCoordinates,
+      secondWalkCoordimates,
+      setSecondWalkCoordinates,
     }),
     [
       centerCoordinate,
@@ -147,6 +163,12 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setIsDotted,
       isShuttle,
       setIsShuttle,
+      firstWalkCoordinates,
+      setFirstWalkCoordinates,
+      shuttleCoordimates,
+      setShuttleCoordinates,
+      secondWalkCoordimates,
+      setSecondWalkCoordinates,
     ]
   );
 

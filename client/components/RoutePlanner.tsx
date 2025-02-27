@@ -41,6 +41,9 @@ export function RoutePlanner() {
     setIsDotted,
     isDotted,
     setIsShuttle,
+    setFirstWalkCoordinates,
+    setShuttleCoordinates,
+    setSecondWalkCoordinates,
   } = useMap();
 
   const calculateOptions = useCallback(async () => {
@@ -52,6 +55,14 @@ export function RoutePlanner() {
       );
 
       const [walkingRoute, cyclingRoute, drivingRoute, shuttleRoute] = routes;
+
+      const firstWalk = shuttleRoute?.firstWalkCoords ?? [];
+      const shuttle = shuttleRoute?.shuttleCoordinates ?? [];
+      const secondWalk = shuttleRoute?.secondWalkCoordinates ?? [];
+
+      setFirstWalkCoordinates(firstWalk);
+      setShuttleCoordinates(shuttle);
+      setSecondWalkCoordinates(secondWalk);
 
       setDurations({
         walking: walkingRoute?.duration ?? null,
