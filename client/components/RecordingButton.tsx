@@ -24,7 +24,11 @@ const RecordingButton: React.FC<RecordingButtonProps> = ({ isRecording, setIsRec
     <TouchableOpacity
       style={[styles.button, { backgroundColor: isRecording ? '#FF3B30' : '#007AFF' }]}
       onPress={() => {
-        isRecording ? stopRecording() : startRecording();
+        if (isRecording) {
+          stopRecording();
+        } else {
+          startRecording();
+        }
       }}>
       <Text style={styles.buttonText}>
         {isRecording ? 'Stop Recording (Usability test)' : 'Start Recording (Usability test)'}
