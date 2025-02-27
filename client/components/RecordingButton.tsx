@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import RNUxcam from 'react-native-ux-cam';
 
@@ -14,12 +14,9 @@ const ActionButton: React.FC<ActionButtonProps> = ({ onPress, buttonStyle, label
   </TouchableOpacity>
 );
 
-interface RecordingButtonProps {
-  isRecording: boolean;
-  setIsRecording: (isRecording: boolean) => void;
-}
+const RecordingButton: React.FC = () => {
+  const [isRecording, setIsRecording] = useState(false);
 
-const RecordingButton: React.FC<RecordingButtonProps> = ({ isRecording, setIsRecording }) => {
   const startRecording = useCallback(() => {
     console.log('Starting new UXCam session...');
     RNUxcam.startNewSession();
