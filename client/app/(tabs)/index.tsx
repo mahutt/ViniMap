@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 // Relative import for iPhone build
 import { SearchBar } from '../../components/SearchBar';
@@ -15,7 +15,6 @@ import { LocationInfo } from '@/components/LocationInfo';
 import { RoutePlanner } from '@/components/RoutePlanner';
 import ToggleCampusButton from '@/components/ui/ToggleCampusButton';
 import MapHint from '@/components/MapHint';
-import RNUxcam from 'react-native-ux-cam';
 
 export default function HomeScreen() {
   const { state } = useMap();

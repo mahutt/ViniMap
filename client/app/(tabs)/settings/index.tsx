@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Stack } from 'expo-router';
 import SettingsItem from '../../../components/SettingsItem';
 import RecordingButton from '../../../components/RecordingButton';
-import RNUxcam from 'react-native-ux-cam';
 
 export default function SettingsScreen() {
   const [isRecording, setIsRecording] = useState(false);
