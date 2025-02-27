@@ -8,23 +8,27 @@ interface RecordingButtonProps {
 }
 
 const RecordingButton: React.FC<RecordingButtonProps> = ({ isRecording, setIsRecording }) => {
+  const startRecording = () => {
+    console.log('Starting new UXCam session...');
+    RNUxcam.startNewSession();
+    console.log('UXCam session started');
+    setIsRecording(true);
+  };
+  const stopRecording = () => {
+    console.log('Stopping UXCam session...');
+    RNUxcam.stopSessionAndUploadData();
+    console.log('UXCam session stopped and upload requested');
+    setIsRecording(false);
+  };
   return (
     <TouchableOpacity
       style={[styles.button, { backgroundColor: isRecording ? '#FF3B30' : '#007AFF' }]}
       onPress={() => {
-        if (isRecording) {
-          console.log('Stopping UXCam session...');
-          RNUxcam.stopSessionAndUploadData();
-          console.log('UXCam session stopped and upload requested');
-          setIsRecording(false);
-        } else {
-          console.log('Starting new UXCam session...');
-          RNUxcam.startNewSession();
-          console.log('UXCam session started');
-          setIsRecording(true);
-        }
+        isRecording ? stopRecording() : startRecording();
       }}>
-      <Text style={styles.buttonText}>{isRecording ? 'Stop Recording' : 'Start Recording'}</Text>
+      <Text style={styles.buttonText}>
+        {isRecording ? 'Stop Recording (Usability test)' : 'Start Recording (Usability test)'}
+      </Text>
     </TouchableOpacity>
   );
 };
