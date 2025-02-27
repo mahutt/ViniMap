@@ -5,7 +5,7 @@ import { useUXCam } from '@/usability/UXCamContext';
 interface ActionButtonProps {
   onPress: () => void;
   buttonStyle: object;
-  label: string;
+  readonly label: string;
 }
 
 const ActionButton: React.FC<ActionButtonProps> = ({ onPress, buttonStyle, label }) => (

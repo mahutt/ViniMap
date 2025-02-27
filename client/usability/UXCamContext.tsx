@@ -5,6 +5,7 @@ import React, {
   useState,
   useCallback,
   useContext,
+  useMemo,
 } from 'react';
 import { usePathname } from 'expo-router';
 import RNUxcam from 'react-native-ux-cam';
@@ -85,16 +86,16 @@ export function UXCamProvider({ children }: UXCamProviderProps): JSX.Element {
     setIsRecording(false);
   }, []);
 
-  return (
-    <UXCamContext.Provider
-      value={{
-        isRecording,
-        startRecording,
-        stopRecording,
-      }}>
-      {children}
-    </UXCamContext.Provider>
+  const UXCamContextValue = useMemo(
+    () => ({
+      isRecording,
+      startRecording,
+      stopRecording,
+    }),
+    [isRecording, startRecording, stopRecording]
   );
+
+  return <UXCamContext.Provider value={UXCamContextValue}>{children}</UXCamContext.Provider>;
 }
 
 export function useUXCam() {
