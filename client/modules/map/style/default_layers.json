@@ -105,14 +105,15 @@
     "type": "fill",
     "source": "indoor",
     "paint": {
-      "fill-color-REQUIRES_PORT": {
-        "base": 1,
-        "stops": [
-          [16, "hsl(230, 16%, 94%)"],
-          [16.25, "hsl(230, 50%, 98%)"]
-        ]
-      },
-      "fill-color": "hsl(230, 16%, 94%)",
+      "fill-color": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        16,
+        "hsl(230, 16%, 94%)",
+        16.25,
+        "hsl(230, 50%, 98%)"
+      ],
       "fill-outline-color": "hsl(230, 26%, 88%)",
       "fill-opacity": 1
     }
