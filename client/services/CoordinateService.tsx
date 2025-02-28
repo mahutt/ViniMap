@@ -24,7 +24,7 @@ export default class CoordinateService {
 
       const { latitude, longitude } = currentLocation.coords;
       return [longitude, latitude];
-    } catch (error) {
+    } catch {
       if (Platform.OS === 'android') {
         return [45.496067, -73.569315];
       }
