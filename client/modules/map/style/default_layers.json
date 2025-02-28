@@ -379,14 +379,7 @@
       "text-halo-color": "#ffffff",
       "text-halo-width": 1,
       "text-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 17.5, 0.5, 19, 1],
-      "icon-opacity": {
-        "base": 1,
-        "stops": [
-          [17, 0],
-          [17.5, 0.5],
-          [19, 1]
-        ]
-      }
+      "icon-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 17.5, 0.5, 19, 1]
     }
   }
 ]
