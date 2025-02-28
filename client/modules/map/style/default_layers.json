@@ -285,13 +285,7 @@
     "paint": {
       "line-color": "hsl(230, 10%, 74%)",
       "line-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 19, 1],
-      "line-width": {
-        "base": 1.5,
-        "stops": [
-          [14, 4],
-          [20, 8]
-        ]
-      },
+      "line-width": ["interpolate", ["exponential", 1.5], ["zoom"], 14, 4, 20, 8],
       "line-dasharray": [0.1, 15]
     }
   },
@@ -328,14 +322,7 @@
   {
     "id": "indoor-steps",
     "paint": {
-      "line-width": {
-        "base": 1.5,
-        "stops": [
-          [17, 1],
-          [18, 1.6],
-          [19, 6]
-        ]
-      },
+      "line-width": ["interpolate", ["exponential", 1.5], ["zoom"], 17, 1, 18, 1.6, 19, 6],
       "line-color": "hsl(0, 0%, 100%)",
       "line-dasharray": {
         "base": 1,
@@ -358,14 +345,7 @@
   {
     "id": "indoor-conveying",
     "paint": {
-      "line-width": {
-        "base": 1.5,
-        "stops": [
-          [17, 1],
-          [18, 1.6],
-          [19, 6]
-        ]
-      },
+      "line-width": ["interpolate", ["exponential", 1.5], ["zoom"], 17, 1, 18, 1.6, 19, 6],
       "line-color": "#FF0000",
       "line-dasharray": {
         "base": 1,
