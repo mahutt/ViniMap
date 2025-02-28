@@ -32,19 +32,8 @@ export function RoutePlanner() {
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
 
-  const {
-    loadRouteFromCoordinates,
-    startLocation,
-    setStartLocation,
-    endLocation,
-    state,
-    setIsDotted,
-    isDotted,
-    setIsShuttle,
-    setFirstWalkCoordinates,
-    setShuttleCoordinates,
-    setSecondWalkCoordinates,
-  } = useMap();
+  const { loadRouteFromCoordinates, startLocation, setStartLocation, endLocation, state } =
+    useMap();
 
   const calculateOptions = useCallback(async () => {
     if (!startLocation || !endLocation) return;
@@ -55,14 +44,6 @@ export function RoutePlanner() {
       );
 
       const [walkingRoute, cyclingRoute, drivingRoute, shuttleRoute] = routes;
-
-      const firstWalk = shuttleRoute?.firstWalkCoords ?? [];
-      const shuttle = shuttleRoute?.shuttleCoordinates ?? [];
-      const secondWalk = shuttleRoute?.secondWalkCoordinates ?? [];
-
-      setFirstWalkCoordinates(firstWalk);
-      setShuttleCoordinates(shuttle);
-      setSecondWalkCoordinates(secondWalk);
 
       setDurations({
         walking: walkingRoute?.duration ?? null,
@@ -82,41 +63,17 @@ export function RoutePlanner() {
     } catch (error) {
       console.error('Error setting route:', error);
     }
-  }, [
-    startLocation,
-    endLocation,
-    setFirstWalkCoordinates,
-    setSecondWalkCoordinates,
-    setShuttleCoordinates,
-  ]);
+  }, [startLocation, endLocation]);
 
   useEffect(() => {
     if (state === MapState.RoutePlanning && !startLocation) {
       getCurrentLocationAsStart(setStartLocation);
     }
-  }, [
-    state,
-    startLocation,
-    setStartLocation,
-    setFirstWalkCoordinates,
-    setSecondWalkCoordinates,
-    setShuttleCoordinates,
-  ]);
+  }, [state, startLocation, setStartLocation]);
 
   useEffect(() => {
     if (state === MapState.RoutePlanning) {
       if (startLocation && endLocation) {
-        console.log(selectedMode);
-        if (selectedMode === 'shuttle') {
-          setIsShuttle(true);
-          setIsDotted(false);
-        } else if (selectedMode === 'walking') {
-          setIsShuttle(false);
-          setIsDotted(true);
-        } else {
-          setIsShuttle(false);
-          setIsDotted(false);
-        }
         const loadRoute = async () => {
           try {
             await loadRouteFromCoordinates(
@@ -132,17 +89,7 @@ export function RoutePlanner() {
         loadRoute();
       }
     }
-  }, [
-    startLocation,
-    endLocation,
-    selectedMode,
-    calculateOptions,
-    loadRouteFromCoordinates,
-    state,
-    isDotted,
-    setIsDotted,
-    setIsShuttle,
-  ]);
+  }, [startLocation, endLocation, selectedMode, calculateOptions, loadRouteFromCoordinates, state]);
 
   useEffect(() => {
     if (durations.shuttle == null && selectedMode === 'shuttle') {

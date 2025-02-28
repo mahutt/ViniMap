@@ -18,12 +18,7 @@ export default function MapView() {
     centerCoordinate,
     zoomLevel,
     pitchLevel,
-    routeCoordinates,
-    isDotted,
-    isShuttle,
-    firstWalkCoordinates,
-    shuttleCoordinates,
-    secondWalkCoordinates,
+    route,
   } = useMap();
 
   function onMapClick(event: any) {
@@ -127,111 +122,31 @@ export default function MapView() {
             <View style={[styles.marker, styles.startMarker]} />
           </Mapbox.MarkerView>
 
-          {!isShuttle && routeCoordinates.length > 0 && (
-            <Mapbox.ShapeSource
-              key={isDotted ? 'dotted' : 'solid'}
-              id="normalRoute"
-              shape={{
-                type: 'Feature',
-                properties: {},
-                geometry: {
-                  type: 'LineString',
-                  coordinates: routeCoordinates,
-                },
-              }}>
-              <Mapbox.LineLayer
-                id="normalRouteLine"
-                style={{
-                  lineColor: '#007AFF',
-                  lineWidth: 4,
-                  lineCap: 'round',
-                  lineJoin: 'round',
-                  lineDasharray: isDotted ? [3, 3] : undefined,
-                }}
-              />
-            </Mapbox.ShapeSource>
-          )}
-
-          {isShuttle && (
-            <>
-              {/* First Walk */}
-              {firstWalkCoordinates.length > 0 && (
-                <Mapbox.ShapeSource
-                  key="firstWalk"
-                  id="firstWalkRoute"
-                  shape={{
-                    type: 'Feature',
-                    properties: {},
-                    geometry: {
-                      type: 'LineString',
-                      coordinates: firstWalkCoordinates,
-                    },
-                  }}>
-                  <Mapbox.LineLayer
-                    id="firstWalkLine"
-                    style={{
-                      lineColor: '#007AFF',
-                      lineWidth: 4,
-                      lineCap: 'round',
-                      lineJoin: 'round',
-                      lineDasharray: [3, 3],
-                    }}
-                  />
-                </Mapbox.ShapeSource>
-              )}
-
-              {/* Shuttle Route */}
-              {shuttleCoordinates.length > 0 && (
-                <Mapbox.ShapeSource
-                  key="shuttle"
-                  id="shuttleRoute"
-                  shape={{
-                    type: 'Feature',
-                    properties: {},
-                    geometry: {
-                      type: 'LineString',
-                      coordinates: shuttleCoordinates,
-                    },
-                  }}>
-                  <Mapbox.LineLayer
-                    id="shuttleLine"
-                    style={{
-                      lineColor: '#007AFF',
-                      lineWidth: 4,
-                      lineCap: 'round',
-                      lineJoin: 'round',
-                    }}
-                  />
-                </Mapbox.ShapeSource>
-              )}
-
-              {/* Second Walk*/}
-              {secondWalkCoordinates.length > 0 && (
-                <Mapbox.ShapeSource
-                  key="secondWalk"
-                  id="secondWalkRoute"
-                  shape={{
-                    type: 'Feature',
-                    properties: {},
-                    geometry: {
-                      type: 'LineString',
-                      coordinates: secondWalkCoordinates,
-                    },
-                  }}>
-                  <Mapbox.LineLayer
-                    id="secondWalkLine"
-                    style={{
-                      lineColor: '#007AFF',
-                      lineWidth: 4,
-                      lineCap: 'round',
-                      lineJoin: 'round',
-                      lineDasharray: [1, 2],
-                    }}
-                  />
-                </Mapbox.ShapeSource>
-              )}
-            </>
-          )}
+          {route &&
+            route.segments.map((segment) => (
+              <Mapbox.ShapeSource
+                key={segment.id}
+                id={segment.id}
+                shape={{
+                  type: 'Feature',
+                  properties: {},
+                  geometry: {
+                    type: 'LineString',
+                    coordinates: segment.steps,
+                  },
+                }}>
+                <Mapbox.LineLayer
+                  id={`${segment.id}-line`}
+                  style={{
+                    lineColor: '#007AFF',
+                    lineWidth: 4,
+                    lineCap: 'round',
+                    lineJoin: 'round',
+                    lineDasharray: segment.type === 'dashed' ? [3, 3] : undefined,
+                  }}
+                />
+              </Mapbox.ShapeSource>
+            ))}
         </>
       )}
     </Mapbox.MapView>
