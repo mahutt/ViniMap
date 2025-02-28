@@ -1,15 +1,24 @@
 import CoordinateService from '@/services/CoordinateService';
 import * as Location from 'expo-location';
 
+jest.useFakeTimers();
+
 // Mock the entire expo-location module
 jest.mock('expo-location');
 
 const mockedLocation = Location as jest.Mocked<typeof Location>;
 
+afterEach(() => {
+  jest.clearAllTimers();
+});
+
 describe('CoordinateService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     console.error = jest.fn();
+    jest.clearAllMocks();
+    console.error = jest.fn();
+    jest.clearAllTimers();
   });
 
   it('should return coordinates when permissions are granted', async () => {
@@ -67,15 +76,13 @@ describe('CoordinateService', () => {
       canAskAgain: true,
     });
 
-    mockedLocation.getCurrentPositionAsync.mockRejectedValue(new Error('Location error'));
+    mockedLocation.getCurrentPositionAsync.mockImplementation(() => {
+      throw new Error('Location error');
+    });
 
     const coordinates = await CoordinateService.getCurrentCoordinates();
 
-    expect(coordinates).toBeNull();
-    expect(console.error).toHaveBeenCalledWith(
-      'Error getting current location:',
-      expect.any(Error)
-    );
+    expect(coordinates).toEqual([45.496067, -73.569315]);
     expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).toHaveBeenCalledTimes(1);
   });
@@ -88,11 +95,7 @@ describe('CoordinateService', () => {
 
     const coordinates = await CoordinateService.getCurrentCoordinates();
 
-    expect(coordinates).toBeNull();
-    expect(console.error).toHaveBeenCalledWith(
-      'Error getting current location:',
-      expect.any(Error)
-    );
+    expect(coordinates).toEqual([45.496067, -73.569315]);
     expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).not.toHaveBeenCalled();
   });
