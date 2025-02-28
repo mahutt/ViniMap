@@ -1,5 +1,4 @@
 import * as Location from 'expo-location';
-import { Platform } from 'react-native';
 
 type Coordinates = [number, number];
 
@@ -25,11 +24,7 @@ export default class CoordinateService {
       const { latitude, longitude } = currentLocation.coords;
       return [longitude, latitude];
     } catch {
-      if (Platform.OS === 'android') {
-        return [45.496067, -73.569315];
-      }
-
-      return null;
+      return [45.496067, -73.569315];
     }
   }
 }
