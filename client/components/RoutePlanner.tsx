@@ -7,6 +7,7 @@ import { getCurrentLocationAsStart } from '@/modules/map/LocationHelper';
 import TransportModes from './ui/RoutePlanner Components/TransportModes';
 import BottomFrame from './ui/RoutePlanner Components/BottomFrame';
 import InputFields from './ui/RoutePlanner Components/InputFields';
+
 const MODES = [
   { name: 'walking', icon: 'walk-outline' },
   { name: 'cycling', icon: 'bicycle-outline' },
