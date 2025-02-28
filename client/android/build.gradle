@@ -37,6 +37,9 @@ allprojects {
         google()
         mavenCentral()
         maven { url 'https://www.jitpack.io' }
+
+        // adding the UxCam repo
+        maven { url 'https://sdk.uxcam.com/android/' }
     }
 }
 // @generated begin @rnmapbox/maps-v2-maven - expo prebuild (DO NOT MODIFY) sync-32f1b7024bb5099f2805443b1960a3233ccde124
