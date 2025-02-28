@@ -20,7 +20,7 @@ jest.mock('@/modules/map/MapContext', () => {
 });
 
 const isTextActive = (textElement: any): boolean => {
-  if (!textElement || !textElement.props || !textElement.props.style) {
+  if (!textElement?.props?.style) {
     return false;
   }
 
