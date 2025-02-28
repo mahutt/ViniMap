@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import { IconSymbol } from '@/components/ui/IconSymbol';
+import { IconSymbol } from '@/components/ui/IconSymbol.ios';
 import { SymbolView } from 'expo-symbols';
 
 jest.mock('expo-symbols', () => ({
