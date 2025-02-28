@@ -50,7 +50,7 @@
     "source": "indoor",
     "paint": {
       "fill-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 18, 0.1],
-      "fill-pattern": "si-main-3",
+      "fill-pattern-DEPRECATED": "si-main-3",
       "fill-translate-anchor": "viewport"
     }
   },
@@ -126,7 +126,7 @@
     "paint": {
       "fill-color": "hsl(0, 0%, 100%)",
       "fill-outline-color": "hsl(35, 10%, 83%)",
-      "fill-pattern": "pedestrian-polygon",
+      "fill-pattern-DEPRECATED": "pedestrian-polygon",
       "fill-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 18, 1]
     }
   },
