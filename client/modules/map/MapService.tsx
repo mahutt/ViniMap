@@ -36,7 +36,7 @@ const getRoute = async (
   mode: string
 ): Promise<Route | null> => {
   if (mode === 'shuttle') {
-    return await getRouteForShuttle(startCoordinates, endCoordinates);
+    return getRouteForShuttle(startCoordinates, endCoordinates);
   }
 
   const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?alternatives=false&annotations=duration,distance&continue_straight=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_ACCESS_TOKEN}`;
