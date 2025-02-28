@@ -128,13 +128,7 @@
     "paint": {
       "line-color": "#000",
       "line-width": 1,
-      "line-opacity": {
-        "base": 1,
-        "stops": [
-          [17, 0],
-          [18, 1]
-        ]
-      }
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 18, 1]
     }
   },
   {
@@ -234,13 +228,7 @@
     "source": "indoor",
     "paint": {
       "line-color": "#000000",
-      "line-opacity": {
-        "base": 1,
-        "stops": [
-          [17, 0],
-          [18, 1]
-        ]
-      }
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 18, 1]
     }
   },
   {
@@ -250,13 +238,7 @@
     "source": "indoor",
     "paint": {
       "line-color": "#000000",
-      "line-opacity": {
-        "base": 1,
-        "stops": [
-          [17, 0],
-          [18, 1]
-        ]
-      }
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 18, 1]
     }
   },
   {
@@ -282,13 +264,7 @@
     "source": "indoor",
     "paint": {
       "line-color": "#000000",
-      "line-opacity": {
-        "base": 1,
-        "stops": [
-          [17, 0],
-          [19, 1]
-        ]
-      }
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 19, 1]
     }
   },
   {
@@ -298,13 +274,7 @@
     "source": "indoor",
     "paint": {
       "line-color": "hsl(230, 10%, 74%)",
-      "line-opacity": {
-        "base": 1,
-        "stops": [
-          [17, 0],
-          [19, 1]
-        ]
-      }
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 19, 1]
     }
   },
   {
@@ -314,13 +284,7 @@
     "source": "indoor",
     "paint": {
       "line-color": "hsl(230, 10%, 74%)",
-      "line-opacity": {
-        "base": 1,
-        "stops": [
-          [17, 0],
-          [19, 1]
-        ]
-      },
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 19, 1],
       "line-width": {
         "base": 1.5,
         "stops": [
@@ -382,13 +346,7 @@
           [19, [0.3, 0.3]]
         ]
       },
-      "line-opacity": {
-        "base": 1,
-        "stops": [
-          [17, 0],
-          [17.25, 1]
-        ]
-      }
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 17.25, 1]
     },
     "type": "line",
     "source": "indoor",
@@ -418,13 +376,7 @@
           [19, [0.3, 0.3]]
         ]
       },
-      "line-opacity": {
-        "base": 1,
-        "stops": [
-          [17, 0],
-          [17.25, 1]
-        ]
-      }
+      "line-opacity": ["interpolate", ["linear"], ["zoom"], 17, 0, 17.25, 1]
     },
     "type": "line",
     "source": "indoor",
