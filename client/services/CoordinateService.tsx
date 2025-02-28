@@ -14,7 +14,7 @@ export default class CoordinateService {
 
       const locationPromise = Location.getCurrentPositionAsync({});
       const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('')), 2000);
+        setTimeout(() => reject(new Error('')), 3000);
       });
 
       const currentLocation = (await Promise.race([
