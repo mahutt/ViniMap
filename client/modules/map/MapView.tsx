@@ -122,31 +122,30 @@ export default function MapView() {
             <View style={[styles.marker, styles.startMarker]} />
           </Mapbox.MarkerView>
 
-          {route &&
-            route.segments.map((segment) => (
-              <Mapbox.ShapeSource
-                key={segment.id}
-                id={segment.id}
-                shape={{
-                  type: 'Feature',
-                  properties: {},
-                  geometry: {
-                    type: 'LineString',
-                    coordinates: segment.steps,
-                  },
-                }}>
-                <Mapbox.LineLayer
-                  id={`${segment.id}-line`}
-                  style={{
-                    lineColor: '#007AFF',
-                    lineWidth: 4,
-                    lineCap: 'round',
-                    lineJoin: 'round',
-                    lineDasharray: segment.type === 'dashed' ? [3, 3] : undefined,
-                  }}
-                />
-              </Mapbox.ShapeSource>
-            ))}
+          {route?.segments.map((segment) => (
+            <Mapbox.ShapeSource
+              key={segment.id}
+              id={segment.id}
+              shape={{
+                type: 'Feature',
+                properties: {},
+                geometry: {
+                  type: 'LineString',
+                  coordinates: segment.steps,
+                },
+              }}>
+              <Mapbox.LineLayer
+                id={`${segment.id}-line`}
+                style={{
+                  lineColor: '#007AFF',
+                  lineWidth: 4,
+                  lineCap: 'round',
+                  lineJoin: 'round',
+                  lineDasharray: segment.type === 'dashed' ? [3, 3] : undefined,
+                }}
+              />
+            </Mapbox.ShapeSource>
+          ))}
         </>
       )}
     </Mapbox.MapView>
