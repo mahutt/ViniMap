@@ -18,6 +18,7 @@ import MapHint from '@/components/MapHint';
 
 export default function HomeScreen() {
   const { state } = useMap();
+
   return (
     <View style={styles.container}>
       <MapView />

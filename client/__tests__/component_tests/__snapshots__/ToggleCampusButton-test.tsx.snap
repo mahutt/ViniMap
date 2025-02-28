@@ -1,0 +1,152 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<ToggleCampusButton /> ToggleCampusButton renders correctly 1`] = `
+<View
+  style={
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "#f3f3f3",
+        "borderColor": "#800000",
+        "borderRadius": 25,
+        "borderWidth": 2,
+        "elevation": 5,
+        "flexDirection": "row",
+        "height": 30,
+        "justifyContent": "center",
+        "padding": 3,
+        "position": "absolute",
+        "shadowColor": "#000",
+        "shadowOffset": {
+          "height": 2,
+          "width": 0,
+        },
+        "shadowOpacity": 0.2,
+        "shadowRadius": 4,
+        "width": 138,
+        "zIndex": 2,
+      },
+      {
+        "left": 39,
+        "right": 20,
+        "top": 125,
+      },
+      undefined,
+    ]
+  }
+>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "borderRadius": 25,
+        "flex": 1,
+        "justifyContent": "center",
+        "opacity": 1,
+        "paddingHorizontal": 16,
+        "paddingVertical": 3,
+      }
+    }
+  >
+    <Text
+      style={
+        [
+          {
+            "color": "#800000",
+            "fontSize": 10,
+            "fontWeight": "bold",
+          },
+          null,
+        ]
+      }
+    >
+      LOY
+    </Text>
+  </View>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "#800000",
+        "borderRadius": 25,
+        "flex": 1,
+        "justifyContent": "center",
+        "opacity": 1,
+        "paddingHorizontal": 16,
+        "paddingVertical": 3,
+      }
+    }
+  >
+    <Text
+      style={
+        [
+          {
+            "color": "#800000",
+            "fontSize": 10,
+            "fontWeight": "bold",
+          },
+          {
+            "color": "white",
+          },
+        ]
+      }
+    >
+      SGW
+    </Text>
+  </View>
+</View>
+`;
