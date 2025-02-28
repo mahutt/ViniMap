@@ -1,24 +1,24 @@
 import { render, fireEvent } from '@testing-library/react-native';
 import ToggleCampusButton from '@/components/ui/ToggleCampusButton';
-import { MapProvider, useMap } from '@/modules/map/MapContext';
+import { MapProvider } from '@/modules/map/MapContext';
 import React from 'react';
 
-// Mock the MapContext module
+const mockFlyTo = jest.fn();
+
 jest.mock('@/modules/map/MapContext', () => {
-  const flyToMock = jest.fn();
+  const actual = jest.requireActual('@/modules/map/MapContext');
+
+  const mockUseMap = () => ({
+    flyTo: mockFlyTo,
+  });
 
   return {
-    // Preserve the actual MapProvider with properly typed children
-    MapProvider: ({ children }: { children: React.ReactNode }) => children,
-
-    // Mock the useMap hook to return a mocked flyTo function
-    useMap: () => ({
-      flyTo: flyToMock,
-    }),
+    ...actual,
+    MapProvider: actual.MapProvider,
+    useMap: mockUseMap,
   };
 });
 
-// Helper function to check if a text element has active styling (white color)
 const isTextActive = (textElement: any): boolean => {
   if (!textElement || !textElement.props || !textElement.props.style) {
     return false;
@@ -37,8 +37,7 @@ const isTextActive = (textElement: any): boolean => {
 
 describe('<ToggleCampusButton />', () => {
   beforeEach(() => {
-    // Clear mock calls between tests
-    jest.clearAllMocks();
+    mockFlyTo.mockClear();
   });
 
   test('ToggleCampusButton renders correctly', () => {
@@ -57,11 +56,9 @@ describe('<ToggleCampusButton />', () => {
       </MapProvider>
     );
 
-    // Get the text elements
     const sgwText = getByText('SGW');
     const loyText = getByText('LOY');
 
-    // Check if text is active (white color indicates active state)
     expect(isTextActive(sgwText)).toBe(true);
     expect(isTextActive(loyText)).toBe(false);
   });
@@ -73,20 +70,13 @@ describe('<ToggleCampusButton />', () => {
       </MapProvider>
     );
 
-    // Simulate clicking the LOY button
     fireEvent.press(getByText('LOY'));
 
-    // Get the mocked flyTo function
-    const { flyTo } = useMap();
+    expect(mockFlyTo).toHaveBeenCalledWith([-73.6391, 45.4581]);
 
-    // Check that flyTo was called with LOY coordinates
-    expect(flyTo).toHaveBeenCalledWith([-73.6391, 45.4581]);
-
-    // Get the text elements
     const loyText = getByText('LOY');
     const sgwText = getByText('SGW');
 
-    // Check if text is active
     expect(isTextActive(loyText)).toBe(true);
     expect(isTextActive(sgwText)).toBe(false);
   });
@@ -98,23 +88,15 @@ describe('<ToggleCampusButton />', () => {
       </MapProvider>
     );
 
-    // First click LOY
     fireEvent.press(getByText('LOY'));
 
-    // Then click SGW
     fireEvent.press(getByText('SGW'));
 
-    // Get the mocked flyTo function
-    const { flyTo } = useMap();
+    expect(mockFlyTo).toHaveBeenNthCalledWith(2, [-73.5789, 45.4973]);
 
-    // Check flyTo was called with SGW coordinates on the second call
-    expect(flyTo).toHaveBeenNthCalledWith(2, [-73.5789, 45.4973]);
-
-    // Get the text elements
     const sgwText = getByText('SGW');
     const loyText = getByText('LOY');
 
-    // Check if text is active
     expect(isTextActive(sgwText)).toBe(true);
     expect(isTextActive(loyText)).toBe(false);
   });

@@ -1,6 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { Platform, View, StyleSheet } from 'react-native';
 
 //keep ../../comp... b/c it is needed to compile on irl iphone
 import { HapticTab } from '../../components/HapticTab';
@@ -11,15 +11,27 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { MapProvider } from '@/modules/map/MapContext';
 
 const TabBarMapIcon = ({ color }: { color: string }) => {
-  return <IconSymbol size={28} name="map.fill" color={color} />;
+  return (
+    <View style={styles.iconContainer}>
+      <IconSymbol size={28} name="map.fill" color={color} />
+    </View>
+  );
 };
 
 const TabBarCalendarIcon = ({ color }: { color: string }) => {
-  return <IconSymbol size={28} name="calendar" color={color} />;
+  return (
+    <View style={styles.iconContainer}>
+      <IconSymbol size={28} name="calendar" color={color} />
+    </View>
+  );
 };
 
 const TabBarSettingsIcon = ({ color }: { color: string }) => {
-  return <IconSymbol size={28} name="gear" color={color} />;
+  return (
+    <View style={styles.iconContainer}>
+      <IconSymbol size={28} name="gear" color={color} />
+    </View>
+  );
 };
 
 const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
@@ -33,9 +45,19 @@ const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
         tabBarStyle: Platform.select({
           ios: {
             position: 'absolute',
+            height: 80,
+            paddingBottom: 20,
           },
-          default: {},
+          default: {
+            height: 70,
+            paddingTop: 10,
+            paddingBottom: 10,
+          },
         }),
+        tabBarItemStyle: {
+          height: '100%',
+          justifyContent: 'center',
+        },
       }}>
       <Tabs.Screen
         name="index"
@@ -61,6 +83,14 @@ const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
     </Tabs>
   </MapProvider>
 );
+
+const styles = StyleSheet.create({
+  iconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '100%',
+  },
+});
 
 export default function App() {
   const colorScheme = useColorScheme();

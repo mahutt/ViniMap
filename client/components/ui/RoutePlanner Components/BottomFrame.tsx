@@ -38,17 +38,19 @@ export function BottomFrame({ selectedMode, modeIcon, durations, distances }: Bo
     </Animated.View>
   );
 }
+
 const styles = StyleSheet.create({
   infoContainer: {
     position: 'absolute',
-    bottom: 20,
     zIndex: 10,
     backgroundColor: 'white',
     padding: 30,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: 180,
+    height: '20%',
+    justifyContent: 'flex-start',
     alignItems: 'flex-start',
+    bottom: 0,
   },
   boldText: {
     fontWeight: 'bold',
@@ -87,4 +89,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
 export default BottomFrame;
