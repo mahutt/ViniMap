@@ -3,12 +3,6 @@ import { render, fireEvent } from '@testing-library/react-native';
 import RecordingButton from '@/components/RecordingButton';
 import { useUXCam } from '@/usability/UXCamContext';
 
-interface UXCamContextType {
-  isRecording: boolean;
-  startRecording: () => void;
-  stopRecording: () => void;
-}
-
 // Mock the UXCamContext hook
 jest.mock('@/usability/UXCamContext', () => ({
   useUXCam: jest.fn(),
@@ -19,10 +13,6 @@ const mockedUseUXCam = useUXCam as jest.MockedFunction<typeof useUXCam>;
 describe('RecordingButton Component', () => {
   describe('ActionButton', () => {
     it('renders correctly with given props', () => {
-      const onPressMock = jest.fn();
-      const buttonStyle = { backgroundColor: 'blue' };
-      const label = 'Test Button';
-
       mockedUseUXCam.mockReturnValue({
         isRecording: false,
         startRecording: jest.fn(),
