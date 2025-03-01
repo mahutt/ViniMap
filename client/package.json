@@ -23,7 +23,11 @@
       "!**/node_modules/**",
       "!**/babel.config.js",
       "!**/expo-env.d.ts",
-      "!**/.expo/**"
+      "!**/.expo/**",
+      "!**/.eslintrc.js",
+      "!**/metro.config.js",
+      "!**/+not-found.tsx",
+      "!**/_layout.tsx"
     ]
   },
   "dependencies": {
