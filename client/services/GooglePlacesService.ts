@@ -61,6 +61,9 @@ class GooglePlacesService {
         'pool',
         'fitness',
         'court',
+        'climbing',
+        'sport',
+        'garden',
 
         // Entertainment & Culture
         'movie',
@@ -68,6 +71,7 @@ class GooglePlacesService {
         'theatre',
         'museum',
         'gallery',
+        'stadium',
 
         // Services
         'atm',
@@ -83,6 +87,7 @@ class GooglePlacesService {
         'car',
         'rental',
         'bixi',
+        'parking',
       ];
 
       const uniqueResults = new Map<string, PlaceResult>();

@@ -1,6 +1,7 @@
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { Coordinates, Location } from './MapContext';
 import { calculateEuclideanDistance } from './MapUtils';
+import GooglePlacesService, { PlaceResult } from '@/services/GooglePlacesService';
 
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
@@ -191,4 +192,46 @@ const formatDuration = (seconds: number | null): string => {
   return `${minutes} min`;
 };
 
-export { getLocations, getRoute, fetchLocationData, formatDuration };
+const getOutdoorPointsOfInterest = async (
+  coordinates: Coordinates,
+  radius: number = 5000
+): Promise<Location[]> => {
+  try {
+    const placesResults = await GooglePlacesService.fetchNearbyOutdoorPlaces(coordinates, radius);
+
+    return placesResults.map((place: PlaceResult) => ({
+      name: place.name,
+      coordinates: [place.geometry.location.lng, place.geometry.location.lat] as Coordinates,
+
+      details: {
+        place_id: place.place_id,
+        vicinity: place.vicinity,
+        rating: place.rating,
+        user_ratings_total: place.user_ratings_total,
+        types: place.types,
+        opening_hours: place.opening_hours,
+      },
+    }));
+  } catch (error) {
+    console.error('Error getting outdoor points of interest:', error);
+    return [];
+  }
+};
+
+const getPlaceDetails = async (placeId: string): Promise<any> => {
+  try {
+    return await GooglePlacesService.getPlaceDetails(placeId);
+  } catch (error) {
+    console.error('Error getting place details:', error);
+    return null;
+  }
+};
+
+export {
+  getLocations,
+  getRoute,
+  fetchLocationData,
+  formatDuration,
+  getOutdoorPointsOfInterest,
+  getPlaceDetails,
+};
