@@ -50,7 +50,7 @@ const getRoute = async (
       segments: [
         {
           id: mode,
-          type: 'solid',
+          type: mode === 'walking' ? 'dashed' : 'solid',
           steps: route.geometry.coordinates as Coordinates[],
         },
       ],
