@@ -2,7 +2,7 @@ import defaultLayers from './default_layers.json';
 
 import type { LayerSpecification } from '../Types';
 
-let layers: Array<LayerSpecification> = defaultLayers;
+let layers: LayerSpecification[] = defaultLayers;
 
 /**
  * Transform the generic "poi-indoor" layer into multiple layers using filters based on OSM tags
@@ -70,7 +70,7 @@ const OSM_FILTER_MAPBOX_MAKI_LIST: FilterMakiEntry[] = [
   },
 ];
 
-function createPoiLayers(metaLayer: LayerSpecification): Array<LayerSpecification> {
+function createPoiLayers(metaLayer: LayerSpecification): LayerSpecification[] {
   const otherShopsEntry = {
     filter: [
       'all',

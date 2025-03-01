@@ -2,6 +2,10 @@ import React, { createContext, useContext, useRef, useState, useMemo, useCallbac
 import Mapbox from '@rnmapbox/maps';
 import { getRoute } from './MapService';
 import { Coordinates, Level } from './Types';
+import { IndoorMap, indoorMaps } from './IndoorMap';
+import type { BBox } from 'geojson';
+import { bboxCenter, overlap } from './Utils';
+import { default as turfDistance } from '@turf/distance';
 
 export interface Location {
   name: string | null;
@@ -45,6 +49,9 @@ type MapContextType = {
     endCoordinates: Coordinates,
     mode?: string
   ) => Promise<void>;
+
+  indoorMap: IndoorMap | null;
+  updateSelectedMapIfNeeded: () => void;
 };
 
 const MapContext = createContext<MapContextType | undefined>(undefined);
@@ -61,6 +68,66 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);
   const [routeCoordinates, setRouteCoordinates] = useState<Coordinates[]>([]);
+
+  const [indoorMap, setIndoorMap] = useState<IndoorMap | null>(null);
+  const mapLoadedPromise = useRef<Promise<void>>(Promise.resolve());
+  const updateMapPromise = useRef<Promise<void>>(Promise.resolve());
+
+  const getClosestMap = async (): Promise<IndoorMap | null> => {
+    const [currentZoomLevel, cameraBounds] = await Promise.all([
+      mapRef.current?.getZoom(),
+      mapRef.current?.getVisibleBounds(),
+    ]);
+
+    if (!currentZoomLevel || currentZoomLevel < 17 || !cameraBounds) {
+      return null;
+    }
+
+    // [west, south, east, north]
+    const cameraBoundsTurf = [
+      cameraBounds[1][0],
+      cameraBounds[1][1],
+      cameraBounds[0][0],
+      cameraBounds[0][1],
+    ] as BBox;
+
+    const mapsInBounds = indoorMaps.filter((indoorMap) =>
+      overlap(indoorMap.bounds, cameraBoundsTurf)
+    );
+
+    if (mapsInBounds.length === 0) {
+      return null;
+    }
+
+    if (mapsInBounds.length === 1) {
+      return mapsInBounds[0];
+    }
+
+    let minDist = Number.POSITIVE_INFINITY;
+    let closestMap = mapsInBounds[0];
+    for (const map of mapsInBounds) {
+      const _dist = turfDistance(bboxCenter(map.bounds), bboxCenter(cameraBoundsTurf));
+      if (_dist < minDist) {
+        closestMap = map;
+        minDist = _dist;
+      }
+    }
+    return closestMap;
+  };
+
+  const updateSelectedMapIfNeeded = useMemo(() => {
+    return async () => {
+      await mapLoadedPromise.current;
+      await updateMapPromise.current;
+      updateMapPromise.current = (async () => {
+        const closestMap = await getClosestMap();
+        if ((closestMap === null) !== (indoorMap === null) || closestMap?.id !== indoorMap?.id) {
+          setIndoorMap(closestMap);
+          setLevel(closestMap?.levelsRange.min ?? null);
+        }
+      })();
+    };
+  }, [indoorMap, setIndoorMap, setLevel]);
 
   const flyTo = useMemo(
     () => (newCenterCoordinate: [number, number], newZoomLevel?: number) => {
@@ -124,6 +191,8 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       setEndLocation,
       flyTo,
       loadRouteFromCoordinates,
+      indoorMap,
+      updateSelectedMapIfNeeded,
     }),
     [
       centerCoordinate,
@@ -136,6 +205,8 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       flyTo,
       pitchLevel,
       loadRouteFromCoordinates,
+      indoorMap,
+      updateSelectedMapIfNeeded,
     ]
   );
 
