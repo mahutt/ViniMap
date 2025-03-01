@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useRef, useState, useMemo, useCallback } from 'react';
 import Mapbox from '@rnmapbox/maps';
 import { getRoute } from './MapService';
-import { Coordinates } from './Types';
+import { Coordinates, Level } from './Types';
 
 export interface Location {
   name: string | null;
@@ -24,6 +24,7 @@ type MapContextType = {
   cameraRef: React.RefObject<Mapbox.Camera>;
   centerCoordinate: [number, number];
   zoomLevel: number;
+  level: Level | null;
 
   pitchLevel: number;
   setPitchLevel: (pitchLevel: number) => void;
@@ -34,6 +35,7 @@ type MapContextType = {
   routeCoordinates: Coordinates[];
   setCenterCoordinate: (centerCoordinate: [number, number]) => void;
   setZoomLevel: (zoomLevel: number) => void;
+  setLevel: (level: Level | null) => void;
   setState: (state: MapState) => void;
   setStartLocation: (startLocation: Location | null) => void;
   setEndLocation: (endLocation: Location | null) => void;
@@ -52,6 +54,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const cameraRef = useRef<Mapbox.Camera | null>(null);
   const [centerCoordinate, setCenterCoordinate] = useState<[number, number]>(DEFAULT_COORDINATES);
   const [zoomLevel, setZoomLevel] = useState(15);
+  const [level, setLevel] = useState<Level | null>(-1);
   const [pitchLevel, setPitchLevel] = useState(0);
   const [state, setState] = useState<MapState>(MapState.Idle);
 
@@ -106,6 +109,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       cameraRef,
       centerCoordinate,
       zoomLevel,
+      level,
       pitchLevel,
       setPitchLevel,
       state,
@@ -114,6 +118,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       routeCoordinates,
       setCenterCoordinate,
       setZoomLevel,
+      setLevel,
       setState,
       setStartLocation,
       setEndLocation,
@@ -123,6 +128,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     [
       centerCoordinate,
       zoomLevel,
+      level,
       state,
       startLocation,
       endLocation,
