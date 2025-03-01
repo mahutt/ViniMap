@@ -1,6 +1,5 @@
 import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
-import React from 'react';
 import { MapState, useMap } from './MapContext';
 import { fetchLocationData } from './MapService';
 
@@ -19,7 +18,7 @@ export default function MapView() {
     centerCoordinate,
     zoomLevel,
     pitchLevel,
-    routeCoordinates,
+    route,
   } = useMap();
 
   function onMapClick(event: any) {
@@ -122,28 +121,31 @@ export default function MapView() {
           <Mapbox.MarkerView id="start" coordinate={startLocation.coordinates}>
             <View style={[styles.marker, styles.startMarker]} />
           </Mapbox.MarkerView>
-          {routeCoordinates.length > 0 && (
+
+          {route?.segments.map((segment) => (
             <Mapbox.ShapeSource
-              id="routeSource"
+              key={segment.id}
+              id={segment.id}
               shape={{
                 type: 'Feature',
                 properties: {},
                 geometry: {
                   type: 'LineString',
-                  coordinates: routeCoordinates,
+                  coordinates: segment.steps,
                 },
               }}>
               <Mapbox.LineLayer
-                id="routeFill"
+                id={`${segment.id}-line`}
                 style={{
                   lineColor: '#007AFF',
                   lineWidth: 4,
                   lineCap: 'round',
                   lineJoin: 'round',
+                  lineDasharray: segment.type === 'dashed' ? [3, 3] : undefined,
                 }}
               />
             </Mapbox.ShapeSource>
-          )}
+          ))}
         </>
       )}
     </Mapbox.MapView>

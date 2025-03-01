@@ -1,6 +1,7 @@
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { Coordinates, Location } from './MapContext';
 import { calculateEuclideanDistance } from './MapUtils';
+import { Route } from './Types';
 
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
@@ -33,11 +34,7 @@ const getRoute = async (
   startCoordinates: Coordinates,
   endCoordinates: Coordinates,
   mode: string
-): Promise<{
-  coordinates: Coordinates[] | null;
-  duration: number | null;
-  distance: number | null;
-}> => {
+): Promise<Route | null> => {
   if (mode === 'shuttle') {
     return getRouteForShuttle(startCoordinates, endCoordinates);
   }
@@ -48,12 +45,18 @@ const getRoute = async (
   if (data?.routes[0]) {
     const route = data.routes[0];
     return {
-      coordinates: route.geometry.coordinates as Coordinates[],
       duration: route.duration,
       distance: route.distance,
+      segments: [
+        {
+          id: mode,
+          type: mode === 'walking' ? 'dashed' : 'solid',
+          steps: route.geometry.coordinates as Coordinates[],
+        },
+      ],
     };
   }
-  return { coordinates: null, duration: null, distance: null };
+  return null;
 };
 
 const fetchLocationData = async (coordinates: Coordinates) => {
@@ -78,11 +81,7 @@ const fetchLocationData = async (coordinates: Coordinates) => {
 const getRouteForShuttle = async (
   startCoordinates: Coordinates,
   endCoordinates: Coordinates
-): Promise<{
-  coordinates: Coordinates[] | null;
-  duration: number | null;
-  distance: number | null;
-}> => {
+): Promise<Route | null> => {
   const MAX_EUCLIDEAN_DISTANCE = 0.01508;
 
   const SgwCoords: Coordinates = [-73.5784711, 45.4970661];
@@ -121,63 +120,80 @@ const getRouteForShuttle = async (
     endBusStop = LoyolaCoords;
   }
 
-  if ((isStartSgw || isStartLoyola) && (isEndSgw || isEndLoyola)) {
-    const start_Walk_ShuttleStart = await getRoute(startCoordinates, startBusStop, 'walking');
-
-    const shuttleStart_Drive_shuttleEnd = await getRoute(startBusStop, endBusStop, 'driving');
-
-    const shuttleEnd_Walk_end = await getRoute(endBusStop, endCoordinates, 'walking');
-
-    const middleCoords: Coordinates[] = (start_Walk_ShuttleStart.coordinates ?? []).concat(
-      shuttleStart_Drive_shuttleEnd.coordinates ?? []
-    );
-    const finalCoords: Coordinates[] = middleCoords.concat(shuttleEnd_Walk_end.coordinates ?? []);
-
-    const daysMap: { [key: number]: string } = {
-      1: 'Monday-Thursday',
-      2: 'Monday-Thursday',
-      3: 'Monday-Thursday',
-      4: 'Monday-Thursday',
-      5: 'Friday',
-    };
-    const today = new Date().getDay();
-    const dayKey = daysMap[today] ?? 'Monday-Thursday';
-    const currentTime = ShuttleCalculatorService.getCurrentTime();
-
-    const departureCampus: 'LOY' | 'SGW' = isStartSgw ? 'SGW' : 'LOY';
-    const nextShuttleDuration = ShuttleCalculatorService.getNextDepartureTime(
-      dayKey,
-      currentTime,
-      departureCampus
-    );
-
-    const shuttleDurationInSeconds =
-      Number(nextShuttleDuration.replace('m', '').replace('h', '')) *
-      (nextShuttleDuration.includes('h') ? 3600 : 60);
-
-    if (isNaN(Number(shuttleDurationInSeconds))) {
-      return { coordinates: null, duration: null, distance: null };
-    }
-
-    const finalDuration =
-      Number(start_Walk_ShuttleStart.duration) +
-      Number(shuttleStart_Drive_shuttleEnd.duration) +
-      Number(shuttleEnd_Walk_end.duration) +
-      shuttleDurationInSeconds;
-
-    const finalDistance =
-      Number(start_Walk_ShuttleStart.distance) +
-      Number(shuttleStart_Drive_shuttleEnd.distance) +
-      Number(shuttleEnd_Walk_end.distance);
-
-    return {
-      coordinates: finalCoords,
-      duration: finalDuration,
-      distance: finalDistance,
-    };
+  if (!((isStartLoyola && isEndSgw) || (isStartSgw && isEndLoyola))) {
+    return null;
   }
 
-  return { coordinates: null, duration: null, distance: null };
+  const start_Walk_ShuttleStart = await getRoute(startCoordinates, startBusStop, 'walking');
+  const shuttleStart_Drive_shuttleEnd = await getRoute(startBusStop, endBusStop, 'driving');
+  const shuttleEnd_Walk_end = await getRoute(endBusStop, endCoordinates, 'walking');
+
+  if (!start_Walk_ShuttleStart || !shuttleStart_Drive_shuttleEnd || !shuttleEnd_Walk_end) {
+    return null;
+  }
+
+  const firstWalkCoords = start_Walk_ShuttleStart?.segments[0].steps ?? [];
+  const shuttleCoordinates = shuttleStart_Drive_shuttleEnd?.segments[0].steps ?? [];
+  const secondWalkCoordinates = shuttleEnd_Walk_end?.segments[0].steps ?? [];
+
+  const daysMap: { [key: number]: string } = {
+    1: 'Monday-Thursday',
+    2: 'Monday-Thursday',
+    3: 'Monday-Thursday',
+    4: 'Monday-Thursday',
+    5: 'Friday',
+  };
+  const today = new Date().getDay();
+  const dayKey = daysMap[today] ?? 'Monday-Thursday';
+  const currentTime = ShuttleCalculatorService.getCurrentTime();
+
+  const departureCampus: 'LOY' | 'SGW' = isStartSgw ? 'SGW' : 'LOY';
+  const nextShuttleDuration = ShuttleCalculatorService.getNextDepartureTime(
+    dayKey,
+    currentTime,
+    departureCampus
+  );
+
+  const shuttleDurationInSeconds =
+    Number(nextShuttleDuration.replace('m', '').replace('h', '')) *
+    (nextShuttleDuration.includes('h') ? 3600 : 60);
+
+  if (isNaN(Number(shuttleDurationInSeconds))) {
+    return null;
+  }
+
+  const finalDuration =
+    Number(start_Walk_ShuttleStart.duration) +
+    Number(shuttleStart_Drive_shuttleEnd.duration) +
+    Number(shuttleEnd_Walk_end.duration) +
+    shuttleDurationInSeconds;
+
+  const finalDistance =
+    Number(start_Walk_ShuttleStart.distance) +
+    Number(shuttleStart_Drive_shuttleEnd.distance) +
+    Number(shuttleEnd_Walk_end.distance);
+
+  return {
+    duration: finalDuration,
+    distance: finalDistance,
+    segments: [
+      {
+        id: 'firstWalk',
+        type: 'dashed',
+        steps: firstWalkCoords,
+      },
+      {
+        id: 'shuttle',
+        type: 'solid',
+        steps: shuttleCoordinates,
+      },
+      {
+        id: 'secondWalk',
+        type: 'dashed',
+        steps: secondWalkCoordinates,
+      },
+    ],
+  };
 };
 
 const formatDuration = (seconds: number | null): string => {
