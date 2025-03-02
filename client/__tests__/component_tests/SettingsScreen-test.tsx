@@ -29,7 +29,7 @@ describe('SettingsScreen', () => {
   });
 
   it('renders correctly with all components', () => {
-    const { getByTestId, toJSON } = render(<SettingsScreen />);
+    const { toJSON } = render(<SettingsScreen />);
 
     expect(toJSON()).toMatchSnapshot();
 
@@ -67,19 +67,6 @@ describe('SettingsScreen', () => {
   });
 
   it('has the correct styles defined', () => {
-    const expectedStyles = {
-      container: {
-        flex: 1,
-        backgroundColor: '#FFFFFF',
-      },
-      content: {
-        flex: 1,
-        justifyContent: 'center',
-        paddingHorizontal: 16,
-        gap: 16,
-      },
-    };
-
     const { toJSON } = render(<SettingsScreen />);
     expect(toJSON()).toBeTruthy();
   });
