@@ -2,8 +2,9 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { UXCamProvider, useUXCam } from '@/usability/UXCamContext';
+import RNUxcam from 'react-native-ux-cam';
 
-// Mock react-native-ux-cam before importing
+// Mock react-native-ux-cam
 jest.mock('react-native-ux-cam', () => ({
   optIntoSchematicRecordings: jest.fn(),
   startWithConfiguration: jest.fn(),
@@ -16,8 +17,6 @@ jest.mock('react-native-ux-cam', () => ({
 jest.mock('expo-router', () => ({
   usePathname: jest.fn().mockReturnValue('/test-path'),
 }));
-
-import RNUxcam from 'react-native-ux-cam';
 
 function TestComponent() {
   const uxcam = useUXCam();
