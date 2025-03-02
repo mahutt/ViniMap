@@ -64,9 +64,27 @@ describe('RoutePlanner', () => {
         return Promise.resolve(null);
       }
 
+      let duration;
+      if (mode === 'walking') {
+        duration = 120;
+      } else if (mode === 'cycling') {
+        duration = 60;
+      } else {
+        duration = 30;
+      }
+
+      let distance;
+      if (mode === 'walking') {
+        distance = 5000;
+      } else if (mode === 'cycling') {
+        distance = 3000;
+      } else {
+        distance = 1500;
+      }
+
       return Promise.resolve({
-        duration: mode === 'walking' ? 120 : mode === 'cycling' ? 60 : 30,
-        distance: mode === 'walking' ? 5000 : mode === 'cycling' ? 3000 : 1500,
+        duration,
+        distance,
       });
     });
 
