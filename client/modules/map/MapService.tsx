@@ -2,7 +2,6 @@ import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { Coordinates, Location } from './MapContext';
 import { calculateEuclideanDistance } from './MapUtils';
 import { Route } from './Types';
-import GooglePlacesService, { PlaceResult } from '@/services/GooglePlacesService';
 
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;

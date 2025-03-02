@@ -1,9 +1,19 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import { MapState, useMap } from './MapContext';
-import { fetchLocationData } from './MapService';
+import { fetchLocationData, getPOIsNearby } from './MapService';
+import { useEffect, useState } from 'react';
+import { Location } from './MapContext';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
+
+const poiIconStyles = {
+  restaurant: { backgroundColor: '#E63946' },
+  cafe: { backgroundColor: '#F4A261' },
+  park: { backgroundColor: '#2A9D8F' },
+  shop: { backgroundColor: '#457B9D' },
+  default: { backgroundColor: '#6D597A' },
+};
 
 export default function MapView() {
   const {
@@ -20,6 +30,28 @@ export default function MapView() {
     pitchLevel,
     route,
   } = useMap();
+
+  const [pointsOfInterest, setPointsOfInterest] = useState<Location[]>([]);
+  const [showPOIs, setShowPOIs] = useState(false);
+
+  useEffect(() => {
+    if (showPOIs) {
+      loadPointsOfInterest();
+    }
+  }, [centerCoordinate, showPOIs]);
+
+  const loadPointsOfInterest = async () => {
+    try {
+      const pois = await getPOIsNearby(centerCoordinate);
+      setPointsOfInterest(pois);
+    } catch (error) {
+      console.error('Error loading POIs:', error);
+    }
+  };
+
+  const togglePOIs = () => {
+    setShowPOIs((prev) => !prev);
+  };
 
   function onMapClick(event: any) {
     const { geometry } = event;
@@ -91,6 +123,20 @@ export default function MapView() {
     }
   }
 
+  const getPOIStyle = (poi: Location) => {
+    const category = poi.data?.type?.toLowerCase() || 'default';
+    if (category.includes('restaurant') || category.includes('food')) {
+      return poiIconStyles.restaurant;
+    } else if (category.includes('cafe') || category.includes('coffee')) {
+      return poiIconStyles.cafe;
+    } else if (category.includes('park') || category.includes('garden')) {
+      return poiIconStyles.park;
+    } else if (category.includes('shop') || category.includes('store')) {
+      return poiIconStyles.shop;
+    }
+    return poiIconStyles.default;
+  };
+
   return (
     <Mapbox.MapView
       ref={mapRef}
@@ -105,6 +151,16 @@ export default function MapView() {
         animationDuration={2000}
         pitch={pitchLevel}
       />
+
+      {showPOIs &&
+        pointsOfInterest.map((poi, index) => (
+          <Mapbox.MarkerView key={`poi-${index}`} id={`poi-${index}`} coordinate={poi.coordinates}>
+            <View style={[styles.poiMarker, getPOIStyle(poi)]}>
+              <Text style={styles.poiIcon}>•</Text>
+            </View>
+            <Mapbox.Callout title={poi.name || 'Point of Interest'} />
+          </Mapbox.MarkerView>
+        ))}
 
       {endLocation?.coordinates && (
         <Mapbox.PointAnnotation
