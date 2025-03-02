@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RecordingButton Component matches snapshot when not recording 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "backgroundColor": "#007AFF",
+      "borderRadius": 8,
+      "marginTop": 16,
+      "opacity": 1,
+      "padding": 12,
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "color": "white",
+        "fontWeight": "bold",
+        "textAlign": "center",
+      }
+    }
+  >
+    Start Recording (Usability test)
+  </Text>
+</View>
+`;
+
+exports[`RecordingButton Component matches snapshot when recording 1`] = `
+<View
+  accessibilityState={
+    {
+      "busy": undefined,
+      "checked": undefined,
+      "disabled": undefined,
+      "expanded": undefined,
+      "selected": undefined,
+    }
+  }
+  accessibilityValue={
+    {
+      "max": undefined,
+      "min": undefined,
+      "now": undefined,
+      "text": undefined,
+    }
+  }
+  accessible={true}
+  collapsable={false}
+  focusable={true}
+  onClick={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    {
+      "backgroundColor": "#FF3B30",
+      "borderRadius": 8,
+      "marginTop": 16,
+      "opacity": 1,
+      "padding": 12,
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "color": "white",
+        "fontWeight": "bold",
+        "textAlign": "center",
+      }
+    }
+  >
+    Stop Recording (Usability test)
+  </Text>
+</View>
+`;
