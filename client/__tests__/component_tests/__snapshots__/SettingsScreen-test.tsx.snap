@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SettingsScreen renders correctly with all components 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#FFFFFF",
+      "flex": 1,
+    }
+  }
+>
+  <View
+    style={
+      {
+        "flex": 1,
+        "gap": 16,
+        "justifyContent": "center",
+        "paddingHorizontal": 16,
+      }
+    }
+  />
+</View>
+`;
