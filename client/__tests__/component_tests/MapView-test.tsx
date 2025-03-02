@@ -27,20 +27,53 @@ const mockOnPressHandler = jest.fn();
 jest.mock('@rnmapbox/maps', () => {
   const React = require('react');
 
+  const MockMapView = React.forwardRef(function MockMapView(props: any, ref: any) {
+    if (props.onPress) {
+      mockOnPressHandler(props.onPress);
+    }
+    return null;
+  });
+  MockMapView.displayName = 'MapView';
+
+  const MockCamera = React.forwardRef(function MockCamera(props: any, ref: any) {
+    return null;
+  });
+  MockCamera.displayName = 'Camera';
+
+  const MockPointAnnotation = React.forwardRef(function MockPointAnnotation(props: any, ref: any) {
+    return null;
+  });
+  MockPointAnnotation.displayName = 'PointAnnotation';
+
+  const MockMarkerView = React.forwardRef(function MockMarkerView(props: any, ref: any) {
+    return null;
+  });
+  MockMarkerView.displayName = 'MarkerView';
+
+  const MockShapeSource = React.forwardRef(function MockShapeSource(props: any, ref: any) {
+    return null;
+  });
+  MockShapeSource.displayName = 'ShapeSource';
+
+  const MockLineLayer = React.forwardRef(function MockLineLayer(props: any, ref: any) {
+    return null;
+  });
+  MockLineLayer.displayName = 'LineLayer';
+
+  const MockCallout = React.forwardRef(function MockCallout(props: any, ref: any) {
+    return null;
+  });
+  MockCallout.displayName = 'Callout';
+
   return {
     setAccessToken: jest.fn(),
-    MapView: React.forwardRef(({ onPress, children, ...rest }: any, ref: any) => {
-      if (onPress) {
-        mockOnPressHandler(onPress);
-      }
-      return null;
-    }),
-    Camera: React.forwardRef((_: any, __: any) => null),
-    PointAnnotation: React.forwardRef((_: any, __: any) => null),
-    MarkerView: React.forwardRef((_: any, __: any) => null),
-    ShapeSource: React.forwardRef((_: any, __: any) => null),
-    LineLayer: React.forwardRef((_: any, __: any) => null),
-    Callout: React.forwardRef((_: any, __: any) => null),
+    MapView: MockMapView,
+    Camera: MockCamera,
+    PointAnnotation: MockPointAnnotation,
+    MarkerView: MockMarkerView,
+    ShapeSource: MockShapeSource,
+    LineLayer: MockLineLayer,
+    Callout: MockCallout,
   };
 });
 
