@@ -14,7 +14,7 @@ jest.mock('@/modules/map/MapContext', () => ({
   },
 }));
 
-const createMockComponent = (name: string): React.FC => {
+const createMockComponent = (name: string): React.FC<Record<string, never>> => {
   interface MockComponentProps {}
 
   const MockComponent: React.FC<MockComponentProps> = () => (
