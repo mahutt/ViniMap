@@ -28,7 +28,12 @@
       "!**/metro.config.js",
       "!**/+not-found.tsx",
       "!**/_layout.tsx"
-    ]
+    ],
+    "coverageThreshold": {
+      "global": {
+        "statements": 90
+      }
+    }
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.2",
