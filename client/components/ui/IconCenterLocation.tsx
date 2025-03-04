@@ -1,28 +1,22 @@
 import React from 'react';
-import { TouchableOpacity, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useMap } from '@/modules/map/MapContext';
-import * as Location from 'expo-location';
+import CoordinateService from '@/services/CoordinateService';
 
 const CenterLocationComponent = () => {
-  let currentLongitude = 0;
-  let currentLatitude = 0;
-  const { flyTo } = useMap();
-  const getPermissions = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-      console.log('Please grant location permissions');
-      return;
-    }
-    let currentLocation = await Location.getCurrentPositionAsync({});
-    currentLatitude = currentLocation.coords.latitude;
-    currentLongitude = currentLocation.coords.longitude;
-  };
-  const { setCenterCoordinate } = useMap();
+  const { flyTo, setCenterCoordinate } = useMap();
+
   const handlePress = async () => {
-    await getPermissions();
-    setCenterCoordinate([currentLatitude, currentLongitude]);
-    flyTo([currentLongitude, currentLatitude]);
+    try {
+      const coordinates = await CoordinateService.getCurrentCoordinates();
+      const mapboxCoordinates: [number, number] = [coordinates[1], coordinates[0]];
+
+      setCenterCoordinate(mapboxCoordinates);
+      flyTo(mapboxCoordinates);
+    } catch (error) {
+      Alert.alert('Location Error', 'Cannot fetch location');
+    }
   };
 
   return (
