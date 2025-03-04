@@ -9,7 +9,7 @@ const CenterLocationComponent = () => {
 
   const handlePress = async () => {
     const coordinates = await CoordinateService.getCurrentCoordinates();
-    const mapboxCoordinates: [number, number] = [coordinates[1], coordinates[0]];
+    const mapboxCoordinates: [number, number] = [coordinates[0], coordinates[1]];
 
     setCenterCoordinate(mapboxCoordinates);
     flyTo(mapboxCoordinates);

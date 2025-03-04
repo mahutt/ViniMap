@@ -22,7 +22,7 @@ export default class CoordinateService {
       ])) as Location.LocationObject;
 
       const { latitude, longitude } = currentLocation.coords;
-      return [latitude, longitude];
+      return [longitude, latitude];
     } catch {
       return [45.494836, -73.577913];
     }
