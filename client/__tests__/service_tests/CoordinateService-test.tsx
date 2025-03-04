@@ -1,30 +1,20 @@
 import CoordinateService from '@/services/CoordinateService';
 import * as Location from 'expo-location';
 
-jest.useFakeTimers();
-
 // Mock the entire expo-location module
 jest.mock('expo-location');
 
 const mockedLocation = Location as jest.Mocked<typeof Location>;
 
-afterEach(() => {
-  jest.clearAllTimers();
-});
-
 describe('CoordinateService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    console.error = jest.fn();
-    jest.clearAllMocks();
-    console.error = jest.fn();
-    jest.clearAllTimers();
   });
 
   it('should return coordinates when permissions are granted', async () => {
     // Mock the required Location methods with successful responses
     mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
-      status: Location.PermissionStatus.GRANTED,
+      status: 'granted' as Location.PermissionStatus,
       granted: true,
       expires: 'never',
       canAskAgain: true,
@@ -54,7 +44,7 @@ describe('CoordinateService', () => {
   it('should return fallback coordinates when permissions are denied', async () => {
     // Mock permissions being denied
     mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
-      status: Location.PermissionStatus.DENIED,
+      status: 'denied' as Location.PermissionStatus,
       granted: false,
       expires: 'never',
       canAskAgain: true,
@@ -70,15 +60,13 @@ describe('CoordinateService', () => {
   it('should return fallback coordinates when Location.getCurrentPositionAsync throws an error', async () => {
     // Mock permissions granted but getCurrentPositionAsync throws
     mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
-      status: Location.PermissionStatus.GRANTED,
+      status: 'granted' as Location.PermissionStatus,
       granted: true,
       expires: 'never',
       canAskAgain: true,
     });
 
-    mockedLocation.getCurrentPositionAsync.mockImplementation(() => {
-      throw new Error('Location error');
-    });
+    mockedLocation.getCurrentPositionAsync.mockRejectedValue(new Error('Location error'));
 
     const coordinates = await CoordinateService.getCurrentCoordinates();
 

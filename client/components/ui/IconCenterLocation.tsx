@@ -17,7 +17,7 @@ const CenterLocationComponent = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={handlePress}>
+      <TouchableOpacity testID="center-location-button" style={styles.button} onPress={handlePress}>
         <Ionicons name="locate" size={24} color="white" />
       </TouchableOpacity>
     </View>
