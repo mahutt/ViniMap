@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, View, StyleSheet, Alert } from 'react-native';
+import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useMap } from '@/modules/map/MapContext';
 import CoordinateService from '@/services/CoordinateService';
@@ -8,15 +8,11 @@ const CenterLocationComponent = () => {
   const { flyTo, setCenterCoordinate } = useMap();
 
   const handlePress = async () => {
-    try {
-      const coordinates = await CoordinateService.getCurrentCoordinates();
-      const mapboxCoordinates: [number, number] = [coordinates[1], coordinates[0]];
+    const coordinates = await CoordinateService.getCurrentCoordinates();
+    const mapboxCoordinates: [number, number] = [coordinates[1], coordinates[0]];
 
-      setCenterCoordinate(mapboxCoordinates);
-      flyTo(mapboxCoordinates);
-    } catch (error) {
-      Alert.alert('Location Error', 'Cannot fetch location');
-    }
+    setCenterCoordinate(mapboxCoordinates);
+    flyTo(mapboxCoordinates);
   };
 
   return (
