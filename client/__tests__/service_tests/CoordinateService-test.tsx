@@ -35,7 +35,7 @@ describe('CoordinateService', () => {
 
     const coordinates = await CoordinateService.getCurrentCoordinates();
 
-    expect(coordinates).toEqual([37.7749, -122.4194]);
+    expect(coordinates).toEqual([-122.4194, 37.7749]);
     expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).toHaveBeenCalledWith({});
