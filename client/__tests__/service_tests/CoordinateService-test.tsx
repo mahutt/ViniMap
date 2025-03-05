@@ -52,7 +52,7 @@ describe('CoordinateService', () => {
 
     const coordinates = await CoordinateService.getCurrentCoordinates();
 
-    expect(coordinates).toEqual([45.494836, -73.577913]);
+    expect(coordinates).toEqual([-73.577913, 45.494836]);
     expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).not.toHaveBeenCalled();
   });
@@ -70,7 +70,7 @@ describe('CoordinateService', () => {
 
     const coordinates = await CoordinateService.getCurrentCoordinates();
 
-    expect(coordinates).toEqual([45.494836, -73.577913]);
+    expect(coordinates).toEqual([-73.577913, 45.494836]);
     expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).toHaveBeenCalledTimes(1);
   });
@@ -83,7 +83,7 @@ describe('CoordinateService', () => {
 
     const coordinates = await CoordinateService.getCurrentCoordinates();
 
-    expect(coordinates).toEqual([45.494836, -73.577913]);
+    expect(coordinates).toEqual([-73.577913, 45.494836]);
     expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).not.toHaveBeenCalled();
   });

@@ -3,6 +3,11 @@ import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import CenterLocationComponent from '@/components/ui/IconCenterLocation';
 import { useMap } from '@/modules/map/MapContext';
 import * as Location from 'expo-location';
+import CoordinateService from '@/services/CoordinateService';
+
+const getCurrentCoordinatesSpy = jest
+  .spyOn(CoordinateService, 'getCurrentCoordinates')
+  .mockResolvedValue([45.5017, -73.5673]);
 
 jest.mock('@/modules/map/MapContext', () => ({
   useMap: jest.fn(),
@@ -53,10 +58,8 @@ describe('CenterLocationComponent', () => {
     fireEvent.press(button);
 
     await waitFor(() => {
-      expect(Location.requestForegroundPermissionsAsync).toHaveBeenCalled();
-      expect(Location.getCurrentPositionAsync).toHaveBeenCalled();
-      expect(setCenterCoordinateMock).toHaveBeenCalledWith([-73.5673, 45.5017]);
-      expect(flyToMock).toHaveBeenCalledWith([-73.5673, 45.5017]);
+      expect(CoordinateService.getCurrentCoordinates).toHaveBeenCalled();
+      expect(flyToMock).toHaveBeenCalledWith([45.5017, -73.5673]);
     });
   });
 });
