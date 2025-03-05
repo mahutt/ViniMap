@@ -23,6 +23,7 @@ export default function FloorControl() {
   return (
     <View style={styles.controlContainer}>
       <TouchableOpacity
+        accessibilityRole="button"
         disabled={atMaxLevel}
         style={{ ...styles.button, paddingTop: 10, opacity: atMaxLevel ? 0.3 : 1 }}
         onPress={() => handleLevelChange(level + 1)}>
@@ -32,6 +33,7 @@ export default function FloorControl() {
         <Text style={styles.levelText}>{level}</Text>
       </View>
       <TouchableOpacity
+        accessibilityRole="button"
         disabled={atMinLevel}
         style={{ ...styles.button, paddingBottom: 10, opacity: atMinLevel ? 0.3 : 1 }}
         onPress={() => handleLevelChange(level - 1)}>
