@@ -19,6 +19,7 @@ import FloorControl from '@/components/FloorControl';
 
 export default function HomeScreen() {
   const { state } = useMap();
+
   return (
     <View style={styles.container}>
       <MapView />

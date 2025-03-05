@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useRef, useState, useMemo, useCallback } from 'react';
 import Mapbox from '@rnmapbox/maps';
 import { getRoute } from './MapService';
-import { Coordinates, Level } from './Types';
+import { Coordinates, Route, Level } from './Types';
 import { IndoorMap, indoorMaps } from './IndoorMap';
 import type { BBox } from 'geojson';
 import { bboxCenter, overlap } from './Utils';
@@ -36,7 +36,7 @@ type MapContextType = {
   state: MapState;
   startLocation: Location | null;
   endLocation: Location | null;
-  routeCoordinates: Coordinates[];
+  route: Route | null;
   setCenterCoordinate: (centerCoordinate: [number, number]) => void;
   setZoomLevel: (zoomLevel: number) => void;
   setLevel: (level: Level | null) => void;
@@ -67,7 +67,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);
-  const [routeCoordinates, setRouteCoordinates] = useState<Coordinates[]>([]);
+  const [route, setRoute] = useState<Route | null>(null);
 
   const [indoorMap, setIndoorMap] = useState<IndoorMap | null>(null);
   const mapLoadedPromise = useRef<Promise<void>>(Promise.resolve());
@@ -154,13 +154,14 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       if (!startCoordinates || !endCoordinates) {
         return;
       }
+
       return getRoute(startCoordinates, endCoordinates, mode)
-        .then((data) => {
-          if (data?.coordinates) {
-            if (data.coordinates.length > 0) {
-              flyTo(data.coordinates[0], zoomLevel);
+        .then((route) => {
+          if (route) {
+            if (route.segments.length > 0) {
+              flyTo(route.segments[0].steps[0], zoomLevel);
             }
-            setRouteCoordinates(data.coordinates);
+            setRoute(route);
           }
         })
         .catch((error) => {
@@ -182,7 +183,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       state,
       startLocation,
       endLocation,
-      routeCoordinates,
+      route,
       setCenterCoordinate,
       setZoomLevel,
       setLevel,
@@ -201,7 +202,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       state,
       startLocation,
       endLocation,
-      routeCoordinates,
+      route,
       flyTo,
       pitchLevel,
       loadRouteFromCoordinates,
