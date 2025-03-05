@@ -22,7 +22,6 @@ export default class CoordinateService {
       ])) as Location.LocationObject;
 
       const { latitude, longitude } = currentLocation.coords;
-      console.log('Current location:', latitude, longitude);
       return [longitude, latitude];
     } catch {
       return [-73.577913, 45.494836];

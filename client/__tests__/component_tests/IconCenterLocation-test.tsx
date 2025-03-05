@@ -5,9 +5,7 @@ import { useMap } from '@/modules/map/MapContext';
 import * as Location from 'expo-location';
 import CoordinateService from '@/services/CoordinateService';
 
-const getCurrentCoordinatesSpy = jest
-  .spyOn(CoordinateService, 'getCurrentCoordinates')
-  .mockResolvedValue([45.5017, -73.5673]);
+jest.spyOn(CoordinateService, 'getCurrentCoordinates').mockResolvedValue([45.5017, -73.5673]);
 
 jest.mock('@/modules/map/MapContext', () => ({
   useMap: jest.fn(),
