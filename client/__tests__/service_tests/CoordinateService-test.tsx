@@ -1,30 +1,20 @@
 import CoordinateService from '@/services/CoordinateService';
 import * as Location from 'expo-location';
 
-jest.useFakeTimers();
-
 // Mock the entire expo-location module
 jest.mock('expo-location');
 
 const mockedLocation = Location as jest.Mocked<typeof Location>;
 
-afterEach(() => {
-  jest.clearAllTimers();
-});
-
 describe('CoordinateService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    console.error = jest.fn();
-    jest.clearAllMocks();
-    console.error = jest.fn();
-    jest.clearAllTimers();
   });
 
   it('should return coordinates when permissions are granted', async () => {
     // Mock the required Location methods with successful responses
     mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
-      status: Location.PermissionStatus.GRANTED,
+      status: 'granted' as Location.PermissionStatus,
       granted: true,
       expires: 'never',
       canAskAgain: true,
@@ -51,10 +41,10 @@ describe('CoordinateService', () => {
     expect(mockedLocation.getCurrentPositionAsync).toHaveBeenCalledWith({});
   });
 
-  it('should return null when permissions are denied', async () => {
+  it('should return fallback coordinates when permissions are denied', async () => {
     // Mock permissions being denied
     mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
-      status: Location.PermissionStatus.DENIED,
+      status: 'denied' as Location.PermissionStatus,
       granted: false,
       expires: 'never',
       canAskAgain: true,
@@ -62,32 +52,30 @@ describe('CoordinateService', () => {
 
     const coordinates = await CoordinateService.getCurrentCoordinates();
 
-    expect(coordinates).toBeNull();
+    expect(coordinates).toEqual([-73.577913, 45.494836]);
     expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).not.toHaveBeenCalled();
   });
 
-  it('should return null when Location.getCurrentPositionAsync throws an error', async () => {
+  it('should return fallback coordinates when Location.getCurrentPositionAsync throws an error', async () => {
     // Mock permissions granted but getCurrentPositionAsync throws
     mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
-      status: Location.PermissionStatus.GRANTED,
+      status: 'granted' as Location.PermissionStatus,
       granted: true,
       expires: 'never',
       canAskAgain: true,
     });
 
-    mockedLocation.getCurrentPositionAsync.mockImplementation(() => {
-      throw new Error('Location error');
-    });
+    mockedLocation.getCurrentPositionAsync.mockRejectedValue(new Error('Location error'));
 
     const coordinates = await CoordinateService.getCurrentCoordinates();
 
-    expect(coordinates).toEqual([45.496067, -73.569315]);
+    expect(coordinates).toEqual([-73.577913, 45.494836]);
     expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).toHaveBeenCalledTimes(1);
   });
 
-  it('should return null when Location.requestForegroundPermissionsAsync throws an error', async () => {
+  it('should return fallback coordinates when Location.requestForegroundPermissionsAsync throws an error', async () => {
     // Mock requestForegroundPermissionsAsync throwing an error
     mockedLocation.requestForegroundPermissionsAsync.mockRejectedValue(
       new Error('Permission error')
@@ -95,7 +83,7 @@ describe('CoordinateService', () => {
 
     const coordinates = await CoordinateService.getCurrentCoordinates();
 
-    expect(coordinates).toEqual([45.496067, -73.569315]);
+    expect(coordinates).toEqual([-73.577913, 45.494836]);
     expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).not.toHaveBeenCalled();
   });
