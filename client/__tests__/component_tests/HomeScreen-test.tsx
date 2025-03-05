@@ -52,6 +52,7 @@ describe('HomeScreen', () => {
   it('renders MapView in all states', () => {
     (useMap as jest.Mock).mockReturnValue({
       state: MapState.Idle,
+      level: null,
     });
 
     const { getByText } = render(<HomeScreen />);
@@ -61,6 +62,7 @@ describe('HomeScreen', () => {
   it('renders SearchBar, PitchButton, and ToggleCampusButton in Idle state', () => {
     (useMap as jest.Mock).mockReturnValue({
       state: MapState.Idle,
+      level: null,
     });
 
     const { getByText } = render(<HomeScreen />);
@@ -72,6 +74,7 @@ describe('HomeScreen', () => {
   it('renders CenterLocationComponent in Idle state', () => {
     (useMap as jest.Mock).mockReturnValue({
       state: MapState.Idle,
+      level: null,
     });
 
     const { getByText } = render(<HomeScreen />);
@@ -81,6 +84,7 @@ describe('HomeScreen', () => {
   it('renders SearchBar, PitchButton, ToggleCampusButton, and LocationInfo in Information state', () => {
     (useMap as jest.Mock).mockReturnValue({
       state: MapState.Information,
+      level: null,
     });
 
     const { getByText, queryByText } = render(<HomeScreen />);
@@ -94,6 +98,7 @@ describe('HomeScreen', () => {
   it('renders RoutePlanner in RoutePlanning state', () => {
     (useMap as jest.Mock).mockReturnValue({
       state: MapState.RoutePlanning,
+      level: null,
     });
 
     const { getByText, queryByText } = render(<HomeScreen />);
@@ -107,6 +112,7 @@ describe('HomeScreen', () => {
   it('renders MapHint in all states', () => {
     (useMap as jest.Mock).mockReturnValue({
       state: MapState.Idle,
+      level: null,
     });
 
     const { getByText, rerender } = render(<HomeScreen />);
@@ -114,12 +120,14 @@ describe('HomeScreen', () => {
 
     (useMap as jest.Mock).mockReturnValue({
       state: MapState.Information,
+      level: null,
     });
     rerender(<HomeScreen />);
     expect(getByText('MapHint')).toBeTruthy();
 
     (useMap as jest.Mock).mockReturnValue({
       state: MapState.RoutePlanning,
+      level: null,
     });
     rerender(<HomeScreen />);
     expect(getByText('MapHint')).toBeTruthy();

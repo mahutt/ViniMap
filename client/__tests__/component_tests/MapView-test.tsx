@@ -133,6 +133,7 @@ describe('MapView', () => {
       zoomLevel: 12,
       pitchLevel: 0,
       route: mockRoute,
+      indoorMap: null,
     });
 
     (fetchLocationData as jest.Mock).mockResolvedValue({
@@ -186,6 +187,7 @@ describe('MapView', () => {
       zoomLevel: 12,
       pitchLevel: 0,
       route: null,
+      indoorMap: null,
     });
 
     render(<MapView />);
@@ -224,6 +226,7 @@ describe('MapView', () => {
       zoomLevel: 12,
       pitchLevel: 0,
       route: null,
+      indoorMap: null,
     });
 
     render(<MapView />);
@@ -309,6 +312,7 @@ describe('MapView', () => {
       zoomLevel: 12,
       pitchLevel: 0,
       route: null,
+      indoorMap: null,
     });
 
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});

@@ -5,12 +5,12 @@
 import bbox from '@turf/bbox';
 
 import type { BBox, Feature } from 'geojson';
-import type { LevelsRange, IndoorMapGeoJSON } from './Types';
+import type { LevelsRange, IndoorMapGeoJSON } from '@/modules/map/Types';
 
 /**
  * Helper for Geojson data
  */
-class GeoJsonHelper {
+class GeojsonService {
   /**
    * Extract level from feature
    *
@@ -84,4 +84,4 @@ class GeoJsonHelper {
     };
   }
 }
-export default GeoJsonHelper;
+export default GeojsonService;
