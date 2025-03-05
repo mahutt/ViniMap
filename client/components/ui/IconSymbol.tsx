@@ -9,9 +9,8 @@ const MAPPING = {
   'map.fill': 'map',
   calendar: 'calendar-today',
   gear: 'settings',
-  "chevron.up":"keyboard-arrow-up",
-  "chevron.down":"keyboard-arrow-down",
-
+  'chevron.up': 'keyboard-arrow-up',
+  'chevron.down': 'keyboard-arrow-down',
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],
