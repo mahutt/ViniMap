@@ -1,6 +1,7 @@
 import type { BBox } from 'geojson';
 import { IndoorMapGeoJSON, LevelsRange } from './Types';
 import gareGeoJSON from '@/assets/geojson/gare.json';
+import hallFoorsGeoJson from '@/assets/geojson/hallFloors.json'
 import GeoJsonHelper from './GeojsonHelper';
 
 export interface IndoorMap {
@@ -13,13 +14,15 @@ export interface IndoorMap {
 // Instantiating globally accessible indoor maps:
 
 const { bounds, levelsRange } = GeoJsonHelper.extractLevelsRangeAndBounds(
-  gareGeoJSON as IndoorMapGeoJSON
+  // gareGeoJSON as IndoorMapGeoJSON
+  hallFoorsGeoJson as IndoorMapGeoJSON  
+
 );
-const gareIndoorMap: IndoorMap = {
-  id: 'gare',
+const hallIndoorMap: IndoorMap = {
+  id: 'hall',
   bounds: bounds,
-  geojson: gareGeoJSON as IndoorMapGeoJSON,
+  geojson: hallFoorsGeoJson  as IndoorMapGeoJSON,
   levelsRange: levelsRange,
 };
 
-export const indoorMaps: IndoorMap[] = [gareIndoorMap];
+export const indoorMaps: IndoorMap[] = [hallIndoorMap];
