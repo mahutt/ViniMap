@@ -1,6 +1,6 @@
 /*
 Internal representation of a pair of coordinates.
-Coordinates: [latitude, longitude]
+Coordinates: [longitude, latitude]
 */
 export type Coordinates = [number, number];
 

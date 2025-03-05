@@ -5,14 +5,11 @@ import { useMap } from '@/modules/map/MapContext';
 import CoordinateService from '@/services/CoordinateService';
 
 const CenterLocationComponent = () => {
-  const { flyTo, setCenterCoordinate } = useMap();
+  const { flyTo } = useMap();
 
   const handlePress = async () => {
     const coordinates = await CoordinateService.getCurrentCoordinates();
-    const mapboxCoordinates: [number, number] = [coordinates[0], coordinates[1]];
-
-    setCenterCoordinate(mapboxCoordinates);
-    flyTo(mapboxCoordinates);
+    flyTo(coordinates);
   };
 
   return (

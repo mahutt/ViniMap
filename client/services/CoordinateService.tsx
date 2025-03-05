@@ -8,7 +8,7 @@ export default class CoordinateService {
       const { status } = await Location.requestForegroundPermissionsAsync();
 
       if (status !== 'granted') {
-        return [45.494836, -73.577913];
+        return [-73.577913, 45.494836];
       }
 
       const locationPromise = Location.getCurrentPositionAsync({});
@@ -22,9 +22,10 @@ export default class CoordinateService {
       ])) as Location.LocationObject;
 
       const { latitude, longitude } = currentLocation.coords;
+      console.log('Current location:', latitude, longitude);
       return [longitude, latitude];
     } catch {
-      return [45.494836, -73.577913];
+      return [-73.577913, 45.494836];
     }
   }
 }
