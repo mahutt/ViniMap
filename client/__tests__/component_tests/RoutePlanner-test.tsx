@@ -3,7 +3,6 @@ import { render, act } from '@testing-library/react-native';
 import RoutePlanner from '@/components/RoutePlanner';
 import { MapState } from '@/modules/map/MapContext';
 import { getRoute } from '@/modules/map/MapService';
-import { getCurrentLocationAsStart } from '@/modules/map/LocationHelper';
 
 // Mock the MapContext module
 jest.mock('@/modules/map/MapContext', () => ({
@@ -18,10 +17,6 @@ jest.mock('@/modules/map/MapContext', () => ({
 // Mock the required modules
 jest.mock('@/modules/map/MapService', () => ({
   getRoute: jest.fn(),
-}));
-
-jest.mock('@/modules/map/LocationHelper', () => ({
-  getCurrentLocationAsStart: jest.fn(),
 }));
 
 jest.mock('@expo/vector-icons', () => ({
@@ -44,6 +39,11 @@ describe('RoutePlanner', () => {
     name: 'Paris',
   };
 
+  const mockUserLocation = {
+    coordinates: [51.5074, -0.1278],
+    name: 'Current Location',
+  };
+
   const mockLoadRouteFromCoordinates = jest.fn();
   const mockSetStartLocation = jest.fn();
 
@@ -55,6 +55,7 @@ describe('RoutePlanner', () => {
       state: MapState.RoutePlanning,
       startLocation: mockStartLocation,
       endLocation: mockEndLocation,
+      userLocation: mockUserLocation,
       setStartLocation: mockSetStartLocation,
       loadRouteFromCoordinates: mockLoadRouteFromCoordinates,
     });
@@ -87,11 +88,6 @@ describe('RoutePlanner', () => {
         distance,
       });
     });
-
-    (getCurrentLocationAsStart as jest.Mock).mockImplementation((callback) => {
-      callback(mockStartLocation);
-      return Promise.resolve();
-    });
   });
 
   it('renders correctly in route planning mode', async () => {
@@ -110,12 +106,13 @@ describe('RoutePlanner', () => {
     );
   });
 
-  it('fetches current location when start location is not provided', async () => {
+  it('uses userLocation when start location is not provided', async () => {
     const { useMap } = require('@/modules/map/MapContext');
     useMap.mockReturnValueOnce({
       state: MapState.RoutePlanning,
       startLocation: null,
       endLocation: mockEndLocation,
+      userLocation: mockUserLocation,
       setStartLocation: mockSetStartLocation,
       loadRouteFromCoordinates: mockLoadRouteFromCoordinates,
     });
@@ -126,7 +123,7 @@ describe('RoutePlanner', () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
-    expect(getCurrentLocationAsStart).toHaveBeenCalledWith(mockSetStartLocation);
+    expect(mockSetStartLocation).toHaveBeenCalledWith(mockUserLocation);
   });
 
   it('calculates routes for different transport modes', async () => {

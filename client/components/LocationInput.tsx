@@ -3,7 +3,6 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import LocationsAutocomplete from './LocationsAutocomplete';
-import CoordinateService from '@/services/CoordinateService';
 
 const CURRENT_LOCATION_NAME = 'Current location';
 
@@ -23,7 +22,7 @@ export default function LocationInput({
   const inputRef = React.useRef<TextInput>(null);
   const [query, setQuery] = React.useState<string>('');
   const [isFocused, setIsFocused] = React.useState(false);
-  const { setState } = useMap();
+  const { setState, userLocation } = useMap();
 
   useEffect(() => {
     if (location) {
@@ -44,18 +43,12 @@ export default function LocationInput({
 
   const handleCurrentLocation = async () => {
     if (isStartLocation) {
-      try {
-        const tempCoordinates = await CoordinateService.getCurrentCoordinates();
-        if (tempCoordinates) {
-          setLocation({
-            name: CURRENT_LOCATION_NAME,
-            coordinates: tempCoordinates,
-          });
-          inputRef.current?.blur();
-        }
-      } catch (error) {
-        console.error('Error getting current location:', error);
+      if (!userLocation) {
+        console.error('User location not available');
+        return;
       }
+      setLocation(userLocation);
+      inputRef.current?.blur();
     }
   };
 
