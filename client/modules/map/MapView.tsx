@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import React, { useCallback } from 'react';
-import { MapState, useMap } from './MapContext';
+import { Location, MapState, useMap } from './MapContext';
 import { fetchLocationData } from './MapService';
 
 import layers from '@/modules/map/style/DefaultLayers';
@@ -10,12 +10,20 @@ import { filterWithLevel } from '@/modules/map/Utils';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
+const equalLocations = (a: Location | null, b: Location | null): boolean => {
+  if (!a || !b) {
+    return false;
+  }
+  return a.coordinates[0] === b.coordinates[0] && a.coordinates[1] === b.coordinates[1];
+};
+
 export default function MapView() {
   const {
     state,
     setState,
     startLocation,
     endLocation,
+    userLocation,
     setStartLocation,
     setEndLocation,
     mapRef,
@@ -128,21 +136,33 @@ export default function MapView() {
         pitch={pitchLevel}
       />
 
-      {endLocation?.coordinates && (
+      {endLocation && !equalLocations(endLocation, userLocation) && (
         <Mapbox.PointAnnotation
           key="selected-location"
           id="selected-location"
-          coordinate={[endLocation?.coordinates[0], endLocation?.coordinates[1]]}>
+          coordinate={endLocation.coordinates}>
           <View style={[styles.marker, styles.endMarker]} />
           <Mapbox.Callout title="Selected Location" />
         </Mapbox.PointAnnotation>
       )}
 
+      {userLocation?.coordinates && (
+        <Mapbox.PointAnnotation
+          key="user-location"
+          id="user-location"
+          coordinate={userLocation.coordinates}>
+          <View style={[styles.marker, styles.userLocationMarker]} />
+          <Mapbox.Callout title="Current Location" />
+        </Mapbox.PointAnnotation>
+      )}
+
       {state === MapState.RoutePlanning && startLocation !== null && endLocation !== null && (
         <>
-          <Mapbox.MarkerView id="start" coordinate={startLocation.coordinates}>
-            <View style={[styles.marker, styles.startMarker]} />
-          </Mapbox.MarkerView>
+          {!equalLocations(startLocation, userLocation) && (
+            <Mapbox.MarkerView id="start" coordinate={startLocation.coordinates}>
+              <View style={[styles.marker, styles.startMarker]} />
+            </Mapbox.MarkerView>
+          )}
 
           {route?.segments.map((segment) => (
             <Mapbox.ShapeSource
@@ -253,5 +273,8 @@ const styles = StyleSheet.create({
   },
   endMarker: {
     backgroundColor: '#852C3A',
+  },
+  userLocationMarker: {
+    backgroundColor: '#007AFF',
   },
 });

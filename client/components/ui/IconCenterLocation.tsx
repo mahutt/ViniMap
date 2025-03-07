@@ -1,16 +1,18 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { TouchableOpacity, View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useMap } from '@/modules/map/MapContext';
-import CoordinateService from '@/services/CoordinateService';
 
 const CenterLocationComponent = () => {
-  const { flyTo } = useMap();
+  const { flyTo, userLocation } = useMap();
 
-  const handlePress = async () => {
-    const coordinates = await CoordinateService.getCurrentCoordinates();
-    flyTo(coordinates);
-  };
+  const handlePress = useCallback(() => {
+    if (userLocation) {
+      flyTo(userLocation.coordinates);
+    } else {
+      console.error('User location not available');
+    }
+  }, [userLocation, flyTo]);
 
   return (
     <View style={styles.container}>

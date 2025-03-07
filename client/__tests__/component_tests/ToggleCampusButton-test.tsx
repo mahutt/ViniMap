@@ -6,16 +6,14 @@ import React from 'react';
 const mockFlyTo = jest.fn();
 
 jest.mock('@/modules/map/MapContext', () => {
-  const actual = jest.requireActual('@/modules/map/MapContext');
-
-  const mockUseMap = () => ({
-    flyTo: mockFlyTo,
-  });
+  const originalModule = jest.requireActual('@/modules/map/MapContext');
 
   return {
-    ...actual,
-    MapProvider: actual.MapProvider,
-    useMap: mockUseMap,
+    ...originalModule,
+    useMap: () => ({
+      flyTo: mockFlyTo,
+    }),
+    MapProvider: ({ children }: { children: React.ReactNode }) => <>{children}</>,
   };
 });
 
