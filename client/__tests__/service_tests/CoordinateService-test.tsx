@@ -97,24 +97,8 @@ describe('CoordinateService', () => {
       canAskAgain: true,
     });
 
-    mockedLocation.getCurrentPositionAsync.mockImplementation(() => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve({
-            coords: {
-              latitude: 37.7749,
-              longitude: -122.4194,
-              altitude: null,
-              accuracy: null,
-              altitudeAccuracy: null,
-              heading: null,
-              speed: null,
-            },
-            timestamp: Date.now(),
-          });
-        }, 4000);
-      });
-    });
+    mockedLocation.getCurrentPositionAsync.mockImplementation();
+
     const coordinates = await CoordinateService.getCurrentCoordinates();
 
     expect(coordinates).toEqual([-73.577913, 45.494836]);

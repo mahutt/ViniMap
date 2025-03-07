@@ -18,7 +18,7 @@ const TestComponent: React.FC<{ onMapContext?: (ctx: ReturnType<typeof useMap>) 
   const mapContext = useMap();
   useEffect(() => {
     onMapContext?.(mapContext);
-  }, [mapContext]);
+  }, [mapContext, onMapContext]);
   return null;
 };
 
