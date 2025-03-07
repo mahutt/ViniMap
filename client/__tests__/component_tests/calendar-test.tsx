@@ -3,11 +3,33 @@ import Schedule from '@/app/(tabs)/calendar';
 import { storage } from '@/services/StorageService';
 import { MMKV } from 'react-native-mmkv';
 import { MapProvider } from '@/modules/map/MapContext';
+import { MapState } from '@/modules/map/MapContext';
+import { getBuildingCoordinates } from '@/services/BuildingService';
+import { extractScheduleData, fetchCalendarEvents } from '@/services/GoogleScheduleService';
 
 // Mock the date to a specific value
 const mockDate = new Date(2025, 1, 22);
 jest.useFakeTimers();
 jest.setSystemTime(mockDate);
+
+jest.mock('@/services/CoordinateService', () => ({
+  getCurrentCoordinates: jest.fn().mockResolvedValue({ latitude: 37.7749, longitude: -122.4194 }),
+}));
+
+const mockPush = jest.fn();
+jest.mock('expo-router', () => ({
+  useRouter: () => ({
+    push: mockPush,
+  }),
+}));
+
+jest.mock('@/modules/map/MapContext', () => ({
+  MapProvider: ({ children }: { children: React.ReactNode }) => children,
+  useMap: jest.fn().mockReturnValue({
+    userLocation: { latitude: 37.7749, longitude: -122.4194 },
+    setUserLocation: jest.fn(),
+  }),
+}));
 
 jest.mock('react-native-mmkv', () => ({
   MMKV: jest.fn().mockImplementation(() => ({
