@@ -9,6 +9,7 @@ const mockedLocation = Location as jest.Mocked<typeof Location>;
 describe('CoordinateService', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.useRealTimers();
   });
 
   it('should return coordinates when permissions are granted', async () => {
@@ -86,5 +87,22 @@ describe('CoordinateService', () => {
     expect(coordinates).toEqual([-73.577913, 45.494836]);
     expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).not.toHaveBeenCalled();
+  });
+
+  it('should handle timeout for location retrieval', async () => {
+    mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
+      status: 'granted' as Location.PermissionStatus,
+      granted: true,
+      expires: 'never',
+      canAskAgain: true,
+    });
+
+    mockedLocation.getCurrentPositionAsync.mockImplementation();
+
+    const coordinates = await CoordinateService.getCurrentCoordinates();
+
+    expect(coordinates).toEqual([-73.577913, 45.494836]);
+    expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
+    expect(mockedLocation.getCurrentPositionAsync).toHaveBeenCalledTimes(1);
   });
 });
