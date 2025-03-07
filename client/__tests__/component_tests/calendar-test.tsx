@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react-native';
+import { render, fireEvent } from '@testing-library/react-native';
 import Schedule from '@/app/(tabs)/calendar';
 import { storage } from '@/services/StorageService';
 import { MMKV } from 'react-native-mmkv';
@@ -20,12 +20,17 @@ jest.mock('expo-router', () => ({
   }),
 }));
 
+const mockSetEndLocation = jest.fn();
+const mockSetState = jest.fn();
 jest.mock('@/modules/map/MapContext', () => ({
   MapProvider: ({ children }: { children: React.ReactNode }) => children,
   useMap: jest.fn().mockReturnValue({
     userLocation: { latitude: 37.7749, longitude: -122.4194 },
     setUserLocation: jest.fn(),
+    setEndLocation: mockSetEndLocation,
+    setState: mockSetState,
   }),
+  MapState: { Information: 'Information' },
 }));
 
 jest.mock('react-native-mmkv', () => ({
@@ -48,6 +53,13 @@ jest.mock('@/services/GoogleScheduleService', () => ({
   extractScheduleData: jest.fn(),
   fetchCalendarEvents: jest.fn(),
 }));
+
+const mockExtractScheduleData = jest.mocked(
+  require('@/services/GoogleScheduleService').extractScheduleData
+);
+const mockFetchCalendarEvents = jest.mocked(
+  require('@/services/GoogleScheduleService').fetchCalendarEvents
+);
 
 // Sample calendar data
 const mockCalendarData = {
@@ -78,6 +90,8 @@ describe('<Schedule />', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockedStorage.getString.mockReturnValue(JSON.stringify(mockCalendarData));
+    mockExtractScheduleData.mockReturnValue(mockCalendarData);
+    mockFetchCalendarEvents.mockResolvedValue({});
   });
 
   test('renders correctly with mocked calendar data', () => {
@@ -99,6 +113,8 @@ describe('<Schedule />', () => {
     expect(mockedStorage.getString).toHaveBeenCalledWith('calendarData');
     expect(getByText('Mathematics 101')).toBeTruthy();
     expect(getByText('Physics Lab')).toBeTruthy();
+    expect(getByText('Room 201 - 09:00 AM - 10:30 AM')).toBeTruthy();
+    expect(getByText('Science Building - 11:00 AM - 12:30 PM')).toBeTruthy();
   });
 
   test('handles empty calendar data gracefully', () => {
@@ -124,7 +140,54 @@ describe('<Schedule />', () => {
     );
     expect(getByText('No classes scheduled')).toBeTruthy();
 
-    // Verify that storage.delete was called to clean up invalid data
     expect(mockedStorage.delete).toHaveBeenCalledWith('calendarData');
+  });
+
+  test('saves calendar data to storage when available', () => {
+    render(
+      <MapProvider>
+        <Schedule />
+      </MapProvider>
+    );
+
+    expect(mockedStorage.set).toHaveBeenCalledWith(
+      'calendarData',
+      JSON.stringify(mockCalendarData)
+    );
+  });
+
+  test('properly formats and displays the current date', () => {
+    const { getByText } = render(
+      <MapProvider>
+        <Schedule />
+      </MapProvider>
+    );
+
+    const dateString = mockDate.toLocaleDateString('en-US', { dateStyle: 'full' });
+    expect(getByText(dateString)).toBeTruthy();
+  });
+
+  test('handles upload button press', () => {
+    const { getByText } = render(
+      <MapProvider>
+        <Schedule />
+      </MapProvider>
+    );
+
+    fireEvent.press(getByText('Upload'));
+
+    expect(getByText('Your Schedule')).toBeTruthy();
+  });
+
+  test('does not call storage.set when scheduleData is empty', () => {
+    mockedStorage.getString.mockReturnValue(undefined);
+
+    render(
+      <MapProvider>
+        <Schedule />
+      </MapProvider>
+    );
+
+    expect(mockedStorage.set).not.toHaveBeenCalled();
   });
 });
