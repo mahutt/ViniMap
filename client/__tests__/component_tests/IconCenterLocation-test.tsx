@@ -2,7 +2,6 @@ import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import CenterLocationComponent from '@/components/ui/IconCenterLocation';
 import { useMap } from '@/modules/map/MapContext';
-import CoordinateService from '@/services/CoordinateService';
 
 jest.mock('@/services/CoordinateService', () => ({
   getCurrentCoordinates: jest.fn().mockResolvedValue([45.5017, -73.5673]),

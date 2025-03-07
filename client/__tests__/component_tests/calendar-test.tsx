@@ -3,9 +3,6 @@ import Schedule from '@/app/(tabs)/calendar';
 import { storage } from '@/services/StorageService';
 import { MMKV } from 'react-native-mmkv';
 import { MapProvider } from '@/modules/map/MapContext';
-import { MapState } from '@/modules/map/MapContext';
-import { getBuildingCoordinates } from '@/services/BuildingService';
-import { extractScheduleData, fetchCalendarEvents } from '@/services/GoogleScheduleService';
 
 // Mock the date to a specific value
 const mockDate = new Date(2025, 1, 22);
