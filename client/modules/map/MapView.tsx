@@ -185,7 +185,7 @@ export default function MapView() {
                       fillColor: layer.paint['fill-color'] ?? undefined,
                       fillOutlineColor: layer.paint['fill-outline-color'] ?? undefined,
                       fillTranslateAnchor: layer.paint['fill-translate-anchor'] ?? undefined,
-                      fillOpacity: layer.paint['fill-opacity'] ?? undefined,
+                      fillOpacity: layer.paint['fill-opacity'] ?? undefined
                     }}
                     filter={layer.filter ? filterFN(layer.filter) : undefined}
                   />
