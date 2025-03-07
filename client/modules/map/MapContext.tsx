@@ -139,7 +139,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           console.error('Error setting route:', error);
         });
     },
-    [flyTo, zoomLevel]
+    []
   );
 
   const value = useMemo(

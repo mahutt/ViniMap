@@ -75,7 +75,7 @@ export function RoutePlanner() {
     if (state === MapState.RoutePlanning && !startLocation) {
       setStartLocation(userLocation);
     }
-  }, [state, startLocation, setStartLocation]);
+  }, [state, startLocation, setStartLocation, userLocation]);
 
   useEffect(() => {
     if (state === MapState.RoutePlanning) {
