@@ -185,7 +185,7 @@ export default function MapView() {
                       fillColor: layer.paint['fill-color'] ?? undefined,
                       fillOutlineColor: layer.paint['fill-outline-color'] ?? undefined,
                       fillTranslateAnchor: layer.paint['fill-translate-anchor'] ?? undefined,
-                      fillOpacity: layer.paint['fill-opacity'] ?? undefined
+                      fillOpacity: layer.paint['fill-opacity'] ?? undefined,
                     }}
                     filter={layer.filter ? filterFN(layer.filter) : undefined}
                   />
@@ -223,6 +223,11 @@ export default function MapView() {
                       textHaloWidth: layer.paint['text-halo-width'],
                       textOpacity: layer.paint['text-opacity'],
                       iconOpacity: layer.paint['icon-opacity'],
+                      textField: layer.paint['textField'],
+                      textSize: layer.paint['textSize'],
+                      textAnchor: layer.paint['textAnchor'],
+                      textAllowOverlap: layer.paint['textAllowOverlap'],
+                      textJustify: layer.paint['textJustify'],
                     }}
                     filter={layer.filter ? filterFN(layer.filter) : undefined}
                   />

@@ -1,4 +1,20 @@
 [
+
+  {
+
+    "id": "room-numbers",
+    "paint": {
+    "textField": ["coalesce", ["get", "ref"], ""],
+    "textSize": 8,
+    "textAnchor": "center",
+    "textAllowOverlap": true,
+    "textJustify": "center"
+    },
+    "filter": true,
+    "source": "indoor",
+    "type": "symbol"
+  },
+
   {
     "filter": ["any", ["has", "building"], ["has", "building:part"]],
     "id": "buildings-background",
