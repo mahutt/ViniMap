@@ -2,7 +2,6 @@ import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import LocationInput from '@/components/LocationInput';
 import { MapProvider, Location, MapState } from '@/modules/map/MapContext';
-import CoordinateService from '@/services/CoordinateService';
 
 const TEST_LOCATION = { name: 'Test Location', coordinates: [1, 2] as [number, number] };
 const CURRENT_LOCATION = { name: 'Current location', coordinates: [20, 10] as [number, number] };
@@ -12,20 +11,51 @@ jest.mock('@expo/vector-icons', () => ({
   Ionicons: 'Ionicons',
 }));
 
-// Make sure the mock function is properly set up for Jest
 jest.mock('@/services/CoordinateService', () => ({
-  getCurrentCoordinates: jest.fn().mockImplementation(() => Promise.resolve([20, 10])),
+  getCurrentCoordinates: jest.fn().mockResolvedValue([20, 10]),
+  watchPosition: jest.fn().mockReturnValue({ remove: jest.fn() }),
 }));
 
 // Mock the map context
 const mockSetState = jest.fn();
+const mockSetUserLocation = jest.fn();
+
+let mockUserLocation: { name: string; coordinates: [number, number] } | null = {
+  name: 'Current location',
+  coordinates: [20, 10] as [number, number],
+};
+
 jest.mock('@/modules/map/MapContext', () => {
-  const actual = jest.requireActual('@/modules/map/MapContext');
+  const React = require('react');
+  const MapContext = React.createContext(null);
+
+  const initialState = {
+    state: 0,
+    setState: mockSetState,
+    userLocation: {
+      name: 'Current location',
+      coordinates: [20, 10],
+    },
+    setUserLocation: mockSetUserLocation,
+  };
+
+  const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    return <MapContext.Provider value={initialState}>{children}</MapContext.Provider>;
+  };
+
+  const useMap = () => {
+    return initialState;
+  };
+
   return {
-    ...actual,
-    useMap: () => ({
-      setState: mockSetState,
-    }),
+    MapContext,
+    MapProvider,
+    useMap,
+    MapState: {
+      Default: 0,
+      SelectingStartLocation: 1,
+      SelectingEndLocation: 2,
+    },
   };
 });
 
@@ -67,6 +97,17 @@ describe('LocationInput', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    mockUserLocation = {
+      name: 'Current location',
+      coordinates: [20, 10] as [number, number],
+    };
+
+    jest.requireMock('@/modules/map/MapContext').useMap = () => ({
+      state: 0,
+      setState: mockSetState,
+      userLocation: mockUserLocation,
+      setUserLocation: mockSetUserLocation,
+    });
   });
 
   test('renders correctly with default props', () => {
@@ -171,11 +212,7 @@ describe('LocationInput', () => {
     expect(mockSetState).toHaveBeenCalledWith(MapState.SelectingEndLocation);
   });
 
-  test('calls getCurrentCoordinates when Use Current Location is pressed', async () => {
-    (CoordinateService.getCurrentCoordinates as jest.Mock).mockImplementation(() =>
-      Promise.resolve([20, 10] as [number, number])
-    );
-
+  test('uses userLocation when Use Current Location is pressed', async () => {
     const { getByPlaceholderText, getByText } = render(
       <MapProvider>
         <LocationInput {...defaultProps} isStartLocation={true} />
@@ -188,18 +225,15 @@ describe('LocationInput', () => {
     fireEvent.press(getByText('Use Current Location'));
 
     await waitFor(() => {
-      expect(CoordinateService.getCurrentCoordinates).toHaveBeenCalled();
-      expect(defaultProps.setLocation).toHaveBeenCalledWith({
-        name: 'Current location',
-        coordinates: [20, 10],
-      });
+      expect(defaultProps.setLocation).toHaveBeenCalledWith(mockUserLocation);
     });
   });
 
-  test('handles errors when getting current location', async () => {
-    (CoordinateService.getCurrentCoordinates as jest.Mock).mockImplementation(() =>
-      Promise.reject(new Error('Location error'))
-    );
+  test('logs error when user location is not available', async () => {
+    const originalUserLocation = mockUserLocation;
+    mockUserLocation = null;
+
+    jest.spyOn(console, 'error').mockImplementation();
 
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
@@ -211,13 +245,19 @@ describe('LocationInput', () => {
 
     const input = getByPlaceholderText('Test placeholder');
     fireEvent(input, 'focus');
-    fireEvent.press(getByText('Use Current Location'));
 
-    await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith('Error getting current location:', expect.any(Error));
-    });
+    if (getByText('Use Current Location')) {
+      fireEvent.press(getByText('Use Current Location'));
 
+      await waitFor(
+        () => {
+          expect(consoleSpy).toHaveBeenCalledWith('User location not available');
+        },
+        { timeout: 1000 }
+      );
+    }
     consoleSpy.mockRestore();
+    mockUserLocation = originalUserLocation;
   });
 
   test('updates input value when typing', () => {
