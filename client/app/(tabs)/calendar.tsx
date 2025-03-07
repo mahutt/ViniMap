@@ -38,7 +38,6 @@ export default function Calendar() {
     const calendarId = value.trim();
     if (calendarId === '') return;
     const calendarJson = await fetchCalendarEvents(calendarId);
-    console.log('Calendar Data:', calendarJson);
     const newScheduleData = extractScheduleData(calendarJson);
 
     const updatedScheduleData: Record<
@@ -78,7 +77,6 @@ export default function Calendar() {
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
     const buildingCoordinates: Coordinates = getBuildingCoordinates(classItem.location);
-    console.log(buildingCoordinates);
     const location: Location = {
       name: classItem.className,
       coordinates: buildingCoordinates,
