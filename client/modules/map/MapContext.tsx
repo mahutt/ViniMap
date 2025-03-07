@@ -123,8 +123,14 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return getRoute(startCoordinates, endCoordinates, mode)
         .then((route) => {
           if (route) {
-            if (route.segments.length > 0) {
-              flyTo(route.segments[0].steps[0], zoomLevel);
+            if (route.segments.length > 0 && cameraRef.current) {
+              const bounds = CoordinateService.calculateRouteCoordinateBounds(route);
+              cameraRef.current.fitBounds(
+                bounds.ne,
+                bounds.sw,
+                50, // padding
+                1500 // animation duration
+              );
             }
             setRoute(route);
           }

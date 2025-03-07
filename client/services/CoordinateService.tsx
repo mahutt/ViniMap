@@ -1,6 +1,5 @@
 import * as Location from 'expo-location';
-
-type Coordinates = [number, number];
+import { Coordinates, Route } from '@/modules/map/Types';
 
 export default class CoordinateService {
   static async getCurrentCoordinates(): Promise<Coordinates> {
@@ -26,5 +25,25 @@ export default class CoordinateService {
     } catch {
       return [-73.577913, 45.494836];
     }
+  }
+
+  static calculateRouteCoordinateBounds(route: Route): {
+    ne: number[];
+    sw: number[];
+  } {
+    const allCoordinates = route.segments.flatMap((segment) => segment.steps);
+    const bounds = allCoordinates.reduce(
+      (acc, coord) => {
+        return {
+          ne: [Math.max(acc.ne[0], coord[0]), Math.max(acc.ne[1], coord[1])],
+          sw: [Math.min(acc.sw[0], coord[0]), Math.min(acc.sw[1], coord[1])],
+        };
+      },
+      {
+        ne: [-180, -90],
+        sw: [180, 90],
+      }
+    );
+    return bounds;
   }
 }
