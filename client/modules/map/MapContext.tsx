@@ -1,7 +1,17 @@
-import React, { createContext, useContext, useRef, useState, useMemo, useCallback } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useRef,
+  useState,
+  useMemo,
+  useCallback,
+  useEffect,
+} from 'react';
 import Mapbox from '@rnmapbox/maps';
 import { getRoute } from './MapService';
 import { Coordinates, Route } from './Types';
+import { LocationSubscription, watchPositionAsync } from 'expo-location';
+import CoordinateService from '@/services/CoordinateService';
 
 export interface Location {
   name: string | null;
@@ -31,6 +41,7 @@ type MapContextType = {
   state: MapState;
   startLocation: Location | null;
   endLocation: Location | null;
+  userLocation: Location | null;
   route: Route | null;
   setCenterCoordinate: (centerCoordinate: [number, number]) => void;
   setZoomLevel: (zoomLevel: number) => void;
@@ -57,7 +68,31 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);
+  const [userLocation, setUserLocation] = useState<Location | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
+
+  useEffect(() => {
+    let subscription: LocationSubscription;
+    CoordinateService.getCurrentCoordinates().then((coords) => {
+      setUserLocation({
+        name: 'Current location',
+        coordinates: coords,
+      });
+    });
+    (async () => {
+      subscription = await watchPositionAsync(
+        { timeInterval: 5000, distanceInterval: 5 },
+        (location) =>
+          setUserLocation({
+            name: 'Current location',
+            coordinates: [location.coords.longitude, location.coords.latitude],
+          })
+      );
+    })();
+    return () => {
+      if (subscription) subscription.remove();
+    };
+  }, []);
 
   const flyTo = useMemo(
     () => (newCenterCoordinate: [number, number], newZoomLevel?: number) => {
@@ -112,6 +147,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       state,
       startLocation,
       endLocation,
+      userLocation,
       route,
       setCenterCoordinate,
       setZoomLevel,
@@ -127,6 +163,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       state,
       startLocation,
       endLocation,
+      userLocation,
       route,
       flyTo,
       pitchLevel,

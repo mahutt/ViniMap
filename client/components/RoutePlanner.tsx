@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute } from '@/modules/map/MapService';
-import { getCurrentLocationAsStart } from '@/modules/map/LocationHelper';
 import TransportModes from './ui/RoutePlanner Components/TransportModes';
 import BottomFrame from './ui/RoutePlanner Components/BottomFrame';
 import InputFields from './ui/RoutePlanner Components/InputFields';
@@ -33,8 +32,14 @@ export function RoutePlanner() {
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
 
-  const { loadRouteFromCoordinates, startLocation, setStartLocation, endLocation, state } =
-    useMap();
+  const {
+    loadRouteFromCoordinates,
+    startLocation,
+    setStartLocation,
+    endLocation,
+    userLocation,
+    state,
+  } = useMap();
 
   const calculateOptions = useCallback(async () => {
     if (!startLocation || !endLocation) return;
@@ -68,7 +73,7 @@ export function RoutePlanner() {
 
   useEffect(() => {
     if (state === MapState.RoutePlanning && !startLocation) {
-      getCurrentLocationAsStart(setStartLocation);
+      setStartLocation(userLocation);
     }
   }, [state, startLocation, setStartLocation]);
 
