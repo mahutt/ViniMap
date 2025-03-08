@@ -59,22 +59,32 @@ const getRoute = async (
   return null;
 };
 
-const fetchLocationData = async (coordinates: Coordinates) => {
+const fetchLocationData = async (coordinates: Coordinates): Promise<Location> => {
   const radius = 50;
   const apiUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${coordinates[1]},${coordinates[0]}&radius=${radius}&key=${GOOGLE_API_KEY}`;
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
 
-    if (data.results.length > 0) {
-      return {
-        address: data.results[0]?.name || 'Address not available',
-        name: data.results[1]?.name || 'Name not available',
-        isOpen: Boolean(data.results[1].opening_hours),
-      };
+    if (data.results.length === 0) {
+      throw new Error('No results found');
     }
+
+    return {
+      coordinates: coordinates,
+      name: data.results[1]?.name || 'Selected Location',
+      data: {
+        address: data.results[0]?.name || 'Address not available',
+        isOpen: Boolean(data.results[1].opening_hours),
+      },
+    };
   } catch (error) {
     console.error('Error fetching data:', error);
+    return {
+      name: 'Selected Location',
+      coordinates: coordinates,
+      data: { address: 'Location', isOpen: false },
+    };
   }
 };
 

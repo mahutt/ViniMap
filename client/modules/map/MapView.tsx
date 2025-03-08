@@ -19,6 +19,7 @@ const equalLocations = (a: Location | null, b: Location | null): boolean => {
 
 export default function MapView() {
   const {
+    flyTo,
     state,
     setState,
     startLocation,
@@ -50,7 +51,7 @@ export default function MapView() {
     [level]
   );
 
-  function onMapClick(event: any) {
+  async function onMapClick(event: any) {
     const { geometry } = event;
 
     if (!geometry?.coordinates) {
@@ -58,66 +59,28 @@ export default function MapView() {
     }
 
     const coordinates = geometry.coordinates;
+    const location = await fetchLocationData(coordinates);
 
-    fetchLocationData(coordinates)
-      .then((data) => {
-        switch (state) {
-          case MapState.SelectingStartLocation:
-            setStartLocation({
-              name: data?.name || null,
-              coordinates: coordinates,
-              data: data || undefined,
-            });
-            if (endLocation) {
-              setState(MapState.RoutePlanning);
-            }
-            break;
-
-          case MapState.SelectingEndLocation:
-            setEndLocation({
-              name: data?.name || 'Selected Location',
-              coordinates: coordinates,
-              data: data || { address: 'Location', isOpen: false },
-            });
-            setState(MapState.RoutePlanning);
-            break;
-
-          default:
-            setEndLocation({
-              name: data?.name || 'Selected Location',
-              coordinates: coordinates,
-              data: data || { address: 'Location', isOpen: false },
-            });
-            setState(MapState.Information);
-            break;
+    switch (state) {
+      case MapState.SelectingStartLocation:
+        setStartLocation(location);
+        if (endLocation) {
+          setState(MapState.RoutePlanning);
         }
-      })
-      .catch((error) => {
-        console.warn('Error fetching location data:', error);
+        break;
 
-        switch (state) {
-          case MapState.SelectingStartLocation:
-            setStartLocation({
-              name: null,
-              coordinates: coordinates,
-            });
-            break;
+      case MapState.SelectingEndLocation:
+        setEndLocation(location);
+        setState(MapState.RoutePlanning);
+        break;
 
-          case MapState.SelectingEndLocation:
-          default:
-            setEndLocation({
-              name: 'Selected Location',
-              coordinates: coordinates,
-              data: { address: 'Location', isOpen: false },
-            });
-            setState(MapState.Information);
-            break;
-        }
-      });
-
-    if (cameraRef.current) {
-      cameraRef.current.flyTo(coordinates, 17);
+      default:
+        setEndLocation(location);
+        setState(MapState.Information);
+        break;
     }
+
+    flyTo(coordinates);
   }
 
   return (
