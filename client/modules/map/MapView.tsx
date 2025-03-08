@@ -2,6 +2,10 @@ import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import { Location, MapState, useMap } from './MapContext';
 import { fetchLocationData } from './MapService';
+import PointsOfInterestService from '@/services/PointsOfInterestService';
+import { useState, useEffect } from 'react';
+import { PointOfInterest } from './PointsOfInterestTypes';
+import POIMarker from '@/components/POIMarker';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -29,6 +33,16 @@ export default function MapView() {
     route,
   } = useMap();
 
+  const [pointsOfInterest, setPointsOfInterest] = useState<PointOfInterest[]>([]);
+  const [showPOIs, setShowPOIs] = useState(false);
+
+  useEffect(() => {
+    const allPOIs = PointsOfInterestService.getAllPOIs();
+    setPointsOfInterest(allPOIs);
+
+    setShowPOIs(PointsOfInterestService.shouldShowPOIs(zoomLevel));
+  }, [zoomLevel]);
+
   function onMapClick(event: any) {
     const { geometry } = event;
 
@@ -37,65 +51,86 @@ export default function MapView() {
     }
 
     const coordinates = geometry.coordinates;
+    const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
 
-    fetchLocationData(coordinates)
-      .then((data) => {
-        switch (state) {
-          case MapState.SelectingStartLocation:
-            setStartLocation({
-              name: data?.name || null,
-              coordinates: coordinates,
-              data: data || undefined,
-            });
-            if (endLocation) {
+    if (clickedPOI) {
+      const poiLocation: Location = {
+        name: clickedPOI.name,
+        coordinates: clickedPOI.coordinates,
+        data: {
+          address: clickedPOI.address,
+          isOpen: clickedPOI.openingHours.isOpen,
+          hours: clickedPOI.openingHours.hours,
+          description: clickedPOI.description || '',
+        },
+      };
+
+      setEndLocation(poiLocation);
+      setState(MapState.Information);
+
+      if (cameraRef.current) {
+        cameraRef.current.flyTo(clickedPOI.coordinates, 17);
+      }
+    } else {
+      fetchLocationData(coordinates)
+        .then((data) => {
+          switch (state) {
+            case MapState.SelectingStartLocation:
+              setStartLocation({
+                name: data?.name || null,
+                coordinates: coordinates,
+                data: data || undefined,
+              });
+              if (endLocation) {
+                setState(MapState.RoutePlanning);
+              }
+              break;
+
+            case MapState.SelectingEndLocation:
+              setEndLocation({
+                name: data?.name || 'Selected Location',
+                coordinates: coordinates,
+                data: data || { address: 'Location', isOpen: false },
+              });
               setState(MapState.RoutePlanning);
-            }
-            break;
+              break;
 
-          case MapState.SelectingEndLocation:
-            setEndLocation({
-              name: data?.name || 'Selected Location',
-              coordinates: coordinates,
-              data: data || { address: 'Location', isOpen: false },
-            });
-            setState(MapState.RoutePlanning);
-            break;
+            default:
+              setEndLocation({
+                name: data?.name || 'Selected Location',
+                coordinates: coordinates,
+                data: data || { address: 'Location', isOpen: false },
+              });
+              setState(MapState.Information);
+              break;
+          }
+        })
+        .catch((error) => {
+          console.warn('Error fetching location data:', error);
 
-          default:
-            setEndLocation({
-              name: data?.name || 'Selected Location',
-              coordinates: coordinates,
-              data: data || { address: 'Location', isOpen: false },
-            });
-            setState(MapState.Information);
-            break;
-        }
-      })
-      .catch((error) => {
-        console.warn('Error fetching location data:', error);
+          switch (state) {
+            case MapState.SelectingStartLocation:
+              setStartLocation({
+                name: null,
+                coordinates: coordinates,
+              });
+              break;
 
-        switch (state) {
-          case MapState.SelectingStartLocation:
-            setStartLocation({
-              name: null,
-              coordinates: coordinates,
-            });
-            break;
+            case MapState.SelectingEndLocation:
+            default:
+              setEndLocation({
+                name: 'Selected Location',
+                coordinates: coordinates,
+                data: { address: 'Location', isOpen: false },
+              });
+              setState(MapState.Information);
+              break;
+          }
+        });
 
-          case MapState.SelectingEndLocation:
-          default:
-            setEndLocation({
-              name: 'Selected Location',
-              coordinates: coordinates,
-              data: { address: 'Location', isOpen: false },
-            });
-            setState(MapState.Information);
-            break;
-        }
-      });
-
-    if (cameraRef.current) {
-      cameraRef.current.flyTo(coordinates, 17);
+      if (cameraRef.current) {
+        cameraRef.current.flyTo(coordinates, 17);
+      }
     }
   }
 
@@ -113,6 +148,17 @@ export default function MapView() {
         animationDuration={2000}
         pitch={pitchLevel}
       />
+
+      {showPOIs &&
+        pointsOfInterest.map((poi) => (
+          <Mapbox.MarkerView
+            key={poi.id}
+            id={`poi-${poi.id}`}
+            coordinate={poi.coordinates}
+            anchor={{ x: 0.5, y: 0.5 }}>
+            <POIMarker type={poi.type} />
+          </Mapbox.MarkerView>
+        ))}
 
       {endLocation && !equalLocations(endLocation, userLocation) && (
         <Mapbox.PointAnnotation
