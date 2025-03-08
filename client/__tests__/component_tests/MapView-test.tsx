@@ -267,6 +267,7 @@ describe('MapView', () => {
       zoomLevel: 12,
       pitchLevel: 0,
       route: null,
+      indoorMap: null,
     });
 
     const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
