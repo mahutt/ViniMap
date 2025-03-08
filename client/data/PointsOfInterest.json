@@ -1,0 +1,64 @@
+{
+  "pointsOfInterest": [
+    {
+      "id": "bixi-1",
+      "name": "Bixi Station - Guy-Concordia",
+      "coordinates": [-73.5789, 45.4961],
+      "address": "1455 De Maisonneuve Blvd W, Montreal, QC",
+      "type": "bixi",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "24/7"
+      },
+      "description": "Bike sharing station with 20 docks"
+    },
+    {
+      "id": "metro-1",
+      "name": "Guy-Concordia Metro Station",
+      "coordinates": [-73.5799, 45.495],
+      "address": "1455 De Maisonneuve Blvd W, Montreal, QC",
+      "type": "metro",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "5:30AM - 1:00AM"
+      },
+      "description": "Green Line metro station"
+    },
+    {
+      "id": "bus-1",
+      "name": "STM Bus Stop - Guy / De Maisonneuve",
+      "coordinates": [-73.5793, 45.4957],
+      "address": "Guy St & De Maisonneuve Blvd W, Montreal, QC",
+      "type": "bus",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "24/7"
+      },
+      "description": "Serves routes 15, 57, 66, 165"
+    },
+    {
+      "id": "park-1",
+      "name": "Norman Bethune Square",
+      "coordinates": [-73.5787, 45.4966],
+      "address": "Guy St & De Maisonneuve Blvd W, Montreal, QC",
+      "type": "park",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "24/7"
+      },
+      "description": "Small urban square with seating areas"
+    },
+    {
+      "id": "restaurant-1",
+      "name": "Café Concordia",
+      "coordinates": [-73.5781, 45.4969],
+      "address": "1450 Guy St, Montreal, QC",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "7:00AM - 7:00PM"
+      },
+      "description": "Campus café serving coffee and light meals"
+    }
+  ]
+}
