@@ -4,6 +4,7 @@ import gareGeoJSON from '@/assets/geojson/gare.json';
 
 import hallFoorsGeoJson from '@/assets/geojson/hallFloors.json'
 import jmsbFloors from '@/assets/geojson/jmsbFloors.json'
+import VLandVEfloors from '@/assets/geojson/VLandVEfloors.json'
 
 
 import GeojsonService from '@/services/GeojsonService';
@@ -37,6 +38,12 @@ const jmsbIndoorMap: IndoorMap = {
   geojson: jmsbFloors  as IndoorMapGeoJSON,
   levelsRange:  GeojsonService.extractLevelsRangeAndBounds(jmsbFloors as IndoorMapGeoJSON).levelsRange,
 };
+const VLandVEIndoorMap: IndoorMap = {
+  id: 'VLVE',
+  bounds: GeojsonService.extractLevelsRangeAndBounds(VLandVEfloors as IndoorMapGeoJSON).bounds,
+  geojson: jmsbFloors  as IndoorMapGeoJSON,
+  levelsRange:  GeojsonService.extractLevelsRangeAndBounds(VLandVEfloors as IndoorMapGeoJSON).levelsRange,
+};
 
 
-export const indoorMaps: IndoorMap[] = [hallIndoorMap,jmsbIndoorMap];
+export const indoorMaps: IndoorMap[] = [hallIndoorMap,jmsbIndoorMap,VLandVEIndoorMap];
