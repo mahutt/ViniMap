@@ -74,23 +74,24 @@ export default function MapView() {
     const coordinates = geometry.coordinates;
     let location: Location | null = null;
 
-    const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
-
-    if (clickedPOI) {
-      location = {
-        name: clickedPOI.name,
-        coordinates: clickedPOI.coordinates,
-        data: {
-          address: clickedPOI.address,
-          isOpen: clickedPOI.openingHours.isOpen,
-          hours: clickedPOI.openingHours.hours,
-          description: clickedPOI.description || '',
-        },
-      };
+    if (indoorMap !== null && level !== null) {
+      location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
     }
 
-    if (!location && indoorMap !== null && level !== null) {
-      location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
+    if (!location) {
+      const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
+      if (clickedPOI) {
+        location = {
+          name: clickedPOI.name,
+          coordinates: clickedPOI.coordinates,
+          data: {
+            address: clickedPOI.address,
+            isOpen: clickedPOI.openingHours.isOpen,
+            hours: clickedPOI.openingHours.hours,
+            description: clickedPOI.description || '',
+          },
+        };
+      }
     }
 
     if (!location) {
