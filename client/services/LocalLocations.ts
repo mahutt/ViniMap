@@ -114,6 +114,10 @@ class LocalLocations {
   autocomplete(prefix: string) {
     return this.trie.search(prefix);
   }
+
+  clear() {
+    this.trie = new Trie();
+  }
 }
 
 export default LocalLocations;
