@@ -1,7 +1,8 @@
 import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import React, { useCallback } from 'react';
-import { Location, MapState, useMap } from './MapContext';
+import { MapState, useMap } from './MapContext';
+import { Location } from '@/modules/map/Types';
 import { fetchLocationData } from './MapService';
 
 import layers from '@/modules/map/style/DefaultLayers';
@@ -19,7 +20,6 @@ const equalLocations = (a: Location | null, b: Location | null): boolean => {
 
 export default function MapView() {
   const {
-    flyTo,
     state,
     setState,
     startLocation,
