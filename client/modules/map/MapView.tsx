@@ -1,7 +1,12 @@
 import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
+import React, { useCallback } from 'react';
 import { Location, MapState, useMap } from './MapContext';
 import { fetchLocationData } from './MapService';
+
+import layers from '@/modules/map/style/DefaultLayers';
+import { ExpressionSpecification } from '@/modules/map/Types';
+import { filterWithLevel } from '@/modules/map/Utils';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -27,7 +32,23 @@ export default function MapView() {
     zoomLevel,
     pitchLevel,
     route,
+    level,
+    indoorMap,
+    updateSelectedMapIfNeeded,
   } = useMap();
+
+  const filterFN = useCallback(
+    (filter: ExpressionSpecification) => {
+      let filterFn: (filter: ExpressionSpecification) => ExpressionSpecification;
+      if (level !== null) {
+        filterFn = (filter: ExpressionSpecification) => filterWithLevel(filter, level, false);
+      } else {
+        filterFn = (filter: ExpressionSpecification): ExpressionSpecification => filter;
+      }
+      return filterFn(filter);
+    },
+    [level]
+  );
 
   function onMapClick(event: any) {
     const { geometry } = event;
@@ -104,7 +125,8 @@ export default function MapView() {
       ref={mapRef}
       style={styles.map}
       styleURL="mapbox://styles/ambrose821/cm6g7anat00kv01qmbxkze6i8"
-      onPress={onMapClick}>
+      onPress={onMapClick}
+      onCameraChanged={() => updateSelectedMapIfNeeded()}>
       <Mapbox.Camera
         ref={cameraRef}
         zoomLevel={zoomLevel}
@@ -167,6 +189,72 @@ export default function MapView() {
             </Mapbox.ShapeSource>
           ))}
         </>
+      )}
+      {indoorMap !== null && (
+        <Mapbox.ShapeSource id="indoor" shape={indoorMap.geojson}>
+          <>
+            {layers
+              .filter((layer) => layer.type === 'fill')
+              .map((layer) => {
+                return (
+                  <Mapbox.FillLayer
+                    key={layer.id}
+                    id={layer.id}
+                    sourceID={layer.source ?? undefined}
+                    style={{
+                      fillColor: layer.paint['fill-color'] ?? undefined,
+                      fillOutlineColor: layer.paint['fill-outline-color'] ?? undefined,
+                      fillTranslateAnchor: layer.paint['fill-translate-anchor'] ?? undefined,
+                      fillOpacity: layer.paint['fill-opacity'] ?? undefined,
+                    }}
+                    filter={layer.filter ? filterFN(layer.filter) : undefined}
+                  />
+                );
+              })}
+            {layers
+              .filter((layer) => layer.type === 'line')
+              .map((layer) => {
+                return (
+                  <Mapbox.LineLayer
+                    key={layer.id}
+                    id={layer.id}
+                    sourceID={layer.source ?? undefined}
+                    style={{
+                      lineColor: layer.paint['line-color'],
+                      lineWidth: layer.paint['line-width'],
+                      lineOpacity: layer.paint['line-opacity'],
+                      lineDasharray: layer.paint['line-dasharray'],
+                    }}
+                    filter={layer.filter ? filterFN(layer.filter) : undefined}
+                  />
+                );
+              })}
+            {layers
+              .filter((layer) => layer.type === 'symbol')
+              .map((layer) => {
+                return (
+                  <Mapbox.SymbolLayer
+                    key={layer.id}
+                    id={layer.id}
+                    sourceID={layer.source ?? undefined}
+                    style={{
+                      textColor: layer.paint['text-color'],
+                      textHaloColor: layer.paint['text-halo-color'],
+                      textHaloWidth: layer.paint['text-halo-width'],
+                      textOpacity: layer.paint['text-opacity'],
+                      iconOpacity: layer.paint['icon-opacity'],
+                      textField: layer.paint['textField'],
+                      textSize: layer.paint['textSize'],
+                      textAnchor: layer.paint['textAnchor'],
+                      textAllowOverlap: layer.paint['textAllowOverlap'],
+                      textJustify: layer.paint['textJustify'],
+                    }}
+                    filter={layer.filter ? filterFN(layer.filter) : undefined}
+                  />
+                );
+              })}
+          </>
+        </Mapbox.ShapeSource>
       )}
     </Mapbox.MapView>
   );

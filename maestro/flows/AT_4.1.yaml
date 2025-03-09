@@ -1,0 +1,14 @@
+appId: com.anonymous.client
+---
+- doubleTapOn:
+    point: '50%,50%'
+- doubleTapOn:
+    point: '50%,50%'
+- doubleTapOn:
+    point: '50%,50%'
+- tapOn: 'go up'
+- tapOn: 'go down'
+- doubleTapOn:
+    point: '50%,50%'
+- tapOn: 'go up'
+- tapOn: 'go down'

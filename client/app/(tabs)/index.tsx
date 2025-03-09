@@ -15,6 +15,7 @@ import { LocationInfo } from '@/components/LocationInfo';
 import { RoutePlanner } from '@/components/RoutePlanner';
 import ToggleCampusButton from '@/components/ui/ToggleCampusButton';
 import MapHint from '@/components/MapHint';
+import FloorControl from '@/components/FloorControl';
 
 export default function HomeScreen() {
   const { state } = useMap();
@@ -33,6 +34,7 @@ export default function HomeScreen() {
       {state === MapState.Information && <LocationInfo />}
       {state === MapState.RoutePlanning && <RoutePlanner />}
       <MapHint />
+      <FloorControl />
     </View>
   );
 }
