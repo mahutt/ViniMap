@@ -5,7 +5,7 @@
 import bbox from '@turf/bbox';
 
 import type { BBox, Feature } from 'geojson';
-import type { LevelsRange, IndoorMapGeoJSON } from '@/modules/map/Types';
+import type { LevelsRange, IndoorMapGeoJSON, Level } from '@/modules/map/Types';
 
 /**
  * Helper for Geojson data
@@ -21,22 +21,27 @@ class GeojsonService {
     if (!!feature.properties && feature.properties.level !== null) {
       const propertyLevel = feature.properties['level'];
       if (typeof propertyLevel === 'string') {
-        const splitLevel = propertyLevel.split(';');
-        if (splitLevel.length === 1) {
-          const level = parseFloat(propertyLevel);
-          if (!isNaN(level)) {
-            return level;
-          }
-        } else if (splitLevel.length === 2) {
-          const level1 = parseFloat(splitLevel[0]);
-          const level2 = parseFloat(splitLevel[1]);
-          if (!isNaN(level1) && !isNaN(level2)) {
-            return {
-              min: Math.min(level1, level2),
-              max: Math.max(level1, level2),
-            };
-          }
-        }
+        return this.parsePropertyLevel(propertyLevel);
+      }
+    }
+    return null;
+  }
+
+  static parsePropertyLevel(propertyLevel: string): LevelsRange | number | null {
+    const splitLevel = propertyLevel.split(';');
+    if (splitLevel.length === 1) {
+      const level = parseFloat(propertyLevel);
+      if (!isNaN(level)) {
+        return level;
+      }
+    } else if (splitLevel.length === 2) {
+      const level1 = parseFloat(splitLevel[0]);
+      const level2 = parseFloat(splitLevel[1]);
+      if (!isNaN(level1) && !isNaN(level2)) {
+        return {
+          min: Math.min(level1, level2),
+          max: Math.max(level1, level2),
+        };
       }
     }
     return null;
