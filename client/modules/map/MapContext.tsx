@@ -9,15 +9,13 @@ import React, {
 } from 'react';
 import Mapbox from '@rnmapbox/maps';
 import { getRoute } from './MapService';
-import { Coordinates, Route } from './Types';
+import { Location, Coordinates, Route, Level } from './Types';
+import { IndoorMap, indoorMaps } from './IndoorMap';
+import type { BBox } from 'geojson';
+import { bboxCenter, overlap } from './IndoorMapUtils';
+import { default as turfDistance } from '@turf/distance';
 import { LocationSubscription, watchPositionAsync } from 'expo-location';
 import CoordinateService from '@/services/CoordinateService';
-
-export interface Location {
-  name: string | null;
-  coordinates: Coordinates;
-  data?: any;
-}
 
 export enum MapState {
   Idle,
@@ -34,6 +32,7 @@ type MapContextType = {
   cameraRef: React.RefObject<Mapbox.Camera>;
   centerCoordinate: [number, number];
   zoomLevel: number;
+  level: Level | null;
 
   pitchLevel: number;
   setPitchLevel: (pitchLevel: number) => void;
@@ -45,6 +44,7 @@ type MapContextType = {
   route: Route | null;
   setCenterCoordinate: (centerCoordinate: [number, number]) => void;
   setZoomLevel: (zoomLevel: number) => void;
+  setLevel: (level: Level | null) => void;
   setState: (state: MapState) => void;
   setStartLocation: (startLocation: Location | null) => void;
   setEndLocation: (endLocation: Location | null) => void;
@@ -54,6 +54,9 @@ type MapContextType = {
     endCoordinates: Coordinates,
     mode?: string
   ) => Promise<void>;
+
+  indoorMap: IndoorMap | null;
+  updateSelectedMapIfNeeded: () => void;
 };
 
 const MapContext = createContext<MapContextType | undefined>(undefined);
@@ -63,6 +66,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const cameraRef = useRef<Mapbox.Camera | null>(null);
   const [centerCoordinate, setCenterCoordinate] = useState<[number, number]>(DEFAULT_COORDINATES);
   const [zoomLevel, setZoomLevel] = useState(15);
+  const [level, setLevel] = useState<Level | null>(-1);
   const [pitchLevel, setPitchLevel] = useState(0);
   const [state, setState] = useState<MapState>(MapState.Idle);
 
@@ -71,6 +75,65 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [userLocation, setUserLocation] = useState<Location | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
 
+  const [indoorMap, setIndoorMap] = useState<IndoorMap | null>(null);
+  const mapLoadedPromise = useRef<Promise<void>>(Promise.resolve());
+  const updateMapPromise = useRef<Promise<void>>(Promise.resolve());
+
+  const getClosestMap = async (): Promise<IndoorMap | null> => {
+    const [currentZoomLevel, cameraBounds] = await Promise.all([
+      mapRef.current?.getZoom(),
+      mapRef.current?.getVisibleBounds(),
+    ]);
+
+    if (!currentZoomLevel || currentZoomLevel < 17 || !cameraBounds) {
+      return null;
+    }
+
+    // [west, south, east, north]
+    const cameraBoundsTurf = [
+      cameraBounds[1][0],
+      cameraBounds[1][1],
+      cameraBounds[0][0],
+      cameraBounds[0][1],
+    ] as BBox;
+
+    const mapsInBounds = indoorMaps.filter((indoorMap) =>
+      overlap(indoorMap.bounds, cameraBoundsTurf)
+    );
+
+    if (mapsInBounds.length === 0) {
+      return null;
+    }
+
+    if (mapsInBounds.length === 1) {
+      return mapsInBounds[0];
+    }
+
+    let minDist = Number.POSITIVE_INFINITY;
+    let closestMap = mapsInBounds[0];
+    for (const map of mapsInBounds) {
+      const _dist = turfDistance(bboxCenter(map.bounds), bboxCenter(cameraBoundsTurf));
+      if (_dist < minDist) {
+        closestMap = map;
+        minDist = _dist;
+      }
+    }
+    return closestMap;
+  };
+
+  const updateSelectedMapIfNeeded = useMemo(() => {
+    return async () => {
+      await mapLoadedPromise.current;
+      await updateMapPromise.current;
+      updateMapPromise.current = (async () => {
+        const closestMap = await getClosestMap();
+        if ((closestMap === null) !== (indoorMap === null) || closestMap?.id !== indoorMap?.id) {
+          setIndoorMap(closestMap);
+          setLevel(closestMap?.levelsRange.min ?? null);
+        }
+      })();
+    };
+  }, [indoorMap, setIndoorMap, setLevel]);
   useEffect(() => {
     let subscription: LocationSubscription;
     CoordinateService.getCurrentCoordinates().then((coords) => {
@@ -148,6 +211,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       cameraRef,
       centerCoordinate,
       zoomLevel,
+      level,
       pitchLevel,
       setPitchLevel,
       state,
@@ -157,15 +221,19 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       route,
       setCenterCoordinate,
       setZoomLevel,
+      setLevel,
       setState,
       setStartLocation,
       setEndLocation,
       flyTo,
       loadRouteFromCoordinates,
+      indoorMap,
+      updateSelectedMapIfNeeded,
     }),
     [
       centerCoordinate,
       zoomLevel,
+      level,
       state,
       startLocation,
       endLocation,
@@ -174,6 +242,8 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       flyTo,
       pitchLevel,
       loadRouteFromCoordinates,
+      indoorMap,
+      updateSelectedMapIfNeeded,
     ]
   );
 

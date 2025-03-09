@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Location } from '@/modules/map/MapContext';
+import { Location } from '@/modules/map/Types';
 import { getLocations } from '@/modules/map/MapService';
+import LocalLocations from '@/services/LocalLocations';
 
 export default function LocationsAutocomplete({
   query,
@@ -13,9 +14,14 @@ export default function LocationsAutocomplete({
   const [locations, setLocations] = useState<Location[]>([]);
   useEffect(() => {
     if (query) {
-      getLocations(query).then((locations) => {
-        setLocations(locations);
-      });
+      const localLocations = LocalLocations.getInstance().autocomplete(query);
+      if (localLocations.length >= 5) {
+        setLocations(localLocations.slice(0, 5));
+      } else {
+        getLocations(query).then((locations) => {
+          setLocations(localLocations.concat(locations).slice(0, 5));
+        });
+      }
     } else {
       setLocations([]);
     }

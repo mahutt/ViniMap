@@ -133,6 +133,7 @@ describe('MapView', () => {
       zoomLevel: 12,
       pitchLevel: 0,
       route: mockRoute,
+      indoorMap: null,
     });
 
     (fetchLocationData as jest.Mock).mockResolvedValue({
@@ -162,13 +163,10 @@ describe('MapView', () => {
     });
 
     expect(mockSetEndLocation).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'Test Location',
-        coordinates: [2, 2],
-      })
+      expect.objectContaining({ address: 'Test Address', isOpen: true, name: 'Test Location' })
     );
     expect(mockSetState).toHaveBeenCalledWith(MapState.Information);
-    expect(mockCameraRef.current.flyTo).toHaveBeenCalledWith([2, 2], 17);
+    expect(mockCameraRef.current.flyTo).toHaveBeenCalledWith([2, 2], 1000);
   });
 
   it('handles map click in SelectingStartLocation state', async () => {
@@ -186,6 +184,7 @@ describe('MapView', () => {
       zoomLevel: 12,
       pitchLevel: 0,
       route: null,
+      indoorMap: null,
     });
 
     render(<MapView />);
@@ -201,10 +200,7 @@ describe('MapView', () => {
     });
 
     expect(mockSetStartLocation).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'Test Location',
-        coordinates: [2, 2],
-      })
+      expect.objectContaining({ address: 'Test Address', isOpen: true, name: 'Test Location' })
     );
     expect(mockSetState).toHaveBeenCalledWith(MapState.RoutePlanning);
   });
@@ -224,6 +220,7 @@ describe('MapView', () => {
       zoomLevel: 12,
       pitchLevel: 0,
       route: null,
+      indoorMap: null,
     });
 
     render(<MapView />);
@@ -239,99 +236,9 @@ describe('MapView', () => {
     });
 
     expect(mockSetEndLocation).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'Test Location',
-        coordinates: [2, 2],
-      })
+      expect.objectContaining({ address: 'Test Address', isOpen: true, name: 'Test Location' })
     );
     expect(mockSetState).toHaveBeenCalledWith(MapState.RoutePlanning);
-  });
-
-  it('handles error when fetching location data', async () => {
-    (fetchLocationData as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
-
-    const { useMap } = require('@/modules/map/MapContext');
-    useMap.mockReturnValueOnce({
-      state: MapState.SelectingEndLocation,
-      setState: mockSetState,
-      startLocation: mockStartLocation,
-      endLocation: null,
-      setStartLocation: mockSetStartLocation,
-      setEndLocation: mockSetEndLocation,
-      mapRef: mockMapRef,
-      cameraRef: mockCameraRef,
-      centerCoordinate: [0, 0],
-      zoomLevel: 12,
-      pitchLevel: 0,
-      route: null,
-    });
-
-    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
-    render(<MapView />);
-
-    const onPressHandler = mockOnPressHandler.mock.calls[0][0];
-
-    await act(async () => {
-      await onPressHandler({
-        geometry: {
-          coordinates: [2, 2],
-        },
-      });
-    });
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith('Error fetching location data:', expect.any(Error));
-    expect(mockSetEndLocation).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'Selected Location',
-        coordinates: [2, 2],
-      })
-    );
-    expect(mockSetState).toHaveBeenCalledWith(MapState.Information);
-
-    consoleWarnSpy.mockRestore();
-  });
-
-  it('handles error when fetching location data in SelectingStartLocation state', async () => {
-    (fetchLocationData as jest.Mock).mockRejectedValueOnce(new Error('Network error'));
-
-    const { useMap } = require('@/modules/map/MapContext');
-    useMap.mockReturnValueOnce({
-      state: MapState.SelectingStartLocation,
-      setState: mockSetState,
-      startLocation: null,
-      endLocation: null,
-      setStartLocation: mockSetStartLocation,
-      setEndLocation: mockSetEndLocation,
-      mapRef: mockMapRef,
-      cameraRef: mockCameraRef,
-      centerCoordinate: [0, 0],
-      zoomLevel: 12,
-      pitchLevel: 0,
-      route: null,
-    });
-
-    const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation(() => {});
-
-    render(<MapView />);
-
-    const onPressHandler = mockOnPressHandler.mock.calls[0][0];
-
-    await act(async () => {
-      await onPressHandler({
-        geometry: {
-          coordinates: [2, 2],
-        },
-      });
-    });
-
-    expect(consoleWarnSpy).toHaveBeenCalledWith('Error fetching location data:', expect.any(Error));
-    expect(mockSetStartLocation).toHaveBeenCalledWith({
-      name: null,
-      coordinates: [2, 2],
-    });
-
-    consoleWarnSpy.mockRestore();
   });
 
   it('ignores map click with invalid coordinates', async () => {

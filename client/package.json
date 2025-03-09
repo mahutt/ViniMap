@@ -41,6 +41,7 @@
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/native": "^7.0.14",
     "@rnmapbox/maps": "^10.1.33",
+    "@turf/boolean-point-in-polygon": "^7.2.0",
     "expo": "~52.0.25",
     "expo-blur": "~14.0.2",
     "expo-constants": "~17.0.4",

@@ -1,11 +1,16 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
-import { Location, MapState, useMap } from './MapContext';
+import React, { useCallback } from 'react';
+import { MapState, useMap } from './MapContext';
+import { Location, ExpressionSpecification } from '@/modules/map/Types';
 import { fetchLocationData } from './MapService';
 import PointsOfInterestService from '@/services/PointsOfInterestService';
 import { useState, useEffect } from 'react';
 import { PointOfInterest } from './PointsOfInterestTypes';
 import POIMarker from '@/components/POIMarker';
+
+import layers from '@/modules/map/style/DefaultLayers';
+import { filterWithLevel, getIndoorFeatureFromCoordinates } from '@/modules/map/IndoorMapUtils';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -31,6 +36,9 @@ export default function MapView() {
     zoomLevel,
     pitchLevel,
     route,
+    level,
+    indoorMap,
+    updateSelectedMapIfNeeded,
   } = useMap();
 
   const [pointsOfInterest, setPointsOfInterest] = useState<PointOfInterest[]>([]);
@@ -43,7 +51,20 @@ export default function MapView() {
     setShowPOIs(PointsOfInterestService.shouldShowPOIs(zoomLevel));
   }, [zoomLevel]);
 
-  function onMapClick(event: any) {
+  const filterFN = useCallback(
+    (filter: ExpressionSpecification) => {
+      let filterFn: (filter: ExpressionSpecification) => ExpressionSpecification;
+      if (level !== null) {
+        filterFn = (filter: ExpressionSpecification) => filterWithLevel(filter, level, false);
+      } else {
+        filterFn = (filter: ExpressionSpecification): ExpressionSpecification => filter;
+      }
+      return filterFn(filter);
+    },
+    [level]
+  );
+
+  async function onMapClick(event: any) {
     const { geometry } = event;
 
     if (!geometry?.coordinates) {
@@ -51,10 +72,12 @@ export default function MapView() {
     }
 
     const coordinates = geometry.coordinates;
+    let location: Location | null = null;
+
     const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
 
     if (clickedPOI) {
-      const poiLocation: Location = {
+      location = {
         name: clickedPOI.name,
         coordinates: clickedPOI.coordinates,
         data: {
@@ -64,73 +87,37 @@ export default function MapView() {
           description: clickedPOI.description || '',
         },
       };
+    }
 
-      setEndLocation(poiLocation);
-      setState(MapState.Information);
+    if (!location && indoorMap !== null && level !== null) {
+      location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
+    }
 
-      if (cameraRef.current) {
-        cameraRef.current.flyTo(clickedPOI.coordinates, 17);
-      }
-    } else {
-      fetchLocationData(coordinates)
-        .then((data) => {
-          switch (state) {
-            case MapState.SelectingStartLocation:
-              setStartLocation({
-                name: data?.name || null,
-                coordinates: coordinates,
-                data: data || undefined,
-              });
-              if (endLocation) {
-                setState(MapState.RoutePlanning);
-              }
-              break;
+    if (!location) {
+      location = await fetchLocationData(coordinates);
+    }
 
-            case MapState.SelectingEndLocation:
-              setEndLocation({
-                name: data?.name || 'Selected Location',
-                coordinates: coordinates,
-                data: data || { address: 'Location', isOpen: false },
-              });
-              setState(MapState.RoutePlanning);
-              break;
+    switch (state) {
+      case MapState.SelectingStartLocation:
+        setStartLocation(location);
+        if (endLocation) {
+          setState(MapState.RoutePlanning);
+        }
+        break;
 
-            default:
-              setEndLocation({
-                name: data?.name || 'Selected Location',
-                coordinates: coordinates,
-                data: data || { address: 'Location', isOpen: false },
-              });
-              setState(MapState.Information);
-              break;
-          }
-        })
-        .catch((error) => {
-          console.warn('Error fetching location data:', error);
+      case MapState.SelectingEndLocation:
+        setEndLocation(location);
+        setState(MapState.RoutePlanning);
+        break;
 
-          switch (state) {
-            case MapState.SelectingStartLocation:
-              setStartLocation({
-                name: null,
-                coordinates: coordinates,
-              });
-              break;
+      default:
+        setEndLocation(location);
+        setState(MapState.Information);
+        break;
+    }
 
-            case MapState.SelectingEndLocation:
-            default:
-              setEndLocation({
-                name: 'Selected Location',
-                coordinates: coordinates,
-                data: { address: 'Location', isOpen: false },
-              });
-              setState(MapState.Information);
-              break;
-          }
-        });
-
-      if (cameraRef.current) {
-        cameraRef.current.flyTo(coordinates, 17);
-      }
+    if (cameraRef.current) {
+      cameraRef.current.flyTo(coordinates, 1000);
     }
   }
 
@@ -139,7 +126,8 @@ export default function MapView() {
       ref={mapRef}
       style={styles.map}
       styleURL="mapbox://styles/ambrose821/cm6g7anat00kv01qmbxkze6i8"
-      onPress={onMapClick}>
+      onPress={onMapClick}
+      onCameraChanged={() => updateSelectedMapIfNeeded()}>
       <Mapbox.Camera
         ref={cameraRef}
         zoomLevel={zoomLevel}
@@ -236,6 +224,72 @@ export default function MapView() {
             </Mapbox.ShapeSource>
           ))}
         </>
+      )}
+      {indoorMap !== null && (
+        <Mapbox.ShapeSource id="indoor" shape={indoorMap.geojson}>
+          <>
+            {layers
+              .filter((layer) => layer.type === 'fill')
+              .map((layer) => {
+                return (
+                  <Mapbox.FillLayer
+                    key={layer.id}
+                    id={layer.id}
+                    sourceID={layer.source ?? undefined}
+                    style={{
+                      fillColor: layer.paint['fill-color'] ?? undefined,
+                      fillOutlineColor: layer.paint['fill-outline-color'] ?? undefined,
+                      fillTranslateAnchor: layer.paint['fill-translate-anchor'] ?? undefined,
+                      fillOpacity: layer.paint['fill-opacity'] ?? undefined,
+                    }}
+                    filter={layer.filter ? filterFN(layer.filter) : undefined}
+                  />
+                );
+              })}
+            {layers
+              .filter((layer) => layer.type === 'line')
+              .map((layer) => {
+                return (
+                  <Mapbox.LineLayer
+                    key={layer.id}
+                    id={layer.id}
+                    sourceID={layer.source ?? undefined}
+                    style={{
+                      lineColor: layer.paint['line-color'],
+                      lineWidth: layer.paint['line-width'],
+                      lineOpacity: layer.paint['line-opacity'],
+                      lineDasharray: layer.paint['line-dasharray'],
+                    }}
+                    filter={layer.filter ? filterFN(layer.filter) : undefined}
+                  />
+                );
+              })}
+            {layers
+              .filter((layer) => layer.type === 'symbol')
+              .map((layer) => {
+                return (
+                  <Mapbox.SymbolLayer
+                    key={layer.id}
+                    id={layer.id}
+                    sourceID={layer.source ?? undefined}
+                    style={{
+                      textColor: layer.paint['text-color'],
+                      textHaloColor: layer.paint['text-halo-color'],
+                      textHaloWidth: layer.paint['text-halo-width'],
+                      textOpacity: layer.paint['text-opacity'],
+                      iconOpacity: layer.paint['icon-opacity'],
+                      textField: layer.paint['textField'],
+                      textSize: layer.paint['textSize'],
+                      textAnchor: layer.paint['textAnchor'],
+                      textAllowOverlap: layer.paint['textAllowOverlap'],
+                      textJustify: layer.paint['textJustify'],
+                    }}
+                    filter={layer.filter ? filterFN(layer.filter) : undefined}
+                  />
+                );
+              })}
+          </>
+        </Mapbox.ShapeSource>
       )}
     </Mapbox.MapView>
   );
