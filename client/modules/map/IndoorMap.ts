@@ -1,6 +1,6 @@
 import type { BBox } from 'geojson';
 import { IndoorMapGeoJSON, LevelsRange } from './Types';
-import gareGeoJSON from '@/assets/geojson/gare.json';
+
 
 import hallFoorsGeoJson from '@/assets/geojson/hallFloors.json'
 import jmsbFloors from '@/assets/geojson/jmsbFloors.json'
