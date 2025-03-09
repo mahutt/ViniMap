@@ -1,10 +1,12 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { MapState, useMap } from './MapContext';
 import { Location, ExpressionSpecification } from '@/modules/map/Types';
 import { fetchLocationData } from './MapService';
-
+import PointsOfInterestService from '@/services/PointsOfInterestService';
+import { PointOfInterest } from './PointsOfInterestTypes';
+import POIMarker from '@/components/POIMarker';
 import layers from '@/modules/map/style/DefaultLayers';
 import { filterWithLevel, getIndoorFeatureFromCoordinates } from '@/modules/map/IndoorMapUtils';
 
@@ -37,6 +39,16 @@ export default function MapView() {
     updateSelectedMapIfNeeded,
   } = useMap();
 
+  const [pointsOfInterest, setPointsOfInterest] = useState<PointOfInterest[]>([]);
+  const [showPOIs, setShowPOIs] = useState(false);
+
+  useEffect(() => {
+    const allPOIs = PointsOfInterestService.getAllPOIs();
+    setPointsOfInterest(allPOIs);
+
+    setShowPOIs(PointsOfInterestService.shouldShowPOIs(zoomLevel));
+  }, [zoomLevel]);
+
   const filterFN = useCallback(
     (filter: ExpressionSpecification) => {
       let filterFn: (filter: ExpressionSpecification) => ExpressionSpecification;
@@ -62,6 +74,22 @@ export default function MapView() {
 
     if (indoorMap !== null && level !== null) {
       location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
+    }
+
+    if (!location) {
+      const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
+      if (clickedPOI) {
+        location = {
+          name: clickedPOI.name,
+          coordinates: clickedPOI.coordinates,
+          data: {
+            address: clickedPOI.address,
+            isOpen: clickedPOI.openingHours.isOpen,
+            hours: clickedPOI.openingHours.hours,
+            description: clickedPOI.description ?? '',
+          },
+        };
+      }
     }
 
     if (!location) {
@@ -107,6 +135,40 @@ export default function MapView() {
         animationDuration={2000}
         pitch={pitchLevel}
       />
+
+      {showPOIs &&
+        pointsOfInterest.map((poi) => (
+          <Mapbox.MarkerView
+            key={poi.id}
+            id={`poi-${poi.id}`}
+            coordinate={poi.coordinates}
+            anchor={{ x: 0.5, y: 0.5 }}>
+            <TouchableOpacity
+              onPress={() => {
+                const poiLocation: Location = {
+                  name: poi.name,
+                  coordinates: poi.coordinates,
+                  data: {
+                    address: poi.address,
+                    isOpen: poi.openingHours.isOpen,
+                    hours: poi.openingHours.hours,
+                    description: poi.description ?? '',
+                  },
+                };
+
+                setEndLocation(poiLocation);
+                setState(MapState.Information);
+
+                if (cameraRef.current) {
+                  cameraRef.current.flyTo(poi.coordinates, 17);
+                }
+              }}
+              activeOpacity={0.7}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <POIMarker type={poi.type} />
+            </TouchableOpacity>
+          </Mapbox.MarkerView>
+        ))}
 
       {endLocation && !equalLocations(endLocation, userLocation) && (
         <Mapbox.PointAnnotation
