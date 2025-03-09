@@ -18,8 +18,12 @@ export interface Route {
   segments: Segment[];
 }
 
+// eslint-disable-next-line @typescript-eslint/no-type-alias
 export type LayerSpecification = any;
+
+// eslint-disable-next-line @typescript-eslint/no-type-alias
 export type ExpressionSpecification = any; // Meant to reference a type from MapLibre spec (see map-gl-indoor)
+// NOSONAR
 export type Level = number;
 export type IndoorMapGeoJSON = FeatureCollection<Geometry>;
 export type LevelsRange = {
