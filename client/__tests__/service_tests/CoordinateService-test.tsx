@@ -105,4 +105,94 @@ describe('CoordinateService', () => {
     expect(mockedLocation.requestForegroundPermissionsAsync).toHaveBeenCalledTimes(1);
     expect(mockedLocation.getCurrentPositionAsync).toHaveBeenCalledTimes(1);
   });
+
+  describe('calculateRouteCoordinateBounds', () => {
+    it('should calculate correct bounds for a route with multiple segments', () => {
+      const route = {
+        duration: 1200,
+        distance: 5000,
+        segments: [
+          {
+            steps: [
+              [10, 20],
+              [30, 40],
+            ],
+          },
+          {
+            steps: [
+              [5, 15],
+              [25, 35],
+            ],
+          },
+        ],
+      };
+
+      const bounds = CoordinateService.calculateRouteCoordinateBounds(route as any);
+
+      expect(bounds).toEqual({
+        ne: [30, 40],
+        sw: [5, 15],
+      });
+    });
+
+    it('should handle a route with a single segment', () => {
+      const route = {
+        duration: 600,
+        distance: 2500,
+        segments: [
+          {
+            steps: [
+              [10, 20],
+              [30, 40],
+            ],
+          },
+        ],
+      };
+
+      const bounds = CoordinateService.calculateRouteCoordinateBounds(route as any);
+
+      expect(bounds).toEqual({
+        ne: [30, 40],
+        sw: [10, 20],
+      });
+    });
+
+    it('should handle a route with a single coordinate', () => {
+      const route = {
+        duration: 0,
+        distance: 0,
+        segments: [
+          {
+            steps: [[10, 20]],
+          },
+        ],
+      };
+
+      const bounds = CoordinateService.calculateRouteCoordinateBounds(route as any);
+
+      expect(bounds).toEqual({
+        ne: [10, 20],
+        sw: [10, 20],
+      });
+    });
+
+    it('should handle an empty route correctly', () => {
+      const route = {
+        duration: 0,
+        distance: 0,
+        segments: [
+          {
+            steps: [],
+          },
+        ],
+      };
+
+      const bounds = CoordinateService.calculateRouteCoordinateBounds(route as any);
+
+      expect(bounds).toEqual({
+        ne: [-180, -90],
+        sw: [180, 90],
+      });
+    });
+  });
 });
