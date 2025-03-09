@@ -144,7 +144,6 @@ describe('MapContext', () => {
 
   test('updateSelectedMapIfNeeded updates indoor map and level', async () => {
     let mapContext: ReturnType<typeof useMap> | undefined;
-    const overlap = require('@/modules/map/IndoorMapUtils').overlap;
     const { indoorMaps } = require('@/modules/map/IndoorMap');
 
     render(
