@@ -1,3 +1,5 @@
+import { Coordinates } from '@/modules/map/Types';
+
 export type POIType =
   | 'bixi'
   | 'metro'
@@ -16,7 +18,7 @@ export interface OpeningHours {
 export interface PointOfInterest {
   id: string;
   name: string;
-  coordinates: [number, number]; // [longitude, latitude]
+  coordinates: Coordinates;
   address: string;
   type: POIType;
   openingHours: OpeningHours;
