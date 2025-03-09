@@ -14,21 +14,17 @@ jest.mock('@/services/GeojsonService');
 
 describe('overlap', () => {
   test('returns false when one rectangle is to the left of the other', () => {
-    const bounds1 = [0, 0, 5, 5] as [number, number, number, number];
-    const bounds2 = [6, 0, 10, 5] as [number, number, number, number];
-    // NOSONAR:S2234 Arguments have same names but different order
-    expect(overlap(bounds1, bounds2)).toBe(false);
-    // NOSONAR:S2234 Arguments have same names but different order
-    expect(overlap(bounds2, bounds1)).toBe(false);
+    const testBounds1 = [0, 0, 5, 5] as [number, number, number, number];
+    const testBounds2 = [6, 0, 10, 5] as [number, number, number, number];
+    expect(overlap(testBounds1, testBounds2)).toBe(false);
+    expect(overlap(testBounds2, testBounds1)).toBe(false);
   });
 
   test('returns false when one rectangle is above the other', () => {
-    const bounds1 = [0, 0, 5, 5] as [number, number, number, number];
-    const bounds2 = [0, 6, 5, 10] as [number, number, number, number];
-    // NOSONAR:S2234 Arguments have same names but different order
-    expect(overlap(bounds1, bounds2)).toBe(false);
-    // NOSONAR:S2234 Arguments have same names but different order
-    expect(overlap(bounds2, bounds1)).toBe(false);
+    const testBounds1 = [0, 0, 5, 5] as [number, number, number, number];
+    const testBounds2 = [0, 6, 5, 10] as [number, number, number, number];
+    expect(overlap(testBounds1, testBounds2)).toBe(false);
+    expect(overlap(testBounds2, testBounds1)).toBe(false);
   });
 
   test('returns true when rectangles overlap', () => {
