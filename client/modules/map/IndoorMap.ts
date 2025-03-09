@@ -2,10 +2,14 @@ import type { BBox } from 'geojson';
 import { IndoorMapGeoJSON, LevelsRange } from './Types';
 import LocalLocations from '@/services/LocalLocations';
 import { bboxCenter } from './IndoorMapUtils';
+
 import hallFoorsGeoJson from '@/assets/geojson/hallFloors.json';
+import jmsbFloors from '@/assets/geojson/jmsbFloors.json';
+import VLandVEfloors from '@/assets/geojson/VLandVEfloors.json';
+
 import GeojsonService from '@/services/GeojsonService';
 
-export interface IndoorMap {
+interface IndoorMap {
   id: string;
   bounds: BBox;
   geojson: IndoorMapGeoJSON;
@@ -22,28 +26,42 @@ const getAllRoomRefs = (geojson: IndoorMapGeoJSON): string[] => {
   return roomRefs;
 };
 
-// Instantiating globally accessible indoor maps:
+const rawIndoorMaps = [
+  {
+    id: 'Hall Building',
+    geojson: hallFoorsGeoJson,
+  },
+  {
+    id: 'John Molson School of Business',
+    geojson: jmsbFloors,
+  },
+  {
+    id: 'VLandVE',
+    geojson: VLandVEfloors,
+  },
+];
 
-const { bounds, levelsRange } = GeojsonService.extractLevelsRangeAndBounds(
-  // gareGeoJSON as IndoorMapGeoJSON
-  hallFoorsGeoJson as IndoorMapGeoJSON
-);
-const hallIndoorMap: IndoorMap = {
-  id: 'Hall Building',
-  bounds: bounds,
-  geojson: hallFoorsGeoJson as IndoorMapGeoJSON,
-  levelsRange: levelsRange,
-};
-
-const HallRooms = getAllRoomRefs(hallIndoorMap.geojson);
-LocalLocations.getInstance().addAll(HallRooms, (name: string) => {
-  return {
-    name,
-    coordinates: bboxCenter(hallIndoorMap.bounds),
-    data: {
-      address: hallIndoorMap.id,
-    },
+const indoorMaps: IndoorMap[] = rawIndoorMaps.map((rawIndoorMap) => {
+  const { bounds, levelsRange } = GeojsonService.extractLevelsRangeAndBounds(
+    rawIndoorMap.geojson as IndoorMapGeoJSON
+  );
+  const indoorMap: IndoorMap = {
+    id: rawIndoorMap.id,
+    bounds: bounds,
+    geojson: rawIndoorMap.geojson as IndoorMapGeoJSON,
+    levelsRange: levelsRange,
   };
+  const rooms = getAllRoomRefs(indoorMap.geojson);
+  LocalLocations.getInstance().addAll(rooms, (name: string) => {
+    return {
+      name,
+      coordinates: bboxCenter(indoorMap.bounds),
+      data: {
+        address: indoorMap.id,
+      },
+    };
+  });
+  return indoorMap;
 });
 
-export const indoorMaps: IndoorMap[] = [hallIndoorMap];
+export { indoorMaps, IndoorMap };
