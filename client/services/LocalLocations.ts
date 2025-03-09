@@ -87,11 +87,8 @@ class Trie {
  * @property {Trie} trie - Trie data structure to store locations
  */
 class LocalLocations {
-  static #instance: LocalLocations;
+  static readonly #instance: LocalLocations = new LocalLocations();
   static getInstance() {
-    if (!LocalLocations.#instance) {
-      LocalLocations.#instance = new LocalLocations();
-    }
     return LocalLocations.#instance;
   }
 
