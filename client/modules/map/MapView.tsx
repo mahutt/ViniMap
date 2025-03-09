@@ -6,7 +6,7 @@ import { fetchLocationData } from './MapService';
 
 import layers from '@/modules/map/style/DefaultLayers';
 import { ExpressionSpecification } from '@/modules/map/Types';
-import { filterWithLevel } from '@/modules/map/Utils';
+import { filterWithLevel, getIndoorFeatureFromCoordinates } from '@/modules/map/Utils';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -59,7 +59,15 @@ export default function MapView() {
     }
 
     const coordinates = geometry.coordinates;
-    const location = await fetchLocationData(coordinates);
+    let location: Location | null = null;
+
+    if (indoorMap !== null && level !== null) {
+      location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
+    }
+
+    if (!location) {
+      location = await fetchLocationData(coordinates);
+    }
 
     switch (state) {
       case MapState.SelectingStartLocation:
@@ -80,7 +88,9 @@ export default function MapView() {
         break;
     }
 
-    flyTo(coordinates);
+    if (cameraRef.current) {
+      cameraRef.current.flyTo(coordinates, 1000);
+    }
   }
 
   return (

@@ -1,8 +1,8 @@
 import type { FeatureCollection, Geometry } from 'geojson';
 
-/*
-Internal representation of a pair of coordinates.
-Coordinates: [longitude, latitude]
+/**
+    Internal representation of a pair of coordinates.
+    Coordinates: [longitude, latitude]
 */
 export type Coordinates = [number, number];
 

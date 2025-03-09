@@ -17,6 +17,9 @@ import { default as turfDistance } from '@turf/distance';
 import { LocationSubscription, watchPositionAsync } from 'expo-location';
 import CoordinateService from '@/services/CoordinateService';
 
+/**
+ * Internal representation of a location.
+ */
 export interface Location {
   name: string | null;
   coordinates: Coordinates;

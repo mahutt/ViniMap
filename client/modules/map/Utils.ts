@@ -1,5 +1,9 @@
+import { IndoorMap } from './IndoorMap';
 import { Coordinates, ExpressionSpecification, Level } from './Types';
+import { Location } from './MapContext';
 import type { BBox } from 'geojson';
+import GeojsonService from '@/services/GeojsonService';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
 export function overlap(bounds1: BBox, bounds2: BBox) {
   // If one rectangle is on left side of other
@@ -58,4 +62,43 @@ export function filterWithLevel(
 export function bboxCenter(bbox: BBox): Coordinates {
   const [west, south, east, north] = bbox;
   return [(south + north) / 2, (west + east) / 2];
+}
+
+export function getIndoorFeatureFromCoordinates(
+  indoorMap: IndoorMap,
+  coordinates: Coordinates,
+  level: Level
+): Location | null {
+  if (
+    coordinates[0] < indoorMap.bounds[0] ||
+    coordinates[0] > indoorMap.bounds[2] ||
+    coordinates[1] < indoorMap.bounds[1] ||
+    coordinates[1] > indoorMap.bounds[3] ||
+    level < indoorMap.levelsRange.min ||
+    level > indoorMap.levelsRange.max
+  ) {
+    return null;
+  }
+
+  for (let feature of indoorMap.geojson.features) {
+    const featureLevel = GeojsonService.extractLevelFromFeature(feature);
+    if (
+      featureLevel === null ||
+      (typeof featureLevel === 'number' && featureLevel !== level) ||
+      (typeof featureLevel === 'object' &&
+        (level < featureLevel.min || level > featureLevel.max)) ||
+      feature.geometry.type !== 'Polygon' // Currently, we only intercept taps on polygon features
+    ) {
+      continue;
+    }
+    if (booleanPointInPolygon(coordinates, feature.geometry)) {
+      return {
+        coordinates,
+        name: feature?.properties?.ref || 'Unknown room',
+        data: { address: indoorMap.id, isOpen: false },
+      };
+    }
+  }
+
+  return null;
 }
