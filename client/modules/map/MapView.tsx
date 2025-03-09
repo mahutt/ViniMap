@@ -145,23 +145,7 @@ export default function MapView() {
             anchor={{ x: 0.5, y: 0.5 }}>
             <TouchableOpacity
               onPress={() => {
-                const poiLocation: Location = {
-                  name: poi.name,
-                  coordinates: poi.coordinates,
-                  data: {
-                    address: poi.address,
-                    isOpen: poi.openingHours.isOpen,
-                    hours: poi.openingHours.hours,
-                    description: poi.description ?? '',
-                  },
-                };
-
-                setEndLocation(poiLocation);
-                setState(MapState.Information);
-
-                if (cameraRef.current) {
-                  cameraRef.current.flyTo(poi.coordinates, 17);
-                }
+                onMapClick({ geometry: { coordinates: poi.coordinates } });
               }}
               activeOpacity={0.7}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
