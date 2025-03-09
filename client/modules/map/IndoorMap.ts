@@ -41,7 +41,7 @@ const jmsbIndoorMap: IndoorMap = {
 const VLandVEIndoorMap: IndoorMap = {
   id: 'VLVE',
   bounds: GeojsonService.extractLevelsRangeAndBounds(VLandVEfloors as IndoorMapGeoJSON).bounds,
-  geojson: jmsbFloors  as IndoorMapGeoJSON,
+  geojson: VLandVEfloors as IndoorMapGeoJSON,
   levelsRange:  GeojsonService.extractLevelsRangeAndBounds(VLandVEfloors as IndoorMapGeoJSON).levelsRange,
 };
 
