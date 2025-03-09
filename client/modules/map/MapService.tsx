@@ -1,7 +1,7 @@
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
-import { Coordinates, Location } from './MapContext';
+import { Coordinates } from './MapContext';
+import { Location, Route } from './Types';
 import { calculateEuclideanDistance } from './MapUtils';
-import { Route } from './Types';
 
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
@@ -79,7 +79,7 @@ const fetchLocationData = async (coordinates: Coordinates): Promise<Location> =>
       },
     };
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.log('Error fetching data:', error);
     return {
       name: 'Selected Location',
       coordinates: coordinates,
