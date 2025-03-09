@@ -2,11 +2,10 @@ import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import React, { useCallback } from 'react';
 import { MapState, useMap } from './MapContext';
-import { Location } from '@/modules/map/Types';
+import { Location, ExpressionSpecification } from '@/modules/map/Types';
 import { fetchLocationData } from './MapService';
 
 import layers from '@/modules/map/style/DefaultLayers';
-import { ExpressionSpecification } from '@/modules/map/Types';
 import { filterWithLevel, getIndoorFeatureFromCoordinates } from '@/modules/map/IndoorMapUtils';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
