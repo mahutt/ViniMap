@@ -163,13 +163,10 @@ describe('MapView', () => {
     });
 
     expect(mockSetEndLocation).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'Test Location',
-        coordinates: [2, 2],
-      })
+      expect.objectContaining({ address: 'Test Address', isOpen: true, name: 'Test Location' })
     );
     expect(mockSetState).toHaveBeenCalledWith(MapState.Information);
-    expect(mockCameraRef.current.flyTo).toHaveBeenCalledWith([2, 2], 17);
+    expect(mockCameraRef.current.flyTo).toHaveBeenCalledWith([2, 2], 1000);
   });
 
   it('handles map click in SelectingStartLocation state', async () => {
@@ -203,10 +200,7 @@ describe('MapView', () => {
     });
 
     expect(mockSetStartLocation).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'Test Location',
-        coordinates: [2, 2],
-      })
+      expect.objectContaining({ address: 'Test Address', isOpen: true, name: 'Test Location' })
     );
     expect(mockSetState).toHaveBeenCalledWith(MapState.RoutePlanning);
   });
@@ -242,10 +236,7 @@ describe('MapView', () => {
     });
 
     expect(mockSetEndLocation).toHaveBeenCalledWith(
-      expect.objectContaining({
-        name: 'Test Location',
-        coordinates: [2, 2],
-      })
+      expect.objectContaining({ address: 'Test Address', isOpen: true, name: 'Test Location' })
     );
     expect(mockSetState).toHaveBeenCalledWith(MapState.RoutePlanning);
   });

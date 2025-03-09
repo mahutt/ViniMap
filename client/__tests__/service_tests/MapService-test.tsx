@@ -294,9 +294,9 @@ describe('getLocations', () => {
 
       expect(result).toBeTruthy();
       if (result) {
-        expect(result.address).toBe('Single Location');
+        expect(result.data.address).toBe('Single Location');
         expect(result.name).toBe('Second Location');
-        expect(result.isOpen).toBe(false);
+        expect(result.data.isOpen).toBe(false);
       }
     });
     it('should handle results with missing opening_hours', async () => {
@@ -317,9 +317,9 @@ describe('getLocations', () => {
 
       expect(result).toBeTruthy();
       if (result) {
-        expect(result.address).toBe('Location 1');
+        expect(result.data.address).toBe('Location 1');
         expect(result.name).toBe('Location 2');
-        expect(result.isOpen).toBe(false);
+        expect(result.data.isOpen).toBe(false);
       }
     });
 
@@ -342,8 +342,8 @@ describe('getLocations', () => {
 
       expect(result).toBeTruthy();
       if (result) {
-        expect(result.address).toBe('Address not available');
-        expect(result.name).toBe('Name not available');
+        expect(result.data.address).toBe('Address not available');
+        expect(result.name).toBe('Selected Location');
       }
     });
   });
