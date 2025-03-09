@@ -5,7 +5,7 @@
 import bbox from '@turf/bbox';
 
 import type { BBox, Feature } from 'geojson';
-import type { LevelsRange, IndoorMapGeoJSON, Level } from '@/modules/map/Types';
+import type { LevelsRange, IndoorMapGeoJSON } from '@/modules/map/Types';
 
 /**
  * Helper for Geojson data

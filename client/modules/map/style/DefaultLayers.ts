@@ -102,12 +102,13 @@ function createPoiLayers(metaLayer: LayerSpecification): LayerSpecification[] {
   });
 }
 
-let layers: LayerSpecification[] = defaultLayers;
-const poiLayer = layers.find((layer) => layer.id === POI_LAYER_ID);
+let pendingLayers: LayerSpecification[] = defaultLayers;
+const poiLayer = pendingLayers.find((layer) => layer.id === POI_LAYER_ID);
 if (poiLayer) {
   // Convert poi-indoor layer into several poi-layers
-  createPoiLayers(poiLayer).forEach((_layer) => layers.push(_layer));
-  layers = layers.filter((layer) => layer.id !== POI_LAYER_ID);
+  createPoiLayers(poiLayer).forEach((_layer) => pendingLayers.push(_layer));
+  pendingLayers = pendingLayers.filter((layer) => layer.id !== POI_LAYER_ID);
 }
+const layers = pendingLayers;
 
 export default layers;
