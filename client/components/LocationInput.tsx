@@ -1,4 +1,5 @@
-import { Location, MapState, useMap } from '@/modules/map/MapContext';
+import { MapState, useMap } from '@/modules/map/MapContext';
+import { Location } from '@/modules/map/Types';
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect } from 'react';
 import { TextInput, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
