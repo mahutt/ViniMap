@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import { Location, MapState, useMap } from './MapContext';
 import { fetchLocationData } from './MapService';
@@ -156,7 +156,30 @@ export default function MapView() {
             id={`poi-${poi.id}`}
             coordinate={poi.coordinates}
             anchor={{ x: 0.5, y: 0.5 }}>
-            <POIMarker type={poi.type} />
+            <TouchableOpacity
+              onPress={() => {
+                const poiLocation: Location = {
+                  name: poi.name,
+                  coordinates: poi.coordinates,
+                  data: {
+                    address: poi.address,
+                    isOpen: poi.openingHours.isOpen,
+                    hours: poi.openingHours.hours,
+                    description: poi.description || '',
+                  },
+                };
+
+                setEndLocation(poiLocation);
+                setState(MapState.Information);
+
+                if (cameraRef.current) {
+                  cameraRef.current.flyTo(poi.coordinates, 17);
+                }
+              }}
+              activeOpacity={0.7}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
+              <POIMarker type={poi.type} />
+            </TouchableOpacity>
           </Mapbox.MarkerView>
         ))}
 

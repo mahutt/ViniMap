@@ -613,18 +613,6 @@
       "description": "Restaurant"
     },
     {
-      "id": "restaurant-4698123619",
-      "name": "Ganadara Restaurant",
-      "coordinates": [-73.5813752, 45.4936916],
-      "address": "1862 Boulevard De Maisonneuve Ouest, Montréal, QC, H3H 1J8",
-      "type": "restaurant",
-      "openingHours": {
-        "isOpen": true,
-        "hours": "Typically 11:00-22:00"
-      },
-      "description": "Korean restaurant"
-    },
-    {
       "id": "restaurant-4698123625",
       "name": "Le Roi du Wonton",
       "coordinates": [-73.5819143, 45.4938845],
@@ -1076,7 +1064,7 @@
       "type": "bixi",
       "openingHours": {
         "isOpen": true,
-        "hours": "Unknown"
+        "hours": "24/7"
       },
       "description": "Bike sharing station"
     },
@@ -1088,7 +1076,7 @@
       "type": "bixi",
       "openingHours": {
         "isOpen": true,
-        "hours": "Unknown"
+        "hours": "24/7"
       },
       "description": "Bike sharing station with 45 docks"
     },
@@ -1220,7 +1208,7 @@
       "type": "bixi",
       "openingHours": {
         "isOpen": true,
-        "hours": "Unknown"
+        "hours": "24/7"
       },
       "description": "Bike sharing station"
     },
@@ -1232,7 +1220,7 @@
       "type": "bixi",
       "openingHours": {
         "isOpen": true,
-        "hours": "Unknown"
+        "hours": "24/7"
       },
       "description": "Bike sharing station"
     },
@@ -1304,7 +1292,7 @@
       "type": "bixi",
       "openingHours": {
         "isOpen": true,
-        "hours": "Unknown"
+        "hours": "24/7"
       },
       "description": "Bike sharing station with 19 docks"
     },
@@ -1316,7 +1304,7 @@
       "type": "bixi",
       "openingHours": {
         "isOpen": true,
-        "hours": "Unknown"
+        "hours": "24/7"
       },
       "description": "Bike sharing station with 31 docks"
     },
@@ -1424,7 +1412,7 @@
       "type": "bixi",
       "openingHours": {
         "isOpen": true,
-        "hours": "Unknown"
+        "hours": "24/7"
       },
       "description": "Bike sharing station"
     },
@@ -1436,7 +1424,7 @@
       "type": "bixi",
       "openingHours": {
         "isOpen": true,
-        "hours": "Unknown"
+        "hours": "24/7"
       },
       "description": "Bike sharing station"
     },
@@ -1448,7 +1436,7 @@
       "type": "bixi",
       "openingHours": {
         "isOpen": true,
-        "hours": "Unknown"
+        "hours": "24/7"
       },
       "description": "Bike sharing station"
     },
@@ -1460,7 +1448,7 @@
       "type": "bixi",
       "openingHours": {
         "isOpen": true,
-        "hours": "Unknown"
+        "hours": "24/7"
       },
       "description": "Bike sharing station with 19 docks"
     },
@@ -1499,6 +1487,102 @@
         "hours": "13:00-3:00"
       },
       "description": "Greek_fried_chiken restaurant"
+    },
+    {
+      "id": "restaurant-12155458653",
+      "name": "Cafe Myriade",
+      "coordinates": [-73.57791048416343, 45.49609843363409],
+      "address": "1432 Mackay St, Montreal, Quebec H3G 2H7",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "8am-7pm"
+      },
+      "description": "Fresh-roasted coffees brewed in a contemporary space, plus baked goods & croissants."
+    },
+    {
+      "id": "restaurant-12155458654",
+      "name": "McKibbin's",
+      "coordinates": [-73.57723263918287, 45.49686502753477],
+      "address": "1426 Bishop St, Montreal, Quebec H3G 2E6",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "11:30 a.m.–3 a.m."
+      },
+      "description": "Cozy, woodsy pub (part of a local chain) for Celtic comfort food, live music, pitchers & TV sports."
+    },
+    {
+      "id": "restaurant-1215545865",
+      "name": "Starbucks",
+      "coordinates": [-73.57717891033924, 45.49601723499876],
+      "address": "1457 Saint-Catherine St W, Montreal, Quebec H3G 1S6",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "6:30 a.m.–10 p.m."
+      },
+      "description": "Seattle-based coffeehouse chain known for its signature roasts, light bites and WiFi availability."
+    },
+    {
+      "id": "restaurant-1215545866",
+      "name": "Starbucks",
+      "coordinates": [-73.57968584270871, 45.49560118502964],
+      "address": "2000 Guy St, Montreal, Quebec H3H 2N4",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "6:30 a.m.–10 p.m."
+      },
+      "description": "Seattle-based coffeehouse chain known for its signature roasts, light bites and WiFi availability."
+    },
+    {
+      "id": "restaurant-1215545867",
+      "name": "Java U Guy",
+      "coordinates": [-73.57908458394421, 45.49580576643054],
+      "address": "1455 Guy St, Montreal, Quebec H3H 2L5",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "7 a.m.–9 p.m."
+      },
+      "description": "Cafe"
+    },
+    {
+      "id": "restaurant-1215545868",
+      "name": "A&W",
+      "coordinates": [-73.57871185992809, 45.495943341876156],
+      "address": "1550 Blvd. De Maisonneuve Ouest #101, Montreal, Quebec H3G 1N1",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "24/7"
+      },
+      "description": "Fast-food outlet serving up namesake root beer, plus burgers, chicken & fries."
+    },
+    {
+      "id": "restaurant-1215545869",
+      "name": "Matcha Zanmai",
+      "coordinates": [-73.57744049299492, 45.49603546770809],
+      "address": "1428 Mackay St, Montreal, Quebec H3G 2H9",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "12-10pm"
+      },
+      "description": "Japanese sweets restaurant"
+    },
+    {
+      "id": "restaurant-1215545879",
+      "name": "Ganadara",
+      "coordinates": [-73.57739989628152, 45.49621478622112],
+      "address": "1417 Mackay St, Montreal, Quebec H3G 0H2",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "11:30 a.m.–8:30 p.m."
+      },
+      "description": "Hearty Korean favourites, from seafood pancakes to bibimbop, dished up in a bustling, compact venue."
     }
   ]
 }
