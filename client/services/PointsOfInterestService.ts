@@ -13,7 +13,7 @@ for (const poi of poiData.pointsOfInterest) {
         address: poi.address,
         isOpen: poi.openingHours.isOpen,
         hours: poi.openingHours.hours,
-        description: poi.description ?? '',
+        description: poi.description,
       },
     };
   });
