@@ -15,7 +15,8 @@ import moment from 'moment';
 import Swiper from 'react-native-swiper';
 import { extractScheduleData, fetchCalendarEvents } from '@/services/GoogleScheduleService';
 import SimpleModal from '@/components/CalendarIdBox';
-import { Coordinates, MapState, useMap, Location } from '@/modules/map/MapContext';
+import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
+import { Location } from '@/modules/map/Types';
 import { getBuildingCoordinates } from '@/services/BuildingService';
 
 const { width } = Dimensions.get('window');
