@@ -1,0 +1,13 @@
+appId: com.anonymous.client
+---
+- tapOn:
+    point: "50%,50%"
+- tapOn: " Directions"
+- tapOn: "Ace It Tutoring"
+- eraseText: 100
+- inputText: "MBS2"
+- tapOn: "MBS2.145"
+- tapOn: "Current location"
+- eraseText: 100
+- inputText: "H85"
+- tapOn: "H852"

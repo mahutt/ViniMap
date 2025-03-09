@@ -1,7 +1,7 @@
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
-import { Coordinates, Location } from './MapContext';
+import { Coordinates } from './MapContext';
+import { Location, Route } from './Types';
 import { calculateEuclideanDistance } from './MapUtils';
-import { Route } from './Types';
 
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
@@ -59,22 +59,32 @@ const getRoute = async (
   return null;
 };
 
-const fetchLocationData = async (coordinates: Coordinates) => {
+const fetchLocationData = async (coordinates: Coordinates): Promise<Location> => {
   const radius = 50;
   const apiUrl = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${coordinates[1]},${coordinates[0]}&radius=${radius}&key=${GOOGLE_API_KEY}`;
   try {
     const response = await fetch(apiUrl);
     const data = await response.json();
 
-    if (data.results.length > 0) {
-      return {
-        address: data.results[0]?.name || 'Address not available',
-        name: data.results[1]?.name || 'Name not available',
-        isOpen: Boolean(data.results[1].opening_hours),
-      };
+    if (data.results.length === 0) {
+      throw new Error('No results found');
     }
+
+    return {
+      coordinates: coordinates,
+      name: data.results[1]?.name || 'Selected Location',
+      data: {
+        address: data.results[0]?.name || 'Address not available',
+        isOpen: Boolean(data.results[1].opening_hours),
+      },
+    };
   } catch (error) {
-    console.error('Error fetching data:', error);
+    console.log('Error fetching data:', error);
+    return {
+      name: 'Selected Location',
+      coordinates: coordinates,
+      data: { address: 'Location', isOpen: false },
+    };
   }
 };
 

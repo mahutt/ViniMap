@@ -1,12 +1,12 @@
 import { StyleSheet, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import React, { useCallback } from 'react';
-import { Location, MapState, useMap } from './MapContext';
+import { MapState, useMap } from './MapContext';
+import { Location, ExpressionSpecification } from '@/modules/map/Types';
 import { fetchLocationData } from './MapService';
 
 import layers from '@/modules/map/style/DefaultLayers';
-import { ExpressionSpecification } from '@/modules/map/Types';
-import { filterWithLevel } from '@/modules/map/Utils';
+import { filterWithLevel, getIndoorFeatureFromCoordinates } from '@/modules/map/IndoorMapUtils';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -50,7 +50,7 @@ export default function MapView() {
     [level]
   );
 
-  function onMapClick(event: any) {
+  async function onMapClick(event: any) {
     const { geometry } = event;
 
     if (!geometry?.coordinates) {
@@ -58,65 +58,37 @@ export default function MapView() {
     }
 
     const coordinates = geometry.coordinates;
+    let location: Location | null = null;
 
-    fetchLocationData(coordinates)
-      .then((data) => {
-        switch (state) {
-          case MapState.SelectingStartLocation:
-            setStartLocation({
-              name: data?.name || null,
-              coordinates: coordinates,
-              data: data || undefined,
-            });
-            if (endLocation) {
-              setState(MapState.RoutePlanning);
-            }
-            break;
+    if (indoorMap !== null && level !== null) {
+      location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
+    }
 
-          case MapState.SelectingEndLocation:
-            setEndLocation({
-              name: data?.name || 'Selected Location',
-              coordinates: coordinates,
-              data: data || { address: 'Location', isOpen: false },
-            });
-            setState(MapState.RoutePlanning);
-            break;
+    if (!location) {
+      location = await fetchLocationData(coordinates);
+    }
 
-          default:
-            setEndLocation({
-              name: data?.name || 'Selected Location',
-              coordinates: coordinates,
-              data: data || { address: 'Location', isOpen: false },
-            });
-            setState(MapState.Information);
-            break;
+    switch (state) {
+      case MapState.SelectingStartLocation:
+        setStartLocation(location);
+        if (endLocation) {
+          setState(MapState.RoutePlanning);
         }
-      })
-      .catch((error) => {
-        console.warn('Error fetching location data:', error);
+        break;
 
-        switch (state) {
-          case MapState.SelectingStartLocation:
-            setStartLocation({
-              name: null,
-              coordinates: coordinates,
-            });
-            break;
+      case MapState.SelectingEndLocation:
+        setEndLocation(location);
+        setState(MapState.RoutePlanning);
+        break;
 
-          case MapState.SelectingEndLocation:
-          default:
-            setEndLocation({
-              name: 'Selected Location',
-              coordinates: coordinates,
-              data: { address: 'Location', isOpen: false },
-            });
-            setState(MapState.Information);
-            break;
-        }
-      });
+      default:
+        setEndLocation(location);
+        setState(MapState.Information);
+        break;
+    }
 
     if (cameraRef.current) {
-      cameraRef.current.flyTo(coordinates, 17);
+      cameraRef.current.flyTo(coordinates, 1000);
     }
   }
 

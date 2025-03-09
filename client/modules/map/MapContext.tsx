@@ -9,19 +9,13 @@ import React, {
 } from 'react';
 import Mapbox from '@rnmapbox/maps';
 import { getRoute } from './MapService';
-import { Coordinates, Route, Level } from './Types';
+import { Location, Coordinates, Route, Level } from './Types';
 import { IndoorMap, indoorMaps } from './IndoorMap';
 import type { BBox } from 'geojson';
-import { bboxCenter, overlap } from './Utils';
+import { bboxCenter, overlap } from './IndoorMapUtils';
 import { default as turfDistance } from '@turf/distance';
 import { LocationSubscription, watchPositionAsync } from 'expo-location';
 import CoordinateService from '@/services/CoordinateService';
-
-export interface Location {
-  name: string | null;
-  coordinates: Coordinates;
-  data?: any;
-}
 
 export enum MapState {
   Idle,
