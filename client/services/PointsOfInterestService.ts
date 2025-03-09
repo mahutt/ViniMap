@@ -3,6 +3,21 @@ import poiData from '@/data/PointsOfInterest.json';
 import { POIData, PointOfInterest } from '../modules/map/PointsOfInterestTypes';
 import { calculateEuclideanDistance } from '@/modules/map/MapUtils';
 
+import LocalLocations from './LocalLocations';
+for (const poi of poiData.pointsOfInterest) {
+  LocalLocations.getInstance().add(poi.name, (name: string) => {
+    return {
+      name: name,
+      coordinates: poi.coordinates as Coordinates,
+      data: {
+        address: poi.address,
+        isOpen: poi.openingHours.isOpen,
+        hours: poi.openingHours.hours,
+        description: poi.description ?? '',
+      },
+    };
+  });
+}
 class PointsOfInterestService {
   private readonly poiData: POIData;
 
