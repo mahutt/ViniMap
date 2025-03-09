@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Location } from '@/modules/map/Types';
 import { getLocations } from '@/modules/map/MapService';
-import LocalLocations from '@/services/TrieService';
+import LocalLocations from '@/services/LocalLocations';
 
 export default function LocationsAutocomplete({
   query,
