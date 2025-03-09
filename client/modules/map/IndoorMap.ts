@@ -1,7 +1,7 @@
 import type { BBox } from 'geojson';
 import { IndoorMapGeoJSON, LevelsRange } from './Types';
 import LocalLocations from '@/services/LocalLocations';
-import { bboxCenter } from './Utils';
+import { bboxCenter } from './IndoorMapUtils';
 import hallFoorsGeoJson from '@/assets/geojson/hallFloors.json';
 import GeojsonService from '@/services/GeojsonService';
 

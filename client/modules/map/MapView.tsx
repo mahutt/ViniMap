@@ -7,7 +7,7 @@ import { fetchLocationData } from './MapService';
 
 import layers from '@/modules/map/style/DefaultLayers';
 import { ExpressionSpecification } from '@/modules/map/Types';
-import { filterWithLevel, getIndoorFeatureFromCoordinates } from '@/modules/map/Utils';
+import { filterWithLevel, getIndoorFeatureFromCoordinates } from '@/modules/map/IndoorMapUtils';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
