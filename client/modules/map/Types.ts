@@ -26,3 +26,12 @@ export type LevelsRange = {
   min: Level;
   max: Level;
 };
+
+/**
+ * Internal representation of a location.
+ */
+export interface Location {
+  name: string | null;
+  coordinates: Coordinates;
+  data?: any;
+}

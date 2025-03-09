@@ -1,6 +1,6 @@
 import { IndoorMap } from './IndoorMap';
 import { Coordinates, ExpressionSpecification, Level } from './Types';
-import { Location } from './MapContext';
+import { Location } from './Types';
 import type { BBox } from 'geojson';
 import GeojsonService from '@/services/GeojsonService';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
@@ -61,7 +61,7 @@ export function filterWithLevel(
 
 export function bboxCenter(bbox: BBox): Coordinates {
   const [west, south, east, north] = bbox;
-  return [(south + north) / 2, (west + east) / 2];
+  return [(west + east) / 2, (south + north) / 2];
 }
 
 export function getIndoorFeatureFromCoordinates(
