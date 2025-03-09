@@ -3,7 +3,7 @@ import { IndoorMapGeoJSON, LevelsRange } from './Types';
 import LocalLocations from '@/services/LocalLocations';
 import { bboxCenter } from './IndoorMapUtils';
 
-import hallFoorsGeoJson from '@/assets/geojson/hallFloors.json';
+import hallFloorsGeoJson from '@/assets/geojson/hallFloors.json';
 import jmsbFloors from '@/assets/geojson/jmsbFloors.json';
 import VLandVEfloors from '@/assets/geojson/VLandVEfloors.json';
 
@@ -29,7 +29,7 @@ const getAllRoomRefs = (geojson: IndoorMapGeoJSON): string[] => {
 const rawIndoorMaps = [
   {
     id: 'Hall Building',
-    geojson: hallFoorsGeoJson,
+    geojson: hallFloorsGeoJson,
   },
   {
     id: 'John Molson School of Business',
