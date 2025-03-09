@@ -86,7 +86,7 @@ export default function MapView() {
             address: clickedPOI.address,
             isOpen: clickedPOI.openingHours.isOpen,
             hours: clickedPOI.openingHours.hours,
-            description: clickedPOI.description || '',
+            description: clickedPOI.description ?? '',
           },
         };
       }
@@ -152,7 +152,7 @@ export default function MapView() {
                     address: poi.address,
                     isOpen: poi.openingHours.isOpen,
                     hours: poi.openingHours.hours,
-                    description: poi.description || '',
+                    description: poi.description ?? '',
                   },
                 };
 

@@ -4,7 +4,7 @@ import { POIData, PointOfInterest } from '../modules/map/PointsOfInterestTypes';
 import { calculateEuclideanDistance } from '@/modules/map/MapUtils';
 
 class PointsOfInterestService {
-  private poiData: POIData;
+  private readonly poiData: POIData;
 
   constructor() {
     this.poiData = poiData as POIData;
