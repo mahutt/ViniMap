@@ -1,0 +1,3790 @@
+{
+  "type": "FeatureCollection",
+  "generator": "overpass-turbo",
+  "copyright": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+  "timestamp": "2025-03-09T05:07:25Z",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/144058337",
+        "leisure": "park"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.5735228,
+              45.4956638
+            ],
+            [
+              -73.5734997,
+              45.4956919
+            ],
+            [
+              -73.5734546,
+              45.4957083
+            ],
+            [
+              -73.5732736,
+              45.4958897
+            ],
+            [
+              -73.5732816,
+              45.4959226
+            ],
+            [
+              -73.5734305,
+              45.4959978
+            ],
+            [
+              -73.5734854,
+              45.4960245
+            ],
+            [
+              -73.573549,
+              45.4960569
+            ],
+            [
+              -73.5737944,
+              45.4958122
+            ],
+            [
+              -73.5738039,
+              45.4957995
+            ],
+            [
+              -73.5737954,
+              45.4957967
+            ],
+            [
+              -73.5738088,
+              45.4957798
+            ],
+            [
+              -73.5735228,
+              45.4956638
+            ]
+          ]
+        ]
+      },
+      "id": "way/144058337"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/340406841",
+        "leisure": "park"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.584353,
+              45.4944415
+            ],
+            [
+              -73.5844067,
+              45.4944733
+            ],
+            [
+              -73.5844653,
+              45.494502
+            ],
+            [
+              -73.5845262,
+              45.4945142
+            ],
+            [
+              -73.5845934,
+              45.494507
+            ],
+            [
+              -73.5846537,
+              45.4944848
+            ],
+            [
+              -73.5847004,
+              45.4944501
+            ],
+            [
+              -73.5847285,
+              45.4944067
+            ],
+            [
+              -73.5847349,
+              45.4943592
+            ],
+            [
+              -73.584719,
+              45.4943128
+            ],
+            [
+              -73.5846748,
+              45.4942759
+            ],
+            [
+              -73.5846164,
+              45.4942436
+            ],
+            [
+              -73.5845678,
+              45.4942184
+            ],
+            [
+              -73.5845106,
+              45.4942045
+            ],
+            [
+              -73.5844601,
+              45.4942015
+            ],
+            [
+              -73.5844112,
+              45.4942067
+            ],
+            [
+              -73.5843748,
+              45.4942182
+            ],
+            [
+              -73.5843322,
+              45.4942416
+            ],
+            [
+              -73.5843026,
+              45.4942753
+            ],
+            [
+              -73.5842859,
+              45.4943106
+            ],
+            [
+              -73.5842821,
+              45.4943546
+            ],
+            [
+              -73.5842959,
+              45.4943921
+            ],
+            [
+              -73.5843273,
+              45.4944224
+            ],
+            [
+              -73.584353,
+              45.4944415
+            ]
+          ]
+        ]
+      },
+      "id": "way/340406841"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "way/1299465613",
+        "addr:city": "Montréal",
+        "addr:housenumber": "40",
+        "addr:postcode": "H3G 2J8",
+        "addr:province": "Québec",
+        "addr:street": "Avenue McGregor",
+        "leisure": "park",
+        "name": "Parc Percy-Walters",
+        "opening_hours": "Mo-Su 06:00-23:00",
+        "website": "https://montreal.ca/en/places/parc-percy-walters",
+        "wikidata": "Q22486105"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -73.5847052,
+              45.4988577
+            ],
+            [
+              -73.5839672,
+              45.4995845
+            ],
+            [
+              -73.5840974,
+              45.499647
+            ],
+            [
+              -73.5842176,
+              45.4997042
+            ],
+            [
+              -73.5842901,
+              45.4997362
+            ],
+            [
+              -73.5848308,
+              45.4999966
+            ],
+            [
+              -73.5852885,
+              45.5002097
+            ],
+            [
+              -73.5857445,
+              45.4989932
+            ],
+            [
+              -73.5857644,
+              45.4989234
+            ],
+            [
+              -73.5857478,
+              45.4989103
+            ],
+            [
+              -73.5857216,
+              45.4989038
+            ],
+            [
+              -73.5856994,
+              45.4989064
+            ],
+            [
+              -73.5855579,
+              45.4990919
+            ],
+            [
+              -73.5855253,
+              45.4991278
+            ],
+            [
+              -73.5854848,
+              45.4991484
+            ],
+            [
+              -73.5854281,
+              45.4991584
+            ],
+            [
+              -73.5853647,
+              45.4991567
+            ],
+            [
+              -73.585312,
+              45.4991448
+            ],
+            [
+              -73.584821,
+              45.4989115
+            ],
+            [
+              -73.5847052,
+              45.4988577
+            ]
+          ]
+        ]
+      },
+      "id": "way/1299465613"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/245512739",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1356",
+        "addr:postcode": "H3G 1P6",
+        "addr:province": "Québec",
+        "addr:street": "Rue Sainte-Catherine Ouest",
+        "amenity": "restaurant",
+        "brand": "3 Brasseurs",
+        "brand:wikidata": "Q3230326",
+        "contact:phone": "+1 514 788 9788",
+        "contact:website": "https://www.les3brasseurs.ca/fr/trouver-un-3-brasseurs/crescent/",
+        "cuisine": "burger;pizza;seafood",
+        "microbrewery": "yes",
+        "name": "3 Brasseurs",
+        "name:en": "3 Brewers",
+        "not:brand:wikidata": "Q3230326",
+        "official_name": "Les 3 Brasseurs",
+        "phone": "+1 514-788-9788",
+        "takeaway": "yes",
+        "website": "https://www.les3brasseurs.ca/fr/trouver-un-3-brasseurs/crescent/",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5754903,
+          45.497185
+        ]
+      },
+      "id": "node/245512739"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/245512741",
+        "addr:housenumber": "1445",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "cuisine": "thai",
+        "diet:vegetarian": "no",
+        "name": "Le Garden Room",
+        "opening_hours": "Mo-We 12:00-23:00; Th-Su 12:00-02:00",
+        "phone": "+1 438 603 5603",
+        "website": "https://www.legardenroom.com/",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5774768,
+          45.4972187
+        ]
+      },
+      "id": "node/245512741"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/504318024",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Station Guy-Concordia (St-Mathieu/De Maisonneuve)",
+        "network": "STM",
+        "network:wikidata": "Q1817151",
+        "operator": "STM",
+        "public_transport": "platform",
+        "ref": "52147",
+        "shelter": "no",
+        "tactile_paving": "no",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.580727,
+          45.494608
+        ]
+      },
+      "id": "node/504318024"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/504318025",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Station Guy-Concordia (Guy / De Maisonneuve)",
+        "network": "STM",
+        "network:wikidata": "Q1817151",
+        "operator": "STM",
+        "public_transport": "platform",
+        "ref": "52201",
+        "shelter": "yes",
+        "tactile_paving": "no",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.579078,
+          45.495688
+        ]
+      },
+      "id": "node/504318025"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/964119609",
+        "amenity": "restaurant",
+        "name": "Sushi Ste-Catherine",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5794979,
+          45.4938203
+        ]
+      },
+      "id": "node/964119609"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1192154206",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1657",
+        "addr:postcode": "H3H 2H8",
+        "addr:province": "QC",
+        "addr:street": "Rue Sainte-Catherine Ouest",
+        "amenity": "restaurant",
+        "capacity": "150",
+        "check_date": "2023-09-09",
+        "cuisine": "mexican",
+        "entrance": "yes",
+        "name": "Les Trois amigos",
+        "name:en": "3 Amigos",
+        "phone": "+1-514-939-3329",
+        "smoking": "no",
+        "website": "http://www.3amigosrestaurant.com",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.578929,
+          45.494302
+        ]
+      },
+      "id": "node/1192154206"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1192154309",
+        "amenity": "restaurant",
+        "brand": "Scores",
+        "brand:wikidata": "Q3476059",
+        "cuisine": "chicken;barbecue",
+        "name": "Scores"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.576448,
+          45.4961727
+        ]
+      },
+      "id": "node/1192154309"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1192154324",
+        "amenity": "restaurant",
+        "name": "BBQ Coréen PONY",
+        "opening_hours": "Mo-We 17:00-23:00, Th 17:00-24:00, Fr,Sa 11:30-01:00, Su 11:30-23:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5781834,
+          45.494505
+        ]
+      },
+      "id": "node/1192154324"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1199379344",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "cuisine": "chicken",
+        "name": "Bar B Barn",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5760757,
+          45.4944594
+        ]
+      },
+      "id": "node/1199379344"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1199684762",
+        "amenity": "library",
+        "check_date": "2024-05-17",
+        "name": "Webster Library",
+        "name:fr": "Bibliothèque Webster",
+        "opening_hours": "24/7",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5779337,
+          45.4968158
+        ]
+      },
+      "id": "node/1199684762"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1201288275",
+        "addr:housenumber": "1434",
+        "addr:street": "Crescent Street",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "check_date": "2024-08-13",
+        "cuisine": "italian",
+        "name": "Wienstein & Gavino's",
+        "website": "https://www.wgmtl.com/",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5767685,
+          45.4975169
+        ]
+      },
+      "id": "node/1201288275"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1201288314",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "cuisine": "pizza",
+        "name": "California Pizza",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.576857,
+          45.4975743
+        ]
+      },
+      "id": "node/1201288314"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1201303591",
+        "addr:housenumber": "1651",
+        "addr:street": "Rue Sainte-Catherine Ouest",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "cuisine": "bubble_tea",
+        "door": "hinged",
+        "entrance": "yes",
+        "name": "Ocha Bubble Tea",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5788086,
+          45.4944023
+        ]
+      },
+      "id": "node/1201303591"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1202561108",
+        "amenity": "restaurant",
+        "name": "Le Pois Penché",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5760644,
+          45.4992991
+        ]
+      },
+      "id": "node/1202561108"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1202561222",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "cuisine": "crepe",
+        "name": "Paris Crêpe",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5757908,
+          45.4973581
+        ]
+      },
+      "id": "node/1202561222"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1204313119",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1333",
+        "addr:postcode": "H3G 2R9",
+        "addr:street": "Boulevard De Maisonneuve Ouest",
+        "amenity": "restaurant",
+        "cuisine": "mediterranean",
+        "name": "Nara Reto Lounge",
+        "was:amenity": "fast_food",
+        "was:name": "Amir",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5773986,
+          45.4984151
+        ]
+      },
+      "id": "node/1204313119"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1231398324",
+        "addr:housenumber": "2045",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "cuisine": "sushi",
+        "name": "Toro Sushi",
+        "step_count": "4",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5783562,
+          45.4976921
+        ]
+      },
+      "id": "node/1231398324"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1231398349",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "cuisine": "korean",
+        "name": "Tianxia",
+        "step_count": "8",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5789216,
+          45.4979195
+        ]
+      },
+      "id": "node/1231398349"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1232026780",
+        "addr:housenumber": "1504",
+        "addr:postcode": "H3G 1L3",
+        "addr:street": "Rue Sherbrooke Ouest",
+        "amenity": "restaurant",
+        "name": "Bice Restaurant"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5809582,
+          45.4970237
+        ]
+      },
+      "id": "node/1232026780"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1232026883",
+        "addr:housenumber": "2171",
+        "addr:postcode": "H3G 2C1",
+        "addr:street": "Rue Crescent",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "Troika"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5785469,
+          45.4986885
+        ]
+      },
+      "id": "node/1232026883"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1232026955",
+        "addr:housenumber": "2137",
+        "addr:postcode": "H3G 2C1",
+        "addr:street": "Rue Crescent",
+        "amenity": "restaurant",
+        "cuisine": "french",
+        "name": "L'Autre Saison",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5783698,
+          45.4986283
+        ]
+      },
+      "id": "node/1232026955"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1232026967",
+        "addr:housenumber": "2100",
+        "addr:street": "Rue Crescent",
+        "amenity": "restaurant",
+        "cuisine": "international",
+        "name": "L'Académie",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5782196,
+          45.4982373
+        ]
+      },
+      "id": "node/1232026967"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1237960420",
+        "addr:housenumber": "1264",
+        "addr:street": "Rue Stanley",
+        "amenity": "restaurant",
+        "cuisine": "italian",
+        "name": "Restaurant Santa Lucia",
+        "phone": "+1-514-393-8623"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5731543,
+          45.4990103
+        ]
+      },
+      "id": "node/1237960420"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1237960466",
+        "amenity": "restaurant",
+        "cuisine": "asian",
+        "name": "Cités d'Asie"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5737766,
+          45.4982743
+        ]
+      },
+      "id": "node/1237960466"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1271418874",
+        "amenity": "restaurant",
+        "cuisine": "organic",
+        "name": "Crudessence",
+        "step_count": "6",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5801931,
+          45.4974721
+        ]
+      },
+      "id": "node/1271418874"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1271418877",
+        "amenity": "restaurant",
+        "name": "Riz en folie"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5801287,
+          45.4974156
+        ]
+      },
+      "id": "node/1271418877"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1457825326",
+        "bench": "yes",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Station Guy-Concordia (Guy / De Maisonneuve)",
+        "public_transport": "platform",
+        "ref": "52195",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5796058,
+          45.4959217
+        ]
+      },
+      "id": "node/1457825326"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1457825329",
+        "bench": "yes",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Côte-des-Neiges / Summerhill",
+        "public_transport": "platform",
+        "ref": "52044",
+        "shelter": "yes",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5839845,
+          45.4965027
+        ]
+      },
+      "id": "node/1457825329"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/1515928358",
+        "addr:housenumber": "1452",
+        "addr:street": "Rue Saint-Mathieu",
+        "amenity": "restaurant",
+        "check_date": "2023-09-09",
+        "cuisine": "vietnamese",
+        "name": "Pho Nguyen"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5804592,
+          45.4943664
+        ]
+      },
+      "id": "node/1515928358"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2439184626",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1460",
+        "addr:street": "Rue Mackay",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "name": "Shifu",
+        "opening_hours": "Mo-Su 11:00-23:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.578432,
+          45.4963864
+        ]
+      },
+      "id": "node/2439184626"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2671487831",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "name": "Sushi Crescent"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5765184,
+          45.4977438
+        ]
+      },
+      "id": "node/2671487831"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/2700650351",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "cuisine": "indian",
+        "entrance": "yes",
+        "name": "Devi",
+        "phone": "+1-514-286-0303",
+        "website": "http://devimontreal.com/",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5769484,
+          45.4976105
+        ]
+      },
+      "id": "node/2700650351"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3118448149",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1909",
+        "addr:postcode": "H3H 1M3",
+        "addr:street": "Rue Sainte-Catherine Ouest",
+        "amenity": "restaurant",
+        "capacity": "40",
+        "cuisine": "asian;dumpling",
+        "name": "Qinghua Dumplings (Express)",
+        "phone": "+1-514-846-8886",
+        "smoking": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.579628,
+          45.4937084
+        ]
+      },
+      "id": "node/3118448149"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3118461153",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1676",
+        "addr:postcode": "H3H 1G9",
+        "addr:street": "Avenue Lincoln",
+        "amenity": "restaurant",
+        "capacity": "80",
+        "cuisine": "asian;dumpling",
+        "name": "Restaurant Qinghua Dumpling",
+        "phone": "+1-438-288-5366",
+        "smoking": "no",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5809915,
+          45.4952594
+        ]
+      },
+      "id": "node/3118461153"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3344755684",
+        "addr:city": "Montréal",
+        "addr:housenumber": "2055",
+        "addr:postcode": "H3G 2E9",
+        "addr:province": "QC",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "diet:vegetarian": "yes",
+        "name": "Burritoville",
+        "step_count": "8",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5787978,
+          45.4978734
+        ]
+      },
+      "id": "node/3344755684"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/3370726297",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1313",
+        "addr:street": "De Maisonneuve West",
+        "amenity": "restaurant",
+        "cuisine": "breakfast",
+        "name": "Eggspectation",
+        "opening_hours": "Mo-Su 06:00-17:00",
+        "outdoor_seating": "seasonal",
+        "phone": "+1 514-842-3447",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5771409,
+          45.4987402
+        ]
+      },
+      "id": "node/3370726297"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4026644598",
+        "addr:housenumber": "1684",
+        "addr:street": "Boulevard De Masonneuve Ouest",
+        "alt_name": "Allo Mon Coco",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "brand": "Allô! Mon Coco",
+        "cuisine": "breakfast",
+        "door": "hinged",
+        "entrance": "yes",
+        "name": "Allô! Mon Coco",
+        "opening_hours": "Mo-Su 06:00-16:00",
+        "website": "https://allomoncoco.com/",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5801911,
+          45.4947087
+        ]
+      },
+      "id": "node/4026644598"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4028151693",
+        "amenity": "restaurant",
+        "cuisine": "persian",
+        "name": "Château Kabab",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.580135,
+          45.4958917
+        ]
+      },
+      "id": "node/4028151693"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4030794085",
+        "bench": "yes",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "no",
+        "name": "René-Lévesque / Bishop",
+        "public_transport": "platform",
+        "ref": "52373",
+        "shelter": "yes",
+        "tactile_paving": "no",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5737142,
+          45.4954342
+        ]
+      },
+      "id": "node/4030794085"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4034535844",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Station Guy-Concordia (Guy / De Maisonneuve)",
+        "public_transport": "platform",
+        "ref": "52194",
+        "shelter": "yes",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5784153,
+          45.4953969
+        ]
+      },
+      "id": "node/4034535844"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4059079061",
+        "addr:housenumber": "1407",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "cuisine": "italian",
+        "designation": "Cuisine italienne traditionnelle",
+        "name": "Ferrari Restaurant - Café",
+        "website": "https://restoferrari.ca/",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5766199,
+          45.496838
+        ]
+      },
+      "id": "node/4059079061"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4059079062",
+        "addr:housenumber": "1421",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "cuisine": "korean",
+        "name": "Man-na",
+        "ramp": "no",
+        "step_count": "10",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5769592,
+          45.4970119
+        ]
+      },
+      "id": "node/4059079062"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4059085456",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1431",
+        "addr:postcode": "H3G 2E4",
+        "addr:province": "Québec",
+        "addr:street": "Rue bishop",
+        "addr:unit": "A",
+        "amenity": "restaurant",
+        "brand": "Pizza Hut",
+        "brand:wikidata": "Q191615",
+        "brand:wikipedia": "en:Pizza Hut",
+        "cuisine": "pizza",
+        "name": "Pizza Hut",
+        "opening_hours": "Mo-Th 10:30-23:00, Fr-Su 10:30-24:00",
+        "phone": "+15142826463",
+        "step_count": "8",
+        "website": "https://www.pizzahut.ca/huts/ca-1/R34601/",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5771979,
+          45.4971162
+        ]
+      },
+      "id": "node/4059085456"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4059093099",
+        "addr:housenumber": "1425",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "cuisine": "mexican",
+        "name": "Messa 14",
+        "ramp": "no",
+        "step_count": "11",
+        "website": "http://www.mesa14.com/",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5770222,
+          45.497056
+        ]
+      },
+      "id": "node/4059093099"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4059100816",
+        "addr:housenumber": "2005",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "cuisine": "indian",
+        "name": "Maison Chaïshaï",
+        "step_count": "0",
+        "website": "http://www.ordercharcos.com/",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5781353,
+          45.4975759
+        ]
+      },
+      "id": "node/4059100816"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4059117065",
+        "addr:city": "Montréal",
+        "addr:province": "QC",
+        "addr:street": "Rue Sherbrooke Ouest",
+        "amenity": "restaurant",
+        "check_date:opening_hours": "2024-06-14",
+        "name": "Maison Inja - Cuisine Perse",
+        "opening_hours:signed": "no",
+        "step_count": "3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5804339,
+          45.4976883
+        ]
+      },
+      "id": "node/4059117065"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4059158304",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "name": "Mei",
+        "step_count": "9",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5775452,
+          45.4962156
+        ]
+      },
+      "id": "node/4059158304"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4059163967",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "name": "Cuisine Szechuan",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5815133,
+          45.4963591
+        ]
+      },
+      "id": "node/4059163967"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4059166319",
+        "amenity": "restaurant",
+        "name": "Cocktail Hawaii",
+        "step_count": "1",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5800075,
+          45.4952229
+        ]
+      },
+      "id": "node/4059166319"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4059413912",
+        "amenity": "restaurant",
+        "check_date": "2023-09-09",
+        "name": "NosThés",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5781872,
+          45.4949266
+        ]
+      },
+      "id": "node/4059413912"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4060351795",
+        "amenity": "restaurant",
+        "cuisine": "mediterranean",
+        "name": "Restaurant Traditions",
+        "step_count": "4",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.58133,
+          45.4962984
+        ]
+      },
+      "id": "node/4060351795"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4060358153",
+        "amenity": "restaurant",
+        "cuisine": "mongolian_grill",
+        "name": "Egina",
+        "opening_hours": "We-Su 17:00-24:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5811803,
+          45.4962533
+        ]
+      },
+      "id": "node/4060358153"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4060371127",
+        "addr:housenumber": "1618",
+        "addr:street": "Avenue Lincoln",
+        "amenity": "restaurant",
+        "cuisine": "chinese",
+        "name": "Chez Chen",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.580315,
+          45.4958601
+        ]
+      },
+      "id": "node/4060371127"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4060378477",
+        "addr:housenumber": "1662",
+        "addr:street": "Boulevard de Maisonneuve O",
+        "amenity": "restaurant",
+        "cuisine": "pizza",
+        "name": "Angela Pizzeria & Restaurant",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5799701,
+          45.4948995
+        ]
+      },
+      "id": "node/4060378477"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4060393298",
+        "addr:housenumber": "1620",
+        "addr:street": "Avenue Lincoln",
+        "amenity": "restaurant",
+        "name": "Student Tasty Biryani",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5804048,
+          45.4957837
+        ]
+      },
+      "id": "node/4060393298"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4354761089",
+        "amenity": "restaurant",
+        "name": "Comptoir du chef"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5800322,
+          45.4961676
+        ]
+      },
+      "id": "node/4354761089"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4354869691",
+        "amenity": "restaurant",
+        "name": "Itali.co",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5742438,
+          45.4950221
+        ]
+      },
+      "id": "node/4354869691"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4467655523",
+        "addr:city": "Montréal",
+        "addr:floor": "G",
+        "addr:housenumber": "1409",
+        "addr:postcode": "H3H 2G4",
+        "addr:province": "QC",
+        "addr:street": "Rue Saint-Marc",
+        "air_conditioning": "yes",
+        "amenity": "restaurant",
+        "capacity": "20",
+        "check_date": "2024-08-17",
+        "cuisine": "indian",
+        "delivery": "yes",
+        "diet:meat": "yes",
+        "diet:vegan": "yes",
+        "diet:vegetarian": "yes",
+        "internet_access": "no",
+        "level": "0",
+        "name": "Thali Cuisine Indienne",
+        "opening_hours": "Tu-Su 11:30-22:00",
+        "opening_hours:covid19": "Mo-Su 12:00-21:30",
+        "outdoor_seating": "no",
+        "payment:cash": "yes",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
+        "phone": "+1 514 989 9048",
+        "smoking": "no",
+        "takeaway": "yes",
+        "website": "https://www.thalimontreal.com",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.580681,
+          45.4931141
+        ]
+      },
+      "id": "node/4467655523"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4467723089",
+        "addr:city": "Montréal",
+        "addr:floor": "G",
+        "addr:housenumber": "1413",
+        "addr:postcode": "H3H 1M1",
+        "addr:province": "QC",
+        "addr:street": "Rue Saint-Marc",
+        "amenity": "restaurant",
+        "check_date": "2024-08-17",
+        "cuisine": "korean",
+        "level": "0",
+        "name": "Ici Restaurant Coréen",
+        "opening_hours": "Mo,We-Su 11:00-21:00; Tu 15:00-21:00",
+        "payment:cash": "yes",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
+        "phone": "+1 5149388388",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5807098,
+          45.4931293
+        ]
+      },
+      "id": "node/4467723089"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4475368798",
+        "amenity": "restaurant",
+        "name": "La Belle et le Bœuf",
+        "name:fr": "La Belle et le Bœuf",
+        "opening_hours": "Su-We 18:00-22:00; Th-Sa 12:30-22:00+"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5786152,
+          45.4941505
+        ]
+      },
+      "id": "node/4475368798"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4664652690",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1465",
+        "addr:postcode": "H3G 2B2",
+        "addr:province": "Québec",
+        "addr:street": "Rue Crescent",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "door": "revolving",
+        "entrance": "yes",
+        "name": "Burger bar crescent",
+        "name:fr": "Burger bar crescent",
+        "phone": "+1-514-903-5575",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5771059,
+          45.4980036
+        ]
+      },
+      "id": "node/4664652690"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4698123619",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1862",
+        "addr:postcode": "H3H 1J8",
+        "addr:province": "QC",
+        "addr:street": "Boulevard De Maisonneuve Ouest",
+        "amenity": "restaurant",
+        "capacity": "20",
+        "cuisine": "korean",
+        "delivery": "no",
+        "name": "Ganadara Restaurant",
+        "phone": "+1-514-933-2288",
+        "smoking": "no",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5813752,
+          45.4936916
+        ]
+      },
+      "id": "node/4698123619"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4698123625",
+        "addr:city": "Montréal",
+        "addr:housenumber": "2125",
+        "addr:postcode": "H3H 2P1",
+        "addr:province": "QC",
+        "addr:street": "Rue Saint-Marc",
+        "amenity": "restaurant",
+        "capacity": "30",
+        "cuisine": "chinese",
+        "delivery": "no",
+        "name": "Le Roi du Wonton",
+        "opening_hours": "Mo-Sa 11:00-21:00",
+        "outdoor_seating": "no",
+        "phone": "+1-514-937-5419",
+        "smoking": "no",
+        "takeaway": "yes",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5819143,
+          45.4938845
+        ]
+      },
+      "id": "node/4698123625"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4708763051",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "entrance": "yes",
+        "name": "L'Atelier d'Argentine",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.577163,
+          45.4977637
+        ]
+      },
+      "id": "node/4708763051"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4708772405",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "entrance": "yes",
+        "name": "Yama"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5756479,
+          45.4982954
+        ]
+      },
+      "id": "node/4708772405"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4711803932",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1237",
+        "addr:postcode": "H3H 2K5",
+        "addr:province": "Québec",
+        "addr:street": "Rue Guy",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "cuisine": "korean_fried_chicken",
+        "name": "COQCOR",
+        "opening_hours": "12:00-22:00",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5768926,
+          45.4948149
+        ]
+      },
+      "id": "node/4711803932"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4711810141",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1209",
+        "addr:postcode": "H3H 2K5",
+        "addr:province": "Québec",
+        "addr:street": "Rue Guy",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "handrail": "no",
+        "name": "Chez la Mere Michel",
+        "step_count": "1",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5762712,
+          45.494555
+        ]
+      },
+      "id": "node/4711810141"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4711825201",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "door": "yes_hinges",
+        "name": "indian_food-1242",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.575397,
+          45.4969101
+        ]
+      },
+      "id": "node/4711825201"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4711843814",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "contact:phone": "+1 514 866 3226",
+        "cuisine": "italian",
+        "door": "hinged",
+        "name": "Trattoria Trestevere",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5749645,
+          45.4969078
+        ]
+      },
+      "id": "node/4711843814"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4711851564",
+        "amenity": "restaurant",
+        "automatic_door": "no",
+        "door": "hinged",
+        "entrance": "yes",
+        "name": "Pizza Chez Danny",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5745967,
+          45.4977746
+        ]
+      },
+      "id": "node/4711851564"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/4893560522",
+        "addr:housenumber": "1612",
+        "addr:street": "Rue Sherbrooke Ouest",
+        "amenity": "restaurant",
+        "internet_access": "wlan",
+        "name": "Chez Hailar",
+        "name:fr": "Chez Hailar",
+        "opening_hours": "Su-Th 11:00-23:00; Fr-Sa 11:00-01:00",
+        "phone": "+1 514 846-0000",
+        "website": "http://www.chezhailar.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5817158,
+          45.4962413
+        ]
+      },
+      "id": "node/4893560522"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5019241521",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "departures_board": "no",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sherbrooke / Bishop",
+        "operator": "52167",
+        "public_transport": "platform",
+        "ref": "52167",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5799549,
+          45.4981896
+        ]
+      },
+      "id": "node/5019241521"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5033044641",
+        "amenity": "restaurant",
+        "cuisine": "ramen",
+        "name": "Kinton Ramen",
+        "name:en": "Kinton Ramen"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5746477,
+          45.4958792
+        ]
+      },
+      "id": "node/5033044641"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5167536372",
+        "amenity": "restaurant",
+        "cuisine": "breakfast",
+        "name": "Chez Cora",
+        "website": "https://www.chezcora.com/",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5734504,
+          45.4981059
+        ]
+      },
+      "id": "node/5167536372"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5403675224",
+        "addr:housenumber": "2159",
+        "addr:street": "Rue Mackay",
+        "amenity": "restaurant",
+        "check_date": "2024-08-19",
+        "cuisine": "japanese",
+        "name": "Schlouppe Bistrot"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5801261,
+          45.4974543
+        ]
+      },
+      "id": "node/5403675224"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5408074121",
+        "addr:housenumber": "2340",
+        "addr:street": "Rue Guy",
+        "amenity": "restaurant",
+        "cuisine": "pakistani",
+        "name": "Chai Paratha"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5813992,
+          45.4963196
+        ]
+      },
+      "id": "node/5408074121"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5415282821",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1468",
+        "addr:street": "Rue Crescent",
+        "amenity": "restaurant",
+        "cuisine": "sushi",
+        "name": "K2 Sushi",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5772792,
+          45.4977849
+        ]
+      },
+      "id": "node/5415282821"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5491265323",
+        "addr:street": "Rue Crescent",
+        "amenity": "restaurant",
+        "name": "Le Poké Bar",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5783841,
+          45.4986877
+        ]
+      },
+      "id": "node/5491265323"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/5526342621",
+        "addr:housenumber": "1441",
+        "addr:street": "Rue Saint-Mathieu",
+        "amenity": "restaurant",
+        "name": "Otto Yakitori"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5799879,
+          45.4944677
+        ]
+      },
+      "id": "node/5526342621"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010964774",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "no",
+        "name": "René-Lévesque / Guy",
+        "public_transport": "platform",
+        "ref": "52331",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.575437,
+          45.493588
+        ]
+      },
+      "id": "node/6010964774"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010964910",
+        "bench": "yes",
+        "bin": "yes",
+        "bus": "yes",
+        "departures_board": "timetable",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sherbrooke / Côte-des-Neiges",
+        "public_transport": "platform",
+        "recycling:waste": "yes",
+        "ref": "52115",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.581755,
+          45.496397
+        ]
+      },
+      "id": "node/6010964910"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010965396",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sherbrooke / Saint-Mathieu",
+        "public_transport": "platform",
+        "ref": "52097",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.582497,
+          45.495555
+        ]
+      },
+      "id": "node/6010965396"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010965967",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "name": "Guy / René-Lévesque",
+        "public_transport": "platform",
+        "ref": "52330",
+        "shelter": "no",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.576023,
+          45.494345
+        ]
+      },
+      "id": "node/6010965967"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010966040",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Station Guy-Concordia (Maisonneuve / St-Mathieu)",
+        "public_transport": "platform",
+        "ref": "60999",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.580236,
+          45.494947
+        ]
+      },
+      "id": "node/6010966040"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010966051",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Guy / Sainte-Catherine",
+        "public_transport": "platform",
+        "ref": "52238",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.57707,
+          45.494623
+        ]
+      },
+      "id": "node/6010966051"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010966279",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "De Maisonneuve / de la Montagne",
+        "public_transport": "platform",
+        "ref": "52269",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.576877,
+          45.498892
+        ]
+      },
+      "id": "node/6010966279"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010968682",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sainte-Catherine / Saint-Mathieu",
+        "public_transport": "platform",
+        "ref": "52197",
+        "shelter": "yes",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.579306,
+          45.493687
+        ]
+      },
+      "id": "node/6010968682"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010968827",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "René-Lévesque / Guy",
+        "public_transport": "platform",
+        "ref": "52327",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.575009,
+          45.494038
+        ]
+      },
+      "id": "node/6010968827"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010969109",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "De Maisonneuve / Bishop",
+        "public_transport": "platform",
+        "ref": "52229",
+        "shelter": "no",
+        "tactile_paving": "no",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.578074,
+          45.497525
+        ]
+      },
+      "id": "node/6010969109"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010969519",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "no",
+        "name": "Station Guy-Concordia (De Maisonneuve/St-Mathieu)",
+        "public_transport": "platform",
+        "ref": "52148",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.580889,
+          45.49435
+        ]
+      },
+      "id": "node/6010969519"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010970018",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "name": "Guy / René-Lévesque",
+        "public_transport": "platform",
+        "ref": "52326"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.574736,
+          45.493792
+        ]
+      },
+      "id": "node/6010970018"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010970054",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "departures_board": "timetable",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sherbrooke / Côte-des-Neiges",
+        "public_transport": "platform",
+        "ref": "52114",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.581765,
+          45.496683
+        ]
+      },
+      "id": "node/6010970054"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010970338",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Saint-Mathieu / Sherbrooke",
+        "public_transport": "platform",
+        "ref": "52096",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.582679,
+          45.49577
+        ]
+      },
+      "id": "node/6010970338"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010971108",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "no",
+        "name": "René-Lévesque / Guy",
+        "public_transport": "platform",
+        "ref": "52329",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.574992,
+          45.493641
+        ]
+      },
+      "id": "node/6010971108"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010971144",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Côte-des-Neiges / Sherbrooke",
+        "public_transport": "platform",
+        "ref": "52113",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.582643,
+          45.496563
+        ]
+      },
+      "id": "node/6010971144"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010971302",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sherbrooke / Saint-Marc",
+        "public_transport": "platform",
+        "ref": "52066",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.583478,
+          45.494448
+        ]
+      },
+      "id": "node/6010971302"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010971829",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sherbrooke / Saint-Mathieu",
+        "public_transport": "platform",
+        "ref": "52095",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.582471,
+          45.495894
+        ]
+      },
+      "id": "node/6010971829"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010973621",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Station Guy-Concordia (De Maisonneuve / Guy)",
+        "public_transport": "platform",
+        "ref": "52202",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.579363,
+          45.495872
+        ]
+      },
+      "id": "node/6010973621"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010973631",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "no",
+        "name": "du Docteur-Penfield / Redpath",
+        "public_transport": "platform",
+        "ref": "52034",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.583821,
+          45.499478
+        ]
+      },
+      "id": "node/6010973631"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010974358",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Station Guy-Concordia (Maisonneuve / St-Mathieu)",
+        "public_transport": "platform",
+        "ref": "52146",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.580486,
+          45.494696
+        ]
+      },
+      "id": "node/6010974358"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010975359",
+        "bench": "yes",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sainte-Catherine / de la Montagne",
+        "public_transport": "platform",
+        "ref": "52325",
+        "shelter": "yes",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.575059,
+          45.497763
+        ]
+      },
+      "id": "node/6010975359"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010975640",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sainte-Catherine / Guy",
+        "public_transport": "platform",
+        "ref": "52237",
+        "shelter": "no",
+        "tactile_paving": "no",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.57791,
+          45.494885
+        ]
+      },
+      "id": "node/6010975640"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010975903",
+        "bench": "yes",
+        "bin": "yes",
+        "bus": "yes",
+        "departures_board": "timetable",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sherbrooke / Redpath",
+        "public_transport": "platform",
+        "ref": "52166",
+        "shelter": "yes",
+        "tactile_paving": "no",
+        "waste_basket": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.580323,
+          45.498117
+        ]
+      },
+      "id": "node/6010975903"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010976705",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sherbrooke / de la Montagne",
+        "public_transport": "platform",
+        "ref": "52204",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.578711,
+          45.499516
+        ]
+      },
+      "id": "node/6010976705"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010977969",
+        "bench": "no",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Saint-Mathieu / Sainte-Catherine",
+        "public_transport": "platform",
+        "ref": "52196",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.579452,
+          45.493867
+        ]
+      },
+      "id": "node/6010977969"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010981200",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Guy / René-Lévesque",
+        "public_transport": "platform",
+        "ref": "52328",
+        "shelter": "no",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.575386,
+          45.493889
+        ]
+      },
+      "id": "node/6010981200"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010981282",
+        "bench": "no",
+        "bin": "no",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Guy / Sainte-Catherine",
+        "public_transport": "platform",
+        "ref": "52236",
+        "shelter": "no",
+        "tactile_paving": "no",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.577591,
+          45.495028
+        ]
+      },
+      "id": "node/6010981282"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6010981492",
+        "bench": "yes",
+        "bin": "yes",
+        "bus": "yes",
+        "highway": "bus_stop",
+        "lit": "yes",
+        "name": "Sherbrooke / Saint-Marc",
+        "public_transport": "platform",
+        "ref": "52065",
+        "shelter": "yes",
+        "tactile_paving": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.583462,
+          45.494762
+        ]
+      },
+      "id": "node/6010981492"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6012982687",
+        "amenity": "restaurant",
+        "name": "Poke Monster",
+        "opening_hours": "Su-Th 10:00-15:00; Fr,Sa 10:00-17:00",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5765657,
+          45.4993416
+        ]
+      },
+      "id": "node/6012982687"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6026247751",
+        "amenity": "restaurant",
+        "cuisine": "italian;pizza",
+        "name": "La Medusa",
+        "website": "https://www.lamedusa.ca/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5731108,
+          45.4979281
+        ]
+      },
+      "id": "node/6026247751"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6040457386",
+        "addr:housenumber": "1242",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "name": "Le Ninja"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5757537,
+          45.4960973
+        ]
+      },
+      "id": "node/6040457386"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6389316686",
+        "addr:housenumber": "2110",
+        "addr:street": "Rue Crescent",
+        "amenity": "restaurant",
+        "name": "Burrito Borracho"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5782589,
+          45.4982572
+        ]
+      },
+      "id": "node/6389316686"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6454873886",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "name": "Parma Café",
+        "wheelchair": "no"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.574647,
+          45.495526
+        ]
+      },
+      "id": "node/6454873886"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6597301988",
+        "amenity": "restaurant",
+        "cuisine": "asian",
+        "name": "Shi Tang"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5809726,
+          45.4953433
+        ]
+      },
+      "id": "node/6597301988"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6852479086",
+        "addr:housenumber": "1675",
+        "addr:street": "Boulevard De Maisonneuve Ouest",
+        "amenity": "restaurant",
+        "name": "Qing Hua Dumpling",
+        "opening_hours": "Mo-Su 11:00-22:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5804004,
+          45.4949629
+        ]
+      },
+      "id": "node/6852479086"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/6852505485",
+        "addr:housenumber": "2100",
+        "addr:street": "Rue Saint-Mathieu",
+        "amenity": "restaurant",
+        "name": "KimGalbi"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5812241,
+          45.4947974
+        ]
+      },
+      "id": "node/6852505485"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/7052992095",
+        "name": "Guy-Concordia",
+        "operator": "Société de transport de Montréal",
+        "public_transport": "station",
+        "railway": "station",
+        "station": "subway",
+        "subway": "yes",
+        "train": "yes",
+        "wheelchair": "no",
+        "wikidata": "Q183268",
+        "wikipedia": "en:Guy-Concordia station"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5798383,
+          45.4953736
+        ]
+      },
+      "id": "node/7052992095"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8326540935",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1448",
+        "addr:postcode": "H3H 2H9",
+        "addr:province": "Québec",
+        "addr:street": "Rue Saint-Mathieu",
+        "amenity": "restaurant",
+        "check_date": "2023-09-09",
+        "cuisine": "chinese",
+        "name": "Cuisine AuntDai",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes",
+        "phone": "+1 514-935-1067",
+        "website": "http://auntdai.com"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5803915,
+          45.4943292
+        ]
+      },
+      "id": "node/8326540935"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/8354577775",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1233",
+        "addr:postcode": "h3g1z2",
+        "addr:province": "Quebec",
+        "addr:street": "Rue de la Montagne",
+        "air_conditioning": "yes",
+        "amenity": "restaurant",
+        "cuisine": "japanese;sushi",
+        "diet:dairy_free": "yes",
+        "diet:healthy": "yes",
+        "diet:meat": "yes",
+        "diet:organic": "yes",
+        "diet:pescetarian": "yes",
+        "diet:vegetarian": "yes",
+        "name": "Hidden Fish",
+        "opening_hours": "Mo-Fr 17:00-22:00",
+        "phone": "+1-514-419-1319",
+        "website": "https://www.sushihiddenfish.ca/sushi/home/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5743941,
+          45.4977411
+        ]
+      },
+      "id": "node/8354577775"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9061291127",
+        "amenity": "bicycle_rental",
+        "bicycle_rental": "docking_station",
+        "brand": "Bixi",
+        "brand:wikidata": "Q4919302",
+        "brand:wikipedia": "en:BIXI Montréal",
+        "fee": "yes",
+        "name": "Bixi",
+        "network": "Bixi",
+        "network:wikidata": "Q4919302",
+        "network:wikipedia": "en:BIXI Montréal",
+        "operator": "Bixi",
+        "operator:wikidata": "Q4919302",
+        "operator:wikipedia": "en:BIXI Montréal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5777635,
+          45.4982296
+        ]
+      },
+      "id": "node/9061291127"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9061291128",
+        "amenity": "bicycle_rental",
+        "bicycle_rental": "docking_station",
+        "brand": "Bixi",
+        "brand:wikidata": "Q4919302",
+        "brand:wikipedia": "en:BIXI Montréal",
+        "capacity": "45",
+        "fee": "yes",
+        "name": "Bixi",
+        "network": "Bixi",
+        "network:wikidata": "Q4919302",
+        "network:wikipedia": "en:BIXI Montréal",
+        "operator": "Bixi",
+        "operator:wikidata": "Q4919302",
+        "operator:wikipedia": "en:BIXI Montréal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5792345,
+          45.4968365
+        ]
+      },
+      "id": "node/9061291128"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/9689067517",
+        "addr:housenumber": "1429 A",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "name": "OFish Bishop"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5771329,
+          45.4970806
+        ]
+      },
+      "id": "node/9689067517"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10017478082",
+        "addr:housenumber": "1175A",
+        "addr:street": "Rue Crescent",
+        "alt_name": "Restaurant Sana",
+        "amenity": "restaurant",
+        "cuisine": "pakistani;indian;bangladeshi",
+        "delivery": "yes",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "level": "-1",
+        "name": "Sana",
+        "smoking": "no",
+        "takeaway": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5737384,
+          45.4963657
+        ]
+      },
+      "id": "node/10017478082"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10200939734",
+        "addr:housenumber": "1437",
+        "addr:street": "Boulevard René-Lévesque Ouest",
+        "amenity": "restaurant",
+        "cuisine": "indian;south_indian",
+        "name": "Notre Endroit",
+        "name:en": "Our Place",
+        "name:fr": "Notre Endroit",
+        "opening_hours": "Mo-Fr 11:30-22:30; Sa,Su 00:00-22:30",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5743612,
+          45.4948268
+        ]
+      },
+      "id": "node/10200939734"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10681843542",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1224",
+        "addr:province": "Québec",
+        "addr:street": "Rue Drummond",
+        "amenity": "restaurant",
+        "cuisine": "mexican",
+        "name": "Escondite"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5732256,
+          45.4980056
+        ]
+      },
+      "id": "node/10681843542"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10719476606",
+        "addr:housenumber": "2065A",
+        "addr:street": "Rue Bishop",
+        "amenity": "restaurant",
+        "check_date": "2023-03-07",
+        "cuisine": "ramen",
+        "internet_access": "wlan",
+        "internet_access:fee": "no",
+        "name": "Misoya"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5785398,
+          45.4978354
+        ]
+      },
+      "id": "node/10719476606"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10911943562",
+        "addr:postcode": "H3G 1N1",
+        "addr:street": "Boulevard de Maisonneuve Ouest",
+        "amenity": "restaurant",
+        "cuisine": "turkish",
+        "diet:halal": "yes",
+        "diet:vegan": "yes",
+        "level": "0",
+        "name": "Mr Tantuni",
+        "outdoor_seating": "no",
+        "payment:mastercard": "yes",
+        "payment:visa": "yes",
+        "wheelchair": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5787705,
+          45.4962498
+        ]
+      },
+      "id": "node/10911943562"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10916576906",
+        "addr:housenumber": "1488",
+        "addr:street": "Rue Sainte-Catherine Ouest",
+        "amenity": "restaurant",
+        "check_date": "2023-05-05",
+        "name": "Mon Ami"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5772425,
+          45.4953152
+        ]
+      },
+      "id": "node/10916576906"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/10948564134",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1390",
+        "addr:province": "Québec",
+        "addr:street": "Boulevard René-Lévesque Ouest",
+        "amenity": "restaurant",
+        "contact:phone": "+1 514 218 4024",
+        "contact:website": "https://www.ihg.com/holidayinn/hotels/us/en/montreal/yulcc/hoteldetail/dining",
+        "level": "0",
+        "name": "Crossbar"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5731912,
+          45.4954452
+        ]
+      },
+      "id": "node/10948564134"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11011981782",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1255",
+        "addr:postcode": "H3G 2B1",
+        "addr:province": "Québec",
+        "addr:street": "Rue Crescent",
+        "amenity": "restaurant",
+        "brand": "Gyu-Kaku",
+        "brand:wikidata": "Q11349387",
+        "contact:website": "https://www.gyu-kaku.com/montreal/",
+        "cuisine": "japanese;barbecue",
+        "name": "Gyu-Kaku",
+        "phone": "+1 (514) 866-8808",
+        "website": "https://www.gyu-kaku.com/montreal/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5750846,
+          45.4969878
+        ]
+      },
+      "id": "node/11011981782"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11065849098",
+        "addr:housenumber": "1668",
+        "addr:street": "Boul. de Maisonneuve Ouest",
+        "amenity": "restaurant",
+        "cuisine": "indian",
+        "name": "Downtown Dhaba",
+        "opening_hours": "Mo-Su 11:00-23:00",
+        "website": "https://downtowndhaba.com/"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5801576,
+          45.4947279
+        ]
+      },
+      "id": "node/11065849098"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11115226176",
+        "amenity": "bicycle_rental",
+        "bicycle_rental": "docking_station",
+        "brand": "Bixi",
+        "brand:wikidata": "Q4919302",
+        "name": "Bixi",
+        "network": "Bixi",
+        "network:wikidata": "Q4919302",
+        "operator": "Bixi",
+        "operator:wikidata": "Q4919302"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5733981,
+          45.4960089
+        ]
+      },
+      "id": "node/11115226176"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11115276148",
+        "amenity": "bicycle_rental",
+        "bicycle_rental": "docking_station",
+        "brand": "Bixi",
+        "brand:wikidata": "Q4919302",
+        "name": "Bixi",
+        "network": "Bixi",
+        "network:wikidata": "Q4919302",
+        "operator": "Bixi",
+        "operator:wikidata": "Q4919302"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5739705,
+          45.4985564
+        ]
+      },
+      "id": "node/11115276148"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11135270536",
+        "amenity": "restaurant",
+        "name": "Lo",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5733823,
+          45.4969261
+        ]
+      },
+      "id": "node/11135270536"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11135270538",
+        "amenity": "restaurant",
+        "cuisine": "italian",
+        "name": "Bis Ristorante"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5742497,
+          45.4976955
+        ]
+      },
+      "id": "node/11135270538"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11155775797",
+        "amenity": "restaurant",
+        "cuisine": "sushi",
+        "name": "Sushi Rosa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5732532,
+          45.4983329
+        ]
+      },
+      "id": "node/11155775797"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11179493519",
+        "amenity": "restaurant",
+        "name": "Poke Bento"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5804334,
+          45.4943508
+        ]
+      },
+      "id": "node/11179493519"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11179493520",
+        "amenity": "bicycle_rental",
+        "bicycle_rental": "docking_station",
+        "brand": "Bixi",
+        "brand:wikidata": "Q4919302",
+        "brand:wikipedia": "en:BIXI Montréal",
+        "fee": "yes",
+        "name": "Bixi",
+        "network": "Bixi",
+        "network:wikidata": "Q4919302",
+        "network:wikipedia": "en:BIXI Montréal",
+        "operator": "Bixi",
+        "operator:wikidata": "Q4919302",
+        "operator:wikipedia": "en:BIXI Montréal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5767445,
+          45.4957423
+        ]
+      },
+      "id": "node/11179493520"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11179531775",
+        "amenity": "restaurant",
+        "name": "Koa Lua Poke"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5766991,
+          45.4959043
+        ]
+      },
+      "id": "node/11179531775"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11179532875",
+        "amenity": "bicycle_rental",
+        "bicycle_rental": "docking_station",
+        "brand": "Bixi",
+        "brand:wikidata": "Q4919302",
+        "brand:wikipedia": "en:BIXI Montréal",
+        "capacity": "19",
+        "fee": "yes",
+        "name": "Bixi",
+        "network": "Bixi",
+        "network:wikidata": "Q4919302",
+        "network:wikipedia": "en:BIXI Montréal",
+        "operator": "Bixi",
+        "operator:wikidata": "Q4919302",
+        "operator:wikipedia": "en:BIXI Montréal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5761128,
+          45.4966664
+        ]
+      },
+      "id": "node/11179532875"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11179539396",
+        "amenity": "restaurant",
+        "name": "Liv Salades"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5766587,
+          45.4959362
+        ]
+      },
+      "id": "node/11179539396"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11179539620",
+        "amenity": "bicycle_rental",
+        "bicycle_rental": "docking_station",
+        "brand": "Bixi",
+        "brand:wikidata": "Q4919302",
+        "brand:wikipedia": "en:BIXI Montréal",
+        "capacity": "31",
+        "fee": "yes",
+        "name": "Bixi",
+        "network": "Bixi",
+        "network:wikidata": "Q4919302",
+        "network:wikipedia": "en:BIXI Montréal",
+        "operator": "Bixi",
+        "operator:wikidata": "Q4919302",
+        "operator:wikipedia": "en:BIXI Montréal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5790823,
+          45.4939028
+        ]
+      },
+      "id": "node/11179539620"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11179540822",
+        "amenity": "restaurant",
+        "cuisine": "japanese",
+        "name": "Kinka Izakaya",
+        "opening_hours": "\"en construction\""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5786514,
+          45.4941098
+        ]
+      },
+      "id": "node/11179540822"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11179541063",
+        "amenity": "restaurant",
+        "cuisine": "vietnamese",
+        "name": "I am Pho",
+        "payment:credit_cards": "yes",
+        "payment:debit_cards": "yes"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5803662,
+          45.4943154
+        ]
+      },
+      "id": "node/11179541063"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11227911637",
+        "amenity": "restaurant",
+        "name": "DonDonYa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5772686,
+          45.4972312
+        ]
+      },
+      "id": "node/11227911637"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11247224077",
+        "amenity": "restaurant",
+        "cuisine": "chinese;indian",
+        "name": "Chatpata"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5804748,
+          45.4957079
+        ]
+      },
+      "id": "node/11247224077"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11247224078",
+        "amenity": "restaurant",
+        "cuisine": "indian",
+        "name": "Tarim"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5804308,
+          45.495749
+        ]
+      },
+      "id": "node/11247224078"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11265575969",
+        "amenity": "restaurant",
+        "name": "La Hueca by Masa"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.577705,
+          45.4945243
+        ]
+      },
+      "id": "node/11265575969"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11422251669",
+        "amenity": "restaurant",
+        "name": "Patty Slaps"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5770217,
+          45.4960875
+        ]
+      },
+      "id": "node/11422251669"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11593040984",
+        "amenity": "restaurant",
+        "cuisine": "noodle;sandwich;soup",
+        "name": "Maison du Nord"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5812834,
+          45.4948328
+        ]
+      },
+      "id": "node/11593040984"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11593040986",
+        "amenity": "restaurant",
+        "cuisine": "chicken",
+        "name": "Chimaek Gana"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.58116,
+          45.4947615
+        ]
+      },
+      "id": "node/11593040986"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11598843918",
+        "amenity": "restaurant",
+        "cuisine": "dessert;bubble_tea",
+        "name": "Hazukido"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5784704,
+          45.4946832
+        ]
+      },
+      "id": "node/11598843918"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11817476631",
+        "amenity": "bicycle_rental",
+        "bicycle_rental": "docking_station",
+        "brand": "Bixi",
+        "brand:wikidata": "Q4919302",
+        "brand:wikipedia": "en:BIXI Montréal",
+        "fee": "yes",
+        "name": "Bixi",
+        "network": "Bixi",
+        "network:wikidata": "Q4919302",
+        "network:wikipedia": "en:BIXI Montréal",
+        "operator": "Bixi",
+        "operator:wikidata": "Q4919302",
+        "operator:wikipedia": "en:BIXI Montréal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5741165,
+          45.4944575
+        ]
+      },
+      "id": "node/11817476631"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11817492674",
+        "amenity": "bicycle_rental",
+        "bicycle_rental": "docking_station",
+        "brand": "Bixi",
+        "brand:wikidata": "Q4919302",
+        "brand:wikipedia": "en:BIXI Montréal",
+        "fee": "yes",
+        "name": "Bixi",
+        "network": "Bixi",
+        "network:wikidata": "Q4919302",
+        "network:wikipedia": "en:BIXI Montréal",
+        "operator": "Bixi",
+        "operator:wikidata": "Q4919302",
+        "operator:wikipedia": "en:BIXI Montréal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5759082,
+          45.4973152
+        ]
+      },
+      "id": "node/11817492674"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11817492784",
+        "amenity": "bicycle_rental",
+        "bicycle_rental": "docking_station",
+        "brand": "Bixi",
+        "brand:wikidata": "Q4919302",
+        "brand:wikipedia": "en:BIXI Montréal",
+        "fee": "yes",
+        "name": "Bixi",
+        "network": "Bixi",
+        "network:wikidata": "Q4919302",
+        "network:wikipedia": "en:BIXI Montréal",
+        "operator": "Bixi",
+        "operator:wikidata": "Q4919302",
+        "operator:wikipedia": "en:BIXI Montréal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5734728,
+          45.4960631
+        ]
+      },
+      "id": "node/11817492784"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11817492798",
+        "amenity": "bicycle_rental",
+        "bicycle_rental": "docking_station",
+        "brand": "Bixi",
+        "brand:wikidata": "Q4919302",
+        "brand:wikipedia": "en:BIXI Montréal",
+        "capacity": "19",
+        "fee": "yes",
+        "name": "Bixi",
+        "network": "Bixi",
+        "network:wikidata": "Q4919302",
+        "network:wikipedia": "en:BIXI Montréal",
+        "operator": "Bixi",
+        "operator:wikidata": "Q4919302",
+        "operator:wikipedia": "en:BIXI Montréal"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5743666,
+          45.4984889
+        ]
+      },
+      "id": "node/11817492798"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11910507327",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1238",
+        "addr:postcode": "H3G 2H4",
+        "addr:province": "QC",
+        "addr:street": "Rue Mackay",
+        "amenity": "restaurant",
+        "name": "Garage Beirut",
+        "wheelchair": "limited"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5761753,
+          45.4952601
+        ]
+      },
+      "id": "node/11910507327"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/11948947033",
+        "amenity": "restaurant",
+        "cuisine": "asian",
+        "name": "Fondue Haidilao",
+        "opening_hours": "Mo-Su 11:00-04:00"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5739593,
+          45.4987693
+        ]
+      },
+      "id": "node/11948947033"
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "@id": "node/12155458652",
+        "addr:city": "Montréal",
+        "addr:housenumber": "1235",
+        "addr:postcode": "H3H 2K5",
+        "addr:province": "Québec",
+        "addr:street": "Rue Guy",
+        "amenity": "restaurant",
+        "cuisine": "greek_fried_chiken",
+        "name": "sparta chicken",
+        "opening_hours": "13:00-3:00",
+        "phone": "5149707970"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -73.5768958,
+          45.4948492
+        ]
+      },
+      "id": "node/12155458652"
+    }
+  ]
+}
