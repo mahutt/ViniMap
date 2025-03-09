@@ -1,14 +1,12 @@
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { MapState, useMap } from './MapContext';
 import { Location, ExpressionSpecification } from '@/modules/map/Types';
 import { fetchLocationData } from './MapService';
 import PointsOfInterestService from '@/services/PointsOfInterestService';
-import { useState, useEffect } from 'react';
 import { PointOfInterest } from './PointsOfInterestTypes';
 import POIMarker from '@/components/POIMarker';
-
 import layers from '@/modules/map/style/DefaultLayers';
 import { filterWithLevel, getIndoorFeatureFromCoordinates } from '@/modules/map/IndoorMapUtils';
 
