@@ -33,9 +33,9 @@ export default function LocationsAutocomplete({
 
   return (
     <View style={styles.locationsContainer}>
-      {locations.map((location, index) => (
+      {locations.map((location) => (
         <View
-          key={`location-${index}`}
+          key={`${location.name}-${location.coordinates[0]}-${location.coordinates[1]}`}
           style={styles.locationItem}
           onTouchEnd={() => {
             callback(location);
