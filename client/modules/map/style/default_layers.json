@@ -317,13 +317,7 @@
     "minzoom": 17,
     "layout": {
       "text-line-height": 1.2,
-      "text-size": {
-        "base": 1,
-        "stops": [
-          [17, 10],
-          [20, 12]
-        ]
-      },
+      "text-size": ["interpolate", ["linear"], ["zoom"], 17, 10, 20, 12],
       "text-allow-overlap": false,
       "text-ignore-placement": false,
       "text-max-angle": 38,
@@ -360,13 +354,7 @@
           [20, 1]
         ]
       },
-      "text-size": {
-        "base": 1,
-        "stops": [
-          [17, 11],
-          [20, 13]
-        ]
-      },
+      "text-size": ["interpolate", ["linear"], ["zoom"], 17, 11, 20, 13],
       "text-allow-overlap": false,
       "icon-image": "{maki}-15",
       "icon-anchor": "center",
