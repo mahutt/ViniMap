@@ -1,6 +1,5 @@
-import defaultLayers from './default_layers.json';
-
-import type { LayerSpecification } from '../Types';
+import defaultLayers from './StyleLayers';
+import { LayerSpecification } from '../Types';
 
 /**
  * Transform the generic "poi-indoor" layer into multiple layers using filters based on OSM tags
@@ -93,11 +92,10 @@ function createPoiLayers(metaLayer: LayerSpecification): LayerSpecification[] {
   };
 
   return OSM_FILTER_MAPBOX_MAKI_LIST.concat(otherShopsEntry).map((poi) => {
-    const newLayer = { ...metaLayer };
+    const newLayer: LayerSpecification = { ...metaLayer };
     newLayer.id += `-${poi.maki}`;
     newLayer.filter = poi.filter;
-    newLayer.layout = { ...metaLayer.layout };
-    newLayer.layout['icon-image'] = `${poi.maki}-15`;
+    newLayer.style = { ...metaLayer.style, iconImage: poi.maki };
     return newLayer;
   });
 }

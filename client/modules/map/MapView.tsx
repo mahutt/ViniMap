@@ -219,12 +219,7 @@ export default function MapView() {
                     key={layer.id}
                     id={layer.id}
                     sourceID={layer.source ?? undefined}
-                    style={{
-                      fillColor: layer.paint['fill-color'] ?? undefined,
-                      fillOutlineColor: layer.paint['fill-outline-color'] ?? undefined,
-                      fillTranslateAnchor: layer.paint['fill-translate-anchor'] ?? undefined,
-                      fillOpacity: layer.paint['fill-opacity'] ?? undefined,
-                    }}
+                    style={layer.style}
                     filter={layer.filter ? filterFN(layer.filter) : undefined}
                   />
                 );
@@ -237,12 +232,7 @@ export default function MapView() {
                     key={layer.id}
                     id={layer.id}
                     sourceID={layer.source ?? undefined}
-                    style={{
-                      lineColor: layer.paint['line-color'],
-                      lineWidth: layer.paint['line-width'],
-                      lineOpacity: layer.paint['line-opacity'],
-                      lineDasharray: layer.paint['line-dasharray'],
-                    }}
+                    style={layer.style}
                     filter={layer.filter ? filterFN(layer.filter) : undefined}
                   />
                 );
@@ -255,18 +245,7 @@ export default function MapView() {
                     key={layer.id}
                     id={layer.id}
                     sourceID={layer.source ?? undefined}
-                    style={{
-                      textColor: layer.paint['text-color'],
-                      textHaloColor: layer.paint['text-halo-color'],
-                      textHaloWidth: layer.paint['text-halo-width'],
-                      textOpacity: layer.paint['text-opacity'],
-                      iconOpacity: layer.paint['icon-opacity'],
-                      textField: layer.paint['textField'],
-                      textSize: layer.paint['textSize'],
-                      textAnchor: layer.paint['textAnchor'],
-                      textAllowOverlap: layer.paint['textAllowOverlap'],
-                      textJustify: layer.paint['textJustify'],
-                    }}
+                    style={layer.style}
                     filter={layer.filter ? filterFN(layer.filter) : undefined}
                   />
                 );
