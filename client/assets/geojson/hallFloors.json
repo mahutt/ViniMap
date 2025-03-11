@@ -8669,8 +8669,7 @@
         "level": "8",
         "indoor": "room",
         "ref": "H827",
-        "level_name": "h8",
-        "name": "H827"
+        "level_name": "h8"
       },
       "geometry": {
         "type": "Polygon",
@@ -10668,7 +10667,6 @@
         "level": "8",
         "indoor": "room",
         "ref": "H825",
-        "name": "H825",
         "level_name": "h8"
       },
       "geometry": {
