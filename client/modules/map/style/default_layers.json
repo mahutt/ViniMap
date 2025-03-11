@@ -347,13 +347,7 @@
     "minzoom": 17,
     "layout": {
       "text-line-height": 1.2,
-      "icon-size": {
-        "base": 1,
-        "stops": [
-          [17, 0.5],
-          [20, 1]
-        ]
-      },
+      "icon-size": ["interpolate", ["linear"], ["zoom"], 17, 0.5, 20, 1],
       "text-size": ["interpolate", ["linear"], ["zoom"], 17, 11, 20, 13],
       "text-allow-overlap": false,
       "icon-image": "{maki}-15",
