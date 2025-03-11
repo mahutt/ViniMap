@@ -32,7 +32,7 @@ jest.mock('@/components/SearchBar', () => ({
 
 jest.mock('@/modules/map/MapView', () => createMockComponent('MapView'));
 jest.mock('@/modules/map/PitchButton', () => createMockComponent('PitchButton'));
-jest.mock('@/components/ui/IconCenterLocation', () =>
+jest.mock('@/components/ui/CenterLocationButton', () =>
   createMockComponent('CenterLocationComponent')
 );
 jest.mock('@/components/LocationInfo', () => ({
