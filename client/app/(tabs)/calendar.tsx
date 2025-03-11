@@ -118,11 +118,9 @@ export default function Calendar() {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Your Schedule</Text>
-          <View style={styles.uploadButton}>
-            <TouchableOpacity onPress={buttonPress}>
-              <Text style={styles.uploadButtonText}>Upload</Text>
-            </TouchableOpacity>
-          </View>
+          <TouchableOpacity style={styles.uploadButton} onPress={buttonPress}>
+            <Text style={styles.uploadButtonText}>Upload</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.picker}>

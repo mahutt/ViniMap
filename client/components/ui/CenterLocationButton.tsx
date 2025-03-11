@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
-import { TouchableOpacity, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useMap } from '@/modules/map/MapContext';
 
-const CenterLocationComponent = () => {
+const CenterLocationButton = () => {
   const { flyTo, userLocation } = useMap();
 
   const handlePress = useCallback(() => {
@@ -15,16 +15,14 @@ const CenterLocationComponent = () => {
   }, [userLocation, flyTo]);
 
   return (
-    <View style={styles.container}>
-      <TouchableOpacity testID="center-location-button" style={styles.button} onPress={handlePress}>
-        <Ionicons name="locate" size={24} color="white" />
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity testID="center-location-button" style={styles.button} onPress={handlePress}>
+      <Ionicons name="locate" size={24} color="white" />
+    </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  button: {
     position: 'absolute',
     bottom: 100,
     right: 36,
@@ -36,10 +34,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  button: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
 });
 
-export default CenterLocationComponent;
+export default CenterLocationButton;

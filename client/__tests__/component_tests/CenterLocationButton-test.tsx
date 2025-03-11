@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import CenterLocationComponent from '@/components/ui/IconCenterLocation';
+import CenterLocationComponent from '@/components/ui/CenterLocationButton';
 import { useMap } from '@/modules/map/MapContext';
 
 jest.mock('@/services/CoordinateService', () => ({
