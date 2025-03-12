@@ -9,6 +9,7 @@ import { PointOfInterest } from './PointsOfInterestTypes';
 import POIMarker from '@/components/POIMarker';
 import layers from '@/modules/map/style/DefaultLayers';
 import { filterWithLevel, getIndoorFeatureFromCoordinates } from '@/modules/map/IndoorMapUtils';
+import { images } from '@/assets';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -135,7 +136,7 @@ export default function MapView() {
         animationDuration={2000}
         pitch={pitchLevel}
       />
-
+      <Mapbox.Images images={images} />
       {showPOIs &&
         pointsOfInterest.map((poi) => (
           <Mapbox.MarkerView
@@ -155,13 +156,9 @@ export default function MapView() {
         ))}
 
       {endLocation && !equalLocations(endLocation, userLocation) && (
-        <Mapbox.PointAnnotation
-          key="selected-location"
-          id="selected-location"
-          coordinate={endLocation.coordinates}>
+        <Mapbox.MarkerView id="end" coordinate={endLocation.coordinates}>
           <View style={[styles.marker, styles.endMarker]} />
-          <Mapbox.Callout title="Selected Location" />
-        </Mapbox.PointAnnotation>
+        </Mapbox.MarkerView>
       )}
 
       {userLocation?.coordinates && (
