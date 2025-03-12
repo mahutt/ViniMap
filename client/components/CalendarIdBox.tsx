@@ -38,10 +38,10 @@ const SimpleModal: React.FC<SimpleModalProps> = ({
   return (
     <Modal animationType="slide" transparent={true} visible={visible} onRequestClose={onClose}>
       <View style={styles.modalBackground}>
-        <View style={styles.modalContent}>
+        <View style={styles.modalContent} testID="modal-content">
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Add Calendar</Text>
-            <TouchableOpacity onPress={onClose}>
+            <TouchableOpacity onPress={onClose} testID="close-button">
               <Feather name="x" size={24} color="#333" />
             </TouchableOpacity>
           </View>
@@ -72,7 +72,8 @@ const SimpleModal: React.FC<SimpleModalProps> = ({
           <TouchableOpacity
             style={[styles.saveButton, calendarId.trim() === '' && styles.disabledButton]}
             onPress={handleSave}
-            disabled={calendarId.trim() === ''}>
+            disabled={calendarId.trim() === ''}
+            testID="save-button">
             <Text style={styles.saveButtonText}>Add Calendar</Text>
           </TouchableOpacity>
         </View>
