@@ -10,7 +10,6 @@ import {
   View,
   Text,
   TouchableOpacity,
-  Image,
   Alert,
 } from 'react-native';
 import moment from 'moment';
