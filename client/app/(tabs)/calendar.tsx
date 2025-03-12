@@ -106,7 +106,6 @@ export default function Calendar() {
       GoogleService.saveCalendarData(updatedScheduleData);
     } catch (error) {
       console.error('Error fetching calendar events:', error);
-      Alert.alert('Error', 'Failed to load calendar events. Please try again.');
     }
   };
 

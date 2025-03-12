@@ -56,7 +56,6 @@ const CalendarSelectionModal: React.FC<CalendarSelectionModalProps> = ({
       setCalendars(calendarItems);
     } catch (error) {
       console.error('Failed to load calendars:', error);
-      Alert.alert('Error', 'Failed to load your calendars. Please try again.');
     }
   };
 
