@@ -39,12 +39,6 @@ const CalendarSelectionModal: React.FC<CalendarSelectionModalProps> = ({
   const userInfo = GoogleService.getUserInfoFromStorage();
   const selectedCalendarId = GoogleService.getSelectedCalendarId();
 
-  useEffect(() => {
-    if (userInfo) {
-      loadCalendars();
-    }
-  }, [userInfo]);
-
   const loadCalendars = useCallback(async () => {
     try {
       const calendarList = await GoogleService.fetchUserCalendars();
@@ -57,6 +51,12 @@ const CalendarSelectionModal: React.FC<CalendarSelectionModalProps> = ({
       console.error('Failed to load calendars:', error);
     }
   }, [selectedCalendarId]);
+
+  useEffect(() => {
+    if (userInfo) {
+      loadCalendars();
+    }
+  }, [userInfo, loadCalendars]);
 
   const handleSelectCalendar = (calendarId: string) => {
     GoogleService.saveSelectedCalendarId(calendarId);

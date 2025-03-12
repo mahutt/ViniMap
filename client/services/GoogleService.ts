@@ -32,7 +32,7 @@ class GoogleService {
   }
 
   useAuthRequest() {
-    return Google.useAuthRequest(this.config);
+    return Google.useAuthRequest(getAuthConfig());
   }
 
   saveUserInfo(userData: any, accessToken: string) {

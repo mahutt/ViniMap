@@ -356,19 +356,24 @@ describe('GoogleService', () => {
   });
 
   describe('schedule data extraction', () => {
-    let originalToLocaleTimeString: (this: Date) => string;
+    const mockToLocaleTimeString = (date: Date) => {
+      const hours = date.getUTCHours();
+      const minutes = date.getUTCMinutes();
+      return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+    };
+
+    let toLocaleTimeStringSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      originalToLocaleTimeString = Date.prototype.toLocaleTimeString;
-      Date.prototype.toLocaleTimeString = function () {
-        const hours = this.getUTCHours();
-        const minutes = this.getUTCMinutes();
-        return `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
-      };
+      toLocaleTimeStringSpy = jest
+        .spyOn(Date.prototype, 'toLocaleTimeString')
+        .mockImplementation(function (this: Date) {
+          return mockToLocaleTimeString(this);
+        });
     });
 
     afterEach(() => {
-      Date.prototype.toLocaleTimeString = originalToLocaleTimeString;
+      toLocaleTimeStringSpy.mockRestore();
     });
 
     it('should extract schedule data correctly from JSON', () => {
