@@ -1,4 +1,4 @@
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { useMap } from './MapContext';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -15,11 +15,9 @@ export default function PitchButton() {
     setPitchLevel(newPitch);
   };
   return (
-    <View style={styles.pitchButtonContainer}>
-      <TouchableOpacity onPress={pressHandler}>
-        <MaterialCommunityIcons name="angle-obtuse" size={35} color="white" />
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity style={styles.pitchButtonContainer} onPress={pressHandler}>
+      <MaterialCommunityIcons name="angle-obtuse" size={35} color="white" />
+    </TouchableOpacity>
   );
 }
 

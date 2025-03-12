@@ -9,8 +9,7 @@ import PitchButton from '@/modules/map/PitchButton';
 
 import { useMap, MapState } from '@/modules/map/MapContext';
 
-import CenterLocationComponent from '@/components/ui/IconCenterLocation';
-
+import CenterLocationButton from '@/components/ui/CenterLocationButton';
 import { LocationInfo } from '@/components/LocationInfo';
 import { RoutePlanner } from '@/components/RoutePlanner';
 import ToggleCampusButton from '@/components/ui/ToggleCampusButton';
@@ -30,7 +29,7 @@ export default function HomeScreen() {
           <ToggleCampusButton />
         </>
       )}
-      {state === MapState.Idle && <CenterLocationComponent />}
+      {state === MapState.Idle && <CenterLocationButton />}
       {state === MapState.Information && <LocationInfo />}
       {state === MapState.RoutePlanning && <RoutePlanner />}
       <MapHint />
