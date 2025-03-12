@@ -1,4 +1,8 @@
-import GoogleService, { STORAGE_KEYS, getAuthConfig } from '@/services/GoogleService';
+import GoogleService, {
+  STORAGE_KEYS,
+  getAuthConfig,
+  useGoogleAuth,
+} from '@/services/GoogleService';
 import { storage } from '@/services/StorageService';
 import { Alert } from 'react-native';
 import * as Google from 'expo-auth-session/providers/google';
@@ -68,7 +72,7 @@ describe('GoogleService', () => {
         'mockResponse',
         'mockPromptAsync',
       ]);
-      const result = GoogleService.useAuthRequest();
+      const result = useGoogleAuth();
       expect(Google.useAuthRequest).toHaveBeenCalledWith(GoogleService.config);
       expect(result).toEqual(['mockRequest', 'mockResponse', 'mockPromptAsync']);
     });
@@ -93,7 +97,7 @@ describe('GoogleService', () => {
       const mockHandleAuthError = jest.spyOn(GoogleService, 'handleAuthError');
 
       try {
-        await GoogleService.handleAuthError(error);
+        GoogleService.handleAuthError(error);
         expect('Should throw error').toBe('But did not throw');
       } catch (e) {
         expect(e).toBe(error);
@@ -479,7 +483,7 @@ describe('GoogleService', () => {
         try {
           const calendarData = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
 
-          if (!calendarData || !calendarData.items || !Array.isArray(calendarData.items)) {
+          if (!calendarData?.items?.length) {
             return {};
           }
 
@@ -505,12 +509,7 @@ describe('GoogleService', () => {
         try {
           const calendarData = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
 
-          if (
-            !calendarData ||
-            !calendarData.items ||
-            !Array.isArray(calendarData.items) ||
-            calendarData.items.length === 0
-          ) {
+          if (!calendarData?.items?.length) {
             return {};
           }
 

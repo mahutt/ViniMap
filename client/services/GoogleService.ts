@@ -24,15 +24,15 @@ export const getAuthConfig = () => {
   };
 };
 
+export const useGoogleAuth = () => {
+  return Google.useAuthRequest(getAuthConfig());
+};
+
 class GoogleService {
   config: any;
 
   constructor() {
     this.config = getAuthConfig();
-  }
-
-  useAuthRequest() {
-    return Google.useAuthRequest(getAuthConfig());
   }
 
   saveUserInfo(userData: any, accessToken: string) {
@@ -123,7 +123,7 @@ class GoogleService {
   }
 
   getSelectedCalendarId() {
-    const calendarId = storage.getString(STORAGE_KEYS.SELECTED_CALENDAR_ID) || '';
+    const calendarId = storage.getString(STORAGE_KEYS.SELECTED_CALENDAR_ID) ?? '';
     return calendarId.trim();
   }
 

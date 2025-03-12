@@ -203,6 +203,18 @@ export default function Calendar() {
     });
   }, []);
 
+  const ProfilePicture = () => {
+    if (isLoggedIn && userInfo) {
+      if (userInfo?.picture) {
+        return <Image source={{ uri: userInfo.picture }} style={styles.profileImage} />;
+      } else {
+        return <Feather user="user-circle" size={32} color="#852C3A" />;
+      }
+    } else {
+      return <Feather name="plus-circle" size={32} color="#852C3A" />;
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SimpleModal
@@ -225,15 +237,7 @@ export default function Calendar() {
         <View style={styles.header}>
           <Text style={styles.title}>Your Schedule</Text>
           <TouchableOpacity style={styles.profileButton} onPress={handleIconPress}>
-            {isLoggedIn && userInfo ? (
-              userInfo?.picture ? (
-                <Image source={{ uri: userInfo.picture }} style={styles.profileImage} />
-              ) : (
-                <Feather user="user-circle" size={32} color="#852C3A" />
-              )
-            ) : (
-              <Feather name="plus-circle" size={32} color="#852C3A" />
-            )}
+            <ProfilePicture />
           </TouchableOpacity>
         </View>
 
