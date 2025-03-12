@@ -116,7 +116,6 @@ class GoogleService {
 
   saveSelectedCalendarId(calendarId: string) {
     if (!calendarId || calendarId.trim() === '') {
-      console.warn('Attempting to save empty calendar ID');
       return;
     }
 
