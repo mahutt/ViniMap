@@ -20,7 +20,7 @@ import CalendarSelectionModal from '@/components/CalendarSelectionModal';
 import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { Location } from '@/modules/map/Types';
 import { getBuildingCoordinates } from '@/services/BuildingService';
-import { Feather } from '@expo/vector-icons';
+import ProfilePicture from '@/components/ProfilePicture';
 
 const { width } = Dimensions.get('window');
 
@@ -203,18 +203,6 @@ export default function Calendar() {
     });
   }, []);
 
-  const ProfilePicture = () => {
-    if (isLoggedIn && userInfo) {
-      if (userInfo?.picture) {
-        return <Image source={{ uri: userInfo.picture }} style={styles.profileImage} />;
-      } else {
-        return <Feather user="user-circle" size={32} color="#852C3A" />;
-      }
-    } else {
-      return <Feather name="plus-circle" size={32} color="#852C3A" />;
-    }
-  };
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SimpleModal
@@ -237,7 +225,7 @@ export default function Calendar() {
         <View style={styles.header}>
           <Text style={styles.title}>Your Schedule</Text>
           <TouchableOpacity style={styles.profileButton} onPress={handleIconPress}>
-            <ProfilePicture />
+            <ProfilePicture isLoggedIn={isLoggedIn} userInfo={userInfo} styles={styles} />
           </TouchableOpacity>
         </View>
 
