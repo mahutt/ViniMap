@@ -10,7 +10,7 @@ import {
   Alert,
   Image,
 } from 'react-native';
-import GoogleAuthService from '@/services/GoogleService';
+import GoogleService from '@/services/GoogleService';
 
 interface CalendarItem {
   id: string;
@@ -37,8 +37,8 @@ const CalendarSelectionModal: React.FC<CalendarSelectionModalProps> = ({
 }) => {
   const [calendars, setCalendars] = useState<CalendarItem[]>([]);
 
-  const userInfo = GoogleAuthService.getUserInfoFromStorage();
-  const selectedCalendarId = GoogleAuthService.getSelectedCalendarId();
+  const userInfo = GoogleService.getUserInfoFromStorage();
+  const selectedCalendarId = GoogleService.getSelectedCalendarId();
 
   useEffect(() => {
     if (userInfo) {
@@ -48,7 +48,7 @@ const CalendarSelectionModal: React.FC<CalendarSelectionModalProps> = ({
 
   const loadCalendars = async () => {
     try {
-      const calendarList = await GoogleAuthService.fetchUserCalendars();
+      const calendarList = await GoogleService.fetchUserCalendars();
       const calendarItems: CalendarItem[] = calendarList.map((calendar: any) => ({
         ...calendar,
         selected: calendar.id === selectedCalendarId,
@@ -61,7 +61,7 @@ const CalendarSelectionModal: React.FC<CalendarSelectionModalProps> = ({
   };
 
   const handleSelectCalendar = (calendarId: string) => {
-    GoogleAuthService.saveSelectedCalendarId(calendarId);
+    GoogleService.saveSelectedCalendarId(calendarId);
     onSelect(calendarId);
     onClose();
   };
