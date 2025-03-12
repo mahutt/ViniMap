@@ -93,7 +93,11 @@ export function getIndoorFeatureFromCoordinates(
     if (booleanPointInPolygon(coordinates, feature.geometry)) {
       return {
         coordinates,
-        name: feature?.properties?.ref || 'Unknown room',
+        name:
+          feature?.properties?.name ||
+          feature?.properties?.amenity ||
+          feature?.properties?.ref ||
+          'Unknown room',
         data: { address: indoorMap.id, isOpen: false },
       };
     }
