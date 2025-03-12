@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Modal,
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  StyleSheet,
-  Alert,
-} from 'react-native';
+import { Modal, View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 interface SimpleModalProps {
@@ -27,7 +18,7 @@ const SimpleModal: React.FC<SimpleModalProps> = ({
   isLoggedIn,
 }) => {
   const [calendarId, setCalendarId] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
 
   const handleSave = () => {
     onSave(calendarId.trim());

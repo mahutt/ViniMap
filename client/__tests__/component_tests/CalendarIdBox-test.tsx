@@ -16,7 +16,7 @@ describe('SimpleModal', () => {
   });
 
   it('renders login and calendar input fields correctly', () => {
-    const { getByTestId, getByText, getByPlaceholderText, queryByText } = render(
+    const { getByTestId, getByText, getByPlaceholderText } = render(
       <SimpleModal
         visible={true}
         onClose={mockOnClose}

@@ -1,4 +1,4 @@
-import { render, fireEvent } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 import Calendar from '@/app/(tabs)/calendar';
 import { storage } from '@/services/StorageService';
 import { MMKV } from 'react-native-mmkv';
@@ -130,13 +130,6 @@ jest.mock('@/components/CalendarSelectionModal', () => {
   );
   return MockCalendarSelectionModal;
 });
-
-const mockExtractScheduleData = jest.mocked(
-  require('@/services/GoogleService').extractScheduleData
-);
-const mockFetchCalendarEvents = jest.mocked(
-  require('@/services/GoogleService').fetchCalendarEvents
-);
 
 // Sample calendar data
 const mockCalendarData = {

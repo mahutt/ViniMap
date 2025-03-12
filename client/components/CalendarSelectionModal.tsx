@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Modal,
   View,
@@ -7,7 +7,6 @@ import {
   TouchableWithoutFeedback,
   StyleSheet,
   FlatList,
-  Alert,
   Image,
 } from 'react-native';
 import GoogleService from '@/services/GoogleService';
@@ -46,7 +45,7 @@ const CalendarSelectionModal: React.FC<CalendarSelectionModalProps> = ({
     }
   }, [userInfo]);
 
-  const loadCalendars = async () => {
+  const loadCalendars = useCallback(async () => {
     try {
       const calendarList = await GoogleService.fetchUserCalendars();
       const calendarItems: CalendarItem[] = calendarList.map((calendar: any) => ({
@@ -57,7 +56,7 @@ const CalendarSelectionModal: React.FC<CalendarSelectionModalProps> = ({
     } catch (error) {
       console.error('Failed to load calendars:', error);
     }
-  };
+  }, [selectedCalendarId]);
 
   const handleSelectCalendar = (calendarId: string) => {
     GoogleService.saveSelectedCalendarId(calendarId);
