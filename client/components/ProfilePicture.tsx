@@ -18,15 +18,19 @@ interface ProfilePictureProps {
 }
 
 const ProfilePicture: React.FC<ProfilePictureProps> = ({ isLoggedIn, userInfo, styles }) => {
-  if (isLoggedIn && userInfo) {
-    if (userInfo?.picture) {
-      return <Image source={{ uri: userInfo.picture }} style={styles.profileImage} />;
-    } else {
-      return <Feather user="user-circle" size={32} color="#852C3A" />;
-    }
-  } else {
+  const getProfileContent = () => {
+    return userInfo?.picture ? (
+      <Image source={{ uri: userInfo.picture }} style={styles.profileImage} />
+    ) : (
+      <Feather user="user-circle" size={32} color="#852C3A" />
+    );
+  };
+
+  const getLoggedOutContent = () => {
     return <Feather name="plus-circle" size={32} color="#852C3A" />;
-  }
+  };
+
+  return isLoggedIn && userInfo ? getProfileContent() : getLoggedOutContent();
 };
 
 export default ProfilePicture;
