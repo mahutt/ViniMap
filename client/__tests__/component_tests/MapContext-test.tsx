@@ -218,6 +218,7 @@ describe('MapContext', () => {
     await waitFor(() => expect(mapContext).toBeDefined());
 
     if (mapContext) {
+      // @ts-ignore - mocking the map ref
       mapContext.mapRef.current = {
         getZoom: jest.fn().mockResolvedValue(16),
         getVisibleBounds: jest.fn().mockResolvedValue([
@@ -247,6 +248,7 @@ describe('MapContext', () => {
     await waitFor(() => expect(mapContext).toBeDefined());
 
     if (mapContext) {
+      // @ts-ignore - mocking the map ref
       mapContext.mapRef.current = {
         getZoom: jest.fn().mockResolvedValue(18),
         getVisibleBounds: jest.fn().mockResolvedValue([
@@ -278,6 +280,7 @@ describe('MapContext', () => {
     await waitFor(() => expect(mapContext).toBeDefined());
 
     if (mapContext) {
+      // @ts-ignore - mocking the map ref
       mapContext.mapRef.current = {
         getZoom: jest.fn().mockResolvedValue(18),
         getVisibleBounds: jest.fn().mockResolvedValue([
@@ -341,6 +344,7 @@ describe('MapContext', () => {
     await waitFor(() => expect(mapContext).toBeDefined());
 
     if (mapContext) {
+      // @ts-ignore - mocking the map ref
       mapContext.cameraRef.current = {
         fitBounds: jest.fn(),
       };
