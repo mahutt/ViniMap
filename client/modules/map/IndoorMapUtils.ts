@@ -90,13 +90,14 @@ export function getIndoorFeatureFromCoordinates(
       continue;
     }
     if (booleanPointInPolygon(coordinates, feature.geometry)) {
+      const name =
+        feature?.properties?.name ||
+        getFallbackNameByAmenity(feature?.properties?.amenity) ||
+        feature?.properties?.ref ||
+        'Unknown room';
       return {
         coordinates,
-        name:
-          feature?.properties?.name ||
-          feature?.properties?.amenity ||
-          feature?.properties?.ref ||
-          'Unknown room',
+        name,
         data: { address: indoorMap.id, isOpen: false },
       };
     }
@@ -104,3 +105,21 @@ export function getIndoorFeatureFromCoordinates(
 
   return null;
 }
+
+const FALLBACK_NAME_BY_AMENITY = {
+  toilets: 'Toilets',
+  vending_machine: 'Vending machine',
+  fast_food: 'Fast food',
+  restaurant: 'Restaurant',
+  cafe: 'Cafe',
+  fountain: 'Fountain',
+  eating_area: 'Eating area',
+  information: 'Information',
+};
+
+const getFallbackNameByAmenity = (amenity: string | null) => {
+  if (amenity && amenity in FALLBACK_NAME_BY_AMENITY) {
+    return FALLBACK_NAME_BY_AMENITY[amenity as keyof typeof FALLBACK_NAME_BY_AMENITY];
+  }
+  return null;
+};
