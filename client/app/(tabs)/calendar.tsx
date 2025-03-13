@@ -55,6 +55,8 @@ export default function Calendar() {
         setUserInfo(storedUserInfo);
 
         if (isAuthenticated) {
+          const calendarId = GoogleService.getSelectedCalendarId();
+          handleCalendarSelect(calendarId);
           const calendarData = GoogleService.getCalendarData();
           if (calendarData && Object.keys(calendarData).length > 0) {
             setScheduleData(calendarData);
