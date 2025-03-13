@@ -8,14 +8,15 @@ import React, {
   useEffect,
 } from 'react';
 import Mapbox from '@rnmapbox/maps';
-import { getRoute } from './MapService';
+import { fetchLocationData, getRoute } from './MapService';
 import { Location, Coordinates, Route, Level, IndoorMap } from './Types';
 import { indoorMaps } from './IndoorMap';
 import type { BBox } from 'geojson';
-import { bboxCenter, overlap } from './IndoorMapUtils';
+import { bboxCenter, getIndoorFeatureFromCoordinates, overlap } from './IndoorMapUtils';
 import { default as turfDistance } from '@turf/distance';
 import { LocationSubscription, watchPositionAsync } from 'expo-location';
 import CoordinateService from '@/services/CoordinateService';
+import PointsOfInterestService from '@/services/PointsOfInterestService';
 
 export enum MapState {
   Idle,
@@ -57,6 +58,7 @@ type MapContextType = {
 
   indoorMap: IndoorMap | null;
   updateSelectedMapIfNeeded: () => void;
+  onMapPress: (event: any) => void;
 };
 
 const MapContext = createContext<MapContextType | undefined>(undefined);
@@ -134,6 +136,84 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       })();
     };
   }, [indoorMap, setIndoorMap, setLevel]);
+
+  const onMapPress = async (event: any) => {
+    const { geometry } = event;
+
+    if (!geometry?.coordinates) {
+      return;
+    }
+
+    const coordinates = geometry.coordinates;
+    let location: Location | null = null;
+
+    if (indoorMap !== null && level !== null) {
+      location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
+    }
+
+    if (!location) {
+      for (let indoorMap of indoorMaps) {
+        if (
+          overlap(indoorMap.bounds, [
+            coordinates[0],
+            coordinates[1],
+            coordinates[0],
+            coordinates[1],
+          ])
+        ) {
+          location = {
+            coordinates,
+            name: indoorMap.id,
+            data: { address: indoorMap.id, isOpen: false },
+          };
+        }
+      }
+    }
+
+    if (!location) {
+      const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
+      if (clickedPOI) {
+        location = {
+          name: clickedPOI.name,
+          coordinates: clickedPOI.coordinates,
+          data: {
+            address: clickedPOI.address,
+            isOpen: clickedPOI.openingHours.isOpen,
+            hours: clickedPOI.openingHours.hours,
+            description: clickedPOI.description ?? '',
+          },
+        };
+      }
+    }
+
+    if (!location) {
+      location = await fetchLocationData(coordinates);
+    }
+
+    switch (state) {
+      case MapState.SelectingStartLocation:
+        setStartLocation(location);
+        if (endLocation) {
+          setState(MapState.RoutePlanning);
+        }
+        break;
+
+      case MapState.SelectingEndLocation:
+        setEndLocation(location);
+        setState(MapState.RoutePlanning);
+        break;
+
+      default:
+        setEndLocation(location);
+        setState(MapState.Information);
+        break;
+    }
+
+    if (cameraRef.current) {
+      cameraRef.current.flyTo(coordinates, 1000);
+    }
+  };
+
   useEffect(() => {
     let subscription: LocationSubscription;
     CoordinateService.getCurrentCoordinates().then((coords) => {
@@ -229,6 +309,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       loadRouteFromCoordinates,
       indoorMap,
       updateSelectedMapIfNeeded,
+      onMapPress,
     }),
     [
       centerCoordinate,

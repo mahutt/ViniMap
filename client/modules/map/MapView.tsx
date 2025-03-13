@@ -23,12 +23,9 @@ const equalLocations = (a: Location | null, b: Location | null): boolean => {
 export default function MapView() {
   const {
     state,
-    setState,
     startLocation,
     endLocation,
     userLocation,
-    setStartLocation,
-    setEndLocation,
     mapRef,
     cameraRef,
     centerCoordinate,
@@ -38,6 +35,7 @@ export default function MapView() {
     level,
     indoorMap,
     updateSelectedMapIfNeeded,
+    onMapPress,
   } = useMap();
 
   const [pointsOfInterest, setPointsOfInterest] = useState<PointOfInterest[]>([]);
@@ -63,70 +61,12 @@ export default function MapView() {
     [level]
   );
 
-  async function onMapClick(event: any) {
-    const { geometry } = event;
-
-    if (!geometry?.coordinates) {
-      return;
-    }
-
-    const coordinates = geometry.coordinates;
-    let location: Location | null = null;
-
-    if (indoorMap !== null && level !== null) {
-      location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
-    }
-
-    if (!location) {
-      const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
-      if (clickedPOI) {
-        location = {
-          name: clickedPOI.name,
-          coordinates: clickedPOI.coordinates,
-          data: {
-            address: clickedPOI.address,
-            isOpen: clickedPOI.openingHours.isOpen,
-            hours: clickedPOI.openingHours.hours,
-            description: clickedPOI.description ?? '',
-          },
-        };
-      }
-    }
-
-    if (!location) {
-      location = await fetchLocationData(coordinates);
-    }
-
-    switch (state) {
-      case MapState.SelectingStartLocation:
-        setStartLocation(location);
-        if (endLocation) {
-          setState(MapState.RoutePlanning);
-        }
-        break;
-
-      case MapState.SelectingEndLocation:
-        setEndLocation(location);
-        setState(MapState.RoutePlanning);
-        break;
-
-      default:
-        setEndLocation(location);
-        setState(MapState.Information);
-        break;
-    }
-
-    if (cameraRef.current) {
-      cameraRef.current.flyTo(coordinates, 1000);
-    }
-  }
-
   return (
     <Mapbox.MapView
       ref={mapRef}
       style={styles.map}
       styleURL="mapbox://styles/ambrose821/cm6g7anat00kv01qmbxkze6i8"
-      onPress={onMapClick}
+      onPress={onMapPress}
       onCameraChanged={() => updateSelectedMapIfNeeded()}>
       <Mapbox.Camera
         ref={cameraRef}
@@ -146,7 +86,7 @@ export default function MapView() {
             anchor={{ x: 0.5, y: 0.5 }}>
             <TouchableOpacity
               onPress={() => {
-                onMapClick({ geometry: { coordinates: poi.coordinates } });
+                onMapPress({ geometry: { coordinates: poi.coordinates } });
               }}
               activeOpacity={0.7}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
