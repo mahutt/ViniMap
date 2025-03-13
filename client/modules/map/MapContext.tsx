@@ -137,82 +137,85 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   }, [indoorMap, setIndoorMap, setLevel]);
 
-  const onMapPress = async (event: any) => {
-    const { geometry } = event;
+  const onMapPress = useCallback(
+    async (event: any) => {
+      const { geometry } = event;
 
-    if (!geometry?.coordinates) {
-      return;
-    }
+      if (!geometry?.coordinates) {
+        return;
+      }
 
-    const coordinates = geometry.coordinates;
-    let location: Location | null = null;
+      const coordinates = geometry.coordinates;
+      let location: Location | null = null;
 
-    if (indoorMap !== null && level !== null) {
-      location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
-    }
+      if (indoorMap !== null && level !== null) {
+        location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
+      }
 
-    if (!location) {
-      for (let indoorMap of indoorMaps) {
-        if (
-          overlap(indoorMap.bounds, [
-            coordinates[0],
-            coordinates[1],
-            coordinates[0],
-            coordinates[1],
-          ])
-        ) {
+      if (!location) {
+        for (let indoorMap of indoorMaps) {
+          if (
+            overlap(indoorMap.bounds, [
+              coordinates[0],
+              coordinates[1],
+              coordinates[0],
+              coordinates[1],
+            ])
+          ) {
+            location = {
+              coordinates,
+              name: indoorMap.id,
+              data: { address: indoorMap.id, isOpen: false },
+            };
+          }
+        }
+      }
+
+      if (!location) {
+        const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
+        if (clickedPOI) {
           location = {
-            coordinates,
-            name: indoorMap.id,
-            data: { address: indoorMap.id, isOpen: false },
+            name: clickedPOI.name,
+            coordinates: clickedPOI.coordinates,
+            data: {
+              address: clickedPOI.address,
+              isOpen: clickedPOI.openingHours.isOpen,
+              hours: clickedPOI.openingHours.hours,
+              description: clickedPOI.description ?? '',
+            },
           };
         }
       }
-    }
 
-    if (!location) {
-      const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
-      if (clickedPOI) {
-        location = {
-          name: clickedPOI.name,
-          coordinates: clickedPOI.coordinates,
-          data: {
-            address: clickedPOI.address,
-            isOpen: clickedPOI.openingHours.isOpen,
-            hours: clickedPOI.openingHours.hours,
-            description: clickedPOI.description ?? '',
-          },
-        };
+      if (!location) {
+        location = await fetchLocationData(coordinates);
       }
-    }
 
-    if (!location) {
-      location = await fetchLocationData(coordinates);
-    }
+      switch (state) {
+        case MapState.SelectingStartLocation:
+          setStartLocation(location);
+          if (endLocation) {
+            setState(MapState.RoutePlanning);
+          }
+          break;
 
-    switch (state) {
-      case MapState.SelectingStartLocation:
-        setStartLocation(location);
-        if (endLocation) {
+        case MapState.SelectingEndLocation:
+          setEndLocation(location);
           setState(MapState.RoutePlanning);
-        }
-        break;
+          break;
 
-      case MapState.SelectingEndLocation:
-        setEndLocation(location);
-        setState(MapState.RoutePlanning);
-        break;
+        default:
+          setEndLocation(location);
+          setState(MapState.Information);
+          break;
+      }
 
-      default:
-        setEndLocation(location);
-        setState(MapState.Information);
-        break;
-    }
-
-    if (cameraRef.current) {
-      cameraRef.current.flyTo(coordinates, 1000);
-    }
-  };
+      if (cameraRef.current) {
+        cameraRef.current.flyTo(coordinates, 1000);
+      }
+    },
+    [indoorMap, level, state, endLocation]
+  );
 
   useEffect(() => {
     let subscription: LocationSubscription;
@@ -325,6 +328,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       loadRouteFromCoordinates,
       indoorMap,
       updateSelectedMapIfNeeded,
+      onMapPress,
     ]
   );
 

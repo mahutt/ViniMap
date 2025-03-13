@@ -3,12 +3,11 @@ import Mapbox from '@rnmapbox/maps';
 import React, { useCallback, useState, useEffect } from 'react';
 import { MapState, useMap } from './MapContext';
 import { Location, ExpressionSpecification } from '@/modules/map/Types';
-import { fetchLocationData } from './MapService';
 import PointsOfInterestService from '@/services/PointsOfInterestService';
 import { PointOfInterest } from './PointsOfInterestTypes';
 import POIMarker from '@/components/POIMarker';
 import layers from '@/modules/map/style/DefaultLayers';
-import { filterWithLevel, getIndoorFeatureFromCoordinates } from '@/modules/map/IndoorMapUtils';
+import { filterWithLevel } from '@/modules/map/IndoorMapUtils';
 import { images } from '@/assets';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
