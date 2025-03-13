@@ -175,7 +175,7 @@ class GoogleService {
     if (accessToken) {
       const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
         calendarId
-      )}/events?key=${GOOGLE_API_KEY}`;
+      )}/events?key=${GOOGLE_API_KEY}&showDeleted=false&singleEvents=true&maxResults=100&orderBy=startTime`;
       const response = await fetch(url, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
