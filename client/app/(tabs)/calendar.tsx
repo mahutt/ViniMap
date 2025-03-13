@@ -92,14 +92,10 @@ export default function Calendar() {
         { className: string; location: string; time: string }[]
       > = {};
 
-      for (let i = 0; i <= 4; i++) {
-        Object.keys(newScheduleData).forEach((date) => {
-          const momentDate = moment(date)
-            .add(i * 7, 'days')
-            .format('YYYY-MM-DD');
-          updatedScheduleData[momentDate] = newScheduleData[date];
-        });
-      }
+      Object.keys(newScheduleData).forEach((date) => {
+        const momentDate = moment(date).format('YYYY-MM-DD');
+        updatedScheduleData[momentDate] = newScheduleData[date];
+      });
 
       setScheduleData(updatedScheduleData);
       GoogleService.saveCalendarData(updatedScheduleData);
