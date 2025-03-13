@@ -27,7 +27,7 @@ const OSM_FILTER_MAPBOX_MAKI_LIST: FilterMakiEntry[] = [
   },
   {
     filter: ['filter-==', 'amenity', 'vending_machine'], // used to be filter: ['in', ['get', 'amenity'], ['literal', ['bank', 'vending_machine']]],
-    maki: 'bank',
+    maki: 'soda',
   },
   {
     filter: ['filter-==', 'amenity', 'toilets'],
@@ -35,7 +35,7 @@ const OSM_FILTER_MAPBOX_MAKI_LIST: FilterMakiEntry[] = [
   },
   {
     filter: ['filter-==', 'amenity', 'fountain'],
-    maki: 'drinking-water',
+    maki: 'water',
   },
   {
     filter: ['filter-==', 'amenity', 'eating_area'],
