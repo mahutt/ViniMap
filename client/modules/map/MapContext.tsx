@@ -262,10 +262,6 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       endCoordinates: Coordinates,
       mode = 'walking'
     ): Promise<void> => {
-      if (!startCoordinates || !endCoordinates) {
-        return;
-      }
-
       return getRoute(startCoordinates, endCoordinates, mode)
         .then((route) => {
           if (route) {

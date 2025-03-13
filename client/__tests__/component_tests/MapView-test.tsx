@@ -3,8 +3,6 @@ import { render, act } from '@testing-library/react-native';
 import MapView from '@/modules/map/MapView';
 import { MapState } from '@/modules/map/MapContext';
 import { fetchLocationData } from '@/modules/map/MapService';
-import PointsOfInterestService from '@/services/PointsOfInterestService';
-import { getIndoorFeatureFromCoordinates } from '@/modules/map/IndoorMapUtils';
 
 jest.mock('@rnmapbox/maps');
 
@@ -150,31 +148,6 @@ describe('MapView', () => {
         ],
       },
     ],
-  };
-  const mockIndoorMap = {
-    id: 'test-indoor',
-    name: 'Test Indoor Map',
-    geojson: {
-      type: 'FeatureCollection',
-      features: [
-        {
-          type: 'Feature',
-          properties: { level: 0, room: 'lobby' },
-          geometry: {
-            type: 'Polygon',
-            coordinates: [
-              [
-                [0, 0],
-                [0, 1],
-                [1, 1],
-                [1, 0],
-                [0, 0],
-              ],
-            ],
-          },
-        },
-      ],
-    },
   };
   const mockUpdateSelectedMapIfNeeded = jest.fn();
   const mockOnMapPress = jest.fn();
