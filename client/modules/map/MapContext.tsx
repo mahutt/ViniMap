@@ -137,6 +137,43 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   }, [indoorMap, setIndoorMap, setLevel]);
 
+  const getLocationFromCoordinates = async (coordinates: Coordinates): Promise<Location> => {
+    if (indoorMap !== null && level !== null) {
+      const location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
+      if (location) {
+        return location;
+      }
+    }
+
+    for (let indoorMap of indoorMaps) {
+      if (
+        overlap(indoorMap.bounds, [coordinates[0], coordinates[1], coordinates[0], coordinates[1]])
+      ) {
+        return {
+          coordinates,
+          name: indoorMap.id,
+          data: { address: indoorMap.id, isOpen: false },
+        };
+      }
+    }
+
+    const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
+    if (clickedPOI) {
+      return {
+        name: clickedPOI.name,
+        coordinates: clickedPOI.coordinates,
+        data: {
+          address: clickedPOI.address,
+          isOpen: clickedPOI.openingHours.isOpen,
+          hours: clickedPOI.openingHours.hours,
+          description: clickedPOI.description ?? '',
+        },
+      };
+    }
+
+    return await fetchLocationData(coordinates);
+  };
+
   const onMapPress = useCallback(
     async (event: any) => {
       const { geometry } = event;
@@ -146,50 +183,8 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
 
       const coordinates = geometry.coordinates;
-      let location: Location | null = null;
 
-      if (indoorMap !== null && level !== null) {
-        location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
-      }
-
-      if (!location) {
-        for (let indoorMap of indoorMaps) {
-          if (
-            overlap(indoorMap.bounds, [
-              coordinates[0],
-              coordinates[1],
-              coordinates[0],
-              coordinates[1],
-            ])
-          ) {
-            location = {
-              coordinates,
-              name: indoorMap.id,
-              data: { address: indoorMap.id, isOpen: false },
-            };
-          }
-        }
-      }
-
-      if (!location) {
-        const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
-        if (clickedPOI) {
-          location = {
-            name: clickedPOI.name,
-            coordinates: clickedPOI.coordinates,
-            data: {
-              address: clickedPOI.address,
-              isOpen: clickedPOI.openingHours.isOpen,
-              hours: clickedPOI.openingHours.hours,
-              description: clickedPOI.description ?? '',
-            },
-          };
-        }
-      }
-
-      if (!location) {
-        location = await fetchLocationData(coordinates);
-      }
+      let location: Location = await getLocationFromCoordinates(coordinates);
 
       switch (state) {
         case MapState.SelectingStartLocation:
