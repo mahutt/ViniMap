@@ -188,7 +188,7 @@ class GoogleService {
 
     const publicUrl = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
       calendarId
-    )}/events?key=${GOOGLE_API_KEY}&showDeleted=false&singleEvents=true&maxResults=100&orderBy=startTime}`;
+    )}/events?key=${GOOGLE_API_KEY}&showDeleted=false&singleEvents=true&maxResults=100&orderBy=startTime`;
 
     const publicResponse = await fetch(publicUrl);
 
