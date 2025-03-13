@@ -36,6 +36,10 @@ jest.mock('@/modules/map/IndoorMapUtils', () => ({
   getIndoorFeatureFromCoordinates: jest.fn(),
 }));
 
+jest.mock('@/assets', () => ({
+  images: {},
+}));
+
 const mockOnPressHandler = jest.fn();
 
 // Create a mock for @rnmapbox/maps
@@ -90,6 +94,11 @@ jest.mock('@rnmapbox/maps', () => {
   });
   MockCallout.displayName = 'Callout';
 
+  const MockImages = React.forwardRef(function MockImages(props: any, ref: any) {
+    return null;
+  });
+  MockImages.displayName = 'Images';
+
   return {
     setAccessToken: jest.fn(),
     MapView: MockMapView,
@@ -101,6 +110,7 @@ jest.mock('@rnmapbox/maps', () => {
     FillLayer: MockFillLayer,
     SymbolLayer: MockSymbolLayer,
     Callout: MockCallout,
+    Images: MockImages,
   };
 });
 
@@ -166,10 +176,8 @@ describe('MapView', () => {
       ],
     },
   };
-  const mockSetState = jest.fn();
-  const mockSetStartLocation = jest.fn();
-  const mockSetEndLocation = jest.fn();
   const mockUpdateSelectedMapIfNeeded = jest.fn();
+  const mockOnMapPress = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -179,12 +187,9 @@ describe('MapView', () => {
     const { useMap } = require('@/modules/map/MapContext');
     useMap.mockReturnValue({
       state: MapState.Idle,
-      setState: mockSetState,
       startLocation: mockStartLocation,
       endLocation: mockEndLocation,
       userLocation: null,
-      setStartLocation: mockSetStartLocation,
-      setEndLocation: mockSetEndLocation,
       mapRef: mockMapRef,
       cameraRef: mockCameraRef,
       centerCoordinate: [0, 0],
@@ -194,6 +199,7 @@ describe('MapView', () => {
       level: null,
       indoorMap: null,
       updateSelectedMapIfNeeded: mockUpdateSelectedMapIfNeeded,
+      onMapPress: mockOnMapPress,
     });
 
     (fetchLocationData as jest.Mock).mockResolvedValue({
@@ -222,23 +228,22 @@ describe('MapView', () => {
       });
     });
 
-    expect(mockSetEndLocation).toHaveBeenCalledWith(
-      expect.objectContaining({ address: 'Test Address', isOpen: true, name: 'Test Location' })
+    expect(mockOnMapPress).toHaveBeenCalledWith(
+      expect.objectContaining({
+        geometry: {
+          coordinates: [2, 2],
+        },
+      })
     );
-    expect(mockSetState).toHaveBeenCalledWith(MapState.Information);
-    expect(mockCameraRef.current.flyTo).toHaveBeenCalledWith([2, 2], 1000);
   });
 
   it('handles map click in SelectingStartLocation state', async () => {
     const { useMap } = require('@/modules/map/MapContext');
     useMap.mockReturnValueOnce({
       state: MapState.SelectingStartLocation,
-      setState: mockSetState,
       startLocation: null,
       endLocation: mockEndLocation,
       userLocation: null,
-      setStartLocation: mockSetStartLocation,
-      setEndLocation: mockSetEndLocation,
       mapRef: mockMapRef,
       cameraRef: mockCameraRef,
       centerCoordinate: [0, 0],
@@ -248,6 +253,7 @@ describe('MapView', () => {
       level: null,
       indoorMap: null,
       updateSelectedMapIfNeeded: mockUpdateSelectedMapIfNeeded,
+      onMapPress: mockOnMapPress,
     });
 
     render(<MapView />);
@@ -262,22 +268,22 @@ describe('MapView', () => {
       });
     });
 
-    expect(mockSetStartLocation).toHaveBeenCalledWith(
-      expect.objectContaining({ address: 'Test Address', isOpen: true, name: 'Test Location' })
+    expect(mockOnMapPress).toHaveBeenCalledWith(
+      expect.objectContaining({
+        geometry: {
+          coordinates: [2, 2],
+        },
+      })
     );
-    expect(mockSetState).toHaveBeenCalledWith(MapState.RoutePlanning);
   });
 
   it('handles map click in SelectingEndLocation state', async () => {
     const { useMap } = require('@/modules/map/MapContext');
     useMap.mockReturnValueOnce({
       state: MapState.SelectingEndLocation,
-      setState: mockSetState,
       startLocation: mockStartLocation,
       endLocation: null,
       userLocation: null,
-      setStartLocation: mockSetStartLocation,
-      setEndLocation: mockSetEndLocation,
       mapRef: mockMapRef,
       cameraRef: mockCameraRef,
       centerCoordinate: [0, 0],
@@ -287,6 +293,7 @@ describe('MapView', () => {
       level: null,
       indoorMap: null,
       updateSelectedMapIfNeeded: mockUpdateSelectedMapIfNeeded,
+      onMapPress: mockOnMapPress,
     });
 
     render(<MapView />);
@@ -301,10 +308,13 @@ describe('MapView', () => {
       });
     });
 
-    expect(mockSetEndLocation).toHaveBeenCalledWith(
-      expect.objectContaining({ address: 'Test Address', isOpen: true, name: 'Test Location' })
+    expect(mockOnMapPress).toHaveBeenCalledWith(
+      expect.objectContaining({
+        geometry: {
+          coordinates: [2, 2],
+        },
+      })
     );
-    expect(mockSetState).toHaveBeenCalledWith(MapState.RoutePlanning);
   });
 
   it('ignores map click with invalid coordinates', async () => {
@@ -318,135 +328,10 @@ describe('MapView', () => {
       });
     });
 
-    expect(mockSetStartLocation).not.toHaveBeenCalled();
-    expect(mockSetEndLocation).not.toHaveBeenCalled();
-    expect(mockSetState).not.toHaveBeenCalled();
-  });
-
-  it('ignores map click with invalid coordinates', async () => {
-    render(<MapView />);
-
-    const onPressHandler = mockOnPressHandler.mock.calls[0][0];
-
-    await act(async () => {
-      await onPressHandler({
+    expect(mockOnMapPress).toHaveBeenCalledWith(
+      expect.objectContaining({
         geometry: null,
-      });
-    });
-
-    expect(mockSetStartLocation).not.toHaveBeenCalled();
-    expect(mockSetEndLocation).not.toHaveBeenCalled();
-    expect(mockSetState).not.toHaveBeenCalled();
-  });
-
-  it('handles indoor map click and uses indoor location', async () => {
-    const { useMap } = require('@/modules/map/MapContext');
-    const mockIndoorLocation = {
-      name: 'Indoor Room',
-      coordinates: [0.5, 0.5],
-      data: {
-        address: 'Indoor Address',
-        isOpen: true,
-      },
-    };
-
-    (getIndoorFeatureFromCoordinates as jest.Mock).mockReturnValue(mockIndoorLocation);
-
-    useMap.mockReturnValueOnce({
-      state: MapState.Idle,
-      setState: mockSetState,
-      startLocation: mockStartLocation,
-      endLocation: mockEndLocation,
-      userLocation: null,
-      setStartLocation: mockSetStartLocation,
-      setEndLocation: mockSetEndLocation,
-      mapRef: mockMapRef,
-      cameraRef: mockCameraRef,
-      centerCoordinate: [0, 0],
-      zoomLevel: 15,
-      pitchLevel: 0,
-      route: mockRoute,
-      level: 0,
-      indoorMap: mockIndoorMap,
-      updateSelectedMapIfNeeded: mockUpdateSelectedMapIfNeeded,
-    });
-
-    render(<MapView />);
-
-    const onPressHandler = mockOnPressHandler.mock.calls[0][0];
-
-    await act(async () => {
-      await onPressHandler({
-        geometry: {
-          coordinates: [0.5, 0.5],
-        },
-      });
-    });
-
-    expect(getIndoorFeatureFromCoordinates).toHaveBeenCalledWith(mockIndoorMap, [0.5, 0.5], 0);
-    expect(mockSetEndLocation).toHaveBeenCalledWith(mockIndoorLocation);
-    expect(mockSetState).toHaveBeenCalledWith(MapState.Information);
-  });
-
-  it('handles POI click and uses POI location', async () => {
-    const { useMap } = require('@/modules/map/MapContext');
-    const mockPOI = {
-      id: 'poi1',
-      name: 'Test POI',
-      coordinates: [3, 3],
-      address: 'POI Address',
-      type: 'restaurant',
-      openingHours: {
-        isOpen: true,
-        hours: '9AM-5PM',
-      },
-      description: 'A nice place',
-    };
-
-    (PointsOfInterestService.findClosestPOI as jest.Mock).mockReturnValue(mockPOI);
-
-    useMap.mockReturnValueOnce({
-      state: MapState.Idle,
-      setState: mockSetState,
-      startLocation: mockStartLocation,
-      endLocation: mockEndLocation,
-      userLocation: null,
-      setStartLocation: mockSetStartLocation,
-      setEndLocation: mockSetEndLocation,
-      mapRef: mockMapRef,
-      cameraRef: mockCameraRef,
-      centerCoordinate: [0, 0],
-      zoomLevel: 15,
-      pitchLevel: 0,
-      route: mockRoute,
-      level: null,
-      indoorMap: null,
-      updateSelectedMapIfNeeded: mockUpdateSelectedMapIfNeeded,
-    });
-
-    render(<MapView />);
-
-    const onPressHandler = mockOnPressHandler.mock.calls[0][0];
-
-    await act(async () => {
-      await onPressHandler({
-        geometry: {
-          coordinates: [3, 3],
-        },
-      });
-    });
-
-    expect(PointsOfInterestService.findClosestPOI).toHaveBeenCalledWith([3, 3]);
-    expect(mockSetEndLocation).toHaveBeenCalledWith({
-      name: 'Test POI',
-      coordinates: [3, 3],
-      data: {
-        address: 'POI Address',
-        isOpen: true,
-        hours: '9AM-5PM',
-        description: 'A nice place',
-      },
-    });
-    expect(mockSetState).toHaveBeenCalledWith(MapState.Information);
+      })
+    );
   });
 });
