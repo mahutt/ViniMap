@@ -9,8 +9,8 @@ import React, {
 } from 'react';
 import Mapbox from '@rnmapbox/maps';
 import { getRoute } from './MapService';
-import { Location, Coordinates, Route, Level } from './Types';
-import { IndoorMap, indoorMaps } from './IndoorMap';
+import { Location, Coordinates, Route, Level, IndoorMap } from './Types';
+import { indoorMaps } from './IndoorMap';
 import type { BBox } from 'geojson';
 import { bboxCenter, overlap } from './IndoorMapUtils';
 import { default as turfDistance } from '@turf/distance';

@@ -1,5 +1,4 @@
-import { IndoorMap } from './IndoorMap';
-import { Coordinates, ExpressionSpecification, Level, Location } from './Types';
+import { Coordinates, ExpressionSpecification, Level, Location, IndoorMap } from './Types';
 import type { BBox } from 'geojson';
 import GeojsonService from '@/services/GeojsonService';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';

@@ -1,4 +1,4 @@
-import type { FeatureCollection, Geometry } from 'geojson';
+import type { BBox, FeatureCollection, Geometry } from 'geojson';
 import {
   FillLayerStyleProps,
   LineLayerStyleProps,
@@ -38,6 +38,13 @@ export type LevelsRange = {
   min: Level;
   max: Level;
 };
+
+export interface IndoorMap {
+  id: string;
+  bounds: BBox;
+  geojson: IndoorMapGeoJSON;
+  levelsRange: LevelsRange;
+}
 
 /**
  * Internal representation of a location.
