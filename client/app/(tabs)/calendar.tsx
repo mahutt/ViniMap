@@ -78,7 +78,6 @@ export default function Calendar() {
   }, [response]);
 
   useEffect(() => {
-    if (Object.keys(scheduleData).length === 0) return;
     GoogleService.saveCalendarData(scheduleData);
   }, [scheduleData]);
 
