@@ -46,7 +46,7 @@ export function RoutePlanner() {
 
     try {
       const routes = await Promise.all(
-        MODES.map((mode) => getRoute(startLocation.coordinates, endLocation.coordinates, mode.name))
+        MODES.map((mode) => getRoute(startLocation, endLocation, mode.name))
       );
 
       const [walkingRoute, cyclingRoute, drivingRoute, shuttleRoute] = routes;
@@ -82,11 +82,7 @@ export function RoutePlanner() {
       if (startLocation && endLocation) {
         const loadRoute = async () => {
           try {
-            await loadRouteFromCoordinates(
-              startLocation.coordinates,
-              endLocation.coordinates,
-              selectedMode
-            );
+            await loadRouteFromCoordinates(startLocation, endLocation, selectedMode);
             calculateOptions();
           } catch (error) {
             console.error('Error loading route:', error);

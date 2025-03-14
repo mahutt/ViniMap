@@ -31,14 +31,23 @@ const getLocations = async (locationQuery: string): Promise<Location[]> => {
 };
 
 const getRoute = async (
+  startLocation: Location,
+  endLocation: Location,
+  mode: string
+): Promise<Route | null> => {
+  const startCoordinates = startLocation.coordinates;
+  const endCoordinates = endLocation.coordinates;
+  if (mode === 'shuttle') {
+    return getRouteForShuttle(startCoordinates, endCoordinates);
+  }
+  return getRouteFromMapbox(startCoordinates, endCoordinates, mode);
+};
+
+const getRouteFromMapbox = async (
   startCoordinates: Coordinates,
   endCoordinates: Coordinates,
   mode: string
 ): Promise<Route | null> => {
-  if (mode === 'shuttle') {
-    return getRouteForShuttle(startCoordinates, endCoordinates);
-  }
-
   const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?alternatives=false&annotations=duration,distance&continue_straight=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_ACCESS_TOKEN}`;
   const response = await fetch(url);
   const data = await response.json();
@@ -134,9 +143,17 @@ const getRouteForShuttle = async (
     return null;
   }
 
-  const start_Walk_ShuttleStart = await getRoute(startCoordinates, startBusStop, 'walking');
-  const shuttleStart_Drive_shuttleEnd = await getRoute(startBusStop, endBusStop, 'driving');
-  const shuttleEnd_Walk_end = await getRoute(endBusStop, endCoordinates, 'walking');
+  const start_Walk_ShuttleStart = await getRouteFromMapbox(
+    startCoordinates,
+    startBusStop,
+    'walking'
+  );
+  const shuttleStart_Drive_shuttleEnd = await getRouteFromMapbox(
+    startBusStop,
+    endBusStop,
+    'driving'
+  );
+  const shuttleEnd_Walk_end = await getRouteFromMapbox(endBusStop, endCoordinates, 'walking');
 
   if (!start_Walk_ShuttleStart || !shuttleStart_Drive_shuttleEnd || !shuttleEnd_Walk_end) {
     return null;

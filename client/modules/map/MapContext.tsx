@@ -51,8 +51,8 @@ type MapContextType = {
   setEndLocation: (endLocation: Location | null) => void;
   flyTo: (coords: [number, number], zoomLevel?: number) => void;
   loadRouteFromCoordinates: (
-    startCoordinates: Coordinates,
-    endCoordinates: Coordinates,
+    startLocation: Location,
+    endLocation: Location,
     mode?: string
   ) => Promise<void>;
 
@@ -260,12 +260,8 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   );
 
   const loadRouteFromCoordinates = useCallback(
-    async (
-      startCoordinates: Coordinates,
-      endCoordinates: Coordinates,
-      mode = 'walking'
-    ): Promise<void> => {
-      return getRoute(startCoordinates, endCoordinates, mode)
+    async (startLocation: Location, endLocation: Location, mode = 'walking'): Promise<void> => {
+      return getRoute(startLocation, endLocation, mode)
         .then((route) => {
           if (route) {
             if (route.segments.length > 0 && cameraRef.current) {
