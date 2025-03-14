@@ -98,7 +98,12 @@ export function getIndoorFeatureFromCoordinates(
       return {
         coordinates,
         name,
-        data: { address: indoorMap.id, isOpen: false },
+        data: {
+          address: indoorMap.id,
+          isOpen: false,
+          level: featureLevel,
+          indoorMapId: indoorMap.id,
+        },
       };
     }
   }
