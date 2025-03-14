@@ -62,6 +62,38 @@ export function bboxCenter(bbox: BBox): Coordinates {
   return [(west + east) / 2, (south + north) / 2];
 }
 
+export function getIndoorFeatureFromProperties(
+  indoorMap: IndoorMap,
+  key: string,
+  value: string
+): Location | null {
+  for (let feature of indoorMap.geojson.features) {
+    if (feature.properties) {
+      if (feature.properties && feature.properties[key] && feature.properties[key] == value) {
+        let coordinates = feature.properties.geometry?.coordinates ?? null;
+        if (!coordinates) {
+          return null;
+        }
+        let featureLevel = GeojsonService.extractLevelFromFeature(feature);
+
+        return {
+          coordinates,
+          name: null,
+          data: {
+            address: indoorMap.id,
+            isOpen: false,
+            level: featureLevel,
+            indoorMapId: indoorMap.id,
+          },
+        };
+      }
+    } else {
+      return null;
+    }
+  }
+  return null;
+}
+
 export function getIndoorFeatureFromCoordinates(
   indoorMap: IndoorMap,
   coordinates: Coordinates,
