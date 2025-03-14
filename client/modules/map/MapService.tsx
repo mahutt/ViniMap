@@ -35,6 +35,19 @@ const getRoute = async (
   endLocation: Location,
   mode: string
 ): Promise<Route | null> => {
+  if (
+    startLocation.data?.ref &&
+    endLocation.data?.ref &&
+    startLocation.data?.indoorMap &&
+    endLocation.data?.indoorMap &&
+    startLocation.data?.indoorMap?.id === endLocation.data?.indoorMap?.id
+  ) {
+    console.log(startLocation.data.ref);
+    console.log(endLocation.data.ref);
+    console.log(startLocation.data.indoorMap.id);
+    // Handle indoor navigation
+  }
+
   const startCoordinates = startLocation.coordinates;
   const endCoordinates = endLocation.coordinates;
   if (mode === 'shuttle') {
