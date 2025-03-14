@@ -1,0 +1,10 @@
+appId: com.anonymous.client
+---
+- doubleTapOn:
+    point: '50%,50%'
+- doubleTapOn:
+    point: '50%,50%'
+- doubleTapOn:
+    point: '50%,50%'
+- tapOn:
+    point: '56%,61%'
