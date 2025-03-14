@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'expo-router';
-import { storage } from '@/services/StorageService';
-
+import GoogleService from '@/services/GoogleService';
+import * as Google from 'expo-auth-session/providers/google';
 import {
   StyleSheet,
   Dimensions,
@@ -10,14 +10,16 @@ import {
   View,
   Text,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import moment from 'moment';
 import Swiper from 'react-native-swiper';
-import { extractScheduleData, fetchCalendarEvents } from '@/services/GoogleScheduleService';
 import SimpleModal from '@/components/CalendarIdBox';
+import CalendarSelectionModal from '@/components/CalendarSelectionModal';
 import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { Location } from '@/modules/map/Types';
 import { getBuildingCoordinates } from '@/services/BuildingService';
+import ProfilePicture from '@/components/ProfilePicture';
 
 const { width } = Dimensions.get('window');
 
@@ -29,52 +31,79 @@ export default function Calendar() {
     Record<string, { className: string; location: string; time: string }[]>
   >({});
 
+  // google auth request
+  const [request, response, promptAsync] = Google.useAuthRequest(GoogleService.config);
+
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userInfo, setUserInfo] = useState<{ picture?: string } | null>(null);
+
   const { setEndLocation } = useMap();
   const { setState } = useMap();
   const router = useRouter();
 
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const handleSave = async (value: string): Promise<void> => {
-    const calendarId = value.trim();
-    if (calendarId === '') return;
-    const calendarJson = await fetchCalendarEvents(calendarId);
-    const newScheduleData = extractScheduleData(calendarJson);
-
-    const updatedScheduleData: Record<
-      string,
-      { className: string; location: string; time: string }[]
-    > = {};
-
-    for (let i = 0; i <= 4; i++) {
-      Object.keys(newScheduleData).forEach((date) => {
-        const momentDate = moment(date)
-          .add(i * 7, 'days')
-          .format('YYYY-MM-DD');
-        updatedScheduleData[momentDate] = newScheduleData[date];
-      });
-    }
-
-    setScheduleData(updatedScheduleData);
-  };
+  const [calendarIdModalVisible, setCalendarIdModalVisible] = useState(false);
+  const [calendarSelectionModalVisible, setCalendarSelectionModalVisible] = useState(false);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
-    const calendarData = storage.getString('calendarData');
-    if (calendarData) {
+    const initializeApp = async () => {
       try {
-        const parsedData = JSON.parse(calendarData);
-        setScheduleData(parsedData);
-      } catch {
-        storage.delete('calendarData');
+        const isAuthenticated = await GoogleService.isSignedIn();
+        const storedUserInfo = isAuthenticated ? GoogleService.getUserInfoFromStorage() : null;
+
+        setIsLoggedIn(isAuthenticated);
+        setUserInfo(storedUserInfo);
+
+        if (isAuthenticated) {
+          const calendarId = GoogleService.getSelectedCalendarId();
+          handleCalendarSelect(calendarId);
+          const calendarData = GoogleService.getCalendarData();
+          if (calendarData && Object.keys(calendarData).length > 0) {
+            setScheduleData(calendarData);
+          }
+        }
+      } catch (error) {
+        console.error('Error initializing app:', error);
       }
-    }
+    };
+
+    initializeApp();
   }, []);
 
   useEffect(() => {
-    if (Object.keys(scheduleData).length === 0) return;
+    if (response?.type === 'success') {
+      const { access_token } = response.params;
+      handleGoogleLogin(access_token);
+    }
+  }, [response]);
 
-    storage.set('calendarData', JSON.stringify(scheduleData));
+  useEffect(() => {
+    GoogleService.saveCalendarData(scheduleData);
   }, [scheduleData]);
+
+  const handleCalendarSelect = async (calendarId: string): Promise<void> => {
+    if (calendarId.trim() === '') return;
+
+    try {
+      const calendarJson = await GoogleService.fetchCalendarEvents(calendarId);
+      const newScheduleData = GoogleService.extractScheduleData(calendarJson);
+
+      const updatedScheduleData: Record<
+        string,
+        { className: string; location: string; time: string }[]
+      > = {};
+
+      Object.keys(newScheduleData).forEach((date) => {
+        const momentDate = moment(date).format('YYYY-MM-DD');
+        updatedScheduleData[momentDate] = newScheduleData[date];
+      });
+
+      setScheduleData(updatedScheduleData);
+      GoogleService.saveCalendarData(updatedScheduleData);
+    } catch (error) {
+      console.error('Error fetching calendar events:', error);
+    }
+  };
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
     const buildingCoordinates: Coordinates = getBuildingCoordinates(classItem.location);
@@ -90,9 +119,72 @@ export default function Calendar() {
     router.push('/');
   };
 
-  async function buttonPress() {
-    setModalVisible(true);
-  }
+  const handleIconPress = () => {
+    if (isLoggedIn) {
+      setCalendarSelectionModalVisible(true);
+    } else {
+      setCalendarIdModalVisible(true);
+    }
+  };
+
+  const handleManualCalendarIdEntry = () => {
+    if (isTransitioning) return;
+
+    setIsTransitioning(true);
+    setCalendarSelectionModalVisible(false);
+
+    setTimeout(() => {
+      setCalendarIdModalVisible(true);
+      setIsTransitioning(false);
+    }, 300);
+  };
+
+  const handleGoogleSignIn = () => {
+    if (request) {
+      promptAsync();
+    } else {
+      Alert.alert('Error', 'Cannot initialize Google Sign-In');
+    }
+  };
+
+  const handleGoogleLogin = async (accessToken: string) => {
+    try {
+      const userData = await GoogleService.getUserInfo(accessToken);
+      GoogleService.saveUserInfo(userData, accessToken);
+
+      setIsLoggedIn(true);
+      setUserInfo(userData);
+      setCalendarIdModalVisible(false);
+
+      setTimeout(() => {
+        setCalendarSelectionModalVisible(true);
+      }, 300);
+    } catch (error) {
+      console.error('Error during Google login:', error);
+      Alert.alert('Login Failed', 'Could not complete the login process.');
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await GoogleService.signOut();
+
+      setIsLoggedIn(false);
+      setUserInfo(null);
+      setScheduleData({});
+    } catch (error) {
+      console.error('Error signing out:', error);
+      Alert.alert('Error', 'Failed to sign out. Please try again.');
+    }
+  };
+
+  const handleCloseCalendarIdModal = () => {
+    setCalendarIdModalVisible(false);
+  };
+
+  const handleCloseCalendarSelectionModal = () => {
+    setCalendarSelectionModalVisible(false);
+  };
 
   const weeks = React.useMemo(() => {
     const start = moment().startOf('week');
@@ -110,16 +202,26 @@ export default function Calendar() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <SimpleModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSave={handleSave}
+        visible={calendarIdModalVisible}
+        onClose={handleCloseCalendarIdModal}
+        onSave={handleCalendarSelect}
+        onGoogleSignIn={handleGoogleSignIn}
+        isLoggedIn={isLoggedIn}
+      />
+
+      <CalendarSelectionModal
+        visible={calendarSelectionModalVisible}
+        onClose={handleCloseCalendarSelectionModal}
+        onSelect={handleCalendarSelect}
+        onEnterCalendarId={handleManualCalendarIdEntry}
+        onSignOut={handleSignOut}
       />
 
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.title}>Your Schedule</Text>
-          <TouchableOpacity style={styles.uploadButton} onPress={buttonPress}>
-            <Text style={styles.uploadButtonText}>Upload</Text>
+          <TouchableOpacity style={styles.profileButton} onPress={handleIconPress}>
+            <ProfilePicture isLoggedIn={isLoggedIn} userInfo={userInfo} styles={styles} />
           </TouchableOpacity>
         </View>
 
@@ -157,7 +259,7 @@ export default function Calendar() {
                           styles.item,
                           isActive && { backgroundColor: '#111', borderColor: '#111' },
                         ]}>
-                        <Text style={[styles.weekDatText, isActive && { color: '#fff' }]}>
+                        <Text style={[styles.weekDayText, isActive && { color: '#fff' }]}>
                           {item.weekday}
                         </Text>
                         <Text style={[styles.dateText, isActive && { color: '#fff' }]}>
@@ -205,6 +307,9 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   title: {
     fontSize: 32,
@@ -263,7 +368,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  weekDatText: {
+  weekDayText: {
     fontSize: 12,
   },
   dateText: {
@@ -287,5 +392,19 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     paddingVertical: 24,
+  },
+  profileButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 2,
+    borderColor: '#852C3A',
   },
 });

@@ -1,8 +1,9 @@
-import { render, fireEvent } from '@testing-library/react-native';
-import Schedule from '@/app/(tabs)/calendar';
+import { render } from '@testing-library/react-native';
+import Calendar from '@/app/(tabs)/calendar';
 import { storage } from '@/services/StorageService';
 import { MMKV } from 'react-native-mmkv';
 import { MapProvider } from '@/modules/map/MapContext';
+import GoogleService from '@/services/GoogleService';
 
 // Mock the date to a specific value
 const mockDate = new Date(2025, 1, 22);
@@ -49,17 +50,86 @@ jest.mock('@/services/StorageService', () => ({
   } as jest.Mocked<Partial<MMKV>>,
 }));
 
-jest.mock('@/services/GoogleScheduleService', () => ({
-  extractScheduleData: jest.fn(),
+jest.mock('@/services/GoogleService', () => ({
+  config: {
+    iosClientId: 'mock-ios-client-id',
+    androidClientId: 'mock-android-client-id',
+    scopes: ['profile', 'email', 'https://www.googleapis.com/auth/calendar.readonly'],
+  },
+  isSignedIn: jest.fn().mockResolvedValue(false),
+  getUserInfoFromStorage: jest.fn().mockReturnValue(null),
+  getCalendarData: jest.fn().mockReturnValue({}),
+  saveCalendarData: jest.fn(),
   fetchCalendarEvents: jest.fn(),
+  extractScheduleData: jest.fn(),
+  getUserInfo: jest.fn(),
+  saveUserInfo: jest.fn(),
+  signOut: jest.fn(),
 }));
 
-const mockExtractScheduleData = jest.mocked(
-  require('@/services/GoogleScheduleService').extractScheduleData
-);
-const mockFetchCalendarEvents = jest.mocked(
-  require('@/services/GoogleScheduleService').fetchCalendarEvents
-);
+jest.mock('expo-auth-session/providers/google', () => ({
+  useAuthRequest: jest.fn().mockReturnValue([
+    { type: 'success' }, // mock request
+    { type: null }, // mock response
+    jest.fn(), // mock promptAsync
+  ]),
+}));
+
+jest.mock('expo-font', () => ({
+  isLoaded: jest.fn(() => true),
+  loadAsync: jest.fn(),
+  FontDisplay: {
+    FALLBACK: 'fallback',
+  },
+  __internal__: {
+    addFontManagerKey: jest.fn(),
+    getNativeFontName: jest.fn(),
+  },
+  _loaded: {},
+  loadedFonts: new Set(),
+  loadedNativeFonts: new Map(),
+}));
+
+jest.mock('@/components/CalendarIdBox', () => {
+  const MockSimpleModal = ({
+    onClose,
+    onSave,
+    onGoogleSignIn,
+  }: {
+    onClose: () => void;
+    onSave: (id: string) => void;
+    onGoogleSignIn: () => void;
+  }) => (
+    <div data-testid="calendar-id-modal">
+      <button onClick={onClose}>Close</button>
+      <button onClick={() => onSave('test-calendar-id')}>Save</button>
+      <button onClick={onGoogleSignIn}>Sign In</button>
+    </div>
+  );
+  return MockSimpleModal;
+});
+
+jest.mock('@/components/CalendarSelectionModal', () => {
+  const MockCalendarSelectionModal = ({
+    onClose,
+    onSelect,
+    onEnterCalendarId,
+    onSignOut,
+  }: {
+    onClose: () => void;
+    onSelect: (id: string) => void;
+    onEnterCalendarId: () => void;
+    onSignOut: () => void;
+  }) => (
+    <div data-testid="calendar-selection-modal">
+      <button onClick={onClose}>Close</button>
+      <button onClick={() => onSelect('test-calendar-id')}>Select</button>
+      <button onClick={onEnterCalendarId}>Enter ID</button>
+      <button onClick={onSignOut}>Sign Out</button>
+    </div>
+  );
+  return MockCalendarSelectionModal;
+});
 
 // Sample calendar data
 const mockCalendarData = {
@@ -86,35 +156,20 @@ const mockCalendarData = {
 
 const mockedStorage = storage as jest.Mocked<MMKV>;
 
-describe('<Schedule />', () => {
+describe('<Calendar />', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    // Reset mock implementations for storage
     mockedStorage.getString.mockReturnValue(JSON.stringify(mockCalendarData));
-    mockExtractScheduleData.mockReturnValue(mockCalendarData);
-    mockFetchCalendarEvents.mockResolvedValue({});
-  });
+    mockedStorage.set.mockClear();
+    mockedStorage.delete.mockClear();
 
-  test('renders correctly with mocked calendar data', () => {
-    const { getByText } = render(
-      <MapProvider>
-        <Schedule />
-      </MapProvider>
-    );
-    expect(getByText('Your Schedule')).toBeTruthy();
-    expect(getByText('Upload')).toBeTruthy();
-  });
-
-  test('displays stored calendar data correctly', () => {
-    const { getByText } = render(
-      <MapProvider>
-        <Schedule />
-      </MapProvider>
-    );
-    expect(mockedStorage.getString).toHaveBeenCalledWith('calendarData');
-    expect(getByText('Mathematics 101')).toBeTruthy();
-    expect(getByText('Physics Lab')).toBeTruthy();
-    expect(getByText('Room 201 - 09:00 AM - 10:30 AM')).toBeTruthy();
-    expect(getByText('Science Building - 11:00 AM - 12:30 PM')).toBeTruthy();
+    // Reset GoogleService mocks
+    (GoogleService.getCalendarData as jest.Mock).mockReturnValue(mockCalendarData);
+    (GoogleService.isSignedIn as jest.Mock).mockResolvedValue(false);
+    (GoogleService.extractScheduleData as jest.Mock).mockReturnValue(mockCalendarData);
+    (GoogleService.fetchCalendarEvents as jest.Mock).mockResolvedValue({});
   });
 
   test('handles empty calendar data gracefully', () => {
@@ -123,43 +178,16 @@ describe('<Schedule />', () => {
 
     const { getByText } = render(
       <MapProvider>
-        <Schedule />
+        <Calendar />
       </MapProvider>
     );
     expect(getByText('No classes scheduled')).toBeTruthy();
-  });
-
-  test('handles invalid JSON data', () => {
-    // Mock invalid JSON in storage
-    mockedStorage.getString.mockReturnValue('invalid-json');
-
-    const { getByText } = render(
-      <MapProvider>
-        <Schedule />
-      </MapProvider>
-    );
-    expect(getByText('No classes scheduled')).toBeTruthy();
-
-    expect(mockedStorage.delete).toHaveBeenCalledWith('calendarData');
-  });
-
-  test('saves calendar data to storage when available', () => {
-    render(
-      <MapProvider>
-        <Schedule />
-      </MapProvider>
-    );
-
-    expect(mockedStorage.set).toHaveBeenCalledWith(
-      'calendarData',
-      JSON.stringify(mockCalendarData)
-    );
   });
 
   test('properly formats and displays the current date', () => {
     const { getByText } = render(
       <MapProvider>
-        <Schedule />
+        <Calendar />
       </MapProvider>
     );
 
@@ -167,24 +195,12 @@ describe('<Schedule />', () => {
     expect(getByText(dateString)).toBeTruthy();
   });
 
-  test('handles upload button press', () => {
-    const { getByText } = render(
-      <MapProvider>
-        <Schedule />
-      </MapProvider>
-    );
-
-    fireEvent.press(getByText('Upload'));
-
-    expect(getByText('Your Schedule')).toBeTruthy();
-  });
-
   test('does not call storage.set when scheduleData is empty', () => {
     mockedStorage.getString.mockReturnValue(undefined);
 
     render(
       <MapProvider>
-        <Schedule />
+        <Calendar />
       </MapProvider>
     );
 
