@@ -1,5 +1,4 @@
-import type { BBox } from 'geojson';
-import { IndoorMapGeoJSON, LevelsRange } from './Types';
+import { IndoorMap, IndoorMapGeoJSON } from './Types';
 import LocalLocations from '@/services/LocalLocations';
 import { bboxCenter } from './IndoorMapUtils';
 
@@ -8,13 +7,6 @@ import jmsbFloors from '@/assets/geojson/jmsbFloors.json';
 import VLandVEfloors from '@/assets/geojson/VLandVEfloors.json';
 
 import GeojsonService from '@/services/GeojsonService';
-
-interface IndoorMap {
-  id: string;
-  bounds: BBox;
-  geojson: IndoorMapGeoJSON;
-  levelsRange: LevelsRange;
-}
 
 const getAllRoomRefs = (geojson: IndoorMapGeoJSON): string[] => {
   const roomRefs: string[] = [];
@@ -64,4 +56,4 @@ const indoorMaps: IndoorMap[] = rawIndoorMaps.map((rawIndoorMap) => {
   return indoorMap;
 });
 
-export { indoorMaps, IndoorMap };
+export { indoorMaps };

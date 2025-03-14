@@ -3,12 +3,12 @@ import Mapbox from '@rnmapbox/maps';
 import React, { useCallback, useState, useEffect } from 'react';
 import { MapState, useMap } from './MapContext';
 import { Location, ExpressionSpecification } from '@/modules/map/Types';
-import { fetchLocationData } from './MapService';
 import PointsOfInterestService from '@/services/PointsOfInterestService';
 import { PointOfInterest } from './PointsOfInterestTypes';
 import POIMarker from '@/components/POIMarker';
 import layers from '@/modules/map/style/DefaultLayers';
-import { filterWithLevel, getIndoorFeatureFromCoordinates } from '@/modules/map/IndoorMapUtils';
+import { filterWithLevel } from '@/modules/map/IndoorMapUtils';
+import { images } from '@/assets';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -22,12 +22,9 @@ const equalLocations = (a: Location | null, b: Location | null): boolean => {
 export default function MapView() {
   const {
     state,
-    setState,
     startLocation,
     endLocation,
     userLocation,
-    setStartLocation,
-    setEndLocation,
     mapRef,
     cameraRef,
     centerCoordinate,
@@ -37,6 +34,7 @@ export default function MapView() {
     level,
     indoorMap,
     updateSelectedMapIfNeeded,
+    onMapPress,
   } = useMap();
 
   const [pointsOfInterest, setPointsOfInterest] = useState<PointOfInterest[]>([]);
@@ -62,70 +60,12 @@ export default function MapView() {
     [level]
   );
 
-  async function onMapClick(event: any) {
-    const { geometry } = event;
-
-    if (!geometry?.coordinates) {
-      return;
-    }
-
-    const coordinates = geometry.coordinates;
-    let location: Location | null = null;
-
-    if (indoorMap !== null && level !== null) {
-      location = getIndoorFeatureFromCoordinates(indoorMap, coordinates, level);
-    }
-
-    if (!location) {
-      const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
-      if (clickedPOI) {
-        location = {
-          name: clickedPOI.name,
-          coordinates: clickedPOI.coordinates,
-          data: {
-            address: clickedPOI.address,
-            isOpen: clickedPOI.openingHours.isOpen,
-            hours: clickedPOI.openingHours.hours,
-            description: clickedPOI.description ?? '',
-          },
-        };
-      }
-    }
-
-    if (!location) {
-      location = await fetchLocationData(coordinates);
-    }
-
-    switch (state) {
-      case MapState.SelectingStartLocation:
-        setStartLocation(location);
-        if (endLocation) {
-          setState(MapState.RoutePlanning);
-        }
-        break;
-
-      case MapState.SelectingEndLocation:
-        setEndLocation(location);
-        setState(MapState.RoutePlanning);
-        break;
-
-      default:
-        setEndLocation(location);
-        setState(MapState.Information);
-        break;
-    }
-
-    if (cameraRef.current) {
-      cameraRef.current.flyTo(coordinates, 1000);
-    }
-  }
-
   return (
     <Mapbox.MapView
       ref={mapRef}
       style={styles.map}
       styleURL="mapbox://styles/ambrose821/cm6g7anat00kv01qmbxkze6i8"
-      onPress={onMapClick}
+      onPress={onMapPress}
       onCameraChanged={() => updateSelectedMapIfNeeded()}>
       <Mapbox.Camera
         ref={cameraRef}
@@ -135,7 +75,7 @@ export default function MapView() {
         animationDuration={2000}
         pitch={pitchLevel}
       />
-
+      <Mapbox.Images images={images} />
       {showPOIs &&
         pointsOfInterest.map((poi) => (
           <Mapbox.MarkerView
@@ -145,7 +85,7 @@ export default function MapView() {
             anchor={{ x: 0.5, y: 0.5 }}>
             <TouchableOpacity
               onPress={() => {
-                onMapClick({ geometry: { coordinates: poi.coordinates } });
+                onMapPress({ geometry: { coordinates: poi.coordinates } });
               }}
               activeOpacity={0.7}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
@@ -155,13 +95,9 @@ export default function MapView() {
         ))}
 
       {endLocation && !equalLocations(endLocation, userLocation) && (
-        <Mapbox.PointAnnotation
-          key="selected-location"
-          id="selected-location"
-          coordinate={endLocation.coordinates}>
+        <Mapbox.MarkerView id="end" coordinate={endLocation.coordinates}>
           <View style={[styles.marker, styles.endMarker]} />
-          <Mapbox.Callout title="Selected Location" />
-        </Mapbox.PointAnnotation>
+        </Mapbox.MarkerView>
       )}
 
       {userLocation?.coordinates && (
@@ -219,12 +155,7 @@ export default function MapView() {
                     key={layer.id}
                     id={layer.id}
                     sourceID={layer.source ?? undefined}
-                    style={{
-                      fillColor: layer.paint['fill-color'] ?? undefined,
-                      fillOutlineColor: layer.paint['fill-outline-color'] ?? undefined,
-                      fillTranslateAnchor: layer.paint['fill-translate-anchor'] ?? undefined,
-                      fillOpacity: layer.paint['fill-opacity'] ?? undefined,
-                    }}
+                    style={layer.style}
                     filter={layer.filter ? filterFN(layer.filter) : undefined}
                   />
                 );
@@ -237,12 +168,7 @@ export default function MapView() {
                     key={layer.id}
                     id={layer.id}
                     sourceID={layer.source ?? undefined}
-                    style={{
-                      lineColor: layer.paint['line-color'],
-                      lineWidth: layer.paint['line-width'],
-                      lineOpacity: layer.paint['line-opacity'],
-                      lineDasharray: layer.paint['line-dasharray'],
-                    }}
+                    style={layer.style}
                     filter={layer.filter ? filterFN(layer.filter) : undefined}
                   />
                 );
@@ -255,18 +181,7 @@ export default function MapView() {
                     key={layer.id}
                     id={layer.id}
                     sourceID={layer.source ?? undefined}
-                    style={{
-                      textColor: layer.paint['text-color'],
-                      textHaloColor: layer.paint['text-halo-color'],
-                      textHaloWidth: layer.paint['text-halo-width'],
-                      textOpacity: layer.paint['text-opacity'],
-                      iconOpacity: layer.paint['icon-opacity'],
-                      textField: layer.paint['textField'],
-                      textSize: layer.paint['textSize'],
-                      textAnchor: layer.paint['textAnchor'],
-                      textAllowOverlap: layer.paint['textAllowOverlap'],
-                      textJustify: layer.paint['textJustify'],
-                    }}
+                    style={layer.style}
                     filter={layer.filter ? filterFN(layer.filter) : undefined}
                   />
                 );

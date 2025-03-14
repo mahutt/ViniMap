@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { render, waitFor, act } from '@testing-library/react-native';
 import { MapProvider, useMap, MapState } from '@/modules/map/MapContext';
+import { indoorMaps } from '@/modules/map/IndoorMap';
+import { getRoute } from '@/modules/map/MapService';
 
 // Mock dependencies
 jest.mock('@rnmapbox/maps', () => ({
@@ -202,5 +204,157 @@ describe('MapContext', () => {
     expect(mapContext?.route).toBeNull();
 
     consoleErrorSpy.mockRestore();
+  });
+
+  test('getClosestMap handles low zoom level', async () => {
+    let mapContext: ReturnType<typeof useMap> | undefined;
+
+    render(
+      <MapProvider>
+        <TestComponent onMapContext={(ctx) => (mapContext = ctx)} />
+      </MapProvider>
+    );
+
+    await waitFor(() => expect(mapContext).toBeDefined());
+
+    if (mapContext) {
+      // @ts-ignore - mocking the map ref
+      mapContext.mapRef.current = {
+        getZoom: jest.fn().mockResolvedValue(16),
+        getVisibleBounds: jest.fn().mockResolvedValue([
+          [-73.57, 45.5],
+          [-73.58, 45.49],
+        ]),
+      };
+    }
+
+    await act(async () => {
+      mapContext?.updateSelectedMapIfNeeded();
+    });
+
+    // Verify early return for zoom level < 17
+    expect(mapContext?.indoorMap).toBeNull();
+  });
+
+  test('getClosestMap selects single indoor map', async () => {
+    let mapContext: ReturnType<typeof useMap> | undefined;
+
+    render(
+      <MapProvider>
+        <TestComponent onMapContext={(ctx) => (mapContext = ctx)} />
+      </MapProvider>
+    );
+
+    await waitFor(() => expect(mapContext).toBeDefined());
+
+    if (mapContext) {
+      // @ts-ignore - mocking the map ref
+      mapContext.mapRef.current = {
+        getZoom: jest.fn().mockResolvedValue(18),
+        getVisibleBounds: jest.fn().mockResolvedValue([
+          [-73.58, 45.49],
+          [-73.57, 45.5], // Bounds matching exactly one indoor map
+        ]),
+      };
+    }
+
+    await act(async () => {
+      mapContext?.updateSelectedMapIfNeeded();
+    });
+
+    await waitFor(() => {
+      expect(mapContext?.indoorMap).toEqual(indoorMaps[0]);
+      expect(mapContext?.level).toBe(indoorMaps[0].levelsRange.min);
+    });
+  });
+
+  test('getClosestMap handles multiple overlapping maps', async () => {
+    let mapContext: ReturnType<typeof useMap> | undefined;
+
+    render(
+      <MapProvider>
+        <TestComponent onMapContext={(ctx) => (mapContext = ctx)} />
+      </MapProvider>
+    );
+
+    await waitFor(() => expect(mapContext).toBeDefined());
+
+    if (mapContext) {
+      // @ts-ignore - mocking the map ref
+      mapContext.mapRef.current = {
+        getZoom: jest.fn().mockResolvedValue(18),
+        getVisibleBounds: jest.fn().mockResolvedValue([
+          [-73.58, 45.48],
+          [-73.57, 45.51], // Bounds overlapping multiple maps
+        ]),
+      };
+    }
+
+    await act(async () => {
+      mapContext?.updateSelectedMapIfNeeded();
+    });
+
+    await waitFor(() => {
+      expect(mapContext?.indoorMap).toBeTruthy();
+      expect(mapContext?.level).toBeTruthy();
+    });
+  });
+
+  test('onMapPress handles indoor feature detection', async () => {
+    let mapContext: ReturnType<typeof useMap> | undefined;
+
+    render(
+      <MapProvider>
+        <TestComponent onMapContext={(ctx) => (mapContext = ctx)} />
+      </MapProvider>
+    );
+
+    await waitFor(() => expect(mapContext).toBeDefined());
+
+    if (mapContext) {
+      mapContext.indoorMap = indoorMaps[0];
+      mapContext.level = 0;
+    }
+
+    const mockEvent = {
+      geometry: {
+        coordinates: [-73.58, 45.49],
+      },
+    };
+
+    await act(async () => {
+      await mapContext?.onMapPress(mockEvent);
+    });
+
+    await waitFor(() => {
+      expect(mapContext?.state).toBe(MapState.Information);
+      expect(mapContext?.endLocation).toBeTruthy();
+    });
+  });
+
+  test('loadRouteFromCoordinates handles camera bounds fitting', async () => {
+    let mapContext: ReturnType<typeof useMap> | undefined;
+
+    render(
+      <MapProvider>
+        <TestComponent onMapContext={(ctx) => (mapContext = ctx)} />
+      </MapProvider>
+    );
+
+    await waitFor(() => expect(mapContext).toBeDefined());
+
+    if (mapContext) {
+      // @ts-ignore - mocking the map ref
+      mapContext.cameraRef.current = {
+        fitBounds: jest.fn(),
+      };
+    }
+
+    await act(async () => {
+      await mapContext?.loadRouteFromCoordinates([-73.57, 45.5], [-73.58, 45.51]);
+    });
+
+    expect(getRoute).toHaveBeenCalledWith([-73.57, 45.5], [-73.58, 45.51], 'walking');
+    expect(mapContext?.cameraRef.current?.fitBounds).toHaveBeenCalled();
   });
 });

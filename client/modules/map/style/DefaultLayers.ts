@@ -1,6 +1,5 @@
-import defaultLayers from './default_layers.json';
-
-import type { LayerSpecification } from '../Types';
+import defaultLayers from './StyleLayers';
+import { LayerSpecification } from '../Types';
 
 /**
  * Transform the generic "poi-indoor" layer into multiple layers using filters based on OSM tags
@@ -27,12 +26,24 @@ const OSM_FILTER_MAPBOX_MAKI_LIST: FilterMakiEntry[] = [
     maki: 'cafe',
   },
   {
-    filter: ['in', ['get', 'amenity'], ['literal', ['bank', 'vending_machine']]],
-    maki: 'bank',
+    filter: ['filter-==', 'amenity', 'vending_machine'], // used to be filter: ['in', ['get', 'amenity'], ['literal', ['bank', 'vending_machine']]],
+    maki: 'soda',
   },
   {
     filter: ['filter-==', 'amenity', 'toilets'],
     maki: 'toilet',
+  },
+  {
+    filter: ['filter-==', 'amenity', 'fountain'],
+    maki: 'water',
+  },
+  {
+    filter: ['filter-==', 'amenity', 'eating_area'],
+    maki: 'picnic-site',
+  },
+  {
+    filter: ['filter-==', 'amenity', 'information'],
+    maki: 'information',
   },
   {
     filter: ['any', ['filter-==', 'highway', 'elevator'], ['has', 'elevator']],
@@ -92,14 +103,38 @@ function createPoiLayers(metaLayer: LayerSpecification): LayerSpecification[] {
     maki: 'shop',
   };
 
-  return OSM_FILTER_MAPBOX_MAKI_LIST.concat(otherShopsEntry).map((poi) => {
-    const newLayer = { ...metaLayer };
-    newLayer.id += `-${poi.maki}`;
-    newLayer.filter = poi.filter;
-    newLayer.layout = { ...metaLayer.layout };
-    newLayer.layout['icon-image'] = `${poi.maki}-15`;
-    return newLayer;
-  });
+  const otherAmenitiesEntry = {
+    filter: [
+      'all',
+      ['has', 'amenity'],
+      [
+        '!',
+        [
+          'in',
+          ['get', 'amenity'],
+          [
+            'literal',
+            [
+              ...OSM_FILTER_MAPBOX_MAKI_LIST.filter((val) => val.filter[1] === 'amenity').map(
+                (val) => val.filter[2]
+              ),
+            ],
+          ],
+        ],
+      ],
+    ],
+    maki: 'amenity',
+  };
+
+  return OSM_FILTER_MAPBOX_MAKI_LIST.concat(otherShopsEntry)
+    .concat(otherAmenitiesEntry)
+    .map((poi) => {
+      const newLayer: LayerSpecification = { ...metaLayer };
+      newLayer.id += `-${poi.maki}`;
+      newLayer.filter = poi.filter;
+      newLayer.style = { ...metaLayer.style, iconImage: poi.maki };
+      return newLayer;
+    });
 }
 
 let pendingLayers: LayerSpecification[] = defaultLayers;

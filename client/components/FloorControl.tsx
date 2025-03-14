@@ -46,7 +46,7 @@ export default function FloorControl() {
 const styles = StyleSheet.create({
   controlContainer: {
     position: 'absolute',
-    top: '25%',
+    top: '30%',
     right: 36,
 
     backgroundColor: 'rgba(255, 255, 255, 0.8)',

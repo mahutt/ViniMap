@@ -1,4 +1,9 @@
-import type { FeatureCollection, Geometry } from 'geojson';
+import type { BBox, FeatureCollection, Geometry } from 'geojson';
+import {
+  FillLayerStyleProps,
+  LineLayerStyleProps,
+  SymbolLayerStyleProps,
+} from '@rnmapbox/maps/src/utils/MapboxStyles';
 
 /**
     Internal representation of a pair of coordinates.
@@ -18,8 +23,13 @@ export interface Route {
   segments: Segment[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-type-alias
-export type LayerSpecification = any;
+export interface LayerSpecification {
+  id: string;
+  type: 'symbol' | 'fill' | 'line';
+  source: string;
+  filter: any;
+  style: SymbolLayerStyleProps | FillLayerStyleProps | LineLayerStyleProps;
+}
 
 export type ExpressionSpecification = any; // Meant to reference a type from MapLibre spec (see map-gl-indoor)
 export type Level = number;
@@ -28,6 +38,13 @@ export type LevelsRange = {
   min: Level;
   max: Level;
 };
+
+export interface IndoorMap {
+  id: string;
+  bounds: BBox;
+  geojson: IndoorMapGeoJSON;
+  levelsRange: LevelsRange;
+}
 
 /**
  * Internal representation of a location.
