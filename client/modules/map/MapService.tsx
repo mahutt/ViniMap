@@ -1,7 +1,9 @@
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { Coordinates } from './MapContext';
-import { Location, Route } from './Types';
+import { IndoorMap, Location, Route } from './Types';
 import { calculateEuclideanDistance } from './MapUtils';
+import { footwaysForLevel, getIndoorFeatureFromProperties } from './IndoorMapUtils';
+import { findShortestPath } from '@/services/DijkstrasService';
 
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
@@ -42,9 +44,13 @@ const getRoute = async (
     endLocation.data?.indoorMap &&
     startLocation.data?.indoorMap?.id === endLocation.data?.indoorMap?.id
   ) {
-    console.log(startLocation.data.ref);
-    console.log(endLocation.data.ref);
-    console.log(startLocation.data.indoorMap.id);
+    //getIndoorRoute
+    console.log('Please god');
+    return getIndoorRoute(
+      startLocation.data.indoorMap,
+      startLocation.data.ref,
+      endLocation.data.ref
+    );
     // Handle indoor navigation
   }
 
@@ -54,6 +60,43 @@ const getRoute = async (
     return getRouteForShuttle(startCoordinates, endCoordinates);
   }
   return getRouteFromMapbox(startCoordinates, endCoordinates, mode);
+};
+
+const getIndoorRoute = (
+  indoorMap: IndoorMap,
+  startRoomRef: string,
+  endRoomRef: string
+): Route | null => {
+  const startDoorLocation = getIndoorFeatureFromProperties(
+    indoorMap,
+    'doorRef',
+    startRoomRef + 'Door'
+  );
+  const endDoorLocation = getIndoorFeatureFromProperties(indoorMap, 'doorRef', endRoomRef + 'Door');
+  if (!startDoorLocation || !endDoorLocation) {
+    console.error('FAILLLL');
+    return null;
+  }
+  const footways = footwaysForLevel(indoorMap, startDoorLocation?.data.level);
+  const result = findShortestPath(
+    startDoorLocation?.coordinates,
+    endDoorLocation?.coordinates,
+    footways
+  );
+  if (!result) {
+    return null;
+  }
+  return {
+    duration: 0,
+    distance: 0,
+    segments: [
+      {
+        id: 'TESTTYTYTYTYTYTY',
+        type: 'solid',
+        steps: result as Coordinates[],
+      },
+    ],
+  };
 };
 
 const getRouteFromMapbox = async (

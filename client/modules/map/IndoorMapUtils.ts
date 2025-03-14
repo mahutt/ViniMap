@@ -70,7 +70,7 @@ export function getIndoorFeatureFromProperties(
   for (let feature of indoorMap.geojson.features) {
     if (feature.properties) {
       if (feature.properties && feature.properties[key] && feature.properties[key] == value) {
-        let coordinates = feature.properties.geometry?.coordinates ?? null;
+        let coordinates = feature.geometry?.coordinates ?? null;
         if (!coordinates) {
           return null;
         }
