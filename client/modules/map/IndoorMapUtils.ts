@@ -102,7 +102,8 @@ export function getIndoorFeatureFromCoordinates(
           address: indoorMap.id,
           isOpen: false,
           level: featureLevel,
-          indoorMapId: indoorMap.id,
+          indoorMap: indoorMap,
+          ref: feature?.properties?.ref,
         },
       };
     }
