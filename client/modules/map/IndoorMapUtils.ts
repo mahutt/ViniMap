@@ -1,5 +1,5 @@
 import { Coordinates, ExpressionSpecification, Level, Location, IndoorMap } from './Types';
-import type { BBox } from 'geojson';
+import type { BBox, Feature } from 'geojson';
 import GeojsonService from '@/services/GeojsonService';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
@@ -92,6 +92,15 @@ export function getIndoorFeatureFromProperties(
     }
   }
   return null;
+}
+export function footwaysForLevel(indoorMap: IndoorMap, level: Level): Feature[] {
+  const footwayFeatures = indoorMap.geojson.features.filter(
+    (feature) =>
+      feature.geometry.type === 'LineString' &&
+      feature.properties?.highway === 'footway' &&
+      (Number(feature.properties?.level) as Level) == level // Might need to use parsefloat in case of bugs
+  );
+  return footwayFeatures;
 }
 
 export function getIndoorFeatureFromCoordinates(
