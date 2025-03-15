@@ -1,5 +1,6 @@
 import { Coordinates } from '@/modules/map/Types';
-import type { BBox, Feature } from 'geojson';
+
+import type { Feature, LineString } from 'geojson';
 
 import turfDistance from '@turf/distance';
 import { point } from '@turf/helpers';
@@ -7,11 +8,11 @@ import { point } from '@turf/helpers';
 export function findShortestPath(
   startCoord: Coordinates,
   endCoord: Coordinates,
-  footwayFeatures: Feature[]
+  footwayFeatures: Feature<LineString>[]
 ) {
-  let graph = {};
+  let graph: Record<string, { node: string; dist: number }[]> = {};
   footwayFeatures.forEach((feat) => {
-    let coords = feat.geometry.coordinates as Coordinates;
+    let coords = feat.geometry.coordinates;
     for (let i = 0; i < coords.length - 1; i++) {
       let a = coords[i],
         b = coords[i + 1];
@@ -32,9 +33,9 @@ export function findShortestPath(
   if (!graph[startKey]) graph[startKey] = [];
   if (!graph[endKey]) graph[endKey] = [];
 
-  let distances = {},
-    prevNode = {},
-    remaining = new Set(Object.keys(graph));
+  let distances: Record<string, number> = {};
+  let prevNode: Record<string, string> = {};
+  let remaining = new Set(Object.keys(graph));
 
   remaining.forEach((node) => {
     distances[node] = Infinity;
