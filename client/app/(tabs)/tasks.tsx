@@ -1,16 +1,80 @@
-// app/tasks.tsx
 import TaskCard from '@/components/TaskCard';
-import { View, Text, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { Task } from '@/modules/map/Types';
+import { TaskList } from '@/classes/TaskList';
+import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 
 export default function TasksScreen() {
+  const taskList = new TaskList();
+  const caretaker = new TaskListCaretaker(taskList);
+
+  const [tasks, setTasks] = useState<Task[]>(taskList.getTasks());
+  const [taskName, setTaskName] = useState('');
+  const [taskLocation, setTaskLocation] = useState('');
+
+  const addTask = () => {
+    if (!taskName.trim() || !taskLocation.trim()) return;
+
+    const newTask: Task = {
+      id: tasks.length.toString(),
+      text: taskName,
+      coordinates: [0, 0],
+    };
+
+    caretaker.save();
+    taskList.addTask(newTask);
+
+    setTasks(taskList.getTasks());
+    console.log('New Task:', newTask);
+
+    setTaskName('');
+    setTaskLocation('');
+  };
+
+  const deleteTask = (id: string) => {
+    console.log('Trying to delete');
+    caretaker.save();
+    taskList.setTasks(tasks.filter((task) => task.id !== id));
+    setTasks([...taskList.getTasks()]);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
-        <Text style={styles.sectionTitle}>Today's Tasks</Text>
+        <View style={styles.header}>
+          <Text style={styles.sectionTitle}>Today's Tasks</Text>
+          <Text style={styles.undo}> Undo</Text>
+        </View>
 
-        <View style={styles.items}>
-          <TaskCard text={'Task1'} />
-          <TaskCard text={'Task2'} />
+        <ScrollView style={styles.scrollView}>
+          {tasks.length === 0 ? (
+            <Text style={styles.noTasksText}>No tasks yet.</Text>
+          ) : (
+            tasks.map((task) => (
+              <TaskCard key={task.id} text={task.text} onDelete={() => deleteTask(task.id)} />
+            ))
+          )}
+        </ScrollView>
+
+        <View style={styles.allInputsContainer}>
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder="Task name"
+              style={styles.inputText}
+              value={taskName}
+              onChangeText={setTaskName}
+            />
+            <TextInput
+              placeholder="Location"
+              style={styles.inputText}
+              value={taskLocation}
+              onChangeText={setTaskLocation}
+            />
+          </View>
+          <TouchableOpacity style={styles.plusButton} onPress={addTask}>
+            <Text style={styles.plusButtonText}>+</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -18,17 +82,31 @@ export default function TasksScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#E8EAED',
+  container: { flex: 1, backgroundColor: '#E8EAED', padding: 20 },
+  tasksWrapper: { paddingTop: 80 },
+  sectionTitle: { fontSize: 24, fontWeight: 'bold', paddingBottom: 20 },
+  scrollView: { height: 500 },
+  noTasksText: { textAlign: 'center', marginTop: 20, color: 'gray' },
+  allInputsContainer: { flexDirection: 'row', alignItems: 'center', marginTop: 20 },
+  inputContainer: { flex: 1, marginRight: 10 },
+  inputText: { backgroundColor: '#FFF', padding: 10, borderRadius: 10, marginBottom: 10 },
+  plusButton: {
+    backgroundColor: '#852C3A',
+    width: 50,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 10,
   },
-  tasksWrapper: {
-    paddingTop: 80,
-    padding: 20,
+  plusButtonText: { fontSize: 24, color: '#FFF' },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: 'bold',
+  undo: {
+    fontSize: 16,
+    color: 'blue',
+    paddingRight: 10,
   },
-  items: { marginTop: 30 },
 });

@@ -1,17 +1,25 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-const TaskCard = (props: any) => {
+interface TaskCardProps {
+  text: string;
+  onDelete: () => void;
+}
+
+const TaskCard = ({ text, onDelete }: TaskCardProps) => {
   return (
     <View style={styles.item}>
       <View style={styles.itemLeft}>
         <View style={styles.square}></View>
-        <Text style={styles.itemText}>{props.text}</Text>
+        <Text style={styles.itemText}>{text}</Text>
       </View>
-      <View style={styles.circular}></View>
+      <TouchableOpacity style={styles.circular} onPress={onDelete}>
+        <Text>X</Text>
+      </TouchableOpacity>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   item: {
     backgroundColor: '#FFF',
@@ -21,6 +29,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
+  },
+  itemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexWrap: 'wrap',
   },
   square: {
     width: 24,
@@ -33,17 +46,14 @@ const styles = StyleSheet.create({
   itemText: {
     maxWidth: '80%',
   },
-  itemLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-  },
   circular: {
-    width: 12,
-    height: 12,
+    width: 20,
+    height: 20,
     borderColor: '#852C3A',
-    borderWidth: 2,
+    borderWidth: 1,
     borderRadius: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

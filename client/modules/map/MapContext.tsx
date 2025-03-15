@@ -9,7 +9,7 @@ import React, {
 } from 'react';
 import Mapbox from '@rnmapbox/maps';
 import { fetchLocationData, getRoute } from './MapService';
-import { Location, Coordinates, Route, Level, IndoorMap } from './Types';
+import { Location, Coordinates, Route, Level, IndoorMap, Task } from './Types';
 import { indoorMaps } from './IndoorMap';
 import type { BBox } from 'geojson';
 import { bboxCenter, getIndoorFeatureFromCoordinates, overlap } from './IndoorMapUtils';
@@ -37,6 +37,9 @@ type MapContextType = {
 
   pitchLevel: number;
   setPitchLevel: (pitchLevel: number) => void;
+
+  tasks: Task[];
+  setTasks: (tasks: Task[]) => void;
 
   state: MapState;
   startLocation: Location | null;
@@ -80,6 +83,8 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [indoorMap, setIndoorMap] = useState<IndoorMap | null>(null);
   const mapLoadedPromise = useRef<Promise<void>>(Promise.resolve());
   const updateMapPromise = useRef<Promise<void>>(Promise.resolve());
+
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const getClosestMap = async (): Promise<IndoorMap | null> => {
     const [currentZoomLevel, cameraBounds] = await Promise.all([
@@ -312,6 +317,8 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       indoorMap,
       updateSelectedMapIfNeeded,
       onMapPress,
+      tasks,
+      setTasks,
     }),
     [
       centerCoordinate,
@@ -328,6 +335,8 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       indoorMap,
       updateSelectedMapIfNeeded,
       onMapPress,
+      tasks,
+      setTasks,
     ]
   );
 
