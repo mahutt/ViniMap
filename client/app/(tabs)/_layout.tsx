@@ -33,6 +33,13 @@ const TabBarSettingsIcon = ({ color }: { color: string }) => {
     </View>
   );
 };
+const TabBarTaskIcon = ({ color }: { color: string }) => {
+  return (
+    <View style={styles.iconContainer}>
+      <IconSymbol size={28} name="checklist" color={color} />
+    </View>
+  );
+};
 
 const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
   <MapProvider>
@@ -71,6 +78,13 @@ const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
         options={{
           title: 'Schedule',
           tabBarIcon: TabBarCalendarIcon,
+        }}
+      />
+      <Tabs.Screen
+        name="tasks"
+        options={{
+          title: 'Tasks',
+          tabBarIcon: TabBarTaskIcon,
         }}
       />
       <Tabs.Screen
