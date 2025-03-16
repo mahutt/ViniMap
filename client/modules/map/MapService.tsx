@@ -284,7 +284,7 @@ const getRouteForShuttle = async (
 // Simple solution to calculate distance between two (coordinate) points.
 // Works for short distances, which makes it ideal for indoor navigation.
 // Source: https://stackoverflow.com/a/27943
-const getDistanceFromPositions = (position1: Position, position2: Position): number => {
+export const getDistanceFromPositions = (position1: Position, position2: Position): number => {
   const dLat = deg2rad(position2[1] - position1[1]); // deg2rad below
   const dLon = deg2rad(position2[0] - position1[0]);
   const a =

@@ -3,6 +3,7 @@ import {
   getLocations,
   getRoute,
   fetchLocationData,
+  getDistanceFromPositions,
 } from '@/modules/map/MapService';
 import fetchMock from 'jest-fetch-mock';
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
@@ -561,5 +562,13 @@ describe('getLocations', () => {
     );
 
     expect(result).toBeNull();
+  });
+
+  it('calculates the correct distance between two locations', () => {
+    const position1 = [-73.9857, 40.7488]; // NYC
+    const position2 = [-0.1276, 51.5074]; // London
+    const distance = getDistanceFromPositions(position1, position2);
+    expect(distance).toBeGreaterThan(5500000);
+    expect(distance).toBeLessThan(6000000); // NYC-London ~5570 km
   });
 });
