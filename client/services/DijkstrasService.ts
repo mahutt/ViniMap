@@ -40,7 +40,10 @@ export function findShortestPath(
   distances[startKey] = 0;
 
   while (remaining.size > 0) {
-    let current = [...remaining].reduce((a, b) => (distances[a] < distances[b] ? a : b));
+    let current = [...remaining].reduce(
+      (a, b) => (distances[a] < distances[b] ? a : b),
+      [...remaining][0]
+    );
     if (current === endKey || distances[current] === Infinity) break;
     remaining.delete(current);
 
