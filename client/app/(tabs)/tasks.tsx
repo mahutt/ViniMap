@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 import { Task } from '@/modules/map/Types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // or Ionicons
 
 export default function TasksScreen() {
   const taskList = useRef(new TaskList());
@@ -49,9 +50,9 @@ export default function TasksScreen() {
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
         <View style={styles.header}>
-          <Text style={styles.sectionTitle}>Today's Tasks</Text>
+          <Text style={styles.sectionTitle}>Tasks</Text>
           <TouchableOpacity onPress={getPreviouseState}>
-            <Text style={styles.undo}> Undo</Text>
+            <Icon name="undo" size={24} color="#852C3A" />
           </TouchableOpacity>
         </View>
 

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface TaskCardProps {
   text: string;
@@ -14,7 +15,7 @@ const TaskCard = ({ text, onDelete }: TaskCardProps) => {
         <Text style={styles.itemText}>{text}</Text>
       </View>
       <TouchableOpacity style={styles.circular} onPress={onDelete}>
-        <Text>X</Text>
+        <Icon name="close" size={18} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -29,6 +30,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: 20,
+    elevation: 2,
   },
   itemLeft: {
     flexDirection: 'row',
@@ -49,11 +51,11 @@ const styles = StyleSheet.create({
   circular: {
     width: 20,
     height: 20,
-    borderColor: '#852C3A',
-    borderWidth: 1,
-    borderRadius: 5,
+    backgroundColor: '#852C3A',
+    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
+    elevation: 3,
   },
 });
 
