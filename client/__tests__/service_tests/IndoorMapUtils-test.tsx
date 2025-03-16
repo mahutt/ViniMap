@@ -305,19 +305,16 @@ describe('getIndoorFeatureFromCoordinates', () => {
 });
 
 describe('footwaysForLevel', () => {
-  // Mock data setup is scoped to this describe block only
   let mockIndoorMap: IndoorMap;
 
   beforeEach(() => {
-    // Create mock indoor map data with different types of features
     mockIndoorMap = {
       id: 'test-building',
-      bounds: [0, 0, 100, 100], // [west, south, east, north]
+      bounds: [0, 0, 100, 100],
       levelsRange: { min: 0, max: 3 },
       geojson: {
         type: 'FeatureCollection',
         features: [
-          // Valid footway for level 1
           {
             type: 'Feature',
             properties: {
@@ -332,7 +329,7 @@ describe('footwaysForLevel', () => {
               ],
             },
           },
-          // Valid footway for level 2
+
           {
             type: 'Feature',
             properties: {
@@ -347,7 +344,7 @@ describe('footwaysForLevel', () => {
               ],
             },
           },
-          // Another valid footway for level 1
+
           {
             type: 'Feature',
             properties: {
@@ -362,7 +359,7 @@ describe('footwaysForLevel', () => {
               ],
             },
           },
-          // Not a footway (different highway type)
+
           {
             type: 'Feature',
             properties: {
@@ -377,7 +374,7 @@ describe('footwaysForLevel', () => {
               ],
             },
           },
-          // Not a LineString geometry
+
           {
             type: 'Feature',
             properties: {
@@ -397,7 +394,7 @@ describe('footwaysForLevel', () => {
               ],
             },
           },
-          // Wrong level
+
           {
             type: 'Feature',
             properties: {
@@ -420,17 +417,14 @@ describe('footwaysForLevel', () => {
   test('should return only footways for the specified level', () => {
     const result = footwaysForLevel(mockIndoorMap, 1);
 
-    // Should find 2 footways at level 1
     expect(result).toHaveLength(2);
 
-    // Verify that all returned features are footways at level 1
     result.forEach((feature) => {
       expect(feature.properties?.highway).toBe('footway');
       expect(feature.properties?.level).toBe('1');
       expect(feature.geometry.type).toBe('LineString');
     });
 
-    // Verify that specific footways were returned
     expect(result[0].geometry.coordinates).toEqual([
       [10, 10],
       [20, 20],
@@ -444,7 +438,6 @@ describe('footwaysForLevel', () => {
   test('should return only footways for level 2', () => {
     const result = footwaysForLevel(mockIndoorMap, 2);
 
-    // Should find 1 footway at level 2
     expect(result).toHaveLength(1);
     expect(result[0].properties?.level).toBe('2');
     expect(result[0].geometry.coordinates).toEqual([
@@ -456,7 +449,6 @@ describe('footwaysForLevel', () => {
   test('should return empty array if no footways exist for the level', () => {
     const result = footwaysForLevel(mockIndoorMap, 0);
 
-    // No footways at level 0
     expect(result).toHaveLength(0);
     expect(Array.isArray(result)).toBe(true);
   });
@@ -464,17 +456,15 @@ describe('footwaysForLevel', () => {
   test('should filter out non-footway LineString features', () => {
     const result = footwaysForLevel(mockIndoorMap, 1);
 
-    // Should not include the corridor feature
     const includeCorridor = result.some((feature) => feature.properties?.highway === 'corridor');
     expect(includeCorridor).toBe(false);
   });
 
   test('should handle string level values correctly', () => {
-    // Add a feature with string level to test
     mockIndoorMap.geojson.features.push({
       type: 'Feature',
       properties: {
-        level: '1.0', // String representation of level 1
+        level: '1.0',
         highway: 'footway',
       },
       geometry: {
@@ -488,7 +478,6 @@ describe('footwaysForLevel', () => {
 
     const result = footwaysForLevel(mockIndoorMap, 1);
 
-    // Should still find 3 footways at level 1 (including the new one)
     expect(result).toHaveLength(3);
   });
 });
