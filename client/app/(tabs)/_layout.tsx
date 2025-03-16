@@ -9,6 +9,7 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { MapProvider } from '@/modules/map/MapContext';
+import { TaskProvider } from '@/providers/TodoListContext';
 
 const TabBarMapIcon = ({ color }: { color: string }) => {
   return (
@@ -33,54 +34,70 @@ const TabBarSettingsIcon = ({ color }: { color: string }) => {
     </View>
   );
 };
+const TabBarTaskIcon = ({ color }: { color: string }) => {
+  return (
+    <View style={styles.iconContainer}>
+      <IconSymbol size={28} name="checklist" color={color} />
+    </View>
+  );
+};
 
 const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
   <MapProvider>
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            position: 'absolute',
-            height: 80,
-            paddingBottom: 20,
+    <TaskProvider>
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+          headerShown: false,
+          tabBarButton: HapticTab,
+          tabBarBackground: TabBarBackground,
+          tabBarStyle: Platform.select({
+            ios: {
+              position: 'absolute',
+              height: 80,
+              paddingBottom: 20,
+            },
+            default: {
+              height: 70,
+              paddingTop: 10,
+              paddingBottom: 10,
+            },
+          }),
+          tabBarItemStyle: {
+            height: '100%',
+            justifyContent: 'center',
           },
-          default: {
-            height: 70,
-            paddingTop: 10,
-            paddingBottom: 10,
-          },
-        }),
-        tabBarItemStyle: {
-          height: '100%',
-          justifyContent: 'center',
-        },
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Map',
-          tabBarIcon: TabBarMapIcon,
-        }}
-      />
-      <Tabs.Screen
-        name="calendar"
-        options={{
-          title: 'Schedule',
-          tabBarIcon: TabBarCalendarIcon,
-        }}
-      />
-      <Tabs.Screen
-        name="settings/index"
-        options={{
-          title: 'Settings',
-          tabBarIcon: TabBarSettingsIcon,
-        }}
-      />
-    </Tabs>
+        }}>
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Map',
+            tabBarIcon: TabBarMapIcon,
+          }}
+        />
+        <Tabs.Screen
+          name="calendar"
+          options={{
+            title: 'Schedule',
+            tabBarIcon: TabBarCalendarIcon,
+          }}
+        />
+        <Tabs.Screen
+          name="tasks"
+          options={{
+            title: 'Tasks',
+            tabBarIcon: TabBarTaskIcon,
+          }}
+        />
+        <Tabs.Screen
+          name="settings/index"
+          options={{
+            title: 'Settings',
+            tabBarIcon: TabBarSettingsIcon,
+          }}
+        />
+      </Tabs>
+    </TaskProvider>
   </MapProvider>
 );
 

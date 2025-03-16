@@ -60,3 +60,9 @@ export interface Location {
   coordinates: Coordinates;
   data?: any;
 }
+
+export interface Task {
+  id: string;
+  text: string;
+  coordinates: Coordinates; // need to look into how the route is generate for the type here.
+}

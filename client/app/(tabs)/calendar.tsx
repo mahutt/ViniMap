@@ -20,6 +20,7 @@ import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { Location } from '@/modules/map/Types';
 import { getBuildingCoordinates } from '@/services/BuildingService';
 import ProfilePicture from '@/components/ProfilePicture';
+import { Ionicons } from '@expo/vector-icons';
 
 const { width } = Dimensions.get('window');
 
@@ -248,6 +249,19 @@ export default function Calendar() {
             }}>
             {weeks.map((dates) => (
               <View style={styles.itemRow} key={dates[0].date.toISOString()}>
+                <TouchableOpacity
+                  style={[styles.navButton, week <= 0 && styles.disabledNavButton]}
+                  disabled={week <= 0}
+                  onPress={() => {
+                    if (week > 0) {
+                      const newWeek = week - 1;
+                      setWeek(newWeek);
+                      swiper.current?.scrollTo(newWeek);
+                      setValue(moment(value).subtract(1, 'week').toDate());
+                    }
+                  }}>
+                  <Ionicons name="chevron-back" size={16} color={week <= 0 ? '#cccccc' : 'black'} />
+                </TouchableOpacity>
                 {dates.map((item) => {
                   const isActive = value.toDateString() === item.date.toDateString();
                   return (
@@ -269,6 +283,23 @@ export default function Calendar() {
                     </TouchableWithoutFeedback>
                   );
                 })}
+                <TouchableOpacity
+                  style={[styles.navButton, week >= 4 && styles.disabledNavButton]}
+                  disabled={week >= 4}
+                  onPress={() => {
+                    if (week < 4) {
+                      const newWeek = week + 1;
+                      setWeek(newWeek);
+                      swiper.current?.scrollTo(newWeek);
+                      setValue(moment(value).add(1, 'week').toDate());
+                    }
+                  }}>
+                  <Ionicons
+                    name="chevron-forward"
+                    size={16}
+                    color={week >= 4 ? '#cccccc' : 'black'}
+                  />
+                </TouchableOpacity>
               </View>
             ))}
           </Swiper>
@@ -374,20 +405,6 @@ const styles = StyleSheet.create({
   dateText: {
     fontSize: 20,
   },
-  uploadButtonText: {
-    color: 'white',
-  },
-  uploadButton: {
-    backgroundColor: '#852C3A',
-    width: '20%',
-    minHeight: 40,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    position: 'absolute',
-    right: 16,
-    top: 0,
-  },
   calendarItemCard: {
     flex: 1,
     paddingHorizontal: 16,
@@ -406,5 +423,16 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 2,
     borderColor: '#852C3A',
+  },
+  navButton: {
+    padding: 0,
+    zIndex: 10,
+    height: 50,
+    width: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  disabledNavButton: {
+    opacity: 0.5,
   },
 });
