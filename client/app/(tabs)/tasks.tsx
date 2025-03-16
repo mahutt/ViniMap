@@ -4,9 +4,12 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 import { Task } from '@/modules/map/Types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // or Ionicons
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTask } from '@/providers/TodoListContext';
 
 export default function TasksScreen() {
+  const { selectedTasks, setSelectedTasks } = useTask();
+
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
 
