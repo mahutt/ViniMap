@@ -65,7 +65,7 @@ export function bboxCenter(bbox: BBox): Coordinates {
 export function footwaysForLevel(indoorMap: IndoorMap, level: Level): Feature<LineString>[] {
   const footwayFeatures = indoorMap.geojson.features.filter(
     (feature) =>
-      parseFloat(feature.properties?.level) == level &&
+      parseFloat(feature.properties?.level) === level &&
       feature.properties?.highway === 'footway' &&
       feature.geometry.type === 'LineString'
   );

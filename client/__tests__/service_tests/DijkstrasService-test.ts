@@ -1,5 +1,5 @@
 import { findShortestPath } from '@/services/DijkstrasService';
-import { Feature, LineString } from 'geojson';
+import type { Feature, LineString } from 'geojson';
 import turfDistance from '@turf/distance';
 import { point } from '@turf/helpers';
 
