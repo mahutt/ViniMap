@@ -1,4 +1,4 @@
-import { findShortestPath } from '@/services/DijkstrasService';
+import DijkstraService from '@/services/DijkstrasService';
 import type { Feature, LineString } from 'geojson';
 import turfDistance from '@turf/distance';
 import { point } from '@turf/helpers';
@@ -47,7 +47,7 @@ describe('findShortestPath', () => {
       },
     ];
 
-    const result = findShortestPath([0, 0], [10, 10], footways);
+    const result = DijkstraService.findShortestPath([0, 0], [10, 10], footways);
     expect(result).toBeNull();
   });
 
@@ -97,7 +97,7 @@ describe('findShortestPath', () => {
       return 10;
     });
 
-    const result = findShortestPath([0, 0], [2, 2], footways);
+    const result = DijkstraService.findShortestPath([0, 0], [2, 2], footways);
     expect(result).toEqual([
       [0, 0],
       [1, 1],
@@ -194,7 +194,7 @@ describe('findShortestPath', () => {
       return 10;
     });
 
-    const result = findShortestPath([0, 0], [2, 2], footways);
+    const result = DijkstraService.findShortestPath([0, 0], [2, 2], footways);
     expect(result).toEqual([
       [0, 0],
       [1, 1],
@@ -218,7 +218,7 @@ describe('findShortestPath', () => {
       },
     ];
 
-    const result = findShortestPath([0, 0], [0, 0], footways);
+    const result = DijkstraService.findShortestPath([0, 0], [0, 0], footways);
     expect(result).toEqual([[0, 0]]);
   });
 
@@ -239,7 +239,7 @@ describe('findShortestPath', () => {
       },
     ];
 
-    const result = findShortestPath([1, 1], [3, 3], footways);
+    const result = DijkstraService.findShortestPath([1, 1], [3, 3], footways);
     expect(result).toEqual([
       [1, 1],
       [2, 2],
@@ -319,7 +319,7 @@ describe('findShortestPath', () => {
       return 2;
     });
 
-    const result = findShortestPath([0, 0], [2, 1], footways);
+    const result = DijkstraService.findShortestPath([0, 0], [2, 1], footways);
 
     expect(result).toEqual([
       [0, 0],

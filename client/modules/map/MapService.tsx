@@ -3,7 +3,7 @@ import { Coordinates } from './MapContext';
 import { IndoorMap, Level, Location, Route } from './Types';
 import { calculateEuclideanDistance } from './MapUtils';
 import { footwaysForLevel } from './IndoorMapUtils';
-import { findShortestPath } from '@/services/DijkstrasService';
+import DijkstraService from '@/services/DijkstrasService';
 import type { Feature, Polygon, Position } from 'geojson';
 import GeojsonHelper from '@/services/GeojsonService';
 
@@ -80,7 +80,7 @@ const getIndoorRoute = (
 
   const startPosition = startPositionOptions[0];
   const endPosition = endPositionOptions[0];
-  const result = findShortestPath(startPosition, endPosition, footways);
+  const result = DijkstraService.findShortestPath(startPosition, endPosition, footways);
   if (!result) {
     return null;
   }
