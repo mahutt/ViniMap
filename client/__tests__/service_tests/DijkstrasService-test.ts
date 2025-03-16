@@ -202,6 +202,7 @@ describe('findShortestPath', () => {
     ]);
   });
 
+  //start = end case
   test('should handle the case when start and end are the same', () => {
     const footways: Feature<LineString>[] = [
       {
@@ -219,5 +220,111 @@ describe('findShortestPath', () => {
 
     const result = findShortestPath([0, 0], [0, 0], footways);
     expect(result).toEqual([[0, 0]]);
+  });
+
+  test('should connect start and end points to the graph correctly', () => {
+    const footways: Feature<LineString>[] = [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [1, 1],
+            [2, 2],
+            [3, 3],
+          ],
+        },
+        properties: {},
+      },
+    ];
+
+    const result = findShortestPath([1, 1], [3, 3], footways);
+    expect(result).toEqual([
+      [1, 1],
+      [2, 2],
+      [3, 3],
+    ]);
+  });
+
+  test('should handle a complex network', () => {
+    const footways: Feature<LineString>[] = [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [0, 0],
+            [1, 0],
+            [2, 0],
+          ],
+        },
+        properties: {},
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [0, 1],
+            [1, 1],
+            [2, 1],
+          ],
+        },
+        properties: {},
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [0, 0],
+            [0, 1],
+          ],
+        },
+        properties: {},
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [1, 0],
+            [1, 1],
+          ],
+        },
+        properties: {},
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [2, 0],
+            [2, 1],
+          ],
+        },
+        properties: {},
+      },
+    ];
+
+    (turfDistance as jest.Mock).mockImplementation((from, to) => {
+      const fromCoord = from.geometry.coordinates;
+      const toCoord = to.geometry.coordinates;
+
+      if (fromCoord[1] === toCoord[1]) {
+        return 1;
+      }
+
+      return 2;
+    });
+
+    const result = findShortestPath([0, 0], [2, 1], footways);
+
+    expect(result).toEqual([
+      [0, 0],
+      [1, 0],
+      [2, 0],
+      [2, 1],
+    ]);
   });
 });
