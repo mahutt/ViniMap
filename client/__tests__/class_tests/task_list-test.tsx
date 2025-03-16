@@ -1,5 +1,4 @@
 import { Task } from '@/modules/map/Types';
-import { TaskListMemento } from '@/classes/TaskListMemento';
 import { TaskList } from '@/classes/TaskList';
 
 describe('TaskList Class', () => {
