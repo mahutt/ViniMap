@@ -1,6 +1,5 @@
 import { IndoorMap, IndoorMapGeoJSON } from './Types';
 import LocalLocations from '@/services/LocalLocations';
-import { bboxCenter } from './IndoorMapUtils';
 
 import hallFloorsGeoJson from '@/assets/geojson/hallFloors.json';
 import jmsbFloors from '@/assets/geojson/jmsbFloors.json';
