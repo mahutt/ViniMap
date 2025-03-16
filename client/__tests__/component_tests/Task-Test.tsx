@@ -1,6 +1,6 @@
-import React from 'react';
 import { render } from '@testing-library/react-native';
 import TasksScreen from '@/app/(tabs)/tasks';
+import React from 'react';
 
 // Mock dependencies
 jest.mock('@/components/TaskCard', () => 'TaskCard');
@@ -11,7 +11,6 @@ describe('TasksScreen Component', () => {
     const { toJSON } = render(<TasksScreen />);
     expect(toJSON()).toMatchSnapshot();
   });
-
   it('matches snapshot when there are tasks', () => {
     jest.spyOn(React, 'useState').mockReturnValueOnce([
       [
@@ -20,7 +19,6 @@ describe('TasksScreen Component', () => {
       ],
       jest.fn(),
     ]);
-
     const { toJSON } = render(<TasksScreen />);
     expect(toJSON()).toMatchSnapshot();
   });
