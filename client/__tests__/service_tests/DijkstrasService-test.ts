@@ -222,6 +222,7 @@ describe('findShortestPath', () => {
     expect(result).toEqual([[0, 0]]);
   });
 
+  //edge case
   test('should connect start and end points to the graph correctly', () => {
     const footways: Feature<LineString>[] = [
       {
@@ -245,7 +246,7 @@ describe('findShortestPath', () => {
       [3, 3],
     ]);
   });
-
+  //with larger networks
   test('should handle a complex network', () => {
     const footways: Feature<LineString>[] = [
       {
