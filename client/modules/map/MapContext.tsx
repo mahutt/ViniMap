@@ -17,6 +17,7 @@ import { default as turfDistance } from '@turf/distance';
 import { LocationSubscription, watchPositionAsync } from 'expo-location';
 import CoordinateService from '@/services/CoordinateService';
 import PointsOfInterestService from '@/services/PointsOfInterestService';
+import { Alert } from 'react-native';
 
 export enum MapState {
   Idle,
@@ -198,12 +199,14 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         case MapState.SelectingStartLocation:
           setStartLocation(location);
           if (endLocation) {
+            setRoute(null); // Clear route if start location is changed
             setState(MapState.RoutePlanning);
           }
           break;
 
         case MapState.SelectingEndLocation:
           setEndLocation(location);
+          setRoute(null); // Clear route if end location is changed
           setState(MapState.RoutePlanning);
           break;
 
@@ -263,18 +266,21 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     async (startLocation: Location, endLocation: Location, mode = 'walking'): Promise<void> => {
       return getRoute(startLocation, endLocation, mode)
         .then((route) => {
-          if (route) {
-            if (route.segments.length > 0 && cameraRef.current) {
-              const bounds = CoordinateService.calculateRouteCoordinateBounds(route);
-              cameraRef.current.fitBounds(
-                bounds.ne,
-                bounds.sw,
-                50, // padding
-                1500 // animation duration
-              );
-            }
-            setRoute(route);
+          if (route === null) {
+            Alert.alert('No route found', "These locations aren't currently supported.");
+            return;
           }
+
+          if (route.segments.length > 0 && cameraRef.current) {
+            const bounds = CoordinateService.calculateRouteCoordinateBounds(route);
+            cameraRef.current.fitBounds(
+              bounds.ne,
+              bounds.sw,
+              50, // padding
+              1500 // animation duration
+            );
+          }
+          setRoute(route);
         })
         .catch((error) => {
           console.error('Error setting route:', error);
