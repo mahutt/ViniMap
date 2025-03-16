@@ -5,10 +5,9 @@ import {
   getIndoorFeatureFromCoordinates,
   footwaysForLevel,
 } from '@/modules/map/IndoorMapUtils';
-import { IndoorMap } from '@/modules/map/IndoorMap';
 import GeojsonService from '@/services/GeojsonService';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import { Coordinates } from '../../modules/map/Types';
+import { IndoorMap } from '../../modules/map/Types';
 
 // Mock dependencies
 jest.mock('@turf/boolean-point-in-polygon');
@@ -230,7 +229,14 @@ describe('getIndoorFeatureFromCoordinates', () => {
     expect(result).toEqual({
       coordinates: [50, 50],
       name: 'Room 101',
-      data: { address: 'building1', isOpen: false },
+      data: {
+        address: 'building1',
+        isOpen: false,
+        feature: indoorMap.geojson.features[0],
+        indoorMap: indoorMap,
+        level: 1,
+        ref: 'Room 101',
+      },
     });
   });
 
@@ -251,7 +257,13 @@ describe('getIndoorFeatureFromCoordinates', () => {
     expect(result).toEqual({
       coordinates: [50, 50],
       name: 'Unknown room',
-      data: { address: 'building1', isOpen: false },
+      data: {
+        address: 'building1',
+        isOpen: false,
+        indoorMap,
+        level: 1,
+        feature: indoorMap.geojson.features[0],
+      },
     });
   });
 
@@ -273,7 +285,17 @@ describe('getIndoorFeatureFromCoordinates', () => {
     expect(result).toEqual({
       coordinates: [50, 50],
       name: 'Stairwell',
-      data: { address: 'building1', isOpen: false },
+      data: {
+        address: 'building1',
+        isOpen: false,
+        indoorMap,
+        level: {
+          max: 3,
+          min: 1,
+        },
+        ref: 'Stairwell',
+        feature: indoorMap.geojson.features[0],
+      },
     });
   });
 
@@ -299,7 +321,14 @@ describe('getIndoorFeatureFromCoordinates', () => {
     expect(result).toEqual({
       coordinates: [50, 50],
       name: 'Room 101',
-      data: { address: 'building1', isOpen: false },
+      data: {
+        address: 'building1',
+        isOpen: false,
+        indoorMap,
+        level: 1,
+        ref: 'Room 101',
+        feature: indoorMap.geojson.features[0],
+      },
     });
   });
 });
