@@ -11,7 +11,7 @@ import Mapbox from '@rnmapbox/maps';
 import { fetchLocationData, getRoute } from './MapService';
 import { Location, Coordinates, Route, Level, IndoorMap } from './Types';
 import { indoorMaps } from './IndoorMap';
-import type { BBox } from 'geojson';
+import type { BBox, Position } from 'geojson';
 import { bboxCenter, getIndoorFeatureFromCoordinates, overlap } from './IndoorMapUtils';
 import { default as turfDistance } from '@turf/distance';
 import { LocationSubscription, watchPositionAsync } from 'expo-location';
@@ -32,7 +32,7 @@ const DEFAULT_COORDINATES: Coordinates = [-73.5789, 45.4973];
 type MapContextType = {
   mapRef: React.RefObject<Mapbox.MapView>;
   cameraRef: React.RefObject<Mapbox.Camera>;
-  centerCoordinate: [number, number];
+  centerCoordinate: Position;
   zoomLevel: number;
   level: Level | null;
 
@@ -44,13 +44,13 @@ type MapContextType = {
   endLocation: Location | null;
   userLocation: Location | null;
   route: Route | null;
-  setCenterCoordinate: (centerCoordinate: [number, number]) => void;
+  setCenterCoordinate: (centerCoordinate: Position) => void;
   setZoomLevel: (zoomLevel: number) => void;
   setLevel: (level: Level | null) => void;
   setState: (state: MapState) => void;
   setStartLocation: (startLocation: Location | null) => void;
   setEndLocation: (endLocation: Location | null) => void;
-  flyTo: (coords: [number, number], zoomLevel?: number) => void;
+  flyTo: (coords: Position, zoomLevel?: number) => void;
   loadRouteFromCoordinates: (
     startLocation: Location,
     endLocation: Location,
@@ -67,7 +67,7 @@ const MapContext = createContext<MapContextType | undefined>(undefined);
 export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const mapRef = useRef<Mapbox.MapView | null>(null);
   const cameraRef = useRef<Mapbox.Camera | null>(null);
-  const [centerCoordinate, setCenterCoordinate] = useState<[number, number]>(DEFAULT_COORDINATES);
+  const [centerCoordinate, setCenterCoordinate] = useState<Position>(DEFAULT_COORDINATES);
   const [zoomLevel, setZoomLevel] = useState(15);
   const [level, setLevel] = useState<Level | null>(-1);
   const [pitchLevel, setPitchLevel] = useState(0);
@@ -247,7 +247,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, []);
 
   const flyTo = useMemo(
-    () => (newCenterCoordinate: [number, number], newZoomLevel?: number) => {
+    () => (newCenterCoordinate: Position, newZoomLevel?: number) => {
       if (cameraRef.current) {
         cameraRef.current.setCamera({
           centerCoordinate: newCenterCoordinate,

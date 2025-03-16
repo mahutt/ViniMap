@@ -1,4 +1,4 @@
-import type { BBox, FeatureCollection, LineString, Point, Polygon } from 'geojson';
+import type { BBox, FeatureCollection, LineString, Point, Polygon, Position } from 'geojson';
 import {
   FillLayerStyleProps,
   LineLayerStyleProps,
@@ -9,7 +9,7 @@ import {
     Internal representation of a pair of coordinates.
     Coordinates: [longitude, latitude]
 */
-export type Coordinates = [number, number];
+export type Coordinates = Position;
 
 export interface Segment {
   id: string;
