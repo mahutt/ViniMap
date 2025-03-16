@@ -201,4 +201,23 @@ describe('findShortestPath', () => {
       [2, 2],
     ]);
   });
+
+  test('should handle the case when start and end are the same', () => {
+    const footways: Feature<LineString>[] = [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [0, 0],
+            [1, 1],
+          ],
+        },
+        properties: {},
+      },
+    ];
+
+    const result = findShortestPath([0, 0], [0, 0], footways);
+    expect(result).toEqual([[0, 0]]);
+  });
 });
