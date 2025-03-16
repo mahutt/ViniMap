@@ -104,4 +104,101 @@ describe('findShortestPath', () => {
       [2, 2],
     ]);
   });
+
+  test('should find the shortest path when multiple paths exist', () => {
+    const footways: Feature<LineString>[] = [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [0, 0],
+            [1, 1],
+          ],
+        },
+        properties: {},
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [1, 1],
+            [2, 2],
+          ],
+        },
+        properties: {},
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [0, 0],
+            [1, -1],
+          ],
+        },
+        properties: {},
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [1, -1],
+            [2, 2],
+          ],
+        },
+        properties: {},
+      },
+    ];
+
+    (turfDistance as jest.Mock).mockImplementation((from, to) => {
+      const fromCoord = from.geometry.coordinates;
+      const toCoord = to.geometry.coordinates;
+
+      if (
+        (JSON.stringify(fromCoord) === JSON.stringify([0, 0]) &&
+          JSON.stringify(toCoord) === JSON.stringify([1, 1])) ||
+        (JSON.stringify(fromCoord) === JSON.stringify([1, 1]) &&
+          JSON.stringify(toCoord) === JSON.stringify([0, 0]))
+      ) {
+        return 1;
+      }
+      if (
+        (JSON.stringify(fromCoord) === JSON.stringify([1, 1]) &&
+          JSON.stringify(toCoord) === JSON.stringify([2, 2])) ||
+        (JSON.stringify(fromCoord) === JSON.stringify([2, 2]) &&
+          JSON.stringify(toCoord) === JSON.stringify([1, 1]))
+      ) {
+        return 1;
+      }
+
+      if (
+        (JSON.stringify(fromCoord) === JSON.stringify([0, 0]) &&
+          JSON.stringify(toCoord) === JSON.stringify([1, -1])) ||
+        (JSON.stringify(fromCoord) === JSON.stringify([1, -1]) &&
+          JSON.stringify(toCoord) === JSON.stringify([0, 0]))
+      ) {
+        return 2;
+      }
+      if (
+        (JSON.stringify(fromCoord) === JSON.stringify([1, -1]) &&
+          JSON.stringify(toCoord) === JSON.stringify([2, 2])) ||
+        (JSON.stringify(fromCoord) === JSON.stringify([2, 2]) &&
+          JSON.stringify(toCoord) === JSON.stringify([1, -1]))
+      ) {
+        return 3;
+      }
+
+      return 10;
+    });
+
+    const result = findShortestPath([0, 0], [2, 2], footways);
+    expect(result).toEqual([
+      [0, 0],
+      [1, 1],
+      [2, 2],
+    ]);
+  });
 });
