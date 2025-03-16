@@ -25,17 +25,14 @@ export default function TasksScreen() {
 
     caretaker.current.save();
     taskList.current.addTask(newTask);
-    console.log('Printing Tasks: ' + taskList.current.getTasks());
 
     setTasks([...taskList.current.getTasks()]);
-    console.log('New Task:', newTask);
 
     setTaskName('');
     setTaskLocation('');
   };
 
   const deleteTask = (id: string) => {
-    console.log('Trying to delete');
     caretaker.current.save();
     taskList.current.setTasks(tasks.filter((task) => task.id !== id));
     setTasks([...taskList.current.getTasks()]);
