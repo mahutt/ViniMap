@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 
 interface TaskCardProps {
   text: string;
@@ -15,7 +15,7 @@ const TaskCard = ({ text, onDelete }: TaskCardProps) => {
         <Text style={styles.itemText}>{text}</Text>
       </View>
       <TouchableOpacity style={styles.circular} onPress={onDelete}>
-        <Icon name="close" size={18} color="white" />
+        <IconSymbol name="xmark" size={14} color="white" />
       </TouchableOpacity>
     </View>
   );
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 10,
     elevation: 2,
   },
   itemLeft: {

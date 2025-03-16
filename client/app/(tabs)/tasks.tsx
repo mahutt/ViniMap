@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 
 import { Task } from '@/modules/map/Types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import { IconSymbol } from '@/components/ui/IconSymbol';
 
 export default function TasksScreen() {
   const taskList = useRef(new TaskList());
@@ -51,7 +51,7 @@ export default function TasksScreen() {
         <View style={styles.header}>
           <Text style={styles.sectionTitle}>Tasks</Text>
           <TouchableOpacity onPress={getPreviouseState}>
-            <Icon name="undo" size={24} color="#852C3A" />
+            <IconSymbol size={24} name="arrow.uturn.backward" color="#852C3A" />
           </TouchableOpacity>
         </View>
 
@@ -95,7 +95,7 @@ export default function TasksScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#E8EAED', padding: 20 },
   tasksWrapper: { paddingTop: 80 },
-  sectionTitle: { fontSize: 24, fontWeight: 'bold', paddingBottom: 20 },
+  sectionTitle: { fontSize: 24, fontWeight: 'bold' },
   scrollView: {
     height: 500,
     borderColor: '#852C3A',
@@ -128,6 +128,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingBottom: 20,
   },
   undo: {
     fontSize: 16,
