@@ -1,13 +1,13 @@
-import { Task } from '@/modules/map/Types';
+import { Task } from 'react-native';
 
 export class TaskListMemento {
   private readonly tasks: Task[];
 
   constructor(tasks: Task[]) {
-    this.tasks = [...tasks];
+    this.tasks = JSON.parse(JSON.stringify(tasks));
   }
 
   getTasks(): Task[] {
-    return [...this.tasks];
+    return JSON.parse(JSON.stringify(this.tasks));
   }
 }
