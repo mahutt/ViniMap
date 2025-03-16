@@ -1,15 +1,15 @@
 import TaskCard from '@/components/TaskCard';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Task } from '@/modules/map/Types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 
 export default function TasksScreen() {
-  const taskList = new TaskList();
-  const caretaker = new TaskListCaretaker(taskList);
+  const taskList = useRef(new TaskList());
+  const caretaker = useRef(new TaskListCaretaker(taskList.current));
 
-  const [tasks, setTasks] = useState<Task[]>(taskList.getTasks());
+  const [tasks, setTasks] = useState<Task[]>(taskList.current.getTasks());
   const [taskName, setTaskName] = useState('');
   const [taskLocation, setTaskLocation] = useState('');
 
@@ -22,10 +22,11 @@ export default function TasksScreen() {
       coordinates: [0, 0],
     };
 
-    caretaker.save();
-    taskList.addTask(newTask);
+    caretaker.current.save();
+    taskList.current.addTask(newTask);
+    console.log('Printing Tasks: ' + taskList.current.getTasks());
 
-    setTasks(taskList.getTasks());
+    setTasks([...taskList.current.getTasks()]);
     console.log('New Task:', newTask);
 
     setTaskName('');
@@ -34,9 +35,14 @@ export default function TasksScreen() {
 
   const deleteTask = (id: string) => {
     console.log('Trying to delete');
-    caretaker.save();
-    taskList.setTasks(tasks.filter((task) => task.id !== id));
-    setTasks([...taskList.getTasks()]);
+    caretaker.current.save();
+    taskList.current.setTasks(tasks.filter((task) => task.id !== id));
+    setTasks([...taskList.current.getTasks()]);
+  };
+
+  const getPreviouseState = () => {
+    caretaker.current.undo();
+    setTasks([...taskList.current.getTasks()]);
   };
 
   return (
@@ -44,7 +50,9 @@ export default function TasksScreen() {
       <View style={styles.tasksWrapper}>
         <View style={styles.header}>
           <Text style={styles.sectionTitle}>Today's Tasks</Text>
-          <Text style={styles.undo}> Undo</Text>
+          <TouchableOpacity onPress={getPreviouseState}>
+            <Text style={styles.undo}> Undo</Text>
+          </TouchableOpacity>
         </View>
 
         <ScrollView style={styles.scrollView}>
@@ -106,7 +114,7 @@ const styles = StyleSheet.create({
   },
   undo: {
     fontSize: 16,
-    color: 'blue',
+    color: '#852C3A',
     paddingRight: 10,
   },
 });
