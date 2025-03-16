@@ -17,6 +17,12 @@ export interface Segment {
   steps: Coordinates[];
 }
 
+/**
+ * Internal representation of a route.
+ * duration: Duration in seconds.
+ * distance: Distance in meters.
+ * segments: List of segments that compose the route.
+ */
 export interface Route {
   duration: number;
   distance: number;

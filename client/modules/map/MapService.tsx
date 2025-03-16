@@ -4,7 +4,7 @@ import { IndoorMap, Level, Location, Route } from './Types';
 import { calculateEuclideanDistance } from './MapUtils';
 import { footwaysForLevel } from './IndoorMapUtils';
 import { findShortestPath } from '@/services/DijkstrasService';
-import type { Feature, Polygon } from 'geojson';
+import type { Feature, Polygon, Position } from 'geojson';
 import GeojsonHelper from '@/services/GeojsonService';
 
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
@@ -14,6 +14,9 @@ const PROXIMITY_COORDINTATES = {
   longitude: -73.57791396549962, // Concordia SGW Campus Longitude
   latitude: 45.495102086770814, // Concordia SGW Campus  Latitude
 };
+
+const RADIUS_OF_EARTH = 6371000; // Radius of the earth in meters
+const AVERAGE_WALKING_SPEED = 1.39; // m/s
 
 const getLocations = async (locationQuery: string): Promise<Location[]> => {
   const response = await fetch(
@@ -75,13 +78,19 @@ const getIndoorRoute = (
     return null;
   }
 
-  const result = findShortestPath(startPositionOptions[0], endPositionOptions[0], footways);
+  const startPosition = startPositionOptions[0];
+  const endPosition = endPositionOptions[0];
+  const result = findShortestPath(startPosition, endPosition, footways);
   if (!result) {
     return null;
   }
+
+  const distance = getDistanceFromPositions(startPosition, endPosition);
+  const duration = distance / AVERAGE_WALKING_SPEED;
+
   return {
-    duration: 0,
-    distance: 0,
+    duration,
+    distance,
     segments: [
       {
         id: 'indoor-navigation-walk',
@@ -270,6 +279,27 @@ const getRouteForShuttle = async (
       },
     ],
   };
+};
+
+// Simple solution to calculate distance between two (coordinate) points.
+// Works for short distances, which makes it ideal for indoor navigation.
+// Source: https://stackoverflow.com/a/27943
+const getDistanceFromPositions = (position1: Position, position2: Position): number => {
+  const dLat = deg2rad(position2[1] - position1[1]); // deg2rad below
+  const dLon = deg2rad(position2[0] - position1[0]);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(position1[1])) *
+      Math.cos(deg2rad(position2[1])) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = RADIUS_OF_EARTH * c; // Distance in km
+  return d;
+};
+
+const deg2rad = (deg: number) => {
+  return deg * (Math.PI / 180);
 };
 
 const formatDuration = (seconds: number | null): string => {
