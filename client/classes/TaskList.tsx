@@ -1,5 +1,5 @@
-import { Task } from '@/modules/map/Types';
 import { TaskListMemento } from '@/classes/TaskListMemento';
+import { Task } from '@/modules/map/Types';
 export class TaskList {
   private tasks: Task[] = [];
 
