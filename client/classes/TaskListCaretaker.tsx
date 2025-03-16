@@ -2,8 +2,8 @@ import { TaskList } from './TaskList';
 import { TaskListMemento } from './TaskListMemento';
 
 export class TaskListCaretaker {
-  private history: TaskListMemento[] = [];
-  private taskList: TaskList;
+  private readonly history: TaskListMemento[] = [];
+  private readonly taskList: TaskList;
 
   constructor(taskList: TaskList) {
     this.taskList = taskList;
