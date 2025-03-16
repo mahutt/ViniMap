@@ -1,5 +1,5 @@
 import { Task } from '@/modules/map/Types';
-import { createContext, useState, useContext, ReactNode } from 'react';
+import { createContext, useState, useContext, ReactNode, useMemo } from 'react';
 
 type TaskContextType = {
   selectedTasks: Task[];
@@ -11,11 +11,9 @@ const TaskContext = createContext<TaskContextType | undefined>(undefined);
 export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [selectedTasks, setSelectedTasks] = useState<Task[]>([]);
 
-  return (
-    <TaskContext.Provider value={{ selectedTasks, setSelectedTasks }}>
-      {children}
-    </TaskContext.Provider>
-  );
+  const contextValue = useMemo(() => ({ selectedTasks, setSelectedTasks }), [selectedTasks]);
+
+  return <TaskContext.Provider value={contextValue}>{children}</TaskContext.Provider>;
 };
 
 export const useTask = () => {
