@@ -44,14 +44,11 @@ const getRoute = async (
     endLocation.data?.indoorMap &&
     startLocation.data?.indoorMap?.id === endLocation.data?.indoorMap?.id
   ) {
-    //getIndoorRoute
-    console.log('Please god');
     return getIndoorRoute(
       startLocation.data.indoorMap,
       startLocation.data.ref,
       endLocation.data.ref
     );
-    // Handle indoor navigation
   }
 
   const startCoordinates = startLocation.coordinates;
