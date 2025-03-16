@@ -11,9 +11,8 @@ jest.mock('@turf/helpers', () => ({
 describe('findShortestPath', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    // Setup default mock implementation
+
     (turfDistance as jest.Mock).mockImplementation((from, to) => {
-      // Simple mock that returns fixed distance (can be improved for specific tests)
       return 1;
     });
     (point as jest.Mock).mockImplementation((coord) => {
@@ -21,8 +20,8 @@ describe('findShortestPath', () => {
     });
   });
 
+  //Null path
   test('should return null if no path exists between points', () => {
-    // Setup two disconnected segments
     const footways: Feature<LineString>[] = [
       {
         type: 'Feature',
@@ -50,5 +49,59 @@ describe('findShortestPath', () => {
 
     const result = findShortestPath([0, 0], [10, 10], footways);
     expect(result).toBeNull();
+  });
+
+  //Single path available
+  test('should find path in simple connected network', () => {
+    const footways: Feature<LineString>[] = [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [0, 0],
+            [1, 1],
+          ],
+        },
+        properties: {},
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [1, 1],
+            [2, 2],
+          ],
+        },
+        properties: {},
+      },
+    ];
+
+    (turfDistance as jest.Mock).mockImplementation((from, to) => {
+      const fromCoord = from.geometry.coordinates;
+      const toCoord = to.geometry.coordinates;
+
+      if (
+        JSON.stringify(fromCoord) === JSON.stringify([0, 0]) &&
+        JSON.stringify(toCoord) === JSON.stringify([1, 1])
+      ) {
+        return 1;
+      }
+      if (
+        JSON.stringify(fromCoord) === JSON.stringify([1, 1]) &&
+        JSON.stringify(toCoord) === JSON.stringify([2, 2])
+      ) {
+        return 1;
+      }
+      return 10;
+    });
+
+    const result = findShortestPath([0, 0], [2, 2], footways);
+    expect(result).toEqual([
+      [0, 0],
+      [1, 1],
+      [2, 2],
+    ]);
   });
 });
