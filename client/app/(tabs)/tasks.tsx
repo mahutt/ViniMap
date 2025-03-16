@@ -14,6 +14,8 @@ export default function TasksScreen() {
   const [taskName, setTaskName] = useState('');
   const [taskLocation, setTaskLocation] = useState('');
 
+  const isButtonDisabled = !taskName.trim() || !taskLocation.trim();
+
   const addTask = () => {
     if (!taskName.trim() || !taskLocation.trim()) return;
 
@@ -78,7 +80,10 @@ export default function TasksScreen() {
               onChangeText={setTaskLocation}
             />
           </View>
-          <TouchableOpacity style={styles.plusButton} onPress={addTask}>
+          <TouchableOpacity
+            style={[styles.plusButton, isButtonDisabled && styles.plusButtonDisabled]}
+            onPress={addTask}
+            disabled={isButtonDisabled}>
             <Text style={styles.plusButtonText}>+</Text>
           </TouchableOpacity>
         </View>
@@ -114,5 +119,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#852C3A',
     paddingRight: 10,
+  },
+  plusButtonDisabled: {
+    backgroundColor: '#ccc',
   },
 });
