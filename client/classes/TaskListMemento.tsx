@@ -1,4 +1,4 @@
-import { Task } from 'react-native';
+import { Task } from '@/modules/map/Types';
 
 export class TaskListMemento {
   private readonly tasks: Task[];

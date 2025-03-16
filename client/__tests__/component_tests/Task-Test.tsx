@@ -2,7 +2,9 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import TasksScreen from '@/app/(tabs)/tasks';
 
+// Mock dependencies
 jest.mock('@/components/TaskCard', () => 'TaskCard');
+jest.mock('react-native-vector-icons/MaterialIcons', () => 'Icon');
 
 describe('TasksScreen Component', () => {
   it('matches snapshot when there are no tasks', () => {
