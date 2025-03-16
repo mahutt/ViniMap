@@ -1,13 +1,10 @@
-import { Coordinates } from '@/modules/map/Types';
-
-import type { Feature, LineString } from 'geojson';
-
+import type { Feature, LineString, Position } from 'geojson';
 import turfDistance from '@turf/distance';
 import { point } from '@turf/helpers';
 
 export function findShortestPath(
-  startCoord: Coordinates,
-  endCoord: Coordinates,
+  startCoord: Position,
+  endCoord: Position,
   footwayFeatures: Feature<LineString>[]
 ) {
   let graph: Record<string, { node: string; dist: number }[]> = {};

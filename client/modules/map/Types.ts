@@ -1,4 +1,4 @@
-import type { BBox, FeatureCollection, Geometry } from 'geojson';
+import type { BBox, FeatureCollection, LineString, Point, Polygon } from 'geojson';
 import {
   FillLayerStyleProps,
   LineLayerStyleProps,
@@ -33,7 +33,7 @@ export interface LayerSpecification {
 
 export type ExpressionSpecification = any; // Meant to reference a type from MapLibre spec (see map-gl-indoor)
 export type Level = number;
-export type IndoorMapGeoJSON = FeatureCollection<Geometry>;
+export type IndoorMapGeoJSON = FeatureCollection<Point | LineString | Polygon>;
 export type LevelsRange = {
   min: Level;
   max: Level;

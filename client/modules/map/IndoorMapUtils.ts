@@ -1,5 +1,5 @@
 import { Coordinates, ExpressionSpecification, Level, Location, IndoorMap } from './Types';
-import type { BBox, Feature } from 'geojson';
+import type { BBox, Feature, LineString } from 'geojson';
 import GeojsonService from '@/services/GeojsonService';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
@@ -62,45 +62,46 @@ export function bboxCenter(bbox: BBox): Coordinates {
   return [(west + east) / 2, (south + north) / 2];
 }
 
-export function getIndoorFeatureFromProperties(
-  indoorMap: IndoorMap,
-  key: string,
-  value: string
-): Location | null {
-  for (let feature of indoorMap.geojson.features) {
-    if (feature.properties) {
-      if (feature.properties && feature.properties[key] && feature.properties[key] == value) {
-        let coordinates = feature.geometry?.coordinates ?? null;
-        if (!coordinates) {
-          return null;
-        }
-        let featureLevel = GeojsonService.extractLevelFromFeature(feature);
+// export function getIndoorFeatureFromProperties(
+//   indoorMap: IndoorMap,
+//   key: string,
+//   value: string
+// ): Location | null {
+//   for (let feature of indoorMap.geojson.features) {
+//     if (feature.properties) {
+//       if (feature.properties && feature.properties[key] && feature.properties[key] == value) {
+//         let coordinates = feature.geometry?.coordinates ?? null;
+//         if (!coordinates) {
+//           return null;
+//         }
+//         let featureLevel = GeojsonService.extractLevelFromFeature(feature);
 
-        return {
-          coordinates,
-          name: null,
-          data: {
-            address: indoorMap.id,
-            isOpen: false,
-            level: featureLevel,
-            indoorMapId: indoorMap.id,
-          },
-        };
-      }
-    } else {
-      return null;
-    }
-  }
-  return null;
-}
-export function footwaysForLevel(indoorMap: IndoorMap, level: Level): Feature[] {
+//         return {
+//           coordinates,
+//           name: null,
+//           data: {
+//             address: indoorMap.id,
+//             isOpen: false,
+//             level: featureLevel,
+//             indoorMapId: indoorMap.id,
+//           },
+//         };
+//       }
+//     } else {
+//       return null;
+//     }
+//   }
+//   return null;
+// }
+
+export function footwaysForLevel(indoorMap: IndoorMap, level: Level): Feature<LineString>[] {
   const footwayFeatures = indoorMap.geojson.features.filter(
     (feature) =>
-      feature.geometry.type === 'LineString' &&
+      parseFloat(feature.properties?.level) == level &&
       feature.properties?.highway === 'footway' &&
-      (Number(feature.properties?.level) as Level) == level // Might need to use parsefloat in case of bugs
+      feature.geometry.type === 'LineString'
   );
-  return footwayFeatures;
+  return footwayFeatures as Feature<LineString>[];
 }
 
 export function getIndoorFeatureFromCoordinates(
@@ -145,6 +146,7 @@ export function getIndoorFeatureFromCoordinates(
           level: featureLevel,
           indoorMap: indoorMap,
           ref: feature?.properties?.ref,
+          feature,
         },
       };
     }

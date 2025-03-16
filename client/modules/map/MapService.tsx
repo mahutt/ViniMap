@@ -1,9 +1,11 @@
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { Coordinates } from './MapContext';
-import { IndoorMap, Location, Route } from './Types';
+import { IndoorMap, Level, Location, Route } from './Types';
 import { calculateEuclideanDistance } from './MapUtils';
-import { footwaysForLevel, getIndoorFeatureFromProperties } from './IndoorMapUtils';
+import { footwaysForLevel } from './IndoorMapUtils';
 import { findShortestPath } from '@/services/DijkstrasService';
+import type { Feature, Polygon } from 'geojson';
+import GeojsonHelper from '@/services/GeojsonService';
 
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
@@ -38,16 +40,17 @@ const getRoute = async (
   mode: string
 ): Promise<Route | null> => {
   if (
-    startLocation.data?.ref &&
-    endLocation.data?.ref &&
+    startLocation.data?.level &&
+    endLocation.data?.level &&
     startLocation.data?.indoorMap &&
     endLocation.data?.indoorMap &&
     startLocation.data?.indoorMap?.id === endLocation.data?.indoorMap?.id
   ) {
     return getIndoorRoute(
       startLocation.data.indoorMap,
-      startLocation.data.ref,
-      endLocation.data.ref
+      startLocation.data.feature,
+      endLocation.data.feature,
+      startLocation.data.level
     );
   }
 
@@ -61,25 +64,18 @@ const getRoute = async (
 
 const getIndoorRoute = (
   indoorMap: IndoorMap,
-  startRoomRef: string,
-  endRoomRef: string
+  startFeature: Feature<Polygon>,
+  endFeature: Feature<Polygon>,
+  level: Level
 ): Route | null => {
-  const startDoorLocation = getIndoorFeatureFromProperties(
-    indoorMap,
-    'doorRef',
-    startRoomRef + 'Door'
-  );
-  const endDoorLocation = getIndoorFeatureFromProperties(indoorMap, 'doorRef', endRoomRef + 'Door');
-  if (!startDoorLocation || !endDoorLocation) {
-    console.error('FAILLLL');
+  const footways = footwaysForLevel(indoorMap, level);
+  const startPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, startFeature);
+  const endPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, endFeature);
+  if (startPositionOptions.length === 0 || endPositionOptions.length === 0) {
     return null;
   }
-  const footways = footwaysForLevel(indoorMap, startDoorLocation?.data.level);
-  const result = findShortestPath(
-    startDoorLocation?.coordinates,
-    endDoorLocation?.coordinates,
-    footways
-  );
+
+  const result = findShortestPath(startPositionOptions[0], endPositionOptions[0], footways);
   if (!result) {
     return null;
   }
@@ -88,8 +84,8 @@ const getIndoorRoute = (
     distance: 0,
     segments: [
       {
-        id: 'TESTTYTYTYTYTYTY',
-        type: 'solid',
+        id: 'indoor-navigation-walk',
+        type: 'dashed',
         steps: result as Coordinates[],
       },
     ],
