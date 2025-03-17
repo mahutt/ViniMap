@@ -1,450 +1,246 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`TasksScreen Component matches snapshot when there are no tasks 1`] = `
-<View
-  style={
-    {
-      "backgroundColor": "#E8EAED",
-      "flex": 1,
-      "padding": 20,
-    }
-  }
->
+exports[`renders TasksScreen correctly 1`] = `
+[
+  " ",
   <View
     style={
       {
-        "paddingTop": 80,
+        "backgroundColor": "#E8EAED",
+        "flex": 1,
+        "padding": 20,
       }
     }
   >
     <View
       style={
         {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
-          "paddingBottom": 20,
+          "paddingTop": 80,
         }
       }
     >
-      <Text
-        style={
-          {
-            "fontSize": 24,
-            "fontWeight": "bold",
-          }
-        }
-      >
-        Tasks
-      </Text>
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
         style={
           {
-            "opacity": 1,
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "paddingBottom": 20,
           }
         }
       >
-        <ViewManagerAdapter_SymbolModule
-          animated={false}
-          colors={[]}
-          name="arrow.uturn.backward"
-          resizeMode="scaleAspectFit"
+        <Text
           style={
-            [
-              {
-                "height": 24,
-                "width": 24,
-              },
+            {
+              "fontSize": 24,
+              "fontWeight": "bold",
+            }
+          }
+        >
+          Tasks
+        </Text>
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "opacity": 1,
+            }
+          }
+        >
+          <ViewManagerAdapter_SymbolModule
+            animated={false}
+            colors={[]}
+            name="arrow.uturn.backward"
+            resizeMode="scaleAspectFit"
+            style={
               [
                 {
                   "height": 24,
                   "width": 24,
                 },
-                undefined,
-              ],
-            ]
-          }
-          tintColor="#852C3A"
-          type="monochrome"
-          weight="regular"
-        />
-      </View>
-    </View>
-    <RCTScrollView
-      style={
-        {
-          "backgroundColor": "#E8EAED",
-          "borderColor": "#852C3A",
-          "borderRadius": 10,
-          "borderWidth": 2,
-          "height": 500,
-          "paddingHorizontal": 10,
-          "paddingVertical": 10,
-        }
-      }
-    >
-      <View>
-        <Text
-          style={
-            {
-              "color": "gray",
-              "marginTop": 20,
-              "textAlign": "center",
+                [
+                  {
+                    "height": 24,
+                    "width": 24,
+                  },
+                  undefined,
+                ],
+              ]
             }
-          }
-        >
-          No tasks yet.
-        </Text>
+            tintColor="#852C3A"
+            type="monochrome"
+            weight="regular"
+          />
+        </View>
       </View>
-    </RCTScrollView>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "marginTop": 20,
-        }
-      }
-    >
-      <View
+      <RCTScrollView
         style={
           {
-            "flex": 1,
-            "marginRight": 10,
-          }
-        }
-      >
-        <TextInput
-          onChangeText={[Function]}
-          placeholder="Task name"
-          style={
-            {
-              "backgroundColor": "#FFF",
-              "borderRadius": 10,
-              "marginBottom": 10,
-              "overflow": "hidden",
-              "padding": 10,
-            }
-          }
-          value=""
-        />
-        <TextInput
-          onChangeText={[Function]}
-          placeholder="Location"
-          style={
-            {
-              "backgroundColor": "#FFF",
-              "borderRadius": 10,
-              "marginBottom": 10,
-              "overflow": "hidden",
-              "padding": 10,
-            }
-          }
-          value=""
-        />
-      </View>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": true,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={false}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "alignItems": "center",
-            "backgroundColor": "#ccc",
+            "backgroundColor": "#E8EAED",
+            "borderColor": "#852C3A",
             "borderRadius": 10,
-            "height": 50,
-            "justifyContent": "center",
-            "opacity": 1,
-            "width": 50,
+            "borderWidth": 2,
+            "height": 500,
+            "paddingHorizontal": 10,
+            "paddingVertical": 10,
           }
         }
       >
-        <Text
-          style={
-            {
-              "color": "#FFF",
-              "fontSize": 24,
-            }
-          }
-        >
-          +
-        </Text>
-      </View>
-    </View>
-  </View>
-</View>
-`;
-
-exports[`TasksScreen Component matches snapshot when there are tasks 1`] = `
-<View
-  style={
-    {
-      "backgroundColor": "#E8EAED",
-      "flex": 1,
-      "padding": 20,
-    }
-  }
->
-  <View
-    style={
-      {
-        "paddingTop": 80,
-      }
-    }
-  >
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "justifyContent": "space-between",
-          "paddingBottom": 20,
-        }
-      }
-    >
-      <Text
-        style={
-          {
-            "fontSize": 24,
-            "fontWeight": "bold",
-          }
-        }
-      >
-        Tasks
-      </Text>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "opacity": 1,
-          }
-        }
-      >
-        <ViewManagerAdapter_SymbolModule
-          animated={false}
-          colors={[]}
-          name="arrow.uturn.backward"
-          resizeMode="scaleAspectFit"
-          style={
-            [
+        <View>
+          <Text
+            style={
               {
-                "height": 24,
-                "width": 24,
-              },
-              [
-                {
-                  "height": 24,
-                  "width": 24,
-                },
-                undefined,
-              ],
-            ]
-          }
-          tintColor="#852C3A"
-          type="monochrome"
-          weight="regular"
-        />
-      </View>
-    </View>
-    <RCTScrollView
-      style={
-        {
-          "backgroundColor": "#E8EAED",
-          "borderColor": "#852C3A",
-          "borderRadius": 10,
-          "borderWidth": 2,
-          "height": 500,
-          "paddingHorizontal": 10,
-          "paddingVertical": 10,
-        }
-      }
-    >
-      <View>
-        <TaskCard
-          onDelete={[Function]}
-          text="Task 1"
-        />
-        <TaskCard
-          onDelete={[Function]}
-          text="Task 2"
-        />
-      </View>
-    </RCTScrollView>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flexDirection": "row",
-          "marginTop": 20,
-        }
-      }
-    >
-      <View
-        style={
-          {
-            "flex": 1,
-            "marginRight": 10,
-          }
-        }
-      >
-        <TextInput
-          onChangeText={[Function]}
-          placeholder="Task name"
-          style={
-            {
-              "backgroundColor": "#FFF",
-              "borderRadius": 10,
-              "marginBottom": 10,
-              "overflow": "hidden",
-              "padding": 10,
+                "color": "gray",
+                "marginTop": 20,
+                "textAlign": "center",
+              }
             }
-          }
-          value=""
-        />
-        <TextInput
-          onChangeText={[Function]}
-          placeholder="Location"
-          style={
-            {
-              "backgroundColor": "#FFF",
-              "borderRadius": 10,
-              "marginBottom": 10,
-              "overflow": "hidden",
-              "padding": 10,
-            }
-          }
-          value=""
-        />
-      </View>
+          >
+            No tasks yet.
+          </Text>
+        </View>
+      </RCTScrollView>
       <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": true,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={false}
-        onClick={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
         style={
           {
             "alignItems": "center",
-            "backgroundColor": "#ccc",
-            "borderRadius": 10,
-            "height": 50,
+            "flexDirection": "column",
             "justifyContent": "center",
-            "opacity": 1,
-            "width": 50,
+            "marginTop": 10,
           }
         }
       >
-        <Text
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
           style={
             {
-              "color": "#FFF",
-              "fontSize": 24,
+              "alignItems": "center",
+              "backgroundColor": "#852C3A",
+              "borderRadius": 10,
+              "height": 50,
+              "justifyContent": "center",
+              "marginBottom": 5,
+              "opacity": 1,
+              "width": 50,
             }
           }
         >
-          +
-        </Text>
+          <Text
+            style={
+              {
+                "color": "#FFF",
+                "fontSize": 24,
+              }
+            }
+          >
+            +
+          </Text>
+        </View>
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={false}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#852C3A",
+              "borderRadius": 10,
+              "height": 45,
+              "justifyContent": "center",
+              "opacity": 1,
+              "width": 250,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "#FFF",
+                "fontSize": 18,
+              }
+            }
+          >
+            Generate Path
+          </Text>
+        </View>
       </View>
     </View>
-  </View>
-</View>
+  </View>,
+]
 `;

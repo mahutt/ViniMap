@@ -35,8 +35,6 @@ export default function TasksScreen() {
     name: '',
     coordinates: [0, 0],
   });
-  const isButtonDisabled = !taskName.trim() || !taskLocation.trim();
-
   useEffect(() => {
     const savedTasks = storage.getString('all_tasks');
     if (savedTasks) {
