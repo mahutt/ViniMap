@@ -181,11 +181,11 @@ export const getStartEndLevels = (
   // If only the end feature spans a range of levels,
   // we provide a route to the end level closest to the start level
   else if (typeof endLevelOrRange === 'object') {
-    startLevel = startLevelOrRange as Level;
+    startLevel = startLevelOrRange;
     endLevel = getClosestLevel(startLevel, endLevelOrRange);
   } else {
-    startLevel = startLevelOrRange as Level;
-    endLevel = endLevelOrRange as Level;
+    startLevel = startLevelOrRange;
+    endLevel = endLevelOrRange;
   }
 
   return [startLevel, endLevel];
