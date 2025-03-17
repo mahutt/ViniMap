@@ -125,7 +125,7 @@ export default function MapView() {
               shape={{
                 type: 'Feature',
                 properties: {
-                  // level: segment.level,
+                  level: segment.level,
                 },
                 geometry: {
                   type: 'LineString',
@@ -141,15 +141,13 @@ export default function MapView() {
                   lineJoin: 'round',
                   lineDasharray: segment.type === 'dashed' ? [3, 3] : undefined,
                 }}
-                // filter={[
-                //   'any',
-                //   ['!', ['has', 'level']],
-                //   [
-                //     'all',
-                //     ['has', 'level'],
-                //     ['any', ['==', ['get', 'level'], (level ?? -100).toString()]],
-                //   ],
-                // ]}
+                filter={[
+                  'any',
+                  ['!', ['has', 'level']],
+                  level
+                    ? ['all', ['has', 'level'], ['any', ['==', ['get', 'level'], level]]]
+                    : false,
+                ]}
               />
             </Mapbox.ShapeSource>
           ))}
