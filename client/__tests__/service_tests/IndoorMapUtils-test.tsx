@@ -4,6 +4,7 @@ import {
   bboxCenter,
   getIndoorFeatureFromCoordinates,
   footwaysForLevel,
+  getClosestLevels,
 } from '@/modules/map/IndoorMapUtils';
 import GeojsonService from '@/services/GeojsonService';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
@@ -508,5 +509,33 @@ describe('footwaysForLevel', () => {
     const result = footwaysForLevel(mockIndoorMap, 1);
 
     expect(result).toHaveLength(3);
+  });
+});
+
+describe('getClosestLevels', () => {
+  test('returns the mins of both ranges when ranges match', () => {
+    const startRange = { min: 8, max: 10 };
+    const endRange = { min: 8, max: 10 };
+    expect(getClosestLevels(startRange, endRange)).toEqual([8, 8]);
+  });
+  test('returns the mins of both ranges when mins of ranges match', () => {
+    const startRange = { min: 8, max: 100 };
+    const endRange = { min: 8, max: 20 };
+    expect(getClosestLevels(startRange, endRange)).toEqual([8, 8]);
+  });
+  test('returns the lowest common level (twice) of both ranges when ranges overlap', () => {
+    const startRange = { min: 6, max: 50 };
+    const endRange = { min: 8, max: 60 };
+    expect(getClosestLevels(startRange, endRange)).toEqual([8, 8]);
+  });
+  test('returns the min and max of the start and end ranges, respectively, when the start range is above the end range', () => {
+    const startRange = { min: 20, max: 30 };
+    const endRange = { min: 0, max: 10 };
+    expect(getClosestLevels(startRange, endRange)).toEqual([20, 10]);
+  });
+  test('returns the max and min of the start and end ranges, respectively, when the start range is below the end range', () => {
+    const startRange = { min: 0, max: 10 };
+    const endRange = { min: 20, max: 30 };
+    expect(getClosestLevels(startRange, endRange)).toEqual([10, 20]);
   });
 });

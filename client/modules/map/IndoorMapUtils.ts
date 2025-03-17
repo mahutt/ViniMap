@@ -1,5 +1,12 @@
-import { Coordinates, ExpressionSpecification, Level, Location, IndoorMap } from './Types';
 import type { BBox, Feature, LineString, Polygon } from 'geojson';
+import {
+  Coordinates,
+  ExpressionSpecification,
+  Level,
+  Location,
+  IndoorMap,
+  LevelsRange,
+} from './Types';
 import GeojsonService from '@/services/GeojsonService';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
@@ -72,29 +79,6 @@ export function footwaysForLevel(indoorMap: IndoorMap, level: Level): Feature<Li
   return footwayFeatures as Feature<LineString>[];
 }
 
-export function elevatorForLevel(indoorMap: IndoorMap, level: Level): Location | null {
-  const elevatorFeature = indoorMap.geojson.features.filter(
-    (feature) =>
-      parseFloat(feature.properties?.level) === level && feature.properties?.highway === 'elevator'
-  )[0];
-
-  const coordinates = elevatorFeature.geometry?.coordinates as Coordinates;
-  const name = `elevator=${level}`;
-
-  return {
-    coordinates,
-    name,
-    data: {
-      address: indoorMap.id,
-      isOpen: false,
-      level: level,
-      indoorMap: indoorMap,
-      ref: elevatorFeature?.properties?.ref,
-      feature: elevatorFeature,
-    },
-  };
-}
-
 export function getIndoorFeatureFromCoordinates(
   indoorMap: IndoorMap,
   coordinates: Coordinates,
@@ -162,4 +146,103 @@ const getFallbackNameByAmenity = (amenity: string | null) => {
     return FALLBACK_NAME_BY_AMENITY[amenity as keyof typeof FALLBACK_NAME_BY_AMENITY];
   }
   return null;
+};
+
+// Given two features,
+// returns the closest and smallest levels between the two features.
+export const getStartEndLevels = (
+  startFeature: Feature,
+  endFeature: Feature
+): [Level, Level] | null => {
+  let startLevelOrRange = GeojsonService.extractLevelFromFeature(startFeature);
+  let endLevelOrRange = GeojsonService.extractLevelFromFeature(endFeature);
+
+  // If either the start or the end feature doesn't have a level,
+  // we can't find a route between them.
+  if (startLevelOrRange === null || endLevelOrRange === null) {
+    return null;
+  }
+
+  let startLevel: Level;
+  let endLevel: Level;
+
+  // If the start feature spans a range of levels
+  // and the end feature also spans a range of levels,
+  // we provide a route between the two "closest" levels (minimize up/down stairs)
+  if (typeof startLevelOrRange === 'object' && typeof endLevelOrRange === 'object') {
+    [startLevel, endLevel] = getClosestLevels(startLevelOrRange, endLevelOrRange);
+  }
+  // If only the start feature spans a range of levels,
+  // we provide a route from the start level closest to the end level
+  else if (typeof startLevelOrRange === 'object') {
+    endLevel = endLevelOrRange as Level;
+    startLevel = getClosestLevel(endLevel, startLevelOrRange);
+  }
+  // If only the end feature spans a range of levels,
+  // we provide a route to the end level closest to the start level
+  else if (typeof endLevelOrRange === 'object') {
+    startLevel = startLevelOrRange as Level;
+    endLevel = getClosestLevel(startLevel, endLevelOrRange);
+  } else {
+    startLevel = startLevelOrRange as Level;
+    endLevel = endLevelOrRange as Level;
+  }
+
+  return [startLevel, endLevel];
+};
+
+// Given two levels ranges,
+// returns one level from each range that are the closest to each other.
+export const getClosestLevels = (
+  levelsRange1: LevelsRange,
+  levelsRange2: LevelsRange
+): [Level, Level] => {
+  let level1: Level;
+  let level2: Level;
+
+  if (levelsRange1.min < levelsRange2.max && levelsRange1.max > levelsRange2.min) {
+    const smallestCommonLevel = Math.max(levelsRange1.min, levelsRange2.min);
+    level1 = smallestCommonLevel;
+    level2 = smallestCommonLevel;
+  } else {
+    level1 = levelsRange1.min > levelsRange2.max ? levelsRange1.min : levelsRange1.max;
+    level2 = levelsRange2.max < level1 ? levelsRange2.max : levelsRange2.min;
+  }
+  return [level1, level2];
+};
+
+// Given a level and a levels range,
+// returns the closest level from the range to the given level.
+export const getClosestLevel = (level: Level, levelsRange: LevelsRange): Level => {
+  if (level < levelsRange.min) {
+    return levelsRange.min;
+  } else if (level > levelsRange.max) {
+    return levelsRange.max;
+  } else {
+    return level;
+  }
+};
+
+// Returns an array of features that connect two levels of an indoor map.
+// Currently, only one connection is returned. We will eventually return multiple connections
+// to support more complex indoor maps.
+export const getConnectionsBetween = (
+  startLevel: Level,
+  endLevel: Level,
+  indoorMap: IndoorMap
+): Feature<Polygon>[] => {
+  let possibleConnections = indoorMap.geojson.features.filter(
+    (feature) => feature.properties?.stairs === 'yes' || feature.properties?.highway === 'elevator'
+  );
+  const usableConnections = possibleConnections.filter((feature) => {
+    if (feature.geometry.type !== 'Polygon') {
+      return false;
+    }
+    const level = GeojsonService.extractLevelFromFeature(feature);
+    if (level !== null && typeof level === 'object') {
+      return level.min <= startLevel && level.max >= endLevel;
+    }
+    return false;
+  });
+  return usableConnections.slice(0, 1) as Feature<Polygon>[];
 };
