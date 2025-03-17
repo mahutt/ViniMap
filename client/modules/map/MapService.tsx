@@ -1,7 +1,11 @@
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { Coordinates } from './MapContext';
-import { Location, Route } from './Types';
+import { IndoorMap, Level, Location, Route } from './Types';
 import { calculateEuclideanDistance } from './MapUtils';
+import { footwaysForLevel } from './IndoorMapUtils';
+import DijkstraService from '@/services/DijkstrasService';
+import type { Feature, Polygon, Position } from 'geojson';
+import GeojsonHelper from '@/services/GeojsonService';
 
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
@@ -10,6 +14,9 @@ const PROXIMITY_COORDINTATES = {
   longitude: -73.57791396549962, // Concordia SGW Campus Longitude
   latitude: 45.495102086770814, // Concordia SGW Campus  Latitude
 };
+
+const RADIUS_OF_EARTH = 6371000; // Radius of the earth in meters
+const AVERAGE_WALKING_SPEED = 1.39; // m/s
 
 const getLocations = async (locationQuery: string): Promise<Location[]> => {
   const response = await fetch(
@@ -31,14 +38,74 @@ const getLocations = async (locationQuery: string): Promise<Location[]> => {
 };
 
 const getRoute = async (
+  startLocation: Location,
+  endLocation: Location,
+  mode: string
+): Promise<Route | null> => {
+  if (
+    startLocation.data?.level &&
+    endLocation.data?.level &&
+    startLocation.data?.indoorMap &&
+    endLocation.data?.indoorMap &&
+    startLocation.data?.indoorMap?.id === endLocation.data?.indoorMap?.id
+  ) {
+    return getIndoorRoute(
+      startLocation.data.indoorMap,
+      startLocation.data.feature,
+      endLocation.data.feature,
+      startLocation.data.level
+    );
+  }
+
+  const startCoordinates = startLocation.coordinates;
+  const endCoordinates = endLocation.coordinates;
+  if (mode === 'shuttle') {
+    return getRouteForShuttle(startCoordinates, endCoordinates);
+  }
+  return getRouteFromMapbox(startCoordinates, endCoordinates, mode);
+};
+
+const getIndoorRoute = (
+  indoorMap: IndoorMap,
+  startFeature: Feature<Polygon>,
+  endFeature: Feature<Polygon>,
+  level: Level
+): Route | null => {
+  const footways = footwaysForLevel(indoorMap, level);
+  const startPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, startFeature);
+  const endPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, endFeature);
+  if (startPositionOptions.length === 0 || endPositionOptions.length === 0) {
+    return null;
+  }
+
+  const startPosition = startPositionOptions[0];
+  const endPosition = endPositionOptions[0];
+  const result = DijkstraService.findShortestPath(startPosition, endPosition, footways);
+  if (!result) {
+    return null;
+  }
+
+  const distance = getDistanceFromPositions(startPosition, endPosition);
+  const duration = distance / AVERAGE_WALKING_SPEED;
+
+  return {
+    duration,
+    distance,
+    segments: [
+      {
+        id: 'indoor-navigation-walk',
+        type: 'dashed',
+        steps: result as Coordinates[],
+      },
+    ],
+  };
+};
+
+const getRouteFromMapbox = async (
   startCoordinates: Coordinates,
   endCoordinates: Coordinates,
   mode: string
 ): Promise<Route | null> => {
-  if (mode === 'shuttle') {
-    return getRouteForShuttle(startCoordinates, endCoordinates);
-  }
-
   const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?alternatives=false&annotations=duration,distance&continue_straight=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_ACCESS_TOKEN}`;
   const response = await fetch(url);
   const data = await response.json();
@@ -134,9 +201,17 @@ const getRouteForShuttle = async (
     return null;
   }
 
-  const start_Walk_ShuttleStart = await getRoute(startCoordinates, startBusStop, 'walking');
-  const shuttleStart_Drive_shuttleEnd = await getRoute(startBusStop, endBusStop, 'driving');
-  const shuttleEnd_Walk_end = await getRoute(endBusStop, endCoordinates, 'walking');
+  const start_Walk_ShuttleStart = await getRouteFromMapbox(
+    startCoordinates,
+    startBusStop,
+    'walking'
+  );
+  const shuttleStart_Drive_shuttleEnd = await getRouteFromMapbox(
+    startBusStop,
+    endBusStop,
+    'driving'
+  );
+  const shuttleEnd_Walk_end = await getRouteFromMapbox(endBusStop, endCoordinates, 'walking');
 
   if (!start_Walk_ShuttleStart || !shuttleStart_Drive_shuttleEnd || !shuttleEnd_Walk_end) {
     return null;
@@ -204,6 +279,27 @@ const getRouteForShuttle = async (
       },
     ],
   };
+};
+
+// Simple solution to calculate distance between two (coordinate) points.
+// Works for short distances, which makes it ideal for indoor navigation.
+// Source: https://stackoverflow.com/a/27943
+export const getDistanceFromPositions = (position1: Position, position2: Position): number => {
+  const dLat = deg2rad(position2[1] - position1[1]); // deg2rad below
+  const dLon = deg2rad(position2[0] - position1[0]);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(position1[1])) *
+      Math.cos(deg2rad(position2[1])) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const d = RADIUS_OF_EARTH * c; // Distance in km
+  return d;
+};
+
+const deg2rad = (deg: number) => {
+  return deg * (Math.PI / 180);
 };
 
 const formatDuration = (seconds: number | null): string => {

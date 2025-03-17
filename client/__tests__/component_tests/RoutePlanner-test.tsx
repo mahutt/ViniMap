@@ -100,8 +100,8 @@ describe('RoutePlanner', () => {
     });
 
     expect(mockLoadRouteFromCoordinates).toHaveBeenCalledWith(
-      mockStartLocation.coordinates,
-      mockEndLocation.coordinates,
+      mockStartLocation,
+      mockEndLocation,
       'walking'
     );
   });
@@ -134,25 +134,9 @@ describe('RoutePlanner', () => {
     });
 
     expect(getRoute).toHaveBeenCalledTimes(4);
-    expect(getRoute).toHaveBeenCalledWith(
-      mockStartLocation.coordinates,
-      mockEndLocation.coordinates,
-      'walking'
-    );
-    expect(getRoute).toHaveBeenCalledWith(
-      mockStartLocation.coordinates,
-      mockEndLocation.coordinates,
-      'cycling'
-    );
-    expect(getRoute).toHaveBeenCalledWith(
-      mockStartLocation.coordinates,
-      mockEndLocation.coordinates,
-      'driving'
-    );
-    expect(getRoute).toHaveBeenCalledWith(
-      mockStartLocation.coordinates,
-      mockEndLocation.coordinates,
-      'shuttle'
-    );
+    expect(getRoute).toHaveBeenCalledWith(mockStartLocation, mockEndLocation, 'walking');
+    expect(getRoute).toHaveBeenCalledWith(mockStartLocation, mockEndLocation, 'cycling');
+    expect(getRoute).toHaveBeenCalledWith(mockStartLocation, mockEndLocation, 'driving');
+    expect(getRoute).toHaveBeenCalledWith(mockStartLocation, mockEndLocation, 'shuttle');
   });
 });

@@ -1,5 +1,5 @@
 import { Coordinates, ExpressionSpecification, Level, Location, IndoorMap } from './Types';
-import type { BBox } from 'geojson';
+import type { BBox, Feature, LineString } from 'geojson';
 import GeojsonService from '@/services/GeojsonService';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
@@ -62,6 +62,16 @@ export function bboxCenter(bbox: BBox): Coordinates {
   return [(west + east) / 2, (south + north) / 2];
 }
 
+export function footwaysForLevel(indoorMap: IndoorMap, level: Level): Feature<LineString>[] {
+  const footwayFeatures = indoorMap.geojson.features.filter(
+    (feature) =>
+      parseFloat(feature.properties?.level) === level &&
+      feature.properties?.highway === 'footway' &&
+      feature.geometry.type === 'LineString'
+  );
+  return footwayFeatures as Feature<LineString>[];
+}
+
 export function getIndoorFeatureFromCoordinates(
   indoorMap: IndoorMap,
   coordinates: Coordinates,
@@ -98,7 +108,14 @@ export function getIndoorFeatureFromCoordinates(
       return {
         coordinates,
         name,
-        data: { address: indoorMap.id, isOpen: false },
+        data: {
+          address: indoorMap.id,
+          isOpen: false,
+          level: featureLevel,
+          indoorMap: indoorMap,
+          ref: feature?.properties?.ref,
+          feature,
+        },
       };
     }
   }

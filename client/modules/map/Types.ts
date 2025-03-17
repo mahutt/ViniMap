@@ -1,4 +1,4 @@
-import type { BBox, FeatureCollection, Geometry } from 'geojson';
+import type { BBox, FeatureCollection, LineString, Point, Polygon, Position } from 'geojson';
 import {
   FillLayerStyleProps,
   LineLayerStyleProps,
@@ -9,7 +9,7 @@ import {
     Internal representation of a pair of coordinates.
     Coordinates: [longitude, latitude]
 */
-export type Coordinates = [number, number];
+export type Coordinates = Position;
 
 export interface Segment {
   id: string;
@@ -17,6 +17,12 @@ export interface Segment {
   steps: Coordinates[];
 }
 
+/**
+ * Internal representation of a route.
+ * duration: Duration in seconds.
+ * distance: Distance in meters.
+ * segments: List of segments that compose the route.
+ */
 export interface Route {
   duration: number;
   distance: number;
@@ -33,7 +39,7 @@ export interface LayerSpecification {
 
 export type ExpressionSpecification = any; // Meant to reference a type from MapLibre spec (see map-gl-indoor)
 export type Level = number;
-export type IndoorMapGeoJSON = FeatureCollection<Geometry>;
+export type IndoorMapGeoJSON = FeatureCollection<Point | LineString | Polygon>;
 export type LevelsRange = {
   min: Level;
   max: Level;

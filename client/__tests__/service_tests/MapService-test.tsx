@@ -3,6 +3,7 @@ import {
   getLocations,
   getRoute,
   fetchLocationData,
+  getDistanceFromPositions,
 } from '@/modules/map/MapService';
 import fetchMock from 'jest-fetch-mock';
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
@@ -222,7 +223,14 @@ describe('getLocations', () => {
 
       fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
-      const result = await getRoute([-73.57, 45.49], [-73.59, 45.51], 'cycling');
+      const result = await getRoute(
+        {
+          coordinates: [-73.57, 45.49],
+          name: null,
+        },
+        { name: null, coordinates: [-73.59, 45.51] },
+        'cycling'
+      );
 
       expect(fetchMock).toHaveBeenCalledWith(expect.stringContaining('mapbox/cycling'));
 
@@ -248,7 +256,11 @@ describe('getLocations', () => {
 
       fetchMock.mockResponseOnce(JSON.stringify(mockResponse));
 
-      const result = await getRoute([-73.57, 45.49], [-73.59, 45.51], 'walking');
+      const result = await getRoute(
+        { name: null, coordinates: [-73.57, 45.49] },
+        { name: null, coordinates: [-73.59, 45.51] },
+        'walking'
+      );
       expect(result).toBeTruthy();
       if (result) {
         expect(result.segments[0].steps).toEqual([]);
@@ -258,7 +270,11 @@ describe('getLocations', () => {
     it('should include correct query parameters in API request', async () => {
       fetchMock.mockResponseOnce(JSON.stringify({ routes: [] }));
 
-      await getRoute([-73.57, 45.49], [-73.59, 45.51], 'walking');
+      await getRoute(
+        { name: null, coordinates: [-73.57, 45.49] },
+        { name: null, coordinates: [-73.59, 45.51] },
+        'walking'
+      );
 
       const callUrl = fetchMock.mock.calls[0][0];
       expect(callUrl).toContain('alternatives=false');
@@ -415,8 +431,11 @@ describe('getLocations', () => {
           ],
         })
       );
-
-      const result = await getRoute([-73.578, 45.497], [-73.639, 45.457], 'shuttle');
+      const result = await getRoute(
+        { name: null, coordinates: [-73.578, 45.497] },
+        { name: null, coordinates: [-73.639, 45.457] },
+        'shuttle'
+      );
 
       expect(fetchMock.mock.calls.length).toBe(3);
 
@@ -482,7 +501,11 @@ describe('getLocations', () => {
       })
     );
 
-    await getRoute([-73.578, 45.497], [-73.639, 45.457], 'shuttle');
+    await getRoute(
+      { name: null, coordinates: [-73.578, 45.497] },
+      { name: null, coordinates: [-73.639, 45.457] },
+      'shuttle'
+    );
 
     expect(ShuttleCalculatorService.getNextDepartureTime).toHaveBeenCalledWith(
       'Friday',
@@ -532,8 +555,20 @@ describe('getLocations', () => {
       })
     );
 
-    const result = await getRoute([-73.578, 45.497], [-73.639, 45.457], 'shuttle');
+    const result = await getRoute(
+      { name: null, coordinates: [-73.578, 45.497] },
+      { name: null, coordinates: [-73.639, 45.457] },
+      'shuttle'
+    );
 
     expect(result).toBeNull();
+  });
+
+  it('calculates the correct distance between two locations', () => {
+    const position1 = [-73.9857, 40.7488]; // NYC
+    const position2 = [-0.1276, 51.5074]; // London
+    const distance = getDistanceFromPositions(position1, position2);
+    expect(distance).toBeGreaterThan(5500000);
+    expect(distance).toBeLessThan(6000000); // NYC-London ~5570 km
   });
 });

@@ -1,21 +1,22 @@
 import { IndoorMap, IndoorMapGeoJSON } from './Types';
 import LocalLocations from '@/services/LocalLocations';
-import { bboxCenter } from './IndoorMapUtils';
 
 import hallFloorsGeoJson from '@/assets/geojson/hallFloors.json';
 import jmsbFloors from '@/assets/geojson/jmsbFloors.json';
 import VLandVEfloors from '@/assets/geojson/VLandVEfloors.json';
 
 import GeojsonService from '@/services/GeojsonService';
+import type { Feature, Polygon } from 'geojson';
+import { center } from '@turf/turf';
 
-const getAllRoomRefs = (geojson: IndoorMapGeoJSON): string[] => {
-  const roomRefs: string[] = [];
+const getAllRooms = (geojson: IndoorMapGeoJSON): Feature<Polygon>[] => {
+  const rooms: Feature<Polygon>[] = [];
   geojson.features.forEach((feature) => {
     if (feature.properties?.ref) {
-      roomRefs.push(feature.properties.ref);
+      rooms.push(feature as Feature<Polygon>);
     }
   });
-  return roomRefs;
+  return rooms;
 };
 
 const rawIndoorMaps = [
@@ -43,16 +44,26 @@ const indoorMaps: IndoorMap[] = rawIndoorMaps.map((rawIndoorMap) => {
     geojson: rawIndoorMap.geojson as IndoorMapGeoJSON,
     levelsRange: levelsRange,
   };
-  const rooms = getAllRoomRefs(indoorMap.geojson);
-  LocalLocations.getInstance().addAll(rooms, (name: string) => {
-    return {
-      name,
-      coordinates: bboxCenter(indoorMap.bounds),
-      data: {
-        address: indoorMap.id,
-      },
-    };
-  });
+  const rooms = getAllRooms(indoorMap.geojson);
+  for (const room of rooms) {
+    const roomRef = room.properties?.ref;
+    if (typeof roomRef !== 'string') {
+      continue;
+    }
+    LocalLocations.getInstance().add(roomRef, (name: string) => {
+      return {
+        name,
+        coordinates: center(room).geometry.coordinates,
+        data: {
+          address: indoorMap.id,
+          level: parseFloat(room.properties?.level),
+          indoorMap: indoorMap,
+          ref: roomRef,
+          feature: room,
+        },
+      };
+    });
+  }
   return indoorMap;
 });
 

@@ -4,8 +4,9 @@
 
 import bbox from '@turf/bbox';
 
-import type { BBox, Feature } from 'geojson';
+import type { BBox, Feature, LineString, Polygon, Position } from 'geojson';
 import type { LevelsRange, IndoorMapGeoJSON } from '@/modules/map/Types';
+import * as turf from '@turf/turf';
 
 /**
  * Helper for Geojson data
@@ -87,6 +88,22 @@ class GeojsonService {
       levelsRange: { min: minLevel, max: maxLevel },
       bounds,
     };
+  }
+
+  static findLinesPolygonIntersect(
+    lines: Feature<LineString>[],
+    polygon: Feature<Polygon>
+  ): Position[] {
+    const polygonBoundary = turf.lineString(turf.getCoords(polygon)[0]);
+    const intersectionPoints: Position[] = [];
+    lines.forEach((line) => {
+      const intersections = turf.lineIntersect(line.geometry, polygonBoundary);
+      const intersectionPoint = intersections.features.map(
+        (feature) => feature.geometry.coordinates
+      );
+      intersectionPoints.push(...intersectionPoint);
+    });
+    return intersectionPoints;
   }
 }
 export default GeojsonService;

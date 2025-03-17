@@ -43,6 +43,8 @@
     "@react-navigation/native": "^7.0.14",
     "@rnmapbox/maps": "^10.1.33",
     "@turf/boolean-point-in-polygon": "^7.2.0",
+    "@turf/helpers": "^7.2.0",
+    "@turf/turf": "^7.2.0",
     "expo": "~52.0.25",
     "expo-auth-session": "^6.0.3",
     "expo-blur": "~14.0.2",
