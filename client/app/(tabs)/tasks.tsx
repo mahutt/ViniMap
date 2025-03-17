@@ -1,11 +1,13 @@
 import TaskCard from '@/components/TaskCard';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 import { Task } from '@/modules/map/Types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useTask } from '@/providers/TodoListContext';
+import { MMKV } from 'react-native-mmkv';
+import { storage } from '@/services/StorageService';
 
 export default function TasksScreen() {
   const { selectedTasks, setSelectedTasks } = useTask();
@@ -18,6 +20,17 @@ export default function TasksScreen() {
   const [taskLocation, setTaskLocation] = useState('');
 
   const isButtonDisabled = !taskName.trim() || !taskLocation.trim();
+
+  useEffect(() => {
+    const savedTasks = storage.getString('all_tasks');
+    if (savedTasks) {
+      setTasks(JSON.parse(savedTasks));
+    }
+  }, []);
+
+  useEffect(() => {
+    storage.set('all_tasks', JSON.stringify(tasks));
+  }, [tasks]);
 
   const addTask = () => {
     if (!taskName.trim() || !taskLocation.trim()) return;
