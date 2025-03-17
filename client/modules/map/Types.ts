@@ -15,6 +15,7 @@ export interface Segment {
   id: string;
   type: 'solid' | 'dashed';
   steps: Coordinates[];
+  level?: Level;
 }
 
 /**

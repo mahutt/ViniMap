@@ -98,6 +98,7 @@ const getIndoorRoute = (
           id: `indoor-navigation-walk-${Date.now()}`,
           type: 'dashed',
           steps: result as Coordinates[],
+          level: startLevel,
         },
       ],
     };
