@@ -1,0 +1,11 @@
+appId: com.anonymous.client
+---
+- tapOn: 'Tasks, tab, 3 of 4'
+- tapOn: 'Task name'
+- inputText: 'test'
+- pressKey: 'enter'
+- tapOn: 'Location'
+- inputText: 'test'
+- pressKey: 'enter'
+- tapOn: '+'
+- assertVisible: 'Tasks'
