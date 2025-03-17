@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 import { TaskProvider } from '@/providers/TodoListContext'; // Import TaskProvider
 import TasksScreen from '@/app/(tabs)/tasks';
 
