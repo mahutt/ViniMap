@@ -4,15 +4,16 @@ import {
   bboxCenter,
   getIndoorFeatureFromCoordinates,
   footwaysForLevel,
+  getStartEndLevels,
   getClosestLevels,
+  getConnectionsBetween,
 } from '@/modules/map/IndoorMapUtils';
-import GeojsonService from '@/services/GeojsonService';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { IndoorMap } from '../../modules/map/Types';
+import type { Feature, LineString, Polygon } from 'geojson';
 
 // Mock dependencies
 jest.mock('@turf/boolean-point-in-polygon');
-jest.mock('@/services/GeojsonService');
 
 describe('overlap', () => {
   test('returns false when one rectangle is to the left of the other', () => {
@@ -125,11 +126,6 @@ describe('getIndoorFeatureFromCoordinates', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
-    // Setup default mock implementations
-    (GeojsonService.extractLevelFromFeature as jest.Mock).mockImplementation((feature) => {
-      return feature.properties?.level !== undefined ? feature.properties.level : null;
-    });
-
     (booleanPointInPolygon as jest.Mock).mockImplementation(() => false);
   });
 
@@ -193,8 +189,6 @@ describe('getIndoorFeatureFromCoordinates', () => {
       },
     ];
 
-    (GeojsonService.extractLevelFromFeature as jest.Mock).mockReturnValue({ min: 1, max: 3 });
-
     const result = getIndoorFeatureFromCoordinates(indoorMap, [50, 50], 4);
     expect(result).toBeNull();
   });
@@ -218,7 +212,7 @@ describe('getIndoorFeatureFromCoordinates', () => {
     indoorMap.geojson.features = [
       {
         type: 'Feature',
-        properties: { level: 1, ref: 'Room 101' },
+        properties: { level: '1', ref: 'Room 101' },
         geometry: { type: 'Polygon', coordinates: [[]] },
       },
     ];
@@ -246,7 +240,7 @@ describe('getIndoorFeatureFromCoordinates', () => {
     indoorMap.geojson.features = [
       {
         type: 'Feature',
-        properties: { level: 1 },
+        properties: { level: '1' },
         geometry: { type: 'Polygon', coordinates: [[]] },
       },
     ];
@@ -278,7 +272,6 @@ describe('getIndoorFeatureFromCoordinates', () => {
       },
     ];
 
-    (GeojsonService.extractLevelFromFeature as jest.Mock).mockReturnValue({ min: 1, max: 3 });
     (booleanPointInPolygon as jest.Mock).mockReturnValue(true);
 
     const result = getIndoorFeatureFromCoordinates(indoorMap, [50, 50], 2);
@@ -305,12 +298,12 @@ describe('getIndoorFeatureFromCoordinates', () => {
     indoorMap.geojson.features = [
       {
         type: 'Feature',
-        properties: { level: 1, ref: 'Room 101' },
+        properties: { level: '1', ref: 'Room 101' },
         geometry: { type: 'Polygon', coordinates: [[]] },
       },
       {
         type: 'Feature',
-        properties: { level: 1, ref: 'Room 102' },
+        properties: { level: '1', ref: 'Room 102' },
         geometry: { type: 'Polygon', coordinates: [[]] },
       },
     ];
@@ -537,5 +530,207 @@ describe('getClosestLevels', () => {
     const startRange = { min: 0, max: 10 };
     const endRange = { min: 20, max: 30 };
     expect(getClosestLevels(startRange, endRange)).toEqual([10, 20]);
+  });
+});
+
+describe('getStartEndLevels', () => {
+  test("returns null when passed features don't have level properties", () => {
+    const startFeature: Feature = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'Point',
+        coordinates: [0, 0],
+      },
+    };
+    const endFeature: Feature = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'Point',
+        coordinates: [0, 0],
+      },
+    };
+    expect(getStartEndLevels(startFeature, endFeature)).toEqual(null);
+  });
+
+  test('returns the closest level of a start multi-level start feature to a single-level end feature', () => {
+    const startFeature: Feature = {
+      type: 'Feature',
+      properties: {
+        level: '1;3',
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [0, 0],
+      },
+    };
+    const endFeature: Feature = {
+      type: 'Feature',
+      properties: {
+        level: '2',
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [0, 0],
+      },
+    };
+    expect(getStartEndLevels(startFeature, endFeature)).toEqual([2, 2]);
+  });
+
+  test('returns the closest level of a start multi-level end feature to a single-level start feature', () => {
+    const startFeature: Feature = {
+      type: 'Feature',
+      properties: {
+        level: '2',
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [0, 0],
+      },
+    };
+    const endFeature: Feature = {
+      type: 'Feature',
+      properties: {
+        level: '4;5',
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [0, 0],
+      },
+    };
+    expect(getStartEndLevels(startFeature, endFeature)).toEqual([2, 4]);
+  });
+
+  test('returns the closest level of a start multi-level end feature to a single-level start feature', () => {
+    const startFeature: Feature = {
+      type: 'Feature',
+      properties: {
+        level: '2',
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [0, 0],
+      },
+    };
+    const endFeature: Feature = {
+      type: 'Feature',
+      properties: {
+        level: '2',
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [0, 0],
+      },
+    };
+    expect(getStartEndLevels(startFeature, endFeature)).toEqual([2, 2]);
+  });
+});
+
+describe('getConnectionsBetween', () => {
+  // Mock data
+  const createMockFeature = (props: any): Feature<Polygon | LineString> => ({
+    type: 'Feature',
+    properties: props,
+    geometry: {
+      type: 'Polygon',
+      coordinates: [[[0, 0]]],
+    },
+  });
+
+  const mockLevel1 = 1;
+  const mockLevel2 = 2;
+  const mockLevel3 = 3;
+
+  const mockStairFeature = createMockFeature({ stairs: 'yes', level: '1;3' });
+  const mockElevatorFeature = createMockFeature({ highway: 'elevator', level: '1;2' });
+  const mockInvalidTypeFeature = createMockFeature({ stairs: 'yes', level: '1;3' });
+  const mockOutOfRangeFeature = createMockFeature({ stairs: 'yes', level: '2;3' });
+  const mockNullLevelFeature = createMockFeature({ stairs: 'yes', level: null });
+  const mockNumberLevelFeature = createMockFeature({ stairs: 'yes', level: '1' });
+
+  const mockIndoorMap: IndoorMap = {
+    id: 'test-map',
+    bounds: [0, 0, 1, 1] as [number, number, number, number],
+    geojson: {
+      type: 'FeatureCollection',
+      features: [
+        mockStairFeature,
+        mockElevatorFeature,
+        mockInvalidTypeFeature,
+        mockOutOfRangeFeature,
+        mockNullLevelFeature,
+        mockNumberLevelFeature,
+      ],
+    },
+    levelsRange: { min: 1, max: 3 },
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should return stairs or elevator features that connect the specified levels', () => {
+    const result = getConnectionsBetween(mockLevel1, mockLevel2, mockIndoorMap);
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toBe(mockStairFeature);
+  });
+
+  it('should filter out features that do not have Polygon geometry', () => {
+    const result = getConnectionsBetween(mockLevel1, mockLevel2, mockIndoorMap);
+
+    expect(result).not.toContain(mockInvalidTypeFeature);
+  });
+
+  it('should filter out features with level range not covering both start and end levels', () => {
+    const result = getConnectionsBetween(mockLevel1, mockLevel3, mockIndoorMap);
+
+    expect(result).not.toContain(mockElevatorFeature);
+    expect(result).toContain(mockStairFeature);
+  });
+
+  it('should filter out features with null level', () => {
+    const result = getConnectionsBetween(mockLevel1, mockLevel2, mockIndoorMap);
+
+    expect(result).not.toContain(mockNullLevelFeature);
+  });
+
+  it('should filter out features with non-object level', () => {
+    const result = getConnectionsBetween(mockLevel1, mockLevel2, mockIndoorMap);
+
+    expect(result).not.toContain(mockNumberLevelFeature);
+  });
+
+  it('should return an empty array when no valid connections exist', () => {
+    // Mock an indoor map with no valid connections
+    const emptyMap: IndoorMap = {
+      ...mockIndoorMap,
+      geojson: { type: 'FeatureCollection', features: [] },
+    };
+
+    const result = getConnectionsBetween(mockLevel1, mockLevel2, emptyMap);
+
+    expect(result).toEqual([]);
+  });
+
+  it('should only return the first valid connection found', () => {
+    // Create an indoor map with multiple valid connections
+    const multipleConnectionsMap: IndoorMap = {
+      ...mockIndoorMap,
+      geojson: {
+        type: 'FeatureCollection',
+        features: [
+          mockStairFeature,
+          createMockFeature({ stairs: 'yes', level: '1;3' }),
+          createMockFeature({ highway: 'elevator', level: '1;3' }),
+        ],
+      },
+    };
+
+    const result = getConnectionsBetween(mockLevel1, mockLevel2, multipleConnectionsMap);
+
+    expect(result).toHaveLength(1);
+    expect(result[0]).toBe(mockStairFeature);
   });
 });
