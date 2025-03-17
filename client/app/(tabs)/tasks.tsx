@@ -5,8 +5,11 @@ import { Task } from '@/modules/map/Types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
+import { useTask } from '@/providers/TodoListContext';
 
 export default function TasksScreen() {
+  const { selectedTasks, setSelectedTasks } = useTask();
+
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
 
@@ -45,6 +48,19 @@ export default function TasksScreen() {
     setTasks([...taskList.current.getTasks()]);
   };
 
+  const toggleTaskSelection = (task: Task) => {
+    let updatedTasks: Task[];
+
+    const isSelected = selectedTasks.some((t) => t.id === task.id);
+
+    if (isSelected) {
+      updatedTasks = selectedTasks.filter((t) => t.id !== task.id);
+    } else {
+      updatedTasks = selectedTasks.concat(task);
+    }
+    setSelectedTasks(updatedTasks);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
@@ -60,7 +76,13 @@ export default function TasksScreen() {
             <Text style={styles.noTasksText}>No tasks yet.</Text>
           ) : (
             tasks.map((task) => (
-              <TaskCard key={task.id} text={task.text} onDelete={() => deleteTask(task.id)} />
+              <TaskCard
+                key={task.id}
+                text={task.text}
+                selected={selectedTasks.some((t) => t.id === task.id)}
+                onDelete={() => deleteTask(task.id)}
+                onSelect={() => toggleTaskSelection(task)}
+              />
             ))
           )}
         </ScrollView>

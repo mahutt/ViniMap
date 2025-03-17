@@ -4,20 +4,24 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 
 interface TaskCardProps {
   text: string;
+  selected: boolean;
   onDelete: () => void;
+  onSelect: () => void;
 }
 
-const TaskCard = ({ text, onDelete }: TaskCardProps) => {
+const TaskCard = ({ text, selected, onDelete, onSelect }: TaskCardProps) => {
   return (
-    <View style={styles.item}>
-      <View style={styles.itemLeft}>
-        <View style={styles.square}></View>
-        <Text style={styles.itemText}>{text}</Text>
+    <TouchableOpacity onPress={onSelect} activeOpacity={0.7}>
+      <View style={styles.item}>
+        <View style={styles.itemLeft}>
+          <View style={[styles.square, selected && styles.selectedSquare]} />
+          <Text style={styles.itemText}>{text}</Text>
+        </View>
+        <TouchableOpacity style={styles.circular} onPress={onDelete}>
+          <IconSymbol name="xmark" size={14} color="white" />
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.circular} onPress={onDelete}>
-        <IconSymbol name="xmark" size={14} color="white" />
-      </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -41,12 +45,17 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     backgroundColor: '#852C3A',
-    opacity: 0.4,
     borderRadius: 5,
     marginRight: 15,
+    opacity: 0.4,
+  },
+  selectedSquare: {
+    backgroundColor: '#852C3A',
+    opacity: 1,
   },
   itemText: {
     maxWidth: '80%',
+    color: '#000',
   },
   circular: {
     width: 20,
