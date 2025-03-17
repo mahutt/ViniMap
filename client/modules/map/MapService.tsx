@@ -1,8 +1,8 @@
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { Coordinates } from './MapContext';
-import { IndoorMap, Level, Location, Route } from './Types';
+import { IndoorMap, Location, Route, Segment } from './Types';
 import { calculateEuclideanDistance } from './MapUtils';
-import { footwaysForLevel, elevatorForLevel } from './IndoorMapUtils';
+import { footwaysForLevel, getConnectionsBetween, getStartEndLevels } from './IndoorMapUtils';
 import DijkstraService from '@/services/DijkstrasService';
 import type { Feature, Polygon, Position } from 'geojson';
 import GeojsonHelper from '@/services/GeojsonService';
@@ -52,9 +52,7 @@ const getRoute = async (
     return getIndoorRoute(
       startLocation.data.indoorMap,
       startLocation.data.feature,
-      endLocation.data.feature,
-      startLocation.data.level,
-      endLocation.data.level
+      endLocation.data.feature
     );
   }
 
@@ -69,84 +67,74 @@ const getRoute = async (
 const getIndoorRoute = (
   indoorMap: IndoorMap,
   startFeature: Feature<Polygon>,
-  endFeature: Feature<Polygon>,
-  startLevel: Level,
-  endLevel: Level
+  endFeature: Feature<Polygon>
 ): Route | null => {
-  if (startLevel == endLevel) {
-    const footways = footwaysForLevel(indoorMap, startLevel);
-    const startPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, startFeature);
-    const endPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, endFeature);
+  // Obtain the levels of the start and end features
+  const startEndLevels = getStartEndLevels(startFeature, endFeature);
+  if (!startEndLevels) {
+    return null;
+  }
+  const [startLevel, endLevel] = startEndLevels;
+
+  // stops is an array of features that the route will pass through,
+  // which is only necessary if the start and end levels are different.
+  // Intermediate stops are necessarily connections between levels.
+  let stops: Feature<Polygon>[] = [];
+  if (startLevel === endLevel) {
+    stops = [startFeature, endFeature];
+  } else {
+    const connections = getConnectionsBetween(startLevel, endLevel, indoorMap);
+    if (connections.length === 0) {
+      return null;
+    }
+    stops = [startFeature, ...connections, endFeature];
+  }
+
+  let distance = 0;
+  const segments: Segment[] = [];
+  for (let i = 0; i < stops.length - 1; i++) {
+    const start = stops[i];
+    const end = stops[i + 1];
+    const segmentLevels = getStartEndLevels(start, end);
+    if (!segmentLevels) {
+      return null;
+    }
+    const [segmentStartLevel, segmentEndLevel] = segmentLevels;
+
+    // Based on how stops is constructed,
+    // the start and end levels of each segment should be the same
+    if (segmentStartLevel !== segmentEndLevel) {
+      return null;
+    }
+
+    const footways = footwaysForLevel(indoorMap, segmentStartLevel);
+    const startPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, start);
+    const endPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, end);
     if (startPositionOptions.length === 0 || endPositionOptions.length === 0) {
       return null;
     }
 
     const startPosition = startPositionOptions[0];
     const endPosition = endPositionOptions[0];
-    const result = DijkstraService.findShortestPath(startPosition, endPosition, footways);
-    if (!result) {
+    const steps = DijkstraService.findShortestPath(startPosition, endPosition, footways);
+    if (!steps) {
       return null;
     }
 
-    const distance = getDistanceFromPositions(startPosition, endPosition);
-    const duration = distance / AVERAGE_WALKING_SPEED;
-    return {
-      duration,
-      distance,
-      segments: [
-        {
-          id: `indoor-navigation-walk-${Date.now()}`,
-          type: 'dashed',
-          steps: result as Coordinates[],
-          level: startLevel,
-        },
-      ],
-    };
-  } else {
-    //current floor class to eleveator
-    const route1EndLocation = elevatorForLevel(indoorMap, startLevel);
-
-    console.log('Elevator 1' + JSON.stringify(route1EndLocation?.data.feature));
-
-    const route1 = getIndoorRoute(
-      indoorMap,
-      startFeature,
-      route1EndLocation?.data.feature,
-      startLevel,
-      startLevel
-    );
-
-    //dest floor elevator start location
-    const route2StartLocation = elevatorForLevel(indoorMap, endLevel);
-    console.log('Elevator 2' + JSON.stringify(route2StartLocation?.data.feature));
-
-    const route2 = getIndoorRoute(
-      indoorMap,
-      route2StartLocation?.data.feature,
-      endFeature,
-      endLevel,
-      endLevel
-    );
-
-    if (route1) {
-      console.log('Route 1 happy');
-    }
-    if (route2) {
-      console.log('Route 2 Happy');
-    }
-    if (!route1 || !route2) {
-      console.log('ONE OF THEM FAILED');
-      return null;
-    }
-
-    const finalRoute: Route = {
-      duration: route1.duration + route2.duration,
-      distance: route1.distance + route2.distance,
-      segments: route1.segments.concat(route2.segments),
-    };
-
-    return finalRoute;
+    distance += getDistanceFromPositions(startPosition, endPosition);
+    segments.push({
+      id: `indoor-navigation-walk-${i}`,
+      type: 'dashed',
+      steps: steps as Coordinates[],
+      level: segmentStartLevel,
+    });
   }
+
+  return {
+    duration: distance / AVERAGE_WALKING_SPEED,
+    distance,
+    segments,
+  };
 };
 
 const getRouteFromMapbox = async (
