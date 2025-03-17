@@ -2,7 +2,7 @@ import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { Coordinates } from './MapContext';
 import { IndoorMap, Level, Location, Route } from './Types';
 import { calculateEuclideanDistance } from './MapUtils';
-import { footwaysForLevel } from './IndoorMapUtils';
+import { footwaysForLevel, elevatorForLevel } from './IndoorMapUtils';
 import DijkstraService from '@/services/DijkstrasService';
 import type { Feature, Polygon, Position } from 'geojson';
 import GeojsonHelper from '@/services/GeojsonService';
@@ -53,7 +53,8 @@ const getRoute = async (
       startLocation.data.indoorMap,
       startLocation.data.feature,
       endLocation.data.feature,
-      startLocation.data.level
+      startLocation.data.level,
+      endLocation.data.level
     );
   }
 
@@ -69,36 +70,82 @@ const getIndoorRoute = (
   indoorMap: IndoorMap,
   startFeature: Feature<Polygon>,
   endFeature: Feature<Polygon>,
-  level: Level
+  startLevel: Level,
+  endLevel: Level
 ): Route | null => {
-  const footways = footwaysForLevel(indoorMap, level);
-  const startPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, startFeature);
-  const endPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, endFeature);
-  if (startPositionOptions.length === 0 || endPositionOptions.length === 0) {
-    return null;
+  if (startLevel == endLevel) {
+    const footways = footwaysForLevel(indoorMap, startLevel);
+    const startPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, startFeature);
+    const endPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, endFeature);
+    if (startPositionOptions.length === 0 || endPositionOptions.length === 0) {
+      return null;
+    }
+
+    const startPosition = startPositionOptions[0];
+    const endPosition = endPositionOptions[0];
+    const result = DijkstraService.findShortestPath(startPosition, endPosition, footways);
+    if (!result) {
+      return null;
+    }
+
+    const distance = getDistanceFromPositions(startPosition, endPosition);
+    const duration = distance / AVERAGE_WALKING_SPEED;
+    return {
+      duration,
+      distance,
+      segments: [
+        {
+          id: `indoor-navigation-walk-${Date.now()}`,
+          type: 'dashed',
+          steps: result as Coordinates[],
+        },
+      ],
+    };
+  } else {
+    //current floor class to eleveator
+    const route1EndLocation = elevatorForLevel(indoorMap, startLevel);
+
+    console.log('Elevator 1' + JSON.stringify(route1EndLocation?.data.feature));
+
+    const route1 = getIndoorRoute(
+      indoorMap,
+      startFeature,
+      route1EndLocation?.data.feature,
+      startLevel,
+      startLevel
+    );
+
+    //dest floor elevator start location
+    const route2StartLocation = elevatorForLevel(indoorMap, endLevel);
+    console.log('Elevator 2' + JSON.stringify(route2StartLocation?.data.feature));
+
+    const route2 = getIndoorRoute(
+      indoorMap,
+      route2StartLocation?.data.feature,
+      endFeature,
+      endLevel,
+      endLevel
+    );
+
+    if (route1) {
+      console.log('Route 1 happy');
+    }
+    if (route2) {
+      console.log('Route 2 Happy');
+    }
+    if (!route1 || !route2) {
+      console.log('ONE OF THEM FAILED');
+      return null;
+    }
+
+    const finalRoute: Route = {
+      duration: route1.duration + route2.duration,
+      distance: route1.distance + route2.distance,
+      segments: route1.segments.concat(route2.segments),
+    };
+
+    return finalRoute;
   }
-
-  const startPosition = startPositionOptions[0];
-  const endPosition = endPositionOptions[0];
-  const result = DijkstraService.findShortestPath(startPosition, endPosition, footways);
-  if (!result) {
-    return null;
-  }
-
-  const distance = getDistanceFromPositions(startPosition, endPosition);
-  const duration = distance / AVERAGE_WALKING_SPEED;
-
-  return {
-    duration,
-    distance,
-    segments: [
-      {
-        id: 'indoor-navigation-walk',
-        type: 'dashed',
-        steps: result as Coordinates[],
-      },
-    ],
-  };
 };
 
 const getRouteFromMapbox = async (

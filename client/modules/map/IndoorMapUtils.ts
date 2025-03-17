@@ -1,5 +1,5 @@
 import { Coordinates, ExpressionSpecification, Level, Location, IndoorMap } from './Types';
-import type { BBox, Feature, LineString } from 'geojson';
+import type { BBox, Feature, LineString, Polygon } from 'geojson';
 import GeojsonService from '@/services/GeojsonService';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
@@ -70,6 +70,29 @@ export function footwaysForLevel(indoorMap: IndoorMap, level: Level): Feature<Li
       feature.geometry.type === 'LineString'
   );
   return footwayFeatures as Feature<LineString>[];
+}
+
+export function elevatorForLevel(indoorMap: IndoorMap, level: Level): Location | null {
+  const elevatorFeature = indoorMap.geojson.features.filter(
+    (feature) =>
+      parseFloat(feature.properties?.level) === level && feature.properties?.highway === 'elevator'
+  )[0];
+
+  const coordinates = elevatorFeature.geometry?.coordinates as Coordinates;
+  const name = `elevator=${level}`;
+
+  return {
+    coordinates,
+    name,
+    data: {
+      address: indoorMap.id,
+      isOpen: false,
+      level: level,
+      indoorMap: indoorMap,
+      ref: elevatorFeature?.properties?.ref,
+      feature: elevatorFeature,
+    },
+  };
 }
 
 export function getIndoorFeatureFromCoordinates(
