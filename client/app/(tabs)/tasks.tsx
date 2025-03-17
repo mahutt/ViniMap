@@ -9,13 +9,14 @@ import {
   ScrollView,
   Modal,
 } from 'react-native';
-import { Task } from '@/modules/map/Types';
+import { Location, Task } from '@/modules/map/Types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useTask } from '@/providers/TodoListContext';
 import { storage } from '@/services/StorageService';
 import LocationsAutocomplete from '@/components/LocationsAutocomplete';
+import { getLocations } from '@/modules/map/MapService';
 
 export default function TasksScreen() {
   const { selectedTasks, setSelectedTasks } = useTask();
@@ -30,6 +31,10 @@ export default function TasksScreen() {
   const [autocompleteVisible, setAutocompleteVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [newTaskLocation, setNewTaskLocation] = useState<Location>({
+    name: '',
+    coordinates: [0, 0],
+  });
   const isButtonDisabled = !taskName.trim() || !taskLocation.trim();
 
   useEffect(() => {
@@ -49,7 +54,7 @@ export default function TasksScreen() {
     const newTask: Task = {
       id: tasks.length.toString(),
       text: taskName,
-      coordinates: [0, 0],
+      location: newTaskLocation,
     };
 
     caretaker.current.save();
@@ -148,8 +153,12 @@ export default function TasksScreen() {
               <View style={{ width: '100%' }}>
                 <LocationsAutocomplete
                   query={taskLocation}
-                  callback={(location) => {
+                  callback={async (location) => {
                     setTaskLocation(location.name ?? '');
+                    const locationResults = await getLocations(taskLocation);
+                    if (locationResults.length > 0) {
+                      setNewTaskLocation(locationResults[0]);
+                    }
                     setAutocompleteVisible(false);
                   }}
                 />

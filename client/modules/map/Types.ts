@@ -58,5 +58,5 @@ export interface Location {
 export interface Task {
   id: string;
   text: string;
-  coordinates: Coordinates; // need to look into how the route is generate for the type here.
+  location: Location; // changed for location for now..., keeping comment here until I close epic.
 }
