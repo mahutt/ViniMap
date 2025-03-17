@@ -6,7 +6,6 @@ import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useTask } from '@/providers/TodoListContext';
-import { MMKV } from 'react-native-mmkv';
 import { storage } from '@/services/StorageService';
 
 export default function TasksScreen() {
