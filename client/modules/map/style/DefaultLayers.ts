@@ -47,7 +47,7 @@ const OSM_FILTER_MAPBOX_MAKI_LIST: FilterMakiEntry[] = [
   },
   {
     filter: ['any', ['filter-==', 'highway', 'elevator'], ['has', 'elevator']],
-    maki: 'triangle-stroked',
+    maki: 'elevator',
   },
   {
     filter: ['filter-==', 'natural', 'tree'],
