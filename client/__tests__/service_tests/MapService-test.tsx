@@ -4,10 +4,13 @@ import {
   getRoute,
   fetchLocationData,
   getDistanceFromPositions,
+  getIndoorRoute,
 } from '@/modules/map/MapService';
 import fetchMock from 'jest-fetch-mock';
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { calculateEuclideanDistance } from '@/modules/map/MapUtils';
+import type { Feature, Polygon } from 'geojson';
+import { indoorMaps } from '@/modules/map/IndoorMap';
 
 jest.mock('@/modules/map/MapUtils', () => ({
   calculateEuclideanDistance: jest.fn(),
@@ -64,6 +67,7 @@ describe('formatDuration', () => {
     expect(result).toBe('3h 0m');
   });
 });
+
 describe('getLocations', () => {
   beforeEach(() => {
     fetchMock.resetMocks();
@@ -570,5 +574,73 @@ describe('getLocations', () => {
     const distance = getDistanceFromPositions(position1, position2);
     expect(distance).toBeGreaterThan(5500000);
     expect(distance).toBeLessThan(6000000); // NYC-London ~5570 km
+  });
+});
+
+describe('getIndoorRoute', () => {
+  test('should return null when neither feature has a level', async () => {
+    const startFeature: Feature<Polygon> = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [-73.578, 45.497],
+            [-73.5784711, 45.4970661],
+          ],
+        ],
+      },
+    };
+    const endFeature: Feature<Polygon> = {
+      type: 'Feature',
+      properties: {},
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [-73.6393324, 45.4577857],
+            [-73.639, 45.457],
+          ],
+        ],
+      },
+    };
+    const result = getIndoorRoute(indoorMaps[0], startFeature, endFeature);
+    expect(result).toBeNull();
+  });
+
+  test("should return no paths when the features aren't connected to the pathway", async () => {
+    const startFeature: Feature<Polygon> = {
+      type: 'Feature',
+      properties: {
+        level: '8',
+      },
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [-73.578, 45.497],
+            [-73.5784711, 45.4970661],
+          ],
+        ],
+      },
+    };
+    const endFeature: Feature<Polygon> = {
+      type: 'Feature',
+      properties: {
+        level: '8',
+      },
+      geometry: {
+        type: 'Polygon',
+        coordinates: [
+          [
+            [-73.6393324, 45.4577857],
+            [-73.639, 45.457],
+          ],
+        ],
+      },
+    };
+    const result = getIndoorRoute(indoorMaps[0], startFeature, endFeature);
+    expect(result).toBeNull();
   });
 });

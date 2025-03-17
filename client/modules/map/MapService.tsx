@@ -64,7 +64,7 @@ const getRoute = async (
   return getRouteFromMapbox(startCoordinates, endCoordinates, mode);
 };
 
-const getIndoorRoute = (
+export const getIndoorRoute = (
   indoorMap: IndoorMap,
   startFeature: Feature<Polygon>,
   endFeature: Feature<Polygon>
