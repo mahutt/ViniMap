@@ -13,7 +13,7 @@ import { Location, Task } from '@/modules/map/Types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import { useTask } from '@/providers/TodoListContext';
+import { useTask } from '@/providers/TaskContext';
 import LocationsAutocomplete from '@/components/LocationsAutocomplete';
 import { getLocations } from '@/modules/map/MapService';
 

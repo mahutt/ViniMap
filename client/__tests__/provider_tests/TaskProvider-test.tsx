@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react-native';
 import { Task } from '@/modules/map/Types';
-import { TaskProvider, useTask } from '@/providers/TodoListContext';
+import { TaskProvider, useTask } from '@/providers/TaskContext';
 
 describe('TaskProvider', () => {
   it('initially has an empty task list', () => {

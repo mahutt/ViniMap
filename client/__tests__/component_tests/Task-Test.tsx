@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import { TaskProvider } from '@/providers/TodoListContext';
+import { TaskProvider } from '@/providers/TaskContext';
 import TasksScreen from '@/app/(tabs)/tasks';
 
 // Mock API Calls
