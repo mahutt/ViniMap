@@ -1,8 +1,8 @@
 import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { Coordinates } from './MapContext';
-import { IndoorMap, Level, Location, Route } from './Types';
+import { IndoorMap, Location, Route, Segment } from './Types';
 import { calculateEuclideanDistance } from './MapUtils';
-import { footwaysForLevel } from './IndoorMapUtils';
+import { footwaysForLevel, getConnectionsBetween, getStartEndLevels } from './IndoorMapUtils';
 import DijkstraService from '@/services/DijkstrasService';
 import type { Feature, Polygon, Position } from 'geojson';
 import GeojsonHelper from '@/services/GeojsonService';
@@ -52,8 +52,7 @@ const getRoute = async (
     return getIndoorRoute(
       startLocation.data.indoorMap,
       startLocation.data.feature,
-      endLocation.data.feature,
-      startLocation.data.level
+      endLocation.data.feature
     );
   }
 
@@ -65,39 +64,76 @@ const getRoute = async (
   return getRouteFromMapbox(startCoordinates, endCoordinates, mode);
 };
 
-const getIndoorRoute = (
+export const getIndoorRoute = (
   indoorMap: IndoorMap,
   startFeature: Feature<Polygon>,
-  endFeature: Feature<Polygon>,
-  level: Level
+  endFeature: Feature<Polygon>
 ): Route | null => {
-  const footways = footwaysForLevel(indoorMap, level);
-  const startPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, startFeature);
-  const endPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, endFeature);
-  if (startPositionOptions.length === 0 || endPositionOptions.length === 0) {
+  // Obtain the levels of the start and end features
+  const startEndLevels = getStartEndLevels(startFeature, endFeature);
+  if (!startEndLevels) {
     return null;
   }
+  const [startLevel, endLevel] = startEndLevels;
 
-  const startPosition = startPositionOptions[0];
-  const endPosition = endPositionOptions[0];
-  const result = DijkstraService.findShortestPath(startPosition, endPosition, footways);
-  if (!result) {
-    return null;
+  // stops is an array of features that the route will pass through,
+  // which is only necessary if the start and end levels are different.
+  // Intermediate stops are necessarily connections between levels.
+  let stops: Feature<Polygon>[] = [];
+  if (startLevel === endLevel) {
+    stops = [startFeature, endFeature];
+  } else {
+    const connections = getConnectionsBetween(startLevel, endLevel, indoorMap);
+    if (connections.length === 0) {
+      return null;
+    }
+    stops = [startFeature, ...connections, endFeature];
   }
 
-  const distance = getDistanceFromPositions(startPosition, endPosition);
-  const duration = distance / AVERAGE_WALKING_SPEED;
+  let distance = 0;
+  const segments: Segment[] = [];
+  for (let i = 0; i < stops.length - 1; i++) {
+    const start = stops[i];
+    const end = stops[i + 1];
+    const segmentLevels = getStartEndLevels(start, end);
+    if (!segmentLevels) {
+      return null;
+    }
+    const [segmentStartLevel, segmentEndLevel] = segmentLevels;
+
+    // Based on how stops is constructed,
+    // the start and end levels of each segment should be the same
+    if (segmentStartLevel !== segmentEndLevel) {
+      return null;
+    }
+
+    const footways = footwaysForLevel(indoorMap, segmentStartLevel);
+    const startPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, start);
+    const endPositionOptions = GeojsonHelper.findLinesPolygonIntersect(footways, end);
+    if (startPositionOptions.length === 0 || endPositionOptions.length === 0) {
+      return null;
+    }
+
+    const startPosition = startPositionOptions[0];
+    const endPosition = endPositionOptions[0];
+    const steps = DijkstraService.findShortestPath(startPosition, endPosition, footways);
+    if (!steps) {
+      return null;
+    }
+
+    distance += getDistanceFromPositions(startPosition, endPosition);
+    segments.push({
+      id: `indoor-navigation-walk-${i}`,
+      type: 'dashed',
+      steps: steps as Coordinates[],
+      level: segmentStartLevel,
+    });
+  }
 
   return {
-    duration,
+    duration: distance / AVERAGE_WALKING_SPEED,
     distance,
-    segments: [
-      {
-        id: 'indoor-navigation-walk',
-        type: 'dashed',
-        steps: result as Coordinates[],
-      },
-    ],
+    segments,
   };
 };
 

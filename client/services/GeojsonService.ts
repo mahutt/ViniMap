@@ -5,7 +5,7 @@
 import bbox from '@turf/bbox';
 
 import type { BBox, Feature, LineString, Polygon, Position } from 'geojson';
-import type { LevelsRange, IndoorMapGeoJSON } from '@/modules/map/Types';
+import type { LevelsRange, IndoorMapGeoJSON, Level } from '@/modules/map/Types';
 import * as turf from '@turf/turf';
 
 /**
@@ -18,7 +18,7 @@ class GeojsonService {
    * @param {GeoJSONFeature} feature geojson feature
    * @returns {LevelsRange | number | null} the level or the range of level.
    */
-  static extractLevelFromFeature(feature: Feature): LevelsRange | number | null {
+  static extractLevelFromFeature(feature: Feature): Level | LevelsRange | null {
     if (!!feature.properties && feature.properties.level !== null) {
       const propertyLevel = feature.properties['level'];
       if (typeof propertyLevel === 'string') {
@@ -28,7 +28,7 @@ class GeojsonService {
     return null;
   }
 
-  static parsePropertyLevel(propertyLevel: string): LevelsRange | number | null {
+  static parsePropertyLevel(propertyLevel: string): Level | LevelsRange | null {
     const splitLevel = propertyLevel.split(';');
     if (splitLevel.length === 1) {
       const level = parseFloat(propertyLevel);
