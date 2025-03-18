@@ -1,5 +1,4 @@
-import TaskCard from '@/components/TaskCard';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -16,6 +15,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useTask } from '@/providers/TaskContext';
 import LocationsAutocomplete from '@/components/LocationsAutocomplete';
 import { getLocations } from '@/modules/map/MapService';
+import TaskCard from '@/components/TaskCard';
 
 export default function TasksScreen() {
   const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
@@ -101,21 +101,17 @@ export default function TasksScreen() {
       return;
     }
 
-    // Store the task that is being edited
     setModifiableTask(tempTask);
 
-    // Populate state with task details for editing
     setTaskName(tempTask.text);
     setTaskLocation(tempTask.location.name ?? '');
 
-    // Open the modal
     setModalVisible(true);
   };
 
   const saveTaskChanges = () => {
     if (!modifiableTask) return;
 
-    // Create a new list where the modified task is updated
     const updatedTasks = tasks.map((task) =>
       task.id === modifiableTask.id
         ? { ...task, text: taskName, location: { ...task.location, name: taskLocation } }
