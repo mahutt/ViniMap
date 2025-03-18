@@ -176,10 +176,10 @@ const getIndoorOutdoorRoute = async (
 ): Promise<Route | null> => {
   const entrances = GeojsonHelper.extractEntrances(indoorMap.geojson);
   if (entrances.length === 0) return null;
-  const entrance: Feature<Point> = entrances[0] as Feature<Point>;
+  const entrance: Feature<Point> = entrances[0];
   const indoorRoute = getIndoorRoute(indoorMap, indoorFeature, entrance);
   const outdoorRoute = await getRouteFromMapbox(
-    entrance.geometry.coordinates as Coordinates,
+    entrance.geometry.coordinates,
     outdoorLocation.coordinates,
     mode
   );
@@ -204,14 +204,14 @@ const getIndoorIndoorRoute = async (
   // If either building does not have an entrance, we cannot find a route
   if (startEntrances.length === 0 || endEntrances.length === 0) return null;
 
-  const startEntrance: Feature<Point> = startEntrances[0] as Feature<Point>;
-  const endEntrance: Feature<Point> = endEntrances[0] as Feature<Point>;
+  const startEntrance: Feature<Point> = startEntrances[0];
+  const endEntrance: Feature<Point> = endEntrances[0];
 
   const startIndoorRoute = getIndoorRoute(startIndoorMap, startFeature, startEntrance);
   const endIndoorRoute = getIndoorRoute(endIndoorMap, endEntrance, endFeature);
   const outdoorRoute = await getRouteFromMapbox(
-    startEntrance.geometry.coordinates as Coordinates,
-    endEntrance.geometry.coordinates as Coordinates,
+    startEntrance.geometry.coordinates,
+    endEntrance.geometry.coordinates,
     mode
   );
 
@@ -237,7 +237,7 @@ const getRouteFromMapbox = async (
   const url = `https://api.mapbox.com/directions/v5/mapbox/${mode}/${startCoordinates[0]},${startCoordinates[1]};${endCoordinates[0]},${endCoordinates[1]}?alternatives=false&annotations=duration,distance&continue_straight=true&geometries=geojson&language=en&overview=full&steps=true&access_token=${MAPBOX_ACCESS_TOKEN}`;
   const response = await fetch(url);
   const data = await response.json();
-  if (data?.routes && data.routes[0]) {
+  if (data?.routes?.length > 0) {
     const route = data.routes[0];
     return {
       duration: route.duration,
