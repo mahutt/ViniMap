@@ -42,13 +42,9 @@ export default function TasksScreen() {
     }
   }, [tasks]);
 
-  useEffect(() => {
-    console.log('Updated Name:', taskName);
-  }, [taskName]);
+  useEffect(() => {}, [taskName]);
 
-  useEffect(() => {
-    console.log('Updated Location:', taskLocation);
-  }, [taskLocation]);
+  useEffect(() => {}, [taskLocation]);
 
   const addTask = () => {
     if (!taskName.trim() || !taskLocation.trim()) return;
