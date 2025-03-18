@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { TaskProvider } from '@/providers/TaskContext';
 import TasksScreen from '@/app/(tabs)/tasks';
 
@@ -7,57 +7,48 @@ jest.mock('@/modules/map/MapService', () => ({
   getLocations: jest.fn(() => Promise.resolve([{ name: 'Mock Location', coordinates: [0, 0] }])),
 }));
 
+const renderComponent = () =>
+  render(
+    <TaskProvider>
+      <TasksScreen />
+    </TaskProvider>
+  );
+
 describe('TasksScreen', () => {
   it('matches the snapshot', () => {
-    const { toJSON } = render(
-      <TaskProvider>
-        <TasksScreen />
-      </TaskProvider>
-    );
-
+    const { toJSON } = renderComponent();
     expect(toJSON()).toMatchSnapshot();
   });
 
   it('displays "No tasks yet." when there are no tasks', () => {
-    const { getByText } = render(
-      <TaskProvider>
-        <TasksScreen />
-      </TaskProvider>
-    );
-
-    expect(getByText('No tasks yet.')).toBeTruthy();
+    renderComponent();
+    expect(screen.getByText('No tasks yet.')).toBeTruthy();
   });
 
-  it('opens the modal when the plus button is clicked', () => {
-    const { getByText, getByPlaceholderText } = render(
-      <TaskProvider>
-        <TasksScreen />
-      </TaskProvider>
-    );
+  it('opens the modal when the plus button is clicked', async () => {
+    renderComponent();
 
-    fireEvent.press(getByText('+'));
+    fireEvent.press(screen.getByText('+'));
 
-    expect(getByPlaceholderText('Task name')).toBeTruthy();
-    expect(getByPlaceholderText('Location')).toBeTruthy();
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Task name')).toBeVisible();
+      expect(screen.getByPlaceholderText('Location')).toBeVisible();
+    });
   });
+
   it('allows users to add a task', async () => {
-    const { getByText, getByPlaceholderText, getAllByText, queryByText } = render(
-      <TaskProvider>
-        <TasksScreen />
-      </TaskProvider>
-    );
+    renderComponent();
 
-    fireEvent.press(getByText('+'));
+    fireEvent.press(screen.getByText('+'));
 
-    const taskInput = getByPlaceholderText('Task name');
-    const locationInput = getByPlaceholderText('Location');
+    fireEvent.changeText(screen.getByPlaceholderText('Task name'), 'Test Task');
+    fireEvent.changeText(screen.getByPlaceholderText('Location'), 'Test Location');
 
-    fireEvent.changeText(taskInput, 'Test Task');
-    fireEvent.changeText(locationInput, 'Test Location');
-
-    const addTaskButtons = getAllByText('Add Task');
+    const addTaskButtons = screen.getAllByText('Add Task');
     fireEvent.press(addTaskButtons[addTaskButtons.length - 1]);
 
-    await waitFor(() => expect(queryByText('Test Task')).toBeTruthy());
+    await waitFor(() => {
+      expect(screen.getByText('Test Task')).toBeTruthy();
+    });
   });
 });
