@@ -19,12 +19,11 @@ import LocationsAutocomplete from '@/components/LocationsAutocomplete';
 import { getLocations } from '@/modules/map/MapService';
 
 export default function TasksScreen() {
-  const { selectedTasks, setSelectedTasks } = useTask();
+  const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
 
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
 
-  const [tasks, setTasks] = useState<Task[]>(taskList.current.getTasks());
   const [taskName, setTaskName] = useState('');
   const [taskLocation, setTaskLocation] = useState('');
 
@@ -35,15 +34,11 @@ export default function TasksScreen() {
     name: '',
     coordinates: [0, 0],
   });
-  useEffect(() => {
-    const savedTasks = storage.getString('all_tasks');
-    if (savedTasks) {
-      setTasks(JSON.parse(savedTasks));
-    }
-  }, []);
 
   useEffect(() => {
-    storage.set('all_tasks', JSON.stringify(tasks));
+    if (tasks.length > 0) {
+      taskList.current.setTasks(tasks);
+    }
   }, [tasks]);
 
   const addTask = () => {
