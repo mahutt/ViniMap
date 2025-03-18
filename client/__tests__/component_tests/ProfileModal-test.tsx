@@ -2,13 +2,6 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import ProfileModal from '@/components/ProfileModal';
 
-const mockUserProfile = {
-  photoUrl: 'https://example.com/photo.jpg',
-  name: 'John Doe',
-  email: 'john.doe@example.com',
-  calendars: ['Work', 'Personal'],
-};
-
 describe('ProfileModal', () => {
   it('matches the snapshot', () => {
     const { toJSON } = render(

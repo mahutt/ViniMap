@@ -14,7 +14,6 @@ jest.mock('@/components/LocationsAutocomplete', () => {
   });
 });
 
-// Mock MapContext with all potential hooks and functions
 jest.mock('@/modules/map/MapContext', () => ({
   MapState: {
     Default: 0,
@@ -114,7 +113,6 @@ describe('<SearchBar />', () => {
   test('calls flyTo when a location is selected', () => {
     const { getByPlaceholderText } = render(<SearchBar />);
     const input = getByPlaceholderText('Search here');
-    const { flyTo } = require('@/modules/map/MapContext').useMap();
 
     fireEvent.changeText(input, 'Chicago');
     mockLocationCallback({ name: 'Chicago', coordinates: [41.8781, -87.6298] });
