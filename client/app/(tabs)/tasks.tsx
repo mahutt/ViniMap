@@ -14,7 +14,6 @@ import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useTask } from '@/providers/TodoListContext';
-import { storage } from '@/services/StorageService';
 import LocationsAutocomplete from '@/components/LocationsAutocomplete';
 import { getLocations } from '@/modules/map/MapService';
 
