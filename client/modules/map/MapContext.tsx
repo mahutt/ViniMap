@@ -283,7 +283,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setRoute(route);
         })
         .catch((error) => {
-          console.error('Error setting route:', error);
+          console.error('Error loading and setting route:', error);
         });
     },
     []

@@ -4,7 +4,7 @@
 
 import bbox from '@turf/bbox';
 
-import type { BBox, Feature, LineString, Polygon, Position } from 'geojson';
+import type { BBox, Feature, LineString, Point, Polygon, Position } from 'geojson';
 import type { LevelsRange, IndoorMapGeoJSON, Level } from '@/modules/map/Types';
 import * as turf from '@turf/turf';
 
@@ -90,6 +90,25 @@ class GeojsonService {
     };
   }
 
+  static findLinesIntersect(
+    lines: Feature<LineString>[],
+    pointOrPolygon: Feature<Point | Polygon>
+  ): Position[] {
+    if (pointOrPolygon.geometry.type === 'Point') {
+      const point = pointOrPolygon as Feature<Point>;
+      const intersectionPoints: Position[] = [];
+      lines.forEach((line) => {
+        const isOnLine = turf.booleanPointOnLine(point, line.geometry, { epsilon: 1e-9 });
+        if (isOnLine) {
+          intersectionPoints.push(turf.getCoord(point));
+        }
+      });
+      return intersectionPoints;
+    } else {
+      return this.findLinesPolygonIntersect(lines, pointOrPolygon as Feature<Polygon>);
+    }
+  }
+
   static findLinesPolygonIntersect(
     lines: Feature<LineString>[],
     polygon: Feature<Polygon>
@@ -104,6 +123,18 @@ class GeojsonService {
       intersectionPoints.push(...intersectionPoint);
     });
     return intersectionPoints;
+  }
+
+  static extractEntrances(geojson: IndoorMapGeoJSON): Feature<Point>[] {
+    const entrances: Feature<Point>[] = [];
+    if (geojson.type === 'FeatureCollection') {
+      geojson.features.forEach((feature) => {
+        if (feature.properties?.entrance && feature.geometry.type === 'Point') {
+          entrances.push(feature as Feature<Point>);
+        }
+      });
+    }
+    return entrances;
   }
 }
 export default GeojsonService;
