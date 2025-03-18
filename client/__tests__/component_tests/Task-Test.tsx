@@ -47,7 +47,6 @@ describe('TasksScreen', () => {
       </TaskProvider>
     );
 
-    // Open modal
     fireEvent.press(getByText('+'));
 
     const taskInput = getByPlaceholderText('Task name');
@@ -56,9 +55,8 @@ describe('TasksScreen', () => {
     fireEvent.changeText(taskInput, 'Test Task');
     fireEvent.changeText(locationInput, 'Test Location');
 
-    // Find the correct 'Add Task' button inside the modal
     const addTaskButtons = getAllByText('Add Task');
-    fireEvent.press(addTaskButtons[addTaskButtons.length - 1]); // Press the last 'Add Task' button
+    fireEvent.press(addTaskButtons[addTaskButtons.length - 1]);
 
     await waitFor(() => expect(queryByText('Test Task')).toBeTruthy());
   });
