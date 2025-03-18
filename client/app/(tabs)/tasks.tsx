@@ -29,6 +29,8 @@ export default function TasksScreen() {
   const [autocompleteVisible, setAutocompleteVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [modifiableTask, setModifiableTask] = useState<Task>();
+
   const [newTaskLocation, setNewTaskLocation] = useState<Location>({
     name: '',
     coordinates: [0, 0],
@@ -39,6 +41,14 @@ export default function TasksScreen() {
       taskList.current.setTasks(tasks);
     }
   }, [tasks]);
+
+  useEffect(() => {
+    console.log('Updated Name:', taskName);
+  }, [taskName]);
+
+  useEffect(() => {
+    console.log('Updated Location:', taskLocation);
+  }, [taskLocation]);
 
   const addTask = () => {
     if (!taskName.trim() || !taskLocation.trim()) return;
@@ -82,6 +92,43 @@ export default function TasksScreen() {
     setSelectedTasks(updatedTasks);
   };
 
+  const editTask = (id: string) => {
+    console.log('Trying to modify');
+    const tempTask = tasks.find((task) => task.id === id);
+
+    if (!tempTask) {
+      console.log('Task not found');
+      return;
+    }
+
+    // Store the task that is being edited
+    setModifiableTask(tempTask);
+
+    // Populate state with task details for editing
+    setTaskName(tempTask.text);
+    setTaskLocation(tempTask.location.name ?? '');
+
+    // Open the modal
+    setModalVisible(true);
+  };
+
+  const saveTaskChanges = () => {
+    if (!modifiableTask) return;
+
+    // Create a new list where the modified task is updated
+    const updatedTasks = tasks.map((task) =>
+      task.id === modifiableTask.id
+        ? { ...task, text: taskName, location: { ...task.location, name: taskLocation } }
+        : task
+    );
+
+    setTasks(updatedTasks);
+    setModalVisible(false);
+    setTaskName('');
+    setTaskLocation('');
+    setModifiableTask(undefined);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
@@ -103,6 +150,7 @@ export default function TasksScreen() {
                 selected={selectedTasks.some((t) => t.id === task.id)}
                 onDelete={() => deleteTask(task.id)}
                 onSelect={() => toggleTaskSelection(task)}
+                modifyTask={() => editTask(task.id)}
               />
             ))
           )}
@@ -121,7 +169,7 @@ export default function TasksScreen() {
       <Modal visible={modalVisible} transparent={true} animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add New Task</Text>
+            <Text style={styles.modalTitle}>{modifiableTask ? 'Edit Task' : 'Add Task'}</Text>
 
             <TextInput
               placeholder="Task name"
@@ -157,8 +205,10 @@ export default function TasksScreen() {
               </View>
             )}
 
-            <TouchableOpacity style={styles.addButton} onPress={addTask}>
-              <Text style={styles.addButtonText}>Add Task</Text>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={modifiableTask ? saveTaskChanges : addTask}>
+              <Text style={styles.addButtonText}>{modifiableTask ? 'Save Task' : 'Add Task'}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => setModalVisible(false)}>

@@ -7,14 +7,17 @@ interface TaskCardProps {
   selected: boolean;
   onDelete: () => void;
   onSelect: () => void;
+  modifyTask: () => void;
 }
 
-const TaskCard = ({ text, selected, onDelete, onSelect }: TaskCardProps) => {
+const TaskCard = ({ text, selected, onDelete, onSelect, modifyTask }: TaskCardProps) => {
   return (
-    <TouchableOpacity onPress={onSelect} activeOpacity={0.7}>
+    <TouchableOpacity onPress={modifyTask}>
       <View style={styles.item}>
         <View style={styles.itemLeft}>
-          <View style={[styles.square, selected && styles.selectedSquare]} />
+          <TouchableOpacity onPress={onSelect} activeOpacity={0.7}>
+            <View style={[styles.square, selected && styles.selectedSquare]} />
+          </TouchableOpacity>
           <Text style={styles.itemText}>{text}</Text>
         </View>
         <TouchableOpacity style={styles.circular} onPress={onDelete}>
