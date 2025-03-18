@@ -42,10 +42,6 @@ export default function TasksScreen() {
     }
   }, [tasks]);
 
-  useEffect(() => {}, [taskName]);
-
-  useEffect(() => {}, [taskLocation]);
-
   const addTask = () => {
     if (!taskName.trim() || !taskLocation.trim()) return;
 
