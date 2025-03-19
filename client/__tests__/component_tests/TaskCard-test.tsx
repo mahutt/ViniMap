@@ -2,10 +2,18 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import TaskCard from '@/components/TaskCard';
 
-test('renders TaskCard correctly', () => {
-  const { toJSON } = render(
-    <TaskCard text="Test Task" selected={false} onDelete={() => {}} onSelect={() => {}} />
-  );
+describe('TaskCard', () => {
+  it('matches the snapshot', () => {
+    const { toJSON } = render(
+      <TaskCard
+        text="Sample Task"
+        selected={false}
+        onDelete={() => {}}
+        onSelect={() => {}}
+        modifyTask={() => {}}
+      />
+    );
 
-  expect(toJSON()).toMatchSnapshot();
+    expect(toJSON()).toMatchSnapshot();
+  });
 });

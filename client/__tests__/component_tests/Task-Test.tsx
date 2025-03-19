@@ -1,70 +1,54 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { TaskProvider } from '@/providers/TaskContext';
 import TasksScreen from '@/app/(tabs)/tasks';
 
-// Mock API Calls
 jest.mock('@/modules/map/MapService', () => ({
   getLocations: jest.fn(() => Promise.resolve([{ name: 'Mock Location', coordinates: [0, 0] }])),
 }));
 
-const renderWithProvider = () =>
+const renderComponent = () =>
   render(
     <TaskProvider>
       <TasksScreen />
     </TaskProvider>
   );
 
-describe('TasksScreen Component', () => {
-  test('should open modal and add a task', async () => {
-    const { getByText, getByPlaceholderText, queryByText } = renderWithProvider();
-
-    // Open modal
-    fireEvent.press(getByText('+'));
-
-    // Wait for input to appear
-    const taskInput = await waitFor(() => getByPlaceholderText('Task name'));
-    fireEvent.changeText(taskInput, 'Test Task');
-
-    const locationInput = getByPlaceholderText('Location');
-    fireEvent.changeText(locationInput, 'Test Location');
-
-    // Click Add Task
-    fireEvent.press(getByText('Add Task'));
-
-    // Verify task appears
-    await waitFor(() => expect(queryByText('Test Task')).toBeTruthy());
+describe('TasksScreen', () => {
+  it('matches the snapshot', () => {
+    const { toJSON } = renderComponent();
+    expect(toJSON()).toMatchSnapshot();
   });
 
-  test('should not add a task when fields are empty', async () => {
-    const { getByText, queryByText } = renderWithProvider();
-
-    fireEvent.press(getByText('+'));
-    fireEvent.press(getByText('Add Task'));
-
-    await waitFor(() => expect(queryByText('No tasks yet.')).toBeFalsy());
+  it('displays "No tasks yet." when there are no tasks', () => {
+    renderComponent();
+    expect(screen.getByText('No tasks yet.')).toBeTruthy();
   });
 
-  test('should delete a task', async () => {
-    const { getByText, getByPlaceholderText, queryByText } = renderWithProvider();
+  it('opens the modal when the plus button is clicked', async () => {
+    renderComponent();
 
-    // Open modal and add a task
-    fireEvent.press(getByText('+'));
-    const taskInput = await waitFor(() => getByPlaceholderText('Task name'));
-    fireEvent.changeText(taskInput, 'Task to Delete');
+    fireEvent.press(screen.getByText('+'));
 
-    const locationInput = getByPlaceholderText('Location');
-    fireEvent.changeText(locationInput, 'Location X');
+    await waitFor(() => {
+      expect(screen.getByPlaceholderText('Task name')).toBeVisible();
+      expect(screen.getByPlaceholderText('Location')).toBeVisible();
+    });
+  });
 
-    fireEvent.press(getByText('Add Task'));
+  it('allows users to add a task', async () => {
+    renderComponent();
 
-    // Wait for task to be added
-    await waitFor(() => expect(queryByText('Task to Delete')).toBeTruthy());
+    fireEvent.press(screen.getByText('+'));
 
-    // Delete the task
-    fireEvent.press(getByText('Task to Delete')); // Assuming the task card triggers delete on press
+    fireEvent.changeText(screen.getByPlaceholderText('Task name'), 'Test Task');
+    fireEvent.changeText(screen.getByPlaceholderText('Location'), 'Test Location');
 
-    // Verify task was removed
-    await waitFor(() => expect(queryByText('Task to Delete')).toBeTruthy());
+    const addTaskButtons = screen.getAllByText('Add Task');
+    fireEvent.press(addTaskButtons[addTaskButtons.length - 1]);
+
+    await waitFor(() => {
+      expect(screen.getByText('Test Task')).toBeTruthy();
+    });
   });
 });

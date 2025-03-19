@@ -1,5 +1,4 @@
-import TaskCard from '@/components/TaskCard';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -16,6 +15,7 @@ import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useTask } from '@/providers/TaskContext';
 import LocationsAutocomplete from '@/components/LocationsAutocomplete';
 import { getLocations } from '@/modules/map/MapService';
+import TaskCard from '@/components/TaskCard';
 
 export default function TasksScreen() {
   const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
@@ -28,6 +28,8 @@ export default function TasksScreen() {
 
   const [autocompleteVisible, setAutocompleteVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const [modifiableTask, setModifiableTask] = useState<Task>();
 
   const [newTaskLocation, setNewTaskLocation] = useState<Location>({
     name: '',
@@ -82,6 +84,39 @@ export default function TasksScreen() {
     setSelectedTasks(updatedTasks);
   };
 
+  const editTask = (id: string) => {
+    console.log('Trying to modify');
+    const tempTask = tasks.find((task) => task.id === id);
+
+    if (!tempTask) {
+      console.log('Task not found');
+      return;
+    }
+
+    setModifiableTask(tempTask);
+
+    setTaskName(tempTask.text);
+    setTaskLocation(tempTask.location.name ?? '');
+
+    setModalVisible(true);
+  };
+
+  const saveTaskChanges = () => {
+    if (!modifiableTask) return;
+
+    const updatedTasks = tasks.map((task) =>
+      task.id === modifiableTask.id
+        ? { ...task, text: taskName, location: { ...task.location, name: taskLocation } }
+        : task
+    );
+
+    setTasks(updatedTasks);
+    setModalVisible(false);
+    setTaskName('');
+    setTaskLocation('');
+    setModifiableTask(undefined);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
@@ -103,6 +138,7 @@ export default function TasksScreen() {
                 selected={selectedTasks.some((t) => t.id === task.id)}
                 onDelete={() => deleteTask(task.id)}
                 onSelect={() => toggleTaskSelection(task)}
+                modifyTask={() => editTask(task.id)}
               />
             ))
           )}
@@ -121,7 +157,7 @@ export default function TasksScreen() {
       <Modal visible={modalVisible} transparent={true} animationType="fade">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add New Task</Text>
+            <Text style={styles.modalTitle}>{modifiableTask ? 'Edit Task' : 'Add Task'}</Text>
 
             <TextInput
               placeholder="Task name"
@@ -157,8 +193,10 @@ export default function TasksScreen() {
               </View>
             )}
 
-            <TouchableOpacity style={styles.addButton} onPress={addTask}>
-              <Text style={styles.addButtonText}>Add Task</Text>
+            <TouchableOpacity
+              style={styles.addButton}
+              onPress={modifiableTask ? saveTaskChanges : addTask}>
+              <Text style={styles.addButtonText}>{modifiableTask ? 'Save Task' : 'Add Task'}</Text>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={() => setModalVisible(false)}>
