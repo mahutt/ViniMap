@@ -50,6 +50,10 @@ const OSM_FILTER_MAPBOX_MAKI_LIST: FilterMakiEntry[] = [
     maki: 'elevator',
   },
   {
+    filter: ['filter-==', 'conveying', 'yes'],
+    maki: 'escalator',
+  },
+  {
     filter: ['filter-==', 'natural', 'tree'],
     maki: 'park',
   },
