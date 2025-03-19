@@ -232,7 +232,10 @@ export const getConnectionsBetween = (
   indoorMap: IndoorMap
 ): Feature<Polygon>[] => {
   let possibleConnections = indoorMap.geojson.features.filter(
-    (feature) => feature.properties?.stairs === 'yes' || feature.properties?.highway === 'elevator'
+    (feature) =>
+      feature.properties?.stairs === 'yes' ||
+      feature.properties?.highway === 'elevator' ||
+      feature.properties?.conveying === 'yes'
   );
   const usableConnections = possibleConnections.filter((feature) => {
     if (feature.geometry.type !== 'Polygon') {
