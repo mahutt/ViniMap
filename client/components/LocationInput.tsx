@@ -33,9 +33,15 @@ export default function LocationInput({
 
   const handleFocus = () => {
     setIsFocused(true);
+
     if (inputRef.current) {
       inputRef.current.focus();
-      inputRef.current.setNativeProps({ selection: { start: 0, end: query.length } });
+
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.setSelection(0, query.length);
+        }
+      }, 100);
     }
   };
 
