@@ -11,4 +11,5 @@ export const images: {
   toilet: require('@/assets/icons/toilet.png'),
   soda: require('@/assets/icons/soda.png'),
   escalator: require('@/assets/icons/escalator.png'),
+  stairs: require('@/assets/icons/stairs.png'),
 };
