@@ -36,6 +36,28 @@ describe('TasksScreen', () => {
     });
   });
 
+  it('undos the last task change', async () => {
+    renderComponent();
+
+    fireEvent.press(screen.getByText('+'));
+    fireEvent.changeText(screen.getByPlaceholderText('Task name'), 'Undo Task');
+    fireEvent.changeText(screen.getByPlaceholderText('Location'), 'Undo Location');
+
+    const addTaskButtons = screen.getAllByText('Add Task');
+    fireEvent.press(addTaskButtons[addTaskButtons.length - 1]);
+
+    await waitFor(() => {
+      expect(screen.getByText('Undo Task')).toBeTruthy();
+    });
+
+    // Undo the change
+    fireEvent.press(screen.getByTestId('undo-button')); // Assuming the undo button has testID
+
+    await waitFor(() => {
+      expect(screen.queryByText('Undo Task')).toBeFalsy(); // Should be removed
+    });
+  });
+
   it('allows users to add a task', async () => {
     renderComponent();
 
