@@ -1,0 +1,14 @@
+appId: com.anonymous.client
+---
+- tapOn: "Tasks, tab, 3 of 4"
+- tapOn: "Christopher Close"
+- tapOn:
+    point: "50%,50%"
+- inputText: "\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\
+    \b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\
+    \b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\b\
+    \b\b\b\b\b\b\b\b"
+- tapOn:
+    point: "50%,57%"
+- tapOn: "Save Task"
+- tapOn: "Christopher Close"
