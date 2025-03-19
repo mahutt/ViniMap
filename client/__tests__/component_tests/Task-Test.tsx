@@ -51,10 +51,10 @@ describe('TasksScreen', () => {
     });
 
     // Undo the change
-    fireEvent.press(screen.getByTestId('undo-button')); // Assuming the undo button has testID
+    fireEvent.press(screen.getByTestId('undo-button'));
 
     await waitFor(() => {
-      expect(screen.queryByText('Undo Task')).toBeFalsy(); // Should be removed
+      expect(screen.queryByText('Undo Task')).toBeFalsy();
     });
   });
 
