@@ -9,7 +9,7 @@ import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { MapProvider } from '@/modules/map/MapContext';
-import { TaskProvider } from '@/providers/TodoListContext';
+import { TaskProvider } from '@/providers/TaskContext';
 
 const TabBarMapIcon = ({ color }: { color: string }) => {
   return (

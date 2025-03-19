@@ -14,6 +14,7 @@ jest.mock('@/components/LocationsAutocomplete', () => {
   });
 });
 // Mock MapContext with all potential hooks and functions
+
 jest.mock('@/modules/map/MapContext', () => ({
   MapState: {
     Default: 0,

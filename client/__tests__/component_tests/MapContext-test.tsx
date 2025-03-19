@@ -200,7 +200,10 @@ describe('MapContext', () => {
       await mapContext?.loadRouteFromCoordinates([-73.57, 45.5], [-73.58, 45.51]);
     });
 
-    expect(consoleErrorSpy).toHaveBeenCalledWith('Error setting route:', expect.any(Error));
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      'Error loading and setting route:',
+      expect.any(Error)
+    );
     expect(mapContext?.route).toBeNull();
 
     consoleErrorSpy.mockRestore();

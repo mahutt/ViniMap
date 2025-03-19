@@ -3,6 +3,7 @@ import Mapbox from '@rnmapbox/maps';
 export const images: {
   [key: string]: Mapbox.ImageEntry;
 } = {
+  elevator: require('@/assets/icons/elevator.png'),
   water: require('@/assets/icons/water.png'),
   information: require('@/assets/icons/information.png'),
   'picnic-site': require('@/assets/icons/picnic-site.png'),
