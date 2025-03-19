@@ -13517,7 +13517,7 @@
             "properties": {
                 "indoor": "room",
                 "highway": "elevator",
-                "level": "2"
+                "level": "1;9"
             },
             "geometry": {
                 "type": "Polygon",
