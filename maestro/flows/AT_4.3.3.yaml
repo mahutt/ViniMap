@@ -1,0 +1,10 @@
+appId: com.anonymous.client
+---
+- tapOn: 'Search here'
+- inputText: 'MB1.11'
+- tapOn: 'MB1.115'
+- tapOn: ' Directions'
+- tapOn: 'Current location'
+- eraseText: 100
+- inputText: 'Château Kaba'
+- tapOn: 'Château Kabab'

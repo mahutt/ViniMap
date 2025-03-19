@@ -108,3 +108,51 @@ describe('formatTimeDifference', () => {
     expect(result).toBe('0m');
   });
 });
+describe('ShuttleCalculatorService Additional Coverage', () => {
+  test('should handle edge case when time is just before midnight', () => {
+    const result = ShuttleCalculatorService.getNextDepartureTime('Monday-Thursday', '23:59', 'LOY');
+    expect(result).toBe('6h 31m');
+  });
+
+  test('should return correct time for early morning shuttle', () => {
+    const result = ShuttleCalculatorService.getNextDepartureTime('Friday', '06:45', 'SGW');
+    expect(result).toBe('3h 0m');
+  });
+
+  test('should handle edge case when the shuttle has already departed', () => {
+    const result = ShuttleCalculatorService.getNextDepartureTime('Friday', '23:00', 'SGW');
+    expect(result).toBe('7h 15m');
+  });
+
+  test('should return correct time difference for next day shuttle', () => {
+    const result = ShuttleCalculatorService.getNextDepartureTime('Friday', '22:00', 'LOY');
+    expect(result).toBe('8h 15m');
+  });
+
+  test('convertToMinutes should handle noon correctly', () => {
+    const result = (ShuttleCalculatorService as any).convertToMinutes('12:00*');
+    expect(result).toBe(1440);
+  });
+
+  test('convertToMinutes should handle midnight correctly with PM indicator', () => {
+    const result = (ShuttleCalculatorService as any).convertToMinutes('00:00*');
+    expect(result).toBe(720);
+  });
+
+  test('getCurrentTime should return a correctly formatted time', () => {
+    jest.useFakeTimers().setSystemTime(new Date('2025-01-01T09:05:00'));
+    const result = ShuttleCalculatorService.getCurrentTime();
+    expect(result).toBe('09:05');
+    jest.useRealTimers();
+  });
+
+  test('formatTimeDifference should handle negative difference gracefully', () => {
+    const result = (ShuttleCalculatorService as any).formatTimeDifference(700, 690);
+    expect(result).toBe('-10m');
+  });
+
+  test('formatTimeDifference should correctly handle differences larger than a day', () => {
+    const result = (ShuttleCalculatorService as any).formatTimeDifference(0, 1500);
+    expect(result).toBe('25h 0m');
+  });
+});

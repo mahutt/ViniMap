@@ -14,7 +14,6 @@ jest.mock('@/components/LocationsAutocomplete', () => {
   });
 });
 
-// Mock MapContext with all potential hooks and functions
 jest.mock('@/modules/map/MapContext', () => ({
   MapState: {
     Default: 0,
@@ -125,5 +124,6 @@ describe('<SearchBar />', () => {
     await waitFor(() => {
       mockLocationCallback({ name: 'Vancouver', coordinates: [49.28, -123.12] });
     });
+
   });
 });

@@ -1,3 +1,4 @@
+import { IndoorMapGeoJSON } from '@/modules/map/Types';
 import GeojsonService from '@/services/GeojsonService';
 import type { Feature, FeatureCollection } from 'geojson';
 
@@ -78,7 +79,7 @@ describe('GeojsonService', () => {
         ],
       };
 
-      const result = GeojsonService.extractLevelsRangeAndBounds(geojson);
+      const result = GeojsonService.extractLevelsRangeAndBounds(geojson as IndoorMapGeoJSON);
       expect(result.levelsRange).toEqual({ min: 1, max: 4 });
       expect(result.bounds).toEqual([0, 0, 2, 2]);
     });
@@ -96,8 +97,93 @@ describe('GeojsonService', () => {
       };
 
       expect(() => {
-        GeojsonService.extractLevelsRangeAndBounds(geojson);
+        GeojsonService.extractLevelsRangeAndBounds(geojson as IndoorMapGeoJSON);
       }).toThrow('No level found');
+    });
+  });
+
+  describe('findLinesIntersect', () => {
+    test('returns valid intersections for a point feature', () => {
+      const intersections = GeojsonService.findLinesIntersect(
+        [
+          {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: [
+                [0, 0],
+                [1, 1],
+              ],
+            },
+          },
+        ],
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'Point', coordinates: [0.5, 0.5] },
+        }
+      );
+      expect(intersections).toEqual([[0.5, 0.5]]);
+    });
+    test('returns valid intersections for a polygon feature', () => {
+      const intersections = GeojsonService.findLinesIntersect(
+        [
+          {
+            type: 'Feature',
+            properties: {},
+            geometry: {
+              type: 'LineString',
+              coordinates: [
+                [0, 0],
+                [1, 1],
+              ],
+            },
+          },
+        ],
+        {
+          type: 'Feature',
+          properties: {},
+          geometry: {
+            type: 'Polygon',
+            coordinates: [
+              [
+                [0.25, 0.25],
+                [0.75, 0.25],
+                [0.75, 0.75],
+                [0.25, 0.75],
+                [0.25, 0.25],
+              ],
+            ],
+          },
+        }
+      );
+      expect(intersections).toEqual([
+        [0.25, 0.25],
+        [0.75, 0.75],
+      ]);
+    });
+  });
+
+  describe('extractEntrances', () => {
+    test('extracts entrances from an indoor map geojson', () => {
+      const entrances = GeojsonService.extractEntrances({
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            properties: { entrance: true },
+            geometry: { type: 'Point', coordinates: [0, 0] },
+          },
+          {
+            type: 'Feature',
+            properties: {},
+            geometry: { type: 'Point', coordinates: [1, 1] },
+          },
+        ],
+      });
+      expect(entrances).toHaveLength(1);
+      expect(entrances[0].geometry.coordinates).toEqual([0, 0]);
     });
   });
 });
