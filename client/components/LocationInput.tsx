@@ -35,7 +35,7 @@ export default function LocationInput({
     setIsFocused(true);
 
     setTimeout(() => {
-      if (inputRef.current) {
+      if (inputRef.current && inputRef.current.setSelection) {
         inputRef.current.setSelection(0, query.length);
       }
     }, 100);
