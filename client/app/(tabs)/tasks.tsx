@@ -17,10 +17,11 @@ import LocationsAutocomplete from '@/components/LocationsAutocomplete';
 import { getLocations } from '@/modules/map/MapService';
 import TaskCard from '@/components/TaskCard';
 import { MapState, useMap } from '@/modules/map/MapContext';
+import { TaskService } from '@/services/TaskService';
 
 export default function TasksScreen() {
   const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
-  const { state, setState } = useMap();
+  const { state, setState, setRoute } = useMap();
 
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
@@ -119,8 +120,13 @@ export default function TasksScreen() {
     setModifiableTask(undefined);
   };
 
-  const generateRoute = () => {
+  const generateRoute = async () => {
     console.log('setting state');
+
+    const route = await TaskService.getOptimalRouteForPaths(selectedTasks);
+
+    console.log('CALCULATED');
+    setRoute(route);
     setState(MapState.RoutePlanning);
   };
 
