@@ -19,10 +19,11 @@ import TaskCard from '@/components/TaskCard';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { TaskService } from '@/services/TaskService';
 import CoordinateService from '@/services/CoordinateService';
+import { useRouter } from 'expo-router';
 
 export default function TasksScreen() {
-  const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
-  const { setState, setRoute, route, setStartLocation, setEndLocation } = useMap();
+  const { selectedTasks, setSelectedTasks, tasks, setTasks, setIsTaskPlanning } = useTask();
+  const { setState, setRoute, route, flyTo, userLocation } = useMap();
 
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
@@ -40,15 +41,13 @@ export default function TasksScreen() {
     coordinates: [0, 0],
   });
 
+  const router = useRouter();
+
   useEffect(() => {
     if (tasks.length > 0) {
       taskList.current.setTasks(tasks);
     }
   }, [tasks]);
-
-  useEffect(() => {
-    console.log(route);
-  }, [route]);
 
   const addTask = () => {
     if (!taskName.trim() || !taskLocation.trim()) return;
@@ -126,17 +125,12 @@ export default function TasksScreen() {
   };
 
   const generateRoute = async () => {
-    console.log('setting state');
-
     const currenCoords: Coordinates = await CoordinateService.getCurrentCoordinates();
 
     const currentLocation: Location = {
       name: 'Current Location',
       coordinates: currenCoords,
     };
-
-    const newStartCoordinates = selectedTasks[0].location;
-    const newEndCoordinates = selectedTasks[selectedTasks.length - 1].location;
 
     const currentLocationTask: Task = {
       id: '1000',
@@ -149,8 +143,6 @@ export default function TasksScreen() {
     tasksForRouting.push(currentLocationTask);
     tasksForRouting.push(...selectedTasks);
 
-    console.log('Tasks for routing:', JSON.stringify(tasksForRouting, null, 2));
-
     let newRoute = await TaskService.getOptimalRouteForPaths(tasksForRouting);
 
     for (let i = 0; i < newRoute.segments.length; i++) {
@@ -158,7 +150,16 @@ export default function TasksScreen() {
     }
 
     setRoute(newRoute);
+    router.push('/');
+
+    if (userLocation) {
+      console.log('trying to fly');
+      flyTo(userLocation.coordinates, 50);
+    }
+
     setState(MapState.RoutePlanning);
+
+    setIsTaskPlanning(true);
   };
 
   return (

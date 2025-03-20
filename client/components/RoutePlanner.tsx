@@ -34,7 +34,7 @@ export function RoutePlanner() {
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
 
-  const { isTaskPlanning, setIsTaskPlanning } = useTask();
+  const { isTaskPlanning } = useTask();
 
   const {
     loadRouteFromCoordinates,
@@ -44,6 +44,7 @@ export function RoutePlanner() {
     userLocation,
     state,
     route,
+    flyTo,
   } = useMap();
 
   const calculateOptions = useCallback(async () => {
@@ -135,7 +136,7 @@ export function RoutePlanner() {
         </View>
       </View>
 
-      {route !== null && true ? (
+      {route !== null && isTaskPlanning ? (
         <TaskFrame />
       ) : (
         <BottomFrame
