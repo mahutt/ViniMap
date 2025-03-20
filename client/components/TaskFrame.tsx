@@ -1,15 +1,10 @@
+import { useTask } from '@/providers/TaskContext';
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
-const data = [
-  { name: 'Go to Sofias', duration: 1.5 },
-  { name: 'Go to School', duration: 3 },
-  { name: 'Get haircut', duration: 0.5 },
-  { name: 'Go back to school', duration: 2 },
-];
-
 const TaskFrame = () => {
   const scrollViewRef = useRef<ScrollView>(null);
+  const { taskRouteDescriptions } = useTask();
 
   return (
     <View style={styles.container}>
@@ -21,19 +16,20 @@ const TaskFrame = () => {
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollView}>
-        {data.map((item, index) => (
-          <View key={index} style={styles.textContainer}>
-            <View style={styles.circle}>
-              <Text style={styles.circleText}>{index + 1}</Text>
-            </View>
-            <Text style={styles.text}>
-              {item.name} -{' '}
-              <Text style={styles.boldText}>
-                {item.duration} {item.duration === 1 ? 'hour' : 'hours'}
+        {taskRouteDescriptions.length === 0 ? (
+          <Text style={styles.noTasksText}>No tasks available</Text>
+        ) : (
+          taskRouteDescriptions.map((item, index) => (
+            <View key={index} style={styles.textContainer}>
+              <View style={styles.circle}>
+                <Text style={styles.circleText}>{index + 1}</Text>
+              </View>
+              <Text style={styles.text}>
+                {item.text} - <Text style={styles.boldText}>{item.time}</Text>
               </Text>
-            </Text>
-          </View>
-        ))}
+            </View>
+          ))
+        )}
       </ScrollView>
     </View>
   );
@@ -98,6 +94,11 @@ const styles = StyleSheet.create({
   doneButtonText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  noTasksText: {
+    textAlign: 'center',
+    marginTop: 20,
+    color: 'gray',
   },
 });
 

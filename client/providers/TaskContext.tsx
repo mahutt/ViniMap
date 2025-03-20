@@ -1,4 +1,4 @@
-import { Task } from '@/modules/map/Types';
+import { Task, TaskRouteDescription } from '@/modules/map/Types';
 import { storage } from '@/services/StorageService';
 import { createContext, useState, useContext, ReactNode, useEffect, useMemo } from 'react';
 
@@ -9,6 +9,8 @@ type TaskContextType = {
   setTasks: (tasks: Task[]) => void;
   isTaskPlanning: boolean;
   setIsTaskPlanning: (isPlanning: boolean) => void;
+  taskRouteDescriptions: TaskRouteDescription[];
+  setTaskRouteDescriptions: (taskTimes: TaskRouteDescription[]) => void;
 };
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -26,6 +28,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const [selectedTasks, setSelectedTasks] = useState<Task[]>([]);
   const [isTaskPlanning, setIsTaskPlanning] = useState<boolean>(false);
+  const [taskRouteDescriptions, setTaskRouteDescriptions] = useState<TaskRouteDescription[]>([]);
 
   useEffect(() => {
     try {
@@ -38,7 +41,16 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [tasks]);
 
   const contextValue = useMemo(
-    () => ({ selectedTasks, setSelectedTasks, tasks, setTasks, isTaskPlanning, setIsTaskPlanning }),
+    () => ({
+      selectedTasks,
+      setSelectedTasks,
+      tasks,
+      setTasks,
+      isTaskPlanning,
+      setIsTaskPlanning,
+      taskRouteDescriptions,
+      setTaskRouteDescriptions,
+    }),
     [selectedTasks, tasks, isTaskPlanning]
   );
 

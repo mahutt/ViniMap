@@ -22,7 +22,15 @@ import CoordinateService from '@/services/CoordinateService';
 import { useRouter } from 'expo-router';
 
 export default function TasksScreen() {
-  const { selectedTasks, setSelectedTasks, tasks, setTasks, setIsTaskPlanning } = useTask();
+  const {
+    selectedTasks,
+    setSelectedTasks,
+    tasks,
+    setTasks,
+    setIsTaskPlanning,
+    taskRouteDescriptions,
+    setTaskRouteDescriptions,
+  } = useTask();
   const { setState, setRoute, flyTo, userLocation } = useMap();
 
   const taskList = useRef(new TaskList());
@@ -143,7 +151,10 @@ export default function TasksScreen() {
     tasksForRouting.push(currentLocationTask);
     tasksForRouting.push(...selectedTasks);
 
-    let newRoute = await TaskService.getOptimalRouteForPaths(tasksForRouting);
+    let newRoute = await TaskService.getOptimalRouteForPaths(
+      tasksForRouting,
+      setTaskRouteDescriptions
+    );
 
     for (let i = 0; i < newRoute.segments.length; i++) {
       newRoute.segments[i].id = ('segement' + i).toString();
