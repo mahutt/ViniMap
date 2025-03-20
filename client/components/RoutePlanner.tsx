@@ -43,6 +43,7 @@ export function RoutePlanner() {
     endLocation,
     userLocation,
     state,
+    route,
   } = useMap();
 
   const calculateOptions = useCallback(async () => {
@@ -134,17 +135,16 @@ export function RoutePlanner() {
         </View>
       </View>
 
-      {isRouteFound &&
-        (true ? (
-          <TaskFrame />
-        ) : (
-          <BottomFrame
-            selectedMode={selectedMode}
-            modeIcon={getModeIcon(selectedMode)}
-            durations={durations}
-            distances={distances}
-          />
-        ))}
+      {route !== null && true ? (
+        <TaskFrame />
+      ) : (
+        <BottomFrame
+          selectedMode={selectedMode}
+          modeIcon={getModeIcon(selectedMode)}
+          durations={durations}
+          distances={distances}
+        />
+      )}
     </>
   );
 }

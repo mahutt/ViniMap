@@ -28,6 +28,7 @@ export class TaskService {
         console.error(`Error generating route from task ${i} to ${i + 1}:`, error);
       }
     }
+
     return {
       duration: totalDuration,
       distance: totalDistance,

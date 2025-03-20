@@ -110,9 +110,9 @@ export default function MapView() {
         </Mapbox.PointAnnotation>
       )}
 
-      {state === MapState.RoutePlanning && startLocation !== null && endLocation !== null && (
+      {state === MapState.RoutePlanning && (
         <>
-          {!equalLocations(startLocation, userLocation) && (
+          {startLocation && !equalLocations(startLocation, userLocation) && (
             <Mapbox.MarkerView id="start" coordinate={startLocation.coordinates}>
               <View style={[styles.marker, styles.startMarker]} />
             </Mapbox.MarkerView>

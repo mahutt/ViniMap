@@ -8,7 +8,7 @@ import {
   ScrollView,
   Modal,
 } from 'react-native';
-import { Location, Task } from '@/modules/map/Types';
+import { Coordinates, Location, Task } from '@/modules/map/Types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -18,10 +18,11 @@ import { getLocations } from '@/modules/map/MapService';
 import TaskCard from '@/components/TaskCard';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { TaskService } from '@/services/TaskService';
+import CoordinateService from '@/services/CoordinateService';
 
 export default function TasksScreen() {
   const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
-  const { state, setState, setRoute } = useMap();
+  const { setState, setRoute, route, setStartLocation, setEndLocation } = useMap();
 
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
@@ -44,6 +45,10 @@ export default function TasksScreen() {
       taskList.current.setTasks(tasks);
     }
   }, [tasks]);
+
+  useEffect(() => {
+    console.log(route);
+  }, [route]);
 
   const addTask = () => {
     if (!taskName.trim() || !taskLocation.trim()) return;
@@ -123,10 +128,36 @@ export default function TasksScreen() {
   const generateRoute = async () => {
     console.log('setting state');
 
-    const route = await TaskService.getOptimalRouteForPaths(selectedTasks);
+    const currenCoords: Coordinates = await CoordinateService.getCurrentCoordinates();
 
-    console.log('CALCULATED');
-    setRoute(route);
+    const currentLocation: Location = {
+      name: 'Current Location',
+      coordinates: currenCoords,
+    };
+
+    const newStartCoordinates = selectedTasks[0].location;
+    const newEndCoordinates = selectedTasks[selectedTasks.length - 1].location;
+
+    const currentLocationTask: Task = {
+      id: '1000',
+      text: 'First Tasks',
+      location: currentLocation,
+    };
+
+    const tasksForRouting: Task[] = [];
+
+    tasksForRouting.push(currentLocationTask);
+    tasksForRouting.push(...selectedTasks);
+
+    console.log('Tasks for routing:', JSON.stringify(tasksForRouting, null, 2));
+
+    let newRoute = await TaskService.getOptimalRouteForPaths(tasksForRouting);
+
+    for (let i = 0; i < newRoute.segments.length; i++) {
+      newRoute.segments[i].id = ('segement' + i).toString();
+    }
+
+    setRoute(newRoute);
     setState(MapState.RoutePlanning);
   };
 
