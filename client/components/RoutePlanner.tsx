@@ -8,6 +8,7 @@ import BottomFrame from './ui/RoutePlanner Components/BottomFrame';
 import InputFields from './ui/RoutePlanner Components/InputFields';
 import TaskFrame from './TaskFrame';
 import { useTask } from '@/providers/TaskContext';
+import TaskRouteHeader from './TaskRouteHeader';
 
 const MODES = [
   { name: 'walking', icon: 'walk-outline' },
@@ -123,18 +124,22 @@ export function RoutePlanner() {
 
   return (
     <>
-      <View style={styles.inputContainer}>
-        <View style={styles.locationRangeForm}>
-          <InputFields />
-          <TransportModes
-            selectedMode={selectedMode}
-            onMode={handleTransportMode}
-            durations={durations}
-            isRouteFound={isRouteFound}
-            modes={MODES}
-          />
+      {isTaskPlanning ? (
+        <TaskRouteHeader />
+      ) : (
+        <View style={styles.inputContainer}>
+          <View style={styles.locationRangeForm}>
+            <InputFields />
+            <TransportModes
+              selectedMode={selectedMode}
+              onMode={handleTransportMode}
+              durations={durations}
+              isRouteFound={isRouteFound}
+              modes={MODES}
+            />
+          </View>
         </View>
-      </View>
+      )}
 
       {route !== null && isTaskPlanning ? (
         <TaskFrame />
