@@ -23,7 +23,7 @@ import { useRouter } from 'expo-router';
 
 export default function TasksScreen() {
   const { selectedTasks, setSelectedTasks, tasks, setTasks, setIsTaskPlanning } = useTask();
-  const { setState, setRoute, route, flyTo, userLocation } = useMap();
+  const { setState, setRoute, flyTo, userLocation } = useMap();
 
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
@@ -152,10 +152,11 @@ export default function TasksScreen() {
     setRoute(newRoute);
     router.push('/');
 
-    if (userLocation) {
-      console.log('trying to fly');
-      flyTo(userLocation.coordinates, 50);
-    }
+    setTimeout(() => {
+      if (userLocation) {
+        flyTo(userLocation.coordinates, 17);
+      }
+    }, 50);
 
     setState(MapState.RoutePlanning);
 
