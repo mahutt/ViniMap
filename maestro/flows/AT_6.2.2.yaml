@@ -1,0 +1,18 @@
+appId: com.anonymous.client
+---
+- tapOn: "Tasks, tab, 3 of 4"
+- tapOn: "+"
+- tapOn: "Task name"
+- inputText: "Homework at phil's crib"
+- tapOn: "Location"
+- inputText: "15 rue de l'artiste"
+- tapOn:
+    point: "50%,58%"
+- tapOn:
+    id: "Return"
+- tapOn:
+    point: "50%,57%"
+- tapOn:
+    point: "50%,61%"
+- tapOn: "Map, tab, 1 of 4"
+- tapOn: "Tasks, tab, 3 of 4"

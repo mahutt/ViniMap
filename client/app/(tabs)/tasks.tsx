@@ -122,7 +122,7 @@ export default function TasksScreen() {
       <View style={styles.tasksWrapper}>
         <View style={styles.header}>
           <Text style={styles.sectionTitle}>Tasks</Text>
-          <TouchableOpacity onPress={getPreviouseState}>
+          <TouchableOpacity testID="undo-button" onPress={getPreviouseState}>
             <IconSymbol size={24} name="arrow.uturn.backward" color="#852C3A" />
           </TouchableOpacity>
         </View>
