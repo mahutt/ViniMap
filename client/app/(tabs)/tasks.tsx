@@ -17,7 +17,6 @@ import LocationsAutocomplete from '@/components/LocationsAutocomplete';
 import { getLocations } from '@/modules/map/MapService';
 import TaskCard from '@/components/TaskCard';
 import { MapState, useMap } from '@/modules/map/MapContext';
-import { useNavigation } from '@react-navigation/native';
 
 export default function TasksScreen() {
   const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
