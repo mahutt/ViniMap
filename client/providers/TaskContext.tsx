@@ -7,6 +7,8 @@ type TaskContextType = {
   setSelectedTasks: (tasks: Task[]) => void;
   tasks: Task[];
   setTasks: (tasks: Task[]) => void;
+  isTaskPlanning: boolean;
+  setIsTaskPlanning: (isPlanning: boolean) => void;
 };
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -23,6 +25,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   });
 
   const [selectedTasks, setSelectedTasks] = useState<Task[]>([]);
+  const [isTaskPlanning, setIsTaskPlanning] = useState<boolean>(false);
 
   useEffect(() => {
     try {
@@ -35,8 +38,8 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [tasks]);
 
   const contextValue = useMemo(
-    () => ({ selectedTasks, setSelectedTasks, tasks, setTasks }),
-    [selectedTasks, tasks]
+    () => ({ selectedTasks, setSelectedTasks, tasks, setTasks, isTaskPlanning, setIsTaskPlanning }),
+    [selectedTasks, tasks, isTaskPlanning]
   );
 
   return <TaskContext.Provider value={contextValue}>{children}</TaskContext.Provider>;

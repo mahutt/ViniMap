@@ -16,9 +16,12 @@ import { useTask } from '@/providers/TaskContext';
 import LocationsAutocomplete from '@/components/LocationsAutocomplete';
 import { getLocations } from '@/modules/map/MapService';
 import TaskCard from '@/components/TaskCard';
+import { MapState, useMap } from '@/modules/map/MapContext';
+import { useNavigation } from '@react-navigation/native';
 
 export default function TasksScreen() {
   const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
+  const { state, setState } = useMap();
 
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
@@ -117,6 +120,11 @@ export default function TasksScreen() {
     setModifiableTask(undefined);
   };
 
+  const generateRoute = () => {
+    console.log('setting state');
+    setState(MapState.RoutePlanning);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
@@ -148,7 +156,7 @@ export default function TasksScreen() {
           <TouchableOpacity style={styles.plusButton} onPress={() => setModalVisible(true)}>
             <Text style={styles.plusButtonText}>+</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.pathButton}>
+          <TouchableOpacity style={styles.pathButton} onPress={generateRoute}>
             <Text style={styles.pathButtonText}>Generate Path</Text>
           </TouchableOpacity>
         </View>

@@ -6,6 +6,8 @@ import { getRoute } from '@/modules/map/MapService';
 import TransportModes from './ui/RoutePlanner Components/TransportModes';
 import BottomFrame from './ui/RoutePlanner Components/BottomFrame';
 import InputFields from './ui/RoutePlanner Components/InputFields';
+import TaskFrame from './TaskFrame';
+import { useTask } from '@/providers/TaskContext';
 
 const MODES = [
   { name: 'walking', icon: 'walk-outline' },
@@ -31,6 +33,8 @@ export function RoutePlanner() {
 
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
+
+  const { isTaskPlanning, setIsTaskPlanning } = useTask();
 
   const {
     loadRouteFromCoordinates,
@@ -130,14 +134,17 @@ export function RoutePlanner() {
         </View>
       </View>
 
-      {isRouteFound && (
-        <BottomFrame
-          selectedMode={selectedMode}
-          modeIcon={getModeIcon(selectedMode)}
-          durations={durations}
-          distances={distances}
-        />
-      )}
+      {isRouteFound &&
+        (true ? (
+          <TaskFrame />
+        ) : (
+          <BottomFrame
+            selectedMode={selectedMode}
+            modeIcon={getModeIcon(selectedMode)}
+            durations={durations}
+            distances={distances}
+          />
+        ))}
     </>
   );
 }
