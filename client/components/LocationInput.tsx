@@ -38,7 +38,7 @@ export default function LocationInput({
       if (inputRef.current?.setSelection) {
         inputRef.current.setSelection(0, query.length);
       }
-    }, 100);
+    }, 50);
   };
 
   const handleBlur = () => {
