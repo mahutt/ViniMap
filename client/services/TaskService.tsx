@@ -15,13 +15,6 @@ export class TaskService {
 
     let taskDescriptions: TaskRouteDescription[] = [];
 
-    if (listOfTasks.length > 0) {
-      taskDescriptions.push({
-        text: listOfTasks[0].text,
-        time: '0 min', // Start point
-      });
-    }
-
     for (let i = 0; i < listOfTasks.length - 1; i++) {
       const startCoordinates = listOfTasks[i].location;
       const endCoordinates = listOfTasks[i + 1].location;
@@ -33,7 +26,7 @@ export class TaskService {
           totalDistance += route.distance;
           totalDuration += route.duration;
 
-          const taskText = listOfTasks[i + 1].text; // Log destination task
+          const taskText = listOfTasks[i + 1].text;
 
           const taskDescription = {
             text: taskText,
@@ -50,8 +43,6 @@ export class TaskService {
         console.error(`Error generating route from task ${i} to ${i + 1}:`, error);
       }
     }
-
-    taskDescriptions.shift();
 
     setTaskTime(taskDescriptions);
     return {
