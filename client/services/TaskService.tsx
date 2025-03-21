@@ -9,12 +9,18 @@ export class TaskService {
     if (listOfTasks.length <= 0) {
       throw new Error('No tasks are selected');
     }
-
     let totalDistance = 0;
     let totalDuration = 0;
     let fullSegments: Segment[] = [];
 
     let taskDescriptions: TaskRouteDescription[] = [];
+
+    if (listOfTasks.length > 0) {
+      taskDescriptions.push({
+        text: listOfTasks[0].text,
+        time: '0 min', // Start point
+      });
+    }
 
     for (let i = 0; i < listOfTasks.length - 1; i++) {
       const startCoordinates = listOfTasks[i].location;
@@ -27,26 +33,26 @@ export class TaskService {
           totalDistance += route.distance;
           totalDuration += route.duration;
 
-          if (route.duration >= 3600) {
-            let taskDescription = {
-              text: listOfTasks[i].text,
-              time: (route.duration / 3600).toFixed(2) + ' h',
-            };
-            taskDescriptions.push(taskDescription);
-          } else {
-            let taskDescription = {
-              text: listOfTasks[i].text,
-              time: Math.round(route.duration / 60) + ' min',
-            };
-            taskDescriptions.push(taskDescription);
-          }
+          const taskText = listOfTasks[i + 1].text; // Log destination task
 
+          const taskDescription = {
+            text: taskText,
+            time:
+              route.duration >= 3600
+                ? (route.duration / 3600).toFixed(2) + ' h'
+                : Math.round(route.duration / 60) + ' min',
+          };
+
+          taskDescriptions.push(taskDescription);
           fullSegments = [...fullSegments, ...route.segments];
         }
       } catch (error) {
         console.error(`Error generating route from task ${i} to ${i + 1}:`, error);
       }
     }
+
+    taskDescriptions.shift();
+
     setTaskTime(taskDescriptions);
     return {
       duration: totalDuration,
