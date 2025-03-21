@@ -142,7 +142,7 @@ export const getIndoorRoute = (
     // Based on how stops is constructed,
     // the start and end levels of each segment should be the same
     if (segmentStartLevel !== segmentEndLevel) {
-      console.log('HEEEEEEREEEEEE');
+      //console.log('HEEEEEEREEEEEE');
       return null;
     }
 
@@ -150,6 +150,7 @@ export const getIndoorRoute = (
     const startPositionOptions = GeojsonHelper.findLinesIntersect(footways, start);
     const endPositionOptions = GeojsonHelper.findLinesIntersect(footways, end);
     if (startPositionOptions.length === 0 || endPositionOptions.length === 0) {
+      console.log('HEEEEEEREEEEEE');
       return null;
     }
 

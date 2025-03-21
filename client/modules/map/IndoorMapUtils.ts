@@ -236,12 +236,11 @@ export const getConnectionsBetween = (
   endLevel = temp;
   let possibleConnections = indoorMap.geojson.features.filter(
     (feature) =>
-      // feature.properties?.highway === 'elevator' ||
-      // feature.properties?.stairs === 'yes' ||
+      feature.properties?.highway === 'elevator' ||
+      feature.properties?.stairs === 'yes' ||
       feature.properties?.conveying === 'yes'
   );
 
-  //Going up
   const usableConnections = possibleConnections.filter((feature) => {
     if (feature.geometry.type !== 'Polygon') {
       return false;
@@ -259,78 +258,76 @@ export const getConnectionsBetween = (
 
     return false;
   });
-  //console.log(usableConnections);
+
   if (usableConnections.length == 0) {
-    console.log('-----------------No single usable---------------------');
-    //case 1 going up
-    console.log(`start: ${startLevel}  End:  ${endLevel}`);
-    if (true) {
-      console.log('-----------------Going Up---------------------');
-      const first_connection = possibleConnections.filter((feature) => {
-        if (feature.geometry.type !== 'Polygon') {
-          return false;
-        }
-        const level = GeojsonService.extractLevelFromFeature(feature);
-        if (level !== null && typeof level === 'object') {
-          return startLevel <= level.max && startLevel >= level.min;
-        }
-      });
-      //Didn't find any possible connections containing the start
-      if (first_connection.length == 0) {
-        return [];
-      }
-      //Loop to get all pieces
-      console.log(
-        '=-------------------First piece: ------------------------\n ' +
-          JSON.stringify(first_connection[0])
-      );
-      let current_connection = first_connection[0];
-      usableConnections.push(current_connection);
-
-      while (true) {
-        const current_level = GeojsonService.extractLevelFromFeature(current_connection);
-        let current_max = -100;
-        if (current_level !== null && typeof current_level === 'object') {
-          current_max = current_level.max;
-        }
-
-        const next_conection = possibleConnections.filter((feature) => {
-          if (feature.geometry.type !== 'Polygon') {
-            return false;
-          }
-          const next_connection_level = GeojsonService.extractLevelFromFeature(feature);
-          if (next_connection_level !== null && typeof next_connection_level === 'object') {
-            return next_connection_level.min == current_max;
-          }
-        });
-        if (next_conection.length == 0) {
-          return [];
-        }
-
-        const next_levels = GeojsonService.extractLevelFromFeature(next_conection[0]);
-        let next_levels_max = -100;
-        if (next_levels !== null && typeof next_levels === 'object') {
-          next_levels_max = next_levels.max;
-        }
-
-        usableConnections.push(next_conection[0]);
-        if (next_levels_max >= endLevel) {
-          break;
-        } else {
-          current_connection = next_conection[0];
-          continue;
-        }
-      }
-      console.log('AFTER LOOP');
-      // usableConnections.forEach((F) => console.log(JSON.stringify(F)));
-      return usableConnections.reverse() as Feature<Polygon>[];
-    }
-
-    //Case 2 Going down
-    // else {
-    //   console.log('-----------------Going DOOOOOOOWN---------------------');
-    // }
+    return getDisjointConnections(startLevel, endLevel, possibleConnections as Feature<Polygon>[]);
   }
 
   return usableConnections.slice(0, 1) as Feature<Polygon>[];
+};
+
+const getDisjointConnections = (
+  startLevel: Level,
+  endLevel: Level,
+  possibleConnections: Feature<Polygon>[]
+): Feature<Polygon>[] => {
+  const usableConnections = [];
+  const first_connection = possibleConnections.filter((feature) => {
+    if (feature.geometry.type !== 'Polygon') {
+      return false;
+    }
+    const level = GeojsonService.extractLevelFromFeature(feature);
+    if (level !== null && typeof level === 'object') {
+      return startLevel <= level.max && startLevel >= level.min;
+    }
+  });
+  //Didn't find any possible connections containing the start
+  if (first_connection.length == 0) {
+    return [];
+  }
+  //Loop to get all pieces
+  console.log(
+    '=-------------------First piece: ------------------------\n ' +
+      JSON.stringify(first_connection[0])
+  );
+  let current_connection = first_connection[0];
+  usableConnections.push(current_connection);
+
+  while (true) {
+    const current_level = GeojsonService.extractLevelFromFeature(current_connection);
+    let current_max = -100;
+    if (current_level !== null && typeof current_level === 'object') {
+      current_max = current_level.max;
+    }
+
+    const next_conection = possibleConnections.filter((feature) => {
+      if (feature.geometry.type !== 'Polygon') {
+        return false;
+      }
+      const next_connection_level = GeojsonService.extractLevelFromFeature(feature);
+      if (next_connection_level !== null && typeof next_connection_level === 'object') {
+        return next_connection_level.min == current_max;
+      }
+    });
+    if (next_conection.length == 0) {
+      return [];
+    }
+
+    const next_levels = GeojsonService.extractLevelFromFeature(next_conection[0]);
+    let next_levels_max = -100;
+    if (next_levels !== null && typeof next_levels === 'object') {
+      next_levels_max = next_levels.max;
+    }
+
+    usableConnections.push(next_conection[0]);
+    if (next_levels_max >= endLevel) {
+      break;
+    } else {
+      current_connection = next_conection[0];
+      continue;
+    }
+  }
+  // console.log('AFTER LOOP');
+  // usableConnections.forEach((F) => console.log(JSON.stringify(F)));
+  return usableConnections.reverse() as Feature<Polygon>[];
 };
