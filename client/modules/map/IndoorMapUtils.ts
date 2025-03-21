@@ -248,7 +248,6 @@ export const getConnectionsBetween = (
 
     const level = GeojsonService.extractLevelFromFeature(feature);
     if (level !== null && typeof level === 'object') {
-      //console.log(JSON.stringify(level));
       if (startLevel < endLevel) {
         return level.min <= startLevel && level.max >= endLevel;
       } else {
@@ -281,21 +280,19 @@ const getDisjointConnections = (
       return startLevel <= level.max && startLevel >= level.min;
     }
   });
-  //Didn't find any possible connections containing the start
+  //Didn't find any possible connections containing the startLevel
   if (first_connection.length == 0) {
     return [];
   }
-  //Loop to get all pieces
-  console.log(
-    '=-------------------First piece: ------------------------\n ' +
-      JSON.stringify(first_connection[0])
-  );
+
+  //First Usable Connection. We loop until we've found enough usable connections to complete the route
   let current_connection = first_connection[0];
   usableConnections.push(current_connection);
 
+  //Loop to get all pieces. Similar to linked list
   while (true) {
     const current_level = GeojsonService.extractLevelFromFeature(current_connection);
-    let current_max = -100;
+    let current_max: Level;
     if (current_level !== null && typeof current_level === 'object') {
       current_max = current_level.max;
     }
@@ -309,6 +306,7 @@ const getDisjointConnections = (
         return next_connection_level.min == current_max;
       }
     });
+
     if (next_conection.length == 0) {
       return [];
     }

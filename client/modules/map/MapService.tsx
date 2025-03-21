@@ -121,7 +121,6 @@ export const getIndoorRoute = (
       return null;
     }
     stops = [startFeature, ...connections, endFeature];
-    console.log('===========STOPS=================');
   }
 
   let distance = 0;
@@ -133,16 +132,12 @@ export const getIndoorRoute = (
     if (!segmentLevels) {
       return null;
     }
-    console.log('S-----------------------------------------\n' + JSON.stringify(start));
-    console.log(
-      'e--------------------------------------------------------\n' + JSON.stringify(end)
-    );
+
     const [segmentStartLevel, segmentEndLevel] = segmentLevels;
-    console.log('Segment Levels' + segmentLevels);
+
     // Based on how stops is constructed,
     // the start and end levels of each segment should be the same
     if (segmentStartLevel !== segmentEndLevel) {
-      //console.log('HEEEEEEREEEEEE');
       return null;
     }
 
@@ -150,7 +145,6 @@ export const getIndoorRoute = (
     const startPositionOptions = GeojsonHelper.findLinesIntersect(footways, start);
     const endPositionOptions = GeojsonHelper.findLinesIntersect(footways, end);
     if (startPositionOptions.length === 0 || endPositionOptions.length === 0) {
-      console.log('HEEEEEEREEEEEE');
       return null;
     }
 
@@ -159,7 +153,6 @@ export const getIndoorRoute = (
     const steps = DijkstraService.findShortestPath(startPosition, endPosition, footways);
 
     if (!steps) {
-      console.log('HEEEEEEREEEEEE');
       return null;
     }
     console.log(steps);
