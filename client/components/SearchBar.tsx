@@ -9,6 +9,14 @@ export function SearchBar() {
   const [query, setQuery] = React.useState<string>('');
   const textInputRef = React.useRef<TextInput>(null);
 
+  const handleFocus = () => {
+    setTimeout(() => {
+      if (textInputRef.current) {
+        textInputRef.current.setSelection(0, query.length);
+      }
+    }, 50);
+  };
+
   return (
     <View style={styles.searchContainer}>
       <View style={styles.searchBar}>
@@ -21,6 +29,7 @@ export function SearchBar() {
           value={query}
           onChangeText={(newQuery) => setQuery(newQuery)}
           autoCorrect={false}
+          onFocus={handleFocus}
         />
         {query !== '' && query !== endLocation?.name && (
           <LocationsAutocomplete
