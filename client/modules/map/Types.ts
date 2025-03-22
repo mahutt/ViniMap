@@ -67,3 +67,8 @@ export interface Task {
   text: string;
   location: Location; // changed for location for now..., keeping comment here until I close epic.
 }
+
+export interface TaskRouteDescription {
+  text: string;
+  time: string;
+}

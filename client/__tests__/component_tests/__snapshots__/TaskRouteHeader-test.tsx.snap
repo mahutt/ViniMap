@@ -1,0 +1,95 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TaskRouteHeader should render correctly with task 1`] = `
+<View
+  style={
+    {
+      "alignItems": "center",
+      "backgroundColor": "white",
+      "borderBottomColor": "#f0f0f0",
+      "borderBottomWidth": 1,
+      "flexDirection": "row",
+      "gap": 10,
+      "left": 0,
+      "paddingBottom": 20,
+      "paddingHorizontal": 20,
+      "paddingTop": 80,
+      "position": "absolute",
+      "right": 0,
+      "top": 0,
+      "zIndex": 10,
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "backgroundColor": "#852C3A",
+        "borderRadius": 12,
+        "color": "white",
+        "fontSize": 16,
+        "fontWeight": "bold",
+        "height": 24,
+        "lineHeight": 24,
+        "textAlign": "center",
+        "width": 24,
+      }
+    }
+  >
+    1
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#333",
+        "flex": 1,
+        "fontSize": 16,
+        "fontWeight": "bold",
+      }
+    }
+  >
+    Test Task
+  </Text>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onClick={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "opacity": 1,
+      }
+    }
+    testID="close-button"
+  >
+    <Ionicons
+      color="#666"
+      name="close-outline"
+      size={28}
+    />
+  </View>
+</View>
+`;

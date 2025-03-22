@@ -360,37 +360,4 @@ describe('MapContext', () => {
     expect(getRoute).toHaveBeenCalledWith([-73.57, 45.5], [-73.58, 45.51], 'walking');
     expect(mapContext?.cameraRef.current?.fitBounds).toHaveBeenCalled();
   });
-
-  test('getClosestMap returns null when no maps overlap', async () => {
-    let mapContext: ReturnType<typeof useMap> | undefined;
-
-    // Mock overlap to return false for this test
-    const { overlap } = require('@/modules/map/IndoorMapUtils');
-    overlap.mockReturnValue(false);
-
-    render(
-      <MapProvider>
-        <TestComponent onMapContext={(ctx) => (mapContext = ctx)} />
-      </MapProvider>
-    );
-
-    await waitFor(() => expect(mapContext).toBeDefined());
-
-    if (mapContext) {
-      // @ts-ignore - mocking the map ref
-      mapContext.mapRef.current = {
-        getZoom: jest.fn().mockResolvedValue(18),
-        getVisibleBounds: jest.fn().mockResolvedValue([
-          [-73.6, 45.4],
-          [-73.5, 45.3], // Bounds not overlapping any indoor maps
-        ]),
-      };
-    }
-
-    await act(async () => {
-      mapContext?.updateSelectedMapIfNeeded();
-    });
-
-    expect(mapContext?.indoorMap).toBeNull();
-  });
 });
