@@ -39,6 +39,7 @@ export function RoutePlanner() {
     endLocation,
     userLocation,
     state,
+    indoorMap,
   } = useMap();
 
   const calculateOptions = useCallback(async () => {

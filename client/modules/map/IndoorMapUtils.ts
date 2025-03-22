@@ -229,16 +229,17 @@ export const getClosestLevel = (level: Level, levelsRange: LevelsRange): Level =
 export const getConnectionsBetween = (
   startLevel: Level,
   endLevel: Level,
-  indoorMap: IndoorMap
+  indoorMap: IndoorMap,
+  getPathForDisabled: Boolean = false
 ): Feature<Polygon>[] => {
   const temp = startLevel;
   startLevel = endLevel;
   endLevel = temp;
   let possibleConnections = indoorMap.geojson.features.filter(
     (feature) =>
-      feature.properties?.highway === 'elevator' ||
-      feature.properties?.stairs === 'yes' ||
-      feature.properties?.conveying === 'yes'
+      (feature.properties?.highway === 'elevator' && getPathForDisabled) ||
+      ((feature.properties?.stairs === 'yes' || feature.properties?.conveying === 'yes') &&
+        !getPathForDisabled)
   );
 
   const usableConnections = possibleConnections.filter((feature) => {
