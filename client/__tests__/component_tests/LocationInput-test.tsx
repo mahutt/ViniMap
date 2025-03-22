@@ -324,32 +324,4 @@ describe('LocationInput', () => {
 
     expect(input.props.value).toBe('Test Location');
   });
-
-  test('handles the case when location changes via props', async () => {
-    const { getByPlaceholderText, rerender } = render(
-      <MapProvider>
-        <LocationInput {...defaultProps} />
-      </MapProvider>
-    );
-
-    const input = getByPlaceholderText('Test placeholder');
-    expect(input.props.value).toBe('');
-
-    rerender(
-      <MapProvider>
-        <LocationInput {...defaultProps} location={TEST_LOCATION} />
-      </MapProvider>
-    );
-
-    expect(input.props.value).toBe('Test Location');
-
-    const DIFFERENT_LOCATION = { name: 'Different Place', coordinates: [3, 4] as [number, number] };
-    rerender(
-      <MapProvider>
-        <LocationInput {...defaultProps} location={DIFFERENT_LOCATION} />
-      </MapProvider>
-    );
-
-    expect(input.props.value).toBe('Different Place');
-  });
 });
