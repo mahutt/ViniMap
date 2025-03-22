@@ -121,7 +121,7 @@
       "description": "Restaurant"
     },
     {
-      "id": "library-1199684762",
+      "id": "library-1199684752",
       "name": "Webster Library",
       "coordinates": [-73.5779337, 45.4968158],
       "address": "Pavillion J.W. McConnell Bldg, 1400 Maisonneuve Blvd W, Montreal, Quebec H3G 1M8",
@@ -1583,6 +1583,174 @@
         "hours": "11:30 a.m.–8:30 p.m."
       },
       "description": "Hearty Korean favourites, from seafood pancakes to bibimbop, dished up in a bustling, compact venue."
+    },
+    {
+      "id": "library-1199684762",
+      "name": "Vanier Library",
+      "coordinates": [-73.6389097132426, 45.4588870024562],
+      "address": "7141 Sherbrooke St W, Montreal, Quebec H4B 1R6",
+      "type": "library",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "24 Hours"
+      },
+      "description": "Loyola Campus University Library"
+    },
+    {
+      "id": "restaurant-1215545829",
+      "name": "Hive Co-op Cafe",
+      "coordinates": [-73.63997274893075, 45.45773520154267],
+      "address": "7141 Sherbrooke Street W. CJ, 2 341 2nd floor, Montreal, Quebec H4B 1R6",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "8:15am-4:00p.m."
+      },
+      "description": "Campus Cafe"
+    },
+    {
+      "id": "restaurant-1215545839",
+      "name": "Second Cup Cafe",
+      "coordinates": [-73.63996001226405, 45.456220187189544],
+      "address": "7335-7345 Sherbrooke St W, Montreal, Quebec H4B 1R9",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "7:00am-9:00p.m."
+      },
+      "description": "Coffee Shop"
+    },
+    {
+      "id": "restaurant-1215545849",
+      "name": "Subway",
+      "coordinates": [-73.64068821641106, 45.45518255995849],
+      "address": "7420 Sherbrooke St W, Montreal, Quebec H4B 1R7",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "7:00am-10:00p.m."
+      },
+      "description": "Casual counter-serve chain for build-your-own sandwiches & salads, with health-conscious options."
+    },
+    {
+      "id": "bus-504318035",
+      "name": "Université Concordia / Campus Loyola",
+      "coordinates": [-73.63854899206329, 45.45790405657016],
+      "address": "Montreal, QC H4B 1R6",
+      "type": "bus",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "24/7"
+      },
+      "description": "Bus stop"
+    },
+    {
+      "id": "bus-504318055",
+      "name": "Université Concordia / Campus Loyola",
+      "coordinates": [-73.63907217997065, 45.457596683606525],
+      "address": "Montreal, QC H4B 1R6",
+      "type": "bus",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "24/7"
+      },
+      "description": "Bus stop"
+    },
+    {
+      "id": "bus-504318065",
+      "name": "Sherbrooke / West Broadway",
+      "coordinates": [-73.64008538443713, 45.45676157079121],
+      "address": "Montreal, QC H4B 1R6",
+      "type": "bus",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "24/7"
+      },
+      "description": "Bus stop"
+    },
+    {
+      "id": "bus-504318075",
+      "name": "West Broadway / Sherbrooke",
+      "coordinates": [-73.6403160543925, 45.456611056327],
+      "address": "Montreal, QC H4B 1R6",
+      "type": "bus",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "24/7"
+      },
+      "description": "Bus stop"
+    },
+    {
+      "id": "bus-504318085",
+      "name": "West Broadway / De Terrebonne",
+      "coordinates": [-73.64227339644337, 45.45749226578458],
+      "address": "Montreal, QC H4B 1R6",
+      "type": "bus",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "24/7"
+      },
+      "description": "Bus stop"
+    },
+    {
+      "id": "restaurant-1215645849",
+      "name": "Souvlaki George® Restaurant",
+      "coordinates": [-73.63719348105644, 45.46001173068683],
+      "address": "6995 Monkland Ave, Montreal, Quebec H4B 1J8",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "11:00am-9:00p.m."
+      },
+      "description": "Quick-serve grilled kebab platters, gyro pita combos & North American eats in an informal space."
+    },
+    {
+      "id": "restaurant-1215745849",
+      "name": "Dagwoods La Sandwicherie",
+      "coordinates": [-73.63658730187137, 45.45985369959814],
+      "address": "6969 Sherbrooke St W, Montreal, Quebec H4B 1R1",
+      "type": "restaurant",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "11:00am-9:00p.m."
+      },
+      "description": "Sandwhich Shop."
+    },
+    {
+      "id": "park-145058337",
+      "name": "Recreational park / Parc de loisirs -Concordia University - Loyola Campus",
+      "coordinates": [-73.64045921732462, 45.46020988829771],
+      "address": "Montreal, Quebec H4B 1E1",
+      "type": "park",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "Dawn to dusk"
+      },
+      "description": "Public park, Dogs Allowed"
+    },
+    {
+      "id": "other-145058337",
+      "name": "Concordia Stadium",
+      "coordinates": [-73.63729609345357, 45.458129722138786],
+      "address": "7200 Sherbrooke St W, Montreal, Quebec H4B 2A4",
+      "type": "other",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "9am-5pm"
+      },
+      "description": "Concordia Stingers Stadium"
+    },
+    {
+      "id": "other-145158337",
+      "name": "Stinger Dome",
+      "coordinates": [-73.63602193474408, 45.45770903739974],
+      "address": "7200 Sherbrooke St W, Montreal, Quebec H4B 1R3",
+      "type": "other",
+      "openingHours": {
+        "isOpen": true,
+        "hours": "9am-10pm"
+      },
+      "description": "Concordia Stingers Dome"
     }
   ]
 }
