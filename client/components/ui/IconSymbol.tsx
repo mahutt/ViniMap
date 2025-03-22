@@ -10,6 +10,8 @@ const MAPPING = {
   gear: 'settings',
   'chevron.up': 'keyboard-arrow-up',
   'chevron.down': 'keyboard-arrow-down',
+  checklist: 'assignment', //tasks tab
+  xmark: 'close', //used in TaskCard
 } as Partial<
   Record<
     import('expo-symbols').SymbolViewProps['name'],
