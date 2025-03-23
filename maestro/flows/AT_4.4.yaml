@@ -1,0 +1,24 @@
+appId: com.anonymous.client
+---
+- tapOn: 'Search here'
+- inputText: 'H80'
+- tapOn: 'H805.02'
+- tapOn: ' Directions'
+- tapOn: 'Current location'
+- eraseText: 100
+- inputText: 'H90'
+- tapOn: 'H902'
+- tapOn: go up
+- tapOn: go up
+- tapOn: go up
+- tapOn: go up
+- tapOn: go up
+- tapOn: go up
+- tapOn: go up
+- tapOn: go up
+- tapOn:  0 min
+- tapOn: go down
+- tapOn: go up
+- tapOn:  0 min
+- tapOn: go down
+- tapOn: go up
