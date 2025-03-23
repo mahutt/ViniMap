@@ -32,7 +32,14 @@ export function TransportModes({
             ]}
             onPress={isDisabled ? null : () => onMode(mode.name)}>
             <Ionicons
-              name={mode.icon as 'walk-outline' | 'bicycle-outline' | 'car-outline' | 'bus-outline'}
+              name={
+                mode.icon as
+                  | 'walk-outline'
+                  | 'bicycle-outline'
+                  | 'car-outline'
+                  | 'bus-outline'
+                  | 'accessibility-outline'
+              }
               size={24}
               color="#666"
             />

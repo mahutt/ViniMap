@@ -6,6 +6,7 @@ import { getRoute } from '@/modules/map/MapService';
 import TransportModes from './ui/RoutePlanner Components/TransportModes';
 import BottomFrame from './ui/RoutePlanner Components/BottomFrame';
 import InputFields from './ui/RoutePlanner Components/InputFields';
+import { computeAriaSelected } from '@testing-library/react-native/build/helpers/accessibility';
 
 const MODES = [
   { name: 'walking', icon: 'walk-outline' },
@@ -93,7 +94,12 @@ export function RoutePlanner() {
       if (startLocation && endLocation) {
         const loadRoute = async () => {
           try {
-            await loadRouteFromCoordinates(startLocation, endLocation, selectedMode);
+            await loadRouteFromCoordinates(
+              startLocation,
+              endLocation,
+              selectedMode,
+              selectedIndoorMode
+            );
             calculateOptions();
           } catch (error) {
             console.error('Error loading route:', error);
@@ -102,7 +108,15 @@ export function RoutePlanner() {
         loadRoute();
       }
     }
-  }, [startLocation, endLocation, selectedMode, calculateOptions, loadRouteFromCoordinates, state]);
+  }, [
+    startLocation,
+    endLocation,
+    selectedMode,
+    selectedIndoorMode,
+    calculateOptions,
+    loadRouteFromCoordinates,
+    state,
+  ]);
 
   useEffect(() => {
     if (durations.shuttle == null && selectedMode === 'shuttle') {
@@ -111,7 +125,10 @@ export function RoutePlanner() {
   }, [durations, distances, selectedMode, selectedIndoorMode]);
 
   const getModeIcon = (modeName: string) => {
-    const mode = MODES.find((m) => m.name === modeName);
+    const mode =
+      indoorMap == null
+        ? MODES.find((m) => m.name === modeName)
+        : INDOOR_MODES.find((m) => m.name === modeName);
     if (!mode) return null;
     return (
       <Ionicons
@@ -154,8 +171,8 @@ export function RoutePlanner() {
 
       {isRouteFound && (
         <BottomFrame
-          selectedMode={selectedMode}
-          modeIcon={getModeIcon(selectedMode)}
+          selectedMode={indoorMap == null ? selectedMode : selectedIndoorMode}
+          modeIcon={getModeIcon(indoorMap == null ? selectedMode : selectedIndoorMode)}
           durations={durations}
           distances={distances}
         />

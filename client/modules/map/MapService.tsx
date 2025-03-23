@@ -72,6 +72,7 @@ const getRoute = async (
       startLocation.data.indoorMap,
       endLocation.data.feature,
       endLocation.data.indoorMap,
+      mode,
       indoorMode
     );
   }
@@ -82,6 +83,7 @@ const getRoute = async (
       startLocation.data.feature,
       startLocation.data.indoorMap,
       endLocation,
+      mode,
       indoorMode
     );
   } else if (endLocation.data?.level && endLocation.data.indoorMap) {
@@ -89,6 +91,7 @@ const getRoute = async (
       endLocation.data.feature,
       endLocation.data.indoorMap,
       startLocation,
+      mode,
       indoorMode
     );
   }
@@ -105,7 +108,7 @@ export const getIndoorRoute = (
   indoorMap: IndoorMap,
   startFeature: Feature<Point | Polygon>,
   endFeature: Feature<Point | Polygon>,
-  mode: string = 'handicap'
+  indoorMode: string
 ): Route | null => {
   // Obtain the levels of the start and end features
   const startEndLevels = getStartEndLevels(startFeature, endFeature);
@@ -119,7 +122,7 @@ export const getIndoorRoute = (
   if (startLevel === endLevel) {
     stops = [startFeature, endFeature];
   } else {
-    const connections = getConnectionsBetween(startLevel, endLevel, indoorMap, mode);
+    const connections = getConnectionsBetween(startLevel, endLevel, indoorMap, indoorMode);
     if (connections.length === 0) {
       return null;
     }
@@ -158,7 +161,7 @@ export const getIndoorRoute = (
     if (!steps) {
       return null;
     }
-    console.log(steps);
+    // console.log(steps);
 
     distance += getDistanceFromPositions(startPosition, endPosition);
     segments.push({
@@ -180,18 +183,31 @@ const getIndoorOutdoorRoute = async (
   indoorFeature: Feature<Polygon>,
   indoorMap: IndoorMap,
   outdoorLocation: Location,
-  mode: string
+  mode: string,
+  indoorMode: string
 ): Promise<Route | null> => {
   const entrances = GeojsonHelper.extractEntrances(indoorMap.geojson);
-  if (entrances.length === 0) return null;
+  if (entrances.length === 0) {
+    console.log('77777777777777777777777777777here');
+    return null;
+  }
   const entrance: Feature<Point> = entrances[0];
-  const indoorRoute = getIndoorRoute(indoorMap, indoorFeature, entrance, mode);
+  const indoorRoute = getIndoorRoute(indoorMap, indoorFeature, entrance, indoorMode);
   const outdoorRoute = await getRouteFromMapbox(
     entrance.geometry.coordinates,
     outdoorLocation.coordinates,
     mode
   );
-  if (!indoorRoute || !outdoorRoute) return null;
+  if (!indoorRoute || !outdoorRoute) {
+    if (outdoorRoute) {
+      console.log('=====================OUT GOOD====================');
+    }
+    if (indoorRoute) {
+      console.log('=====================In GOOD====================');
+    }
+    console.log('8888888888888888888888888888888here');
+    return null;
+  }
   return {
     duration: indoorRoute.duration + outdoorRoute.duration,
     distance: indoorRoute.distance + outdoorRoute.distance,
@@ -204,7 +220,8 @@ const getIndoorIndoorRoute = async (
   startIndoorMap: IndoorMap,
   endFeature: Feature<Polygon>,
   endIndoorMap: IndoorMap,
-  mode: string
+  mode: string,
+  indoorMode: string
 ): Promise<Route | null> => {
   const startEntrances = GeojsonHelper.extractEntrances(startIndoorMap.geojson);
   const endEntrances = GeojsonHelper.extractEntrances(endIndoorMap.geojson);
@@ -215,8 +232,8 @@ const getIndoorIndoorRoute = async (
   const startEntrance: Feature<Point> = startEntrances[0];
   const endEntrance: Feature<Point> = endEntrances[0];
 
-  const startIndoorRoute = getIndoorRoute(startIndoorMap, startFeature, startEntrance, mode);
-  const endIndoorRoute = getIndoorRoute(endIndoorMap, endEntrance, endFeature, mode);
+  const startIndoorRoute = getIndoorRoute(startIndoorMap, startFeature, startEntrance, indoorMode);
+  const endIndoorRoute = getIndoorRoute(endIndoorMap, endEntrance, endFeature, indoorMode);
   const outdoorRoute = await getRouteFromMapbox(
     startEntrance.geometry.coordinates,
     endEntrance.geometry.coordinates,
