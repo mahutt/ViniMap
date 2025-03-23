@@ -3,6 +3,7 @@ import { render, act } from '@testing-library/react-native';
 import MapView from '@/modules/map/MapView';
 import { MapState } from '@/modules/map/MapContext';
 import { fetchLocationData } from '@/modules/map/MapService';
+import { TaskProvider } from '@/providers/TaskContext';
 
 jest.mock('@rnmapbox/maps');
 
@@ -114,6 +115,8 @@ jest.mock('@rnmapbox/maps', () => {
 
 const mockMarkerPressHandlers: Record<string, Function> = {};
 
+const renderWithProviders = (ui: React.ReactElement) => render(<TaskProvider>{ui}</TaskProvider>);
+
 describe('MapView', () => {
   const mockMapRef = { current: {} };
   const mockCameraRef = { current: { flyTo: jest.fn() } };
@@ -150,6 +153,7 @@ describe('MapView', () => {
     ],
   };
   const mockUpdateSelectedMapIfNeeded = jest.fn();
+  render(<MapView />);
   const mockOnMapPress = jest.fn();
 
   beforeEach(() => {
@@ -184,12 +188,12 @@ describe('MapView', () => {
 
   it('renders without throwing errors', () => {
     expect(() => {
-      render(<MapView />);
+      renderWithProviders(<MapView />);
     }).not.toThrow();
   });
 
   it('handles map click in Idle state', async () => {
-    render(<MapView />);
+    renderWithProviders(<MapView />);
 
     const onPressHandler = mockOnPressHandler.mock.calls[0][0];
 
@@ -229,7 +233,7 @@ describe('MapView', () => {
       onMapPress: mockOnMapPress,
     });
 
-    render(<MapView />);
+    renderWithProviders(<MapView />);
 
     const onPressHandler = mockOnPressHandler.mock.calls[0][0];
 
@@ -269,7 +273,7 @@ describe('MapView', () => {
       onMapPress: mockOnMapPress,
     });
 
-    render(<MapView />);
+    renderWithProviders(<MapView />);
 
     const onPressHandler = mockOnPressHandler.mock.calls[0][0];
 
@@ -291,7 +295,7 @@ describe('MapView', () => {
   });
 
   it('ignores map click with invalid coordinates', async () => {
-    render(<MapView />);
+    renderWithProviders(<MapView />);
 
     const onPressHandler = mockOnPressHandler.mock.calls[0][0];
 
