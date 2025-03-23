@@ -51,7 +51,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       taskRouteDescriptions,
       setTaskRouteDescriptions,
     }),
-    [selectedTasks, tasks, isTaskPlanning]
+    [selectedTasks, tasks, isTaskPlanning, taskRouteDescriptions]
   );
 
   return <TaskContext.Provider value={contextValue}>{children}</TaskContext.Provider>;
