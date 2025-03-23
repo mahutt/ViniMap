@@ -53,5 +53,4 @@ export class TaskService {
       segments: fullSegments,
     };
   }
-  generateId = () => Date.now().toString() + Math.random().toString(36);
 }

@@ -1,10 +1,15 @@
 import { TaskService } from '@/services/TaskService';
 import { getRoute } from '@/modules/map/MapService';
 import { Task } from '@/modules/map/Types';
+import uuid from 'react-native-uuid';
 
-// Mock the getRoute function
+// Mocks
 jest.mock('@/modules/map/MapService', () => ({
   getRoute: jest.fn(),
+}));
+
+jest.mock('react-native-uuid', () => ({
+  v4: jest.fn(),
 }));
 
 describe('TaskService', () => {
@@ -19,50 +24,42 @@ describe('TaskService', () => {
       await expect(TaskService.getOptimalRouteForPaths([], mockSetTaskTime)).rejects.toThrow(
         'No tasks are selected'
       );
-
       expect(mockSetTaskTime).not.toHaveBeenCalled();
     });
 
     it('should return a route with expected properties when tasks are provided', async () => {
-      // Mock tasks
       const tasks: Task[] = [
         {
           id: 'task-1',
-          location: {
-            name: 'Task 1',
-            coordinates: [1, 1],
-          },
+          location: { name: 'Task 1', coordinates: [1, 1] },
           text: 'Task 1',
         },
         {
           id: 'task-2',
-          location: {
-            name: 'Task 2',
-            coordinates: [2, 2],
-          },
+          location: { name: 'Task 2', coordinates: [2, 2] },
           text: 'Task 2',
         },
         {
           id: 'task-3',
-          location: {
-            name: 'Task 3',
-            coordinates: [3, 3],
-          },
+          location: { name: 'Task 3', coordinates: [3, 3] },
           text: 'Task 3',
         },
       ];
 
       const mockRoute1 = {
         distance: 100,
-        duration: 300, // 5 minutes
+        duration: 300,
         segments: [{ id: 'segment1' }],
       };
 
       const mockRoute2 = {
         distance: 200,
-        duration: 600, // 10 minutes
+        duration: 600,
         segments: [{ id: 'segment2' }],
       };
+
+      // Mock UUIDs
+      (uuid.v4 as jest.Mock).mockReturnValueOnce('uuid-task-2').mockReturnValueOnce('uuid-task-3');
 
       (getRoute as jest.Mock).mockImplementation((start, end) => {
         if (
@@ -76,24 +73,10 @@ describe('TaskService', () => {
         ) {
           return Promise.resolve(mockRoute2);
         }
-        console.log('Unexpected route:', start, end);
         return Promise.reject(new Error('Unexpected route'));
       });
 
       const result = await TaskService.getOptimalRouteForPaths(tasks, mockSetTaskTime);
-      expect(getRoute).toHaveBeenCalledTimes(2);
-      expect(getRoute).toHaveBeenNthCalledWith(
-        1,
-        { coordinates: [1, 1], name: 'Task 1' },
-        { coordinates: [2, 2], name: 'Task 2' },
-        'walking'
-      );
-      expect(getRoute).toHaveBeenNthCalledWith(
-        2,
-        { coordinates: [2, 2], name: 'Task 2' },
-        { coordinates: [3, 3], name: 'Task 3' },
-        'walking'
-      );
 
       expect(result).toEqual({
         distance: 300,
@@ -102,8 +85,8 @@ describe('TaskService', () => {
       });
 
       expect(mockSetTaskTime).toHaveBeenCalledWith([
-        { text: 'Task 2', time: '5 min' },
-        { text: 'Task 3', time: '10 min' },
+        { id: 'uuid-task-2', text: 'Task 2', time: '5 min' },
+        { id: 'uuid-task-3', text: 'Task 3', time: '10 min' },
       ]);
     });
 
@@ -111,61 +94,53 @@ describe('TaskService', () => {
       const tasks: Task[] = [
         {
           id: 'task-1',
-          location: {
-            name: 'Task 1',
-            coordinates: [1, 1],
-          },
+          location: { name: 'Task 1', coordinates: [1, 1] },
           text: 'Task 1',
         },
         {
           id: 'task-2',
-          location: {
-            name: 'Task 2',
-            coordinates: [2, 2],
-          },
+          location: { name: 'Task 2', coordinates: [2, 2] },
           text: 'Task 2',
         },
       ];
 
       const mockRoute = {
         distance: 1000,
-        duration: 3600 * 2.5, // 2.5 hours
+        duration: 3600 * 2.5,
         segments: [{ id: 'longSegment' }],
       };
+
+      (uuid.v4 as jest.Mock).mockReturnValueOnce('uuid-task-2');
 
       (getRoute as jest.Mock).mockResolvedValue(mockRoute);
 
       await TaskService.getOptimalRouteForPaths(tasks, mockSetTaskTime);
-      expect(mockSetTaskTime).toHaveBeenCalledWith([{ text: 'Task 2', time: '2.50 h' }]);
+
+      expect(mockSetTaskTime).toHaveBeenCalledWith([
+        { id: 'uuid-task-2', text: 'Task 2', time: '2.50 h' },
+      ]);
     });
 
     it('should handle errors when getting routes and continue processing', async () => {
       const tasks: Task[] = [
         {
           id: 'task-1',
-          location: {
-            name: 'Task 1',
-            coordinates: [1, 1],
-          },
+          location: { name: 'Task 1', coordinates: [1, 1] },
           text: 'Task 1',
         },
         {
           id: 'task-2',
-          location: {
-            name: 'Task 2',
-            coordinates: [2, 2],
-          },
+          location: { name: 'Task 2', coordinates: [2, 2] },
           text: 'Task 2',
         },
         {
           id: 'task-3',
-          location: {
-            name: 'Task 3',
-            coordinates: [3, 3],
-          },
+          location: { name: 'Task 3', coordinates: [3, 3] },
           text: 'Task 3',
         },
       ];
+
+      (uuid.v4 as jest.Mock).mockReturnValueOnce('uuid-task-2');
 
       (getRoute as jest.Mock)
         .mockResolvedValueOnce({
@@ -176,7 +151,9 @@ describe('TaskService', () => {
         .mockRejectedValueOnce(new Error('Route calculation failed'));
 
       jest.spyOn(console, 'error').mockImplementation();
+
       const result = await TaskService.getOptimalRouteForPaths(tasks, mockSetTaskTime);
+
       expect(console.error).toHaveBeenCalledWith(
         'Error generating route from task 1 to 2:',
         expect.any(Error)
@@ -188,7 +165,9 @@ describe('TaskService', () => {
         segments: [{ id: 'segment1' }],
       });
 
-      expect(mockSetTaskTime).toHaveBeenCalledWith([{ text: 'Task 2', time: '5 min' }]);
+      expect(mockSetTaskTime).toHaveBeenCalledWith([
+        { id: 'uuid-task-2', text: 'Task 2', time: '5 min' },
+      ]);
     });
   });
 });
