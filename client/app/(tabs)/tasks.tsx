@@ -18,7 +18,6 @@ import { getLocations } from '@/modules/map/MapService';
 import TaskCard from '@/components/TaskCard';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { TaskService } from '@/services/TaskService';
-import CoordinateService from '@/services/CoordinateService';
 import { useRouter } from 'expo-router';
 
 export default function TasksScreen() {
@@ -132,12 +131,21 @@ export default function TasksScreen() {
   };
 
   const generateRoute = async () => {
-    const currenCoords: Coordinates = await CoordinateService.getCurrentCoordinates();
+    const currentCoords = userLocation?.coordinates;
 
-    const currentLocation: Location = {
-      name: 'Current Location',
-      coordinates: currenCoords,
-    };
+    let currentLocation: Location;
+
+    if (currentCoords) {
+      currentLocation = {
+        name: 'Current Location',
+        coordinates: currentCoords,
+      };
+    } else {
+      currentLocation = {
+        name: 'Default Location - Concordia Hall Building',
+        coordinates: [-73.57845, 45.497042],
+      };
+    }
 
     const currentLocationTask: Task = {
       id: '1000',
