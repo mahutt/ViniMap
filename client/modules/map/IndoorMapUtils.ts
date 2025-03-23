@@ -264,7 +264,7 @@ export const getConnectionsBetween = (
     return false;
   });
 
-  if (usableConnections.length == 0) {
+  if (usableConnections.length === 0) {
     return getDisjointConnections(startLevel, endLevel, possibleConnections as Feature<Polygon>[]);
   }
 
@@ -287,7 +287,7 @@ export const getDisjointConnections = (
     }
   });
   //Didn't find any possible connections containing the startLevel
-  if (first_connection.length == 0) {
+  if (first_connection.length === 0) {
     return [];
   }
 
@@ -313,7 +313,7 @@ export const getDisjointConnections = (
       }
     });
 
-    if (next_conection.length == 0) {
+    if (next_conection.length === 0) {
       return [];
     }
 
