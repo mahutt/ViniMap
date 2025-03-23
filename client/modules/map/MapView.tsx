@@ -153,11 +153,13 @@ export default function MapView() {
 
           {selectedTasks.map((task, index) => (
             <Mapbox.MarkerView
-              key={`task-marker-${index}`}
-              id={`task-${index}`}
+              key={`task-marker-${task.id}`}
+              id={`task-${task.id}`}
               coordinate={task.location.coordinates}>
               <View style={styles.markerContainer}>
-                <Text style={styles.markerText}>{index + 1}</Text>
+                <Text style={styles.markerText}>
+                  {selectedTasks.findIndex((t) => t.id === task.id) + 1}
+                </Text>
               </View>
             </Mapbox.MarkerView>
           ))}
