@@ -1,6 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute } from '@/modules/map/MapService';
 import TransportModes from './ui/RoutePlanner Components/TransportModes';
@@ -14,7 +15,7 @@ const MODES = [
   { name: 'shuttle', icon: 'bus-outline' },
 ];
 const INDOOR_MODES = [
-  { name: 'handicap', icon: 'accessibility-outline' },
+  { name: 'handicap', icon: 'wheelchair' },
   { name: 'walking', icon: 'walk-outline' },
 ];
 
@@ -128,17 +129,16 @@ export function RoutePlanner() {
       indoorMap == null
         ? MODES.find((m) => m.name === modeName)
         : INDOOR_MODES.find((m) => m.name === modeName);
+
     if (!mode) return null;
+
+    if (mode.name === 'handicap') {
+      return <FontAwesome5 name="wheelchair" size={24} color="black" />;
+    }
+
     return (
       <Ionicons
-        name={
-          mode.icon as
-            | 'walk-outline'
-            | 'bicycle-outline'
-            | 'car-outline'
-            | 'bus-outline'
-            | 'accessibility-outline'
-        }
+        name={mode.icon as 'walk-outline' | 'bicycle-outline' | 'car-outline' | 'bus-outline'}
         size={24}
         color="black"
       />
