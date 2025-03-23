@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Pressable, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { formatDuration } from '@/modules/map/MapService';
 
 interface TransportModesProps {
@@ -31,11 +31,17 @@ export function TransportModes({
               isDisabled && styles.disabledTransportButton,
             ]}
             onPress={isDisabled ? null : () => onMode(mode.name)}>
-            <Ionicons
-              name={mode.icon as 'walk-outline' | 'bicycle-outline' | 'car-outline' | 'bus-outline'}
-              size={24}
-              color="#666"
-            />
+            {mode.name === 'handicap' ? (
+              <FontAwesome5 name="wheelchair" size={24} color="#666" />
+            ) : (
+              <Ionicons
+                name={
+                  mode.icon as 'walk-outline' | 'bicycle-outline' | 'car-outline' | 'bus-outline'
+                }
+                size={24}
+                color="#666"
+              />
+            )}
             {isRouteFound && durations[mode.name] !== null && (
               <Text>
                 {durations[mode.name] !== null ? formatDuration(durations[mode.name]) : ''}

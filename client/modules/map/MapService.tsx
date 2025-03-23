@@ -40,7 +40,8 @@ const getLocations = async (locationQuery: string): Promise<Location[]> => {
 const getRoute = async (
   startLocation: Location,
   endLocation: Location,
-  mode: string
+  mode: string,
+  indoorMode: string = 'walking'
 ): Promise<Route | null> => {
   // If the start and end locations are in the same indoor map
   if (
@@ -53,7 +54,8 @@ const getRoute = async (
     return getIndoorRoute(
       startLocation.data.indoorMap,
       startLocation.data.feature,
-      endLocation.data.feature
+      endLocation.data.feature,
+      indoorMode
     );
   }
 
@@ -70,7 +72,8 @@ const getRoute = async (
       startLocation.data.indoorMap,
       endLocation.data.feature,
       endLocation.data.indoorMap,
-      mode
+      mode,
+      indoorMode
     );
   }
 
@@ -80,14 +83,16 @@ const getRoute = async (
       startLocation.data.feature,
       startLocation.data.indoorMap,
       endLocation,
-      mode
+      mode,
+      indoorMode
     );
   } else if (endLocation.data?.level && endLocation.data.indoorMap) {
     return await getIndoorOutdoorRoute(
       endLocation.data.feature,
       endLocation.data.indoorMap,
       startLocation,
-      mode
+      mode,
+      indoorMode
     );
   }
 
@@ -102,7 +107,8 @@ const getRoute = async (
 export const getIndoorRoute = (
   indoorMap: IndoorMap,
   startFeature: Feature<Point | Polygon>,
-  endFeature: Feature<Point | Polygon>
+  endFeature: Feature<Point | Polygon>,
+  indoorMode: string
 ): Route | null => {
   // Obtain the levels of the start and end features
   const startEndLevels = getStartEndLevels(startFeature, endFeature);
@@ -116,7 +122,7 @@ export const getIndoorRoute = (
   if (startLevel === endLevel) {
     stops = [startFeature, endFeature];
   } else {
-    const connections = getConnectionsBetween(startLevel, endLevel, indoorMap);
+    const connections = getConnectionsBetween(startLevel, endLevel, indoorMap, indoorMode);
     if (connections.length === 0) {
       return null;
     }
@@ -132,11 +138,14 @@ export const getIndoorRoute = (
     if (!segmentLevels) {
       return null;
     }
+
     const [segmentStartLevel, segmentEndLevel] = segmentLevels;
 
     // Based on how stops is constructed,
     // the start and end levels of each segment should be the same
-    if (segmentStartLevel !== segmentEndLevel) return null;
+    if (segmentStartLevel !== segmentEndLevel) {
+      return null;
+    }
 
     const footways = footwaysForLevel(indoorMap, segmentStartLevel);
     const startPositionOptions = GeojsonHelper.findLinesIntersect(footways, start);
@@ -148,6 +157,7 @@ export const getIndoorRoute = (
     const startPosition = startPositionOptions[0];
     const endPosition = endPositionOptions[0];
     const steps = DijkstraService.findShortestPath(startPosition, endPosition, footways);
+
     if (!steps) {
       return null;
     }
@@ -172,18 +182,23 @@ const getIndoorOutdoorRoute = async (
   indoorFeature: Feature<Polygon>,
   indoorMap: IndoorMap,
   outdoorLocation: Location,
-  mode: string
+  mode: string,
+  indoorMode: string
 ): Promise<Route | null> => {
   const entrances = GeojsonHelper.extractEntrances(indoorMap.geojson);
-  if (entrances.length === 0) return null;
+  if (entrances.length === 0) {
+    return null;
+  }
   const entrance: Feature<Point> = entrances[0];
-  const indoorRoute = getIndoorRoute(indoorMap, indoorFeature, entrance);
+  const indoorRoute = getIndoorRoute(indoorMap, indoorFeature, entrance, indoorMode);
   const outdoorRoute = await getRouteFromMapbox(
     entrance.geometry.coordinates,
     outdoorLocation.coordinates,
     mode
   );
-  if (!indoorRoute || !outdoorRoute) return null;
+  if (!indoorRoute || !outdoorRoute) {
+    return null;
+  }
   return {
     duration: indoorRoute.duration + outdoorRoute.duration,
     distance: indoorRoute.distance + outdoorRoute.distance,
@@ -196,7 +211,8 @@ const getIndoorIndoorRoute = async (
   startIndoorMap: IndoorMap,
   endFeature: Feature<Polygon>,
   endIndoorMap: IndoorMap,
-  mode: string
+  mode: string,
+  indoorMode: string
 ): Promise<Route | null> => {
   const startEntrances = GeojsonHelper.extractEntrances(startIndoorMap.geojson);
   const endEntrances = GeojsonHelper.extractEntrances(endIndoorMap.geojson);
@@ -207,8 +223,8 @@ const getIndoorIndoorRoute = async (
   const startEntrance: Feature<Point> = startEntrances[0];
   const endEntrance: Feature<Point> = endEntrances[0];
 
-  const startIndoorRoute = getIndoorRoute(startIndoorMap, startFeature, startEntrance);
-  const endIndoorRoute = getIndoorRoute(endIndoorMap, endEntrance, endFeature);
+  const startIndoorRoute = getIndoorRoute(startIndoorMap, startFeature, startEntrance, indoorMode);
+  const endIndoorRoute = getIndoorRoute(endIndoorMap, endEntrance, endFeature, indoorMode);
   const outdoorRoute = await getRouteFromMapbox(
     startEntrance.geometry.coordinates,
     endEntrance.geometry.coordinates,
