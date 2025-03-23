@@ -42,11 +42,9 @@ export function RoutePlanner() {
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
 
-
   const { isTaskPlanning } = useTask();
 
   const [selectedIndoorMode, setSelectedIndoorMode] = React.useState<string>('walking');
-
 
   const {
     loadRouteFromCoordinates,
@@ -58,7 +56,6 @@ export function RoutePlanner() {
     route,
     flyTo,
     indoorMap,
-
   } = useMap();
 
   const calculateOptions = useCallback(async () => {
@@ -165,26 +162,22 @@ export function RoutePlanner() {
 
   return (
     <>
-
       {isTaskPlanning ? (
         <TaskRouteHeader />
       ) : (
-        
-
-      <View style={styles.inputContainer}>
-        <View style={styles.locationRangeForm}>
-          <InputFields />
-          <TransportModes
-            selectedMode={indoorMap == null ? selectedMode : selectedIndoorMode}
-            onMode={handleTransportMode}
-            durations={durations}
-            isRouteFound={isRouteFound}
-            modes={indoorMap == null ? MODES : INDOOR_MODES}
-          />
-
+        <View style={styles.inputContainer}>
+          <View style={styles.locationRangeForm}>
+            <InputFields />
+            <TransportModes
+              selectedMode={indoorMap == null ? selectedMode : selectedIndoorMode}
+              onMode={handleTransportMode}
+              durations={durations}
+              isRouteFound={isRouteFound}
+              modes={indoorMap == null ? MODES : INDOOR_MODES}
+            />
+          </View>
         </View>
       )}
-
       {route !== null && isTaskPlanning ? (
         <TaskFrame />
       ) : (
