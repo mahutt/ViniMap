@@ -8,7 +8,7 @@ import {
   ScrollView,
   Modal,
 } from 'react-native';
-import { Coordinates, Location, Task } from '@/modules/map/Types';
+import { Location, Task } from '@/modules/map/Types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -142,7 +142,7 @@ export default function TasksScreen() {
       };
     } else {
       currentLocation = {
-        name: 'Default Location - Concordia Hall Building',
+        name: 'Default Location: Concordia Hall Building',
         coordinates: [-73.57845, 45.497042],
       };
     }
