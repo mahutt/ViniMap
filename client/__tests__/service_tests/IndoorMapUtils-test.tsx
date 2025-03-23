@@ -7,11 +7,12 @@ import {
   getStartEndLevels,
   getClosestLevels,
   getConnectionsBetween,
+  getDisjointConnections,
 } from '@/modules/map/IndoorMapUtils';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { IndoorMap } from '../../modules/map/Types';
 import type { Feature, LineString, Polygon } from 'geojson';
-
+import GeojsonService from '@/services/GeojsonService';
 // Mock dependencies
 jest.mock('@turf/boolean-point-in-polygon');
 
@@ -627,17 +628,16 @@ describe('getStartEndLevels', () => {
   });
 });
 
+// Mock data
+const createMockFeature = (props: any): Feature<Polygon | LineString> => ({
+  type: 'Feature',
+  properties: props,
+  geometry: {
+    type: 'Polygon',
+    coordinates: [[[0, 0]]],
+  },
+});
 describe('getConnectionsBetween', () => {
-  // Mock data
-  const createMockFeature = (props: any): Feature<Polygon | LineString> => ({
-    type: 'Feature',
-    properties: props,
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[[0, 0]]],
-    },
-  });
-
   const mockLevel1 = 1;
   const mockLevel2 = 2;
   const mockLevel3 = 3;
@@ -732,5 +732,118 @@ describe('getConnectionsBetween', () => {
 
     expect(result).toHaveLength(1);
     expect(result[0]).toBe(mockStairFeature);
+  });
+});
+
+describe('getDisjointConnections', () => {
+  const mockLevel1 = 1;
+  const mockLevel3 = 3;
+  const mockLevel5 = 5;
+
+  const stairsLevel1To2 = createMockFeature({ stairs: 'yes', level: '1;2' });
+  const stairsLevel2To3 = createMockFeature({ stairs: 'yes', level: '2;3' });
+  const stairsLevel3To5 = createMockFeature({ stairs: 'yes', level: '3;5' });
+  const stairsLevel1To5 = createMockFeature({ stairs: 'yes', level: '1;5' });
+  const elevatorLevel1To3 = createMockFeature({ highway: 'elevator', level: '1;3' });
+  const invalidTypeFeature = createMockFeature({ stairs: 'yes', level: '1;3' });
+
+  invalidTypeFeature.geometry = {
+    type: 'LineString',
+    coordinates: [
+      [0, 0],
+      [1, 1],
+    ],
+  } as any;
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+    jest.spyOn(GeojsonService, 'extractLevelFromFeature').mockImplementation((feature) => {
+      if (feature === stairsLevel1To2) return { min: 1, max: 2 };
+      if (feature === stairsLevel2To3) return { min: 2, max: 3 };
+      if (feature === stairsLevel3To5) return { min: 3, max: 5 };
+      if (feature === stairsLevel1To5) return { min: 1, max: 5 };
+      if (feature === elevatorLevel1To3) return { min: 1, max: 3 };
+      if (feature === invalidTypeFeature) return { min: 1, max: 3 };
+      return null;
+    });
+  });
+
+  it('should return features that form a connected path between levels', () => {
+    const possibleConnections = [stairsLevel1To2, stairsLevel2To3, stairsLevel3To5];
+
+    const result = getDisjointConnections(mockLevel1, mockLevel5, possibleConnections);
+
+    // Should find a path using stairsLevel1To2 -> stairsLevel2To3 -> stairsLevel3To5
+    expect(result).toHaveLength(3);
+    expect(result[0]).toBe(stairsLevel3To5);
+    expect(result[1]).toBe(stairsLevel2To3);
+    expect(result[2]).toBe(stairsLevel1To2);
+  });
+
+  it('should work with connectors in different order', () => {
+    const possibleConnections = [stairsLevel3To5, stairsLevel1To2, stairsLevel2To3];
+
+    const result = getDisjointConnections(mockLevel1, mockLevel5, possibleConnections);
+
+    expect(result).toHaveLength(3);
+    expect(result[0]).toBe(stairsLevel3To5);
+    expect(result[1]).toBe(stairsLevel2To3);
+    expect(result[2]).toBe(stairsLevel1To2);
+  });
+
+  it('should filter out features that do not have Polygon geometry', () => {
+    const possibleConnections = [stairsLevel1To2, invalidTypeFeature, stairsLevel2To3];
+
+    const result = getDisjointConnections(mockLevel1, mockLevel3, possibleConnections);
+
+    expect(result).toHaveLength(2);
+    expect(result).not.toContain(invalidTypeFeature);
+  });
+
+  it('should return an empty array when no valid first connection is found', () => {
+    // None of these connect from level 1
+    const possibleConnections = [stairsLevel2To3, stairsLevel3To5];
+
+    const result = getDisjointConnections(mockLevel1, mockLevel5, possibleConnections);
+
+    expect(result).toEqual([]);
+  });
+
+  it('should return an empty array when connections do not form a complete path', () => {
+    // Missing connection between level 2 and 3
+    const possibleConnections = [stairsLevel1To2, stairsLevel3To5];
+
+    const result = getDisjointConnections(mockLevel1, mockLevel5, possibleConnections);
+
+    expect(result).toEqual([]);
+  });
+
+  it('should handle levels correctly when creating paths', () => {
+    const nullLevelFeature = createMockFeature({ stairs: 'yes', level: null });
+    const numberLevelFeature = createMockFeature({ stairs: 'yes', level: '2' });
+
+    // Override the mock for these specific features
+    (GeojsonService.extractLevelFromFeature as jest.Mock).mockImplementation((feature) => {
+      if (feature === nullLevelFeature) return null;
+      if (feature === numberLevelFeature) return 2;
+      if (feature === stairsLevel1To2) return { min: 1, max: 2 };
+      if (feature === stairsLevel2To3) return { min: 2, max: 3 };
+      if (feature === stairsLevel3To5) return { min: 3, max: 5 };
+      return null;
+    });
+
+    const possibleConnections = [
+      stairsLevel1To2,
+      nullLevelFeature,
+      numberLevelFeature,
+      stairsLevel2To3,
+      stairsLevel3To5,
+    ];
+
+    const result = getDisjointConnections(mockLevel1, mockLevel5, possibleConnections);
+
+    expect(result).toHaveLength(3);
+    expect(result).not.toContain(nullLevelFeature);
+    expect(result).not.toContain(numberLevelFeature);
   });
 });

@@ -106,6 +106,7 @@ describe('RoutePlanner', () => {
     expect(mockLoadRouteFromCoordinates).toHaveBeenCalledWith(
       mockStartLocation,
       mockEndLocation,
+      'walking',
       'walking'
     );
   });
