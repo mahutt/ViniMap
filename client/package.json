@@ -27,7 +27,8 @@
       "!**/.eslintrc.js",
       "!**/metro.config.js",
       "!**/+not-found.tsx",
-      "!**/_layout.tsx"
+      "!**/_layout.tsx",
+      "!**/useColorScheme.web.ts"
     ],
     "coverageThreshold": {
       "global": {
