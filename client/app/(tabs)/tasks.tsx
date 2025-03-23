@@ -28,7 +28,6 @@ export default function TasksScreen() {
     tasks,
     setTasks,
     setIsTaskPlanning,
-    taskRouteDescriptions,
     setTaskRouteDescriptions,
   } = useTask();
   const { setState, setRoute, flyTo, userLocation } = useMap();

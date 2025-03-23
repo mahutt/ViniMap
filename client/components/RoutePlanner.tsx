@@ -54,7 +54,6 @@ export function RoutePlanner() {
     userLocation,
     state,
     route,
-    flyTo,
     indoorMap,
   } = useMap();
 
