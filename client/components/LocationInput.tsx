@@ -33,12 +33,6 @@ export default function LocationInput({
 
   const handleFocus = () => {
     setIsFocused(true);
-
-    setTimeout(() => {
-      if (inputRef.current?.setSelection) {
-        inputRef.current.setSelection(0, query.length);
-      }
-    }, 50);
   };
 
   const handleBlur = () => {

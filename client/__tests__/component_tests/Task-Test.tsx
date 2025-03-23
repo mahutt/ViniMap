@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { TaskProvider } from '@/providers/TaskContext';
 import TasksScreen from '@/app/(tabs)/tasks';
+import { MapProvider } from '@/modules/map/MapContext';
 
 jest.mock('@/modules/map/MapService', () => ({
   getLocations: jest.fn(() => Promise.resolve([{ name: 'Mock Location', coordinates: [0, 0] }])),
@@ -9,9 +10,11 @@ jest.mock('@/modules/map/MapService', () => ({
 
 const renderComponent = () =>
   render(
-    <TaskProvider>
-      <TasksScreen />
-    </TaskProvider>
+    <MapProvider>
+      <TaskProvider>
+        <TasksScreen />
+      </TaskProvider>
+    </MapProvider>
   );
 
 describe('TasksScreen', () => {

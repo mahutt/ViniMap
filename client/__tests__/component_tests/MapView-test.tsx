@@ -3,6 +3,7 @@ import { render, act } from '@testing-library/react-native';
 import MapView from '@/modules/map/MapView';
 import { MapState } from '@/modules/map/MapContext';
 import { fetchLocationData } from '@/modules/map/MapService';
+import { TaskProvider } from '@/providers/TaskContext';
 
 jest.mock('@rnmapbox/maps');
 
@@ -114,6 +115,8 @@ jest.mock('@rnmapbox/maps', () => {
 
 const mockMarkerPressHandlers: Record<string, Function> = {};
 
+const renderWithProviders = (ui: React.ReactElement) => render(<TaskProvider>{ui}</TaskProvider>);
+
 describe('MapView', () => {
   const mockMapRef = { current: {} };
   const mockCameraRef = { current: { flyTo: jest.fn() } };
@@ -184,12 +187,12 @@ describe('MapView', () => {
 
   it('renders without throwing errors', () => {
     expect(() => {
-      render(<MapView />);
+      renderWithProviders(<MapView />);
     }).not.toThrow();
   });
 
   it('handles map click in Idle state', async () => {
-    render(<MapView />);
+    renderWithProviders(<MapView />);
 
     const onPressHandler = mockOnPressHandler.mock.calls[0][0];
 
@@ -229,7 +232,7 @@ describe('MapView', () => {
       onMapPress: mockOnMapPress,
     });
 
-    render(<MapView />);
+    renderWithProviders(<MapView />);
 
     const onPressHandler = mockOnPressHandler.mock.calls[0][0];
 
@@ -269,7 +272,7 @@ describe('MapView', () => {
       onMapPress: mockOnMapPress,
     });
 
-    render(<MapView />);
+    renderWithProviders(<MapView />);
 
     const onPressHandler = mockOnPressHandler.mock.calls[0][0];
 
@@ -291,7 +294,7 @@ describe('MapView', () => {
   });
 
   it('ignores map click with invalid coordinates', async () => {
-    render(<MapView />);
+    renderWithProviders(<MapView />);
 
     const onPressHandler = mockOnPressHandler.mock.calls[0][0];
 
@@ -306,5 +309,30 @@ describe('MapView', () => {
         geometry: null,
       })
     );
+  });
+  it('renders start and end location markers in RoutePlanning state', () => {
+    const { useMap } = require('@/modules/map/MapContext');
+    useMap.mockReturnValueOnce({
+      state: MapState.RoutePlanning,
+      startLocation: mockStartLocation,
+      endLocation: mockEndLocation,
+      userLocation: null,
+      mapRef: mockMapRef,
+      cameraRef: mockCameraRef,
+      centerCoordinate: [0, 0],
+      zoomLevel: 12,
+      pitchLevel: 0,
+      route: mockRoute,
+      level: null,
+      indoorMap: null,
+      updateSelectedMapIfNeeded: mockUpdateSelectedMapIfNeeded,
+      onMapPress: mockOnMapPress,
+    });
+
+    const { UNSAFE_getAllByType } = renderWithProviders(<MapView />);
+    const { MarkerView } = require('@rnmapbox/maps');
+
+    expect(UNSAFE_getAllByType).not.toBeNull();
+    expect(MarkerView).not.toBeNull();
   });
 });

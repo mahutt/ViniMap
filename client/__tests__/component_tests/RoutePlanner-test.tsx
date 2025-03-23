@@ -3,6 +3,7 @@ import { render, act } from '@testing-library/react-native';
 import RoutePlanner from '@/components/RoutePlanner';
 import { MapState } from '@/modules/map/MapContext';
 import { getRoute } from '@/modules/map/MapService';
+import { TaskProvider } from '@/providers/TaskContext';
 
 // Mock the MapContext module
 jest.mock('@/modules/map/MapContext', () => ({
@@ -28,6 +29,9 @@ jest.mock('@/components/ui/RoutePlanner Components/TransportModes', () => 'Trans
 jest.mock('@/components/ui/RoutePlanner Components/BottomFrame', () => 'BottomFrame');
 jest.mock('@/components/ui/RoutePlanner Components/InputFields', () => 'InputFields');
 
+const renderWithProviders = (ui: React.ReactElement) => {
+  return render(<TaskProvider>{ui}</TaskProvider>);
+};
 describe('RoutePlanner', () => {
   const mockStartLocation = {
     coordinates: [51.5074, -0.1278],
@@ -91,7 +95,7 @@ describe('RoutePlanner', () => {
   });
 
   it('renders correctly in route planning mode', async () => {
-    const { toJSON } = render(<RoutePlanner />);
+    const { toJSON } = renderWithProviders(<RoutePlanner />);
 
     expect(toJSON()).toBeTruthy();
 
@@ -118,7 +122,7 @@ describe('RoutePlanner', () => {
       loadRouteFromCoordinates: mockLoadRouteFromCoordinates,
     });
 
-    render(<RoutePlanner />);
+    renderWithProviders(<RoutePlanner />);
 
     await act(async () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -128,7 +132,7 @@ describe('RoutePlanner', () => {
   });
 
   it('calculates routes for different transport modes', async () => {
-    render(<RoutePlanner />);
+    renderWithProviders(<RoutePlanner />);
 
     await act(async () => {
       await new Promise((resolve) => setTimeout(resolve, 100));

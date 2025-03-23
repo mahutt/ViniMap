@@ -44,6 +44,7 @@ type MapContextType = {
   endLocation: Location | null;
   userLocation: Location | null;
   route: Route | null;
+  setRoute: (route: Route | null) => void;
   setCenterCoordinate: (centerCoordinate: Position) => void;
   setZoomLevel: (zoomLevel: number) => void;
   setLevel: (level: Level | null) => void;
@@ -309,6 +310,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       endLocation,
       userLocation,
       route,
+      setRoute,
       setCenterCoordinate,
       setZoomLevel,
       setLevel,

@@ -16,9 +16,20 @@ import { useTask } from '@/providers/TaskContext';
 import LocationsAutocomplete from '@/components/LocationsAutocomplete';
 import { getLocations } from '@/modules/map/MapService';
 import TaskCard from '@/components/TaskCard';
+import { MapState, useMap } from '@/modules/map/MapContext';
+import { TaskService } from '@/services/TaskService';
+import { useRouter } from 'expo-router';
 
 export default function TasksScreen() {
-  const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
+  const {
+    selectedTasks,
+    setSelectedTasks,
+    tasks,
+    setTasks,
+    setIsTaskPlanning,
+    setTaskRouteDescriptions,
+  } = useTask();
+  const { setState, setRoute, flyTo, userLocation } = useMap();
 
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
@@ -35,6 +46,8 @@ export default function TasksScreen() {
     name: '',
     coordinates: [0, 0],
   });
+
+  const router = useRouter();
 
   useEffect(() => {
     if (tasks.length > 0) {
@@ -117,6 +130,57 @@ export default function TasksScreen() {
     setModifiableTask(undefined);
   };
 
+  const generateRoute = async () => {
+    const currentCoords = userLocation?.coordinates;
+
+    let currentLocation: Location;
+
+    if (currentCoords) {
+      currentLocation = {
+        name: 'Current Location',
+        coordinates: currentCoords,
+      };
+    } else {
+      currentLocation = {
+        name: 'Default Location: Concordia Hall Building',
+        coordinates: [-73.57845, 45.497042],
+      };
+    }
+
+    const currentLocationTask: Task = {
+      id: '1000',
+      text: 'First Tasks',
+      location: currentLocation,
+    };
+
+    const tasksForRouting: Task[] = [];
+
+    tasksForRouting.push(currentLocationTask);
+    tasksForRouting.push(...selectedTasks);
+
+    let newRoute = await TaskService.getOptimalRouteForPaths(
+      tasksForRouting,
+      setTaskRouteDescriptions
+    );
+
+    for (let i = 0; i < newRoute.segments.length; i++) {
+      newRoute.segments[i].id = ('segement' + i).toString();
+    }
+
+    setRoute(newRoute);
+    router.push('/');
+
+    setTimeout(() => {
+      if (userLocation) {
+        flyTo(userLocation.coordinates, 17);
+      }
+    }, 50);
+
+    setState(MapState.RoutePlanning);
+
+    setIsTaskPlanning(true);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
@@ -148,7 +212,7 @@ export default function TasksScreen() {
           <TouchableOpacity style={styles.plusButton} onPress={() => setModalVisible(true)}>
             <Text style={styles.plusButtonText}>+</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.pathButton}>
+          <TouchableOpacity style={styles.pathButton} onPress={generateRoute}>
             <Text style={styles.pathButtonText}>Generate Path</Text>
           </TouchableOpacity>
         </View>

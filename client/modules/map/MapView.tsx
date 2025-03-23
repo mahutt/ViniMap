@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
 import React, { useCallback, useState, useEffect } from 'react';
 import { MapState, useMap } from './MapContext';
@@ -9,6 +9,7 @@ import POIMarker from '@/components/POIMarker';
 import layers from '@/modules/map/style/DefaultLayers';
 import { filterWithLevel } from '@/modules/map/IndoorMapUtils';
 import { images } from '@/assets';
+import { useTask } from '@/providers/TaskContext';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -36,6 +37,8 @@ export default function MapView() {
     updateSelectedMapIfNeeded,
     onMapPress,
   } = useMap();
+
+  const { selectedTasks } = useTask();
 
   const [pointsOfInterest, setPointsOfInterest] = useState<PointOfInterest[]>([]);
   const [showPOIs, setShowPOIs] = useState(false);
@@ -106,9 +109,9 @@ export default function MapView() {
         </Mapbox.MarkerView>
       )}
 
-      {state === MapState.RoutePlanning && startLocation !== null && endLocation !== null && (
+      {state === MapState.RoutePlanning && (
         <>
-          {!equalLocations(startLocation, userLocation) && (
+          {startLocation && !equalLocations(startLocation, userLocation) && (
             <Mapbox.MarkerView id="start" coordinate={startLocation.coordinates}>
               <View style={[styles.marker, styles.startMarker]} />
             </Mapbox.MarkerView>
@@ -146,6 +149,19 @@ export default function MapView() {
                 ]}
               />
             </Mapbox.ShapeSource>
+          ))}
+
+          {selectedTasks.map((task, index) => (
+            <Mapbox.MarkerView
+              key={`task-marker-${task.id}`}
+              id={`task-${task.id}`}
+              coordinate={task.location.coordinates}>
+              <View style={styles.markerContainer}>
+                <Text style={styles.markerText}>
+                  {selectedTasks.findIndex((t) => t.id === task.id) + 1}
+                </Text>
+              </View>
+            </Mapbox.MarkerView>
           ))}
         </>
       )}
@@ -219,5 +235,31 @@ const styles = StyleSheet.create({
   },
   userLocationMarker: {
     backgroundColor: '#007AFF',
+  },
+  numberedMarker: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: '#852C3A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'white',
+  },
+  markerContainer: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#852C3A',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'white',
+  },
+  markerText: {
+    color: 'white',
+    fontSize: 12,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });

@@ -7,6 +7,9 @@ import { getRoute } from '@/modules/map/MapService';
 import TransportModes from './ui/RoutePlanner Components/TransportModes';
 import BottomFrame from './ui/RoutePlanner Components/BottomFrame';
 import InputFields from './ui/RoutePlanner Components/InputFields';
+import TaskFrame from './TaskFrame';
+import { useTask } from '@/providers/TaskContext';
+import TaskRouteHeader from './TaskRouteHeader';
 
 const MODES = [
   { name: 'walking', icon: 'walk-outline' },
@@ -39,6 +42,8 @@ export function RoutePlanner() {
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
 
+  const { isTaskPlanning } = useTask();
+
   const [selectedIndoorMode, setSelectedIndoorMode] = React.useState<string>('walking');
 
   const {
@@ -48,6 +53,7 @@ export function RoutePlanner() {
     endLocation,
     userLocation,
     state,
+    route,
     indoorMap,
   } = useMap();
 
@@ -155,20 +161,25 @@ export function RoutePlanner() {
 
   return (
     <>
-      <View style={styles.inputContainer}>
-        <View style={styles.locationRangeForm}>
-          <InputFields />
-          <TransportModes
-            selectedMode={indoorMap == null ? selectedMode : selectedIndoorMode}
-            onMode={handleTransportMode}
-            durations={durations}
-            isRouteFound={isRouteFound}
-            modes={indoorMap == null ? MODES : INDOOR_MODES}
-          />
+      {isTaskPlanning ? (
+        <TaskRouteHeader />
+      ) : (
+        <View style={styles.inputContainer}>
+          <View style={styles.locationRangeForm}>
+            <InputFields />
+            <TransportModes
+              selectedMode={indoorMap == null ? selectedMode : selectedIndoorMode}
+              onMode={handleTransportMode}
+              durations={durations}
+              isRouteFound={isRouteFound}
+              modes={indoorMap == null ? MODES : INDOOR_MODES}
+            />
+          </View>
         </View>
-      </View>
-
-      {isRouteFound && (
+      )}
+      {route !== null && isTaskPlanning ? (
+        <TaskFrame />
+      ) : (
         <BottomFrame
           selectedMode={indoorMap == null ? selectedMode : selectedIndoorMode}
           modeIcon={getModeIcon(indoorMap == null ? selectedMode : selectedIndoorMode)}

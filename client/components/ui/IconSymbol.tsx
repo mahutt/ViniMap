@@ -37,13 +37,5 @@ export function IconSymbol({
   color: string | OpaqueColorValue;
   style?: StyleProp<TextStyle>;
 }>) {
-  return (
-    <MaterialIcons
-      color={color}
-      size={size}
-      name={MAPPING[name]}
-      style={style}
-      testID="icon-symbol"
-    />
-  );
+  return <MaterialIcons color={color} size={size} name={MAPPING[name]} style={style} />;
 }
