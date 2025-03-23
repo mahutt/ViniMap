@@ -20,7 +20,7 @@ const TaskFrame = () => {
           <Text style={styles.noTasksText}>No tasks available</Text>
         ) : (
           taskRouteDescriptions.map((item, index) => (
-            <View key={index} style={styles.textContainer}>
+            <View key={item.id} style={styles.textContainer}>
               <View style={styles.circle}>
                 <Text style={styles.circleText}>{index + 1}</Text>
               </View>

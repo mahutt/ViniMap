@@ -1,5 +1,6 @@
 import { getRoute } from '@/modules/map/MapService';
 import { Route, Task, Segment, TaskRouteDescription } from '@/modules/map/Types';
+import uuid from 'react-native-uuid';
 
 export class TaskService {
   static async getOptimalRouteForPaths(
@@ -29,6 +30,7 @@ export class TaskService {
           const taskText = listOfTasks[i + 1].text;
 
           const taskDescription = {
+            id: uuid.v4().toString(),
             text: taskText,
             time:
               route.duration >= 3600
@@ -51,4 +53,5 @@ export class TaskService {
       segments: fullSegments,
     };
   }
+  generateId = () => Date.now().toString() + Math.random().toString(36);
 }

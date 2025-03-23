@@ -69,6 +69,7 @@ export interface Task {
 }
 
 export interface TaskRouteDescription {
+  id: string;
   text: string;
   time: string;
 }
