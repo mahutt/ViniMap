@@ -309,7 +309,7 @@ export const getDisjointConnections = (
       }
       const next_connection_level = GeojsonService.extractLevelFromFeature(feature);
       if (next_connection_level !== null && typeof next_connection_level === 'object') {
-        return next_connection_level.min == current_max;
+        return next_connection_level.min === current_max;
       }
     });
 
