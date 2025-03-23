@@ -153,7 +153,6 @@ describe('MapView', () => {
     ],
   };
   const mockUpdateSelectedMapIfNeeded = jest.fn();
-  render(<MapView />);
   const mockOnMapPress = jest.fn();
 
   beforeEach(() => {
