@@ -104,13 +104,9 @@ export default function MapView() {
       )}
 
       {userLocation?.coordinates && (
-        <Mapbox.PointAnnotation
-          key="user-location"
-          id="user-location"
-          coordinate={userLocation.coordinates}>
+        <Mapbox.MarkerView id="user-location" coordinate={userLocation.coordinates}>
           <View style={[styles.marker, styles.userLocationMarker]} />
-          <Mapbox.Callout title="Current Location" />
-        </Mapbox.PointAnnotation>
+        </Mapbox.MarkerView>
       )}
 
       {state === MapState.RoutePlanning && (

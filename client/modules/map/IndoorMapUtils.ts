@@ -200,7 +200,7 @@ export const getClosestLevels = (
   let level1: Level;
   let level2: Level;
 
-  if (levelsRange1.min < levelsRange2.max && levelsRange1.max > levelsRange2.min) {
+  if (levelsRange1.min <= levelsRange2.max && levelsRange1.max >= levelsRange2.min) {
     const smallestCommonLevel = Math.max(levelsRange1.min, levelsRange2.min);
     level1 = smallestCommonLevel;
     level2 = smallestCommonLevel;
@@ -229,20 +229,105 @@ export const getClosestLevel = (level: Level, levelsRange: LevelsRange): Level =
 export const getConnectionsBetween = (
   startLevel: Level,
   endLevel: Level,
-  indoorMap: IndoorMap
+  indoorMap: IndoorMap,
+  mode: string
 ): Feature<Polygon>[] => {
+  const temp = startLevel;
+  startLevel = endLevel;
+  endLevel = temp;
+
+  const getPathForDisabled = mode === 'handicap';
   let possibleConnections = indoorMap.geojson.features.filter(
-    (feature) => feature.properties?.stairs === 'yes' || feature.properties?.highway === 'elevator'
+    (feature) =>
+      (feature.properties?.highway === 'elevator' && getPathForDisabled) ||
+      ((feature.properties?.stairs === 'yes' || feature.properties?.conveying === 'yes') &&
+        !getPathForDisabled)
   );
+
   const usableConnections = possibleConnections.filter((feature) => {
+    if (feature.geometry.type !== 'Polygon') {
+      return false;
+    }
+
+    const level = GeojsonService.extractLevelFromFeature(feature);
+    if (level !== null && typeof level === 'object') {
+      if (startLevel < endLevel) {
+        return level.min <= startLevel && level.max >= endLevel;
+      } else {
+        return level.min <= endLevel && level.max >= startLevel;
+      }
+    }
+
+    return false;
+  });
+
+  if (usableConnections.length === 0) {
+    return getDisjointConnections(startLevel, endLevel, possibleConnections as Feature<Polygon>[]);
+  }
+
+  return usableConnections.slice(0, 1) as Feature<Polygon>[];
+};
+
+export const getDisjointConnections = (
+  startLevel: Level,
+  endLevel: Level,
+  possibleConnections: Feature<Polygon>[]
+): Feature<Polygon>[] => {
+  const usableConnections = [];
+  const first_connection = possibleConnections.filter((feature) => {
     if (feature.geometry.type !== 'Polygon') {
       return false;
     }
     const level = GeojsonService.extractLevelFromFeature(feature);
     if (level !== null && typeof level === 'object') {
-      return level.min <= startLevel && level.max >= endLevel;
+      return startLevel <= level.max && startLevel >= level.min;
     }
-    return false;
   });
-  return usableConnections.slice(0, 1) as Feature<Polygon>[];
+  //Didn't find any possible connections containing the startLevel
+  if (first_connection.length === 0) {
+    return [];
+  }
+
+  //First Usable Connection. We loop until we've found enough usable connections to complete the route
+  let current_connection = first_connection[0];
+  usableConnections.push(current_connection);
+
+  //Loop to get all pieces. Similar to linked list
+  while (true) {
+    const current_level = GeojsonService.extractLevelFromFeature(current_connection);
+    let current_max: Level;
+    if (current_level !== null && typeof current_level === 'object') {
+      current_max = current_level.max;
+    }
+
+    const next_connection = possibleConnections.filter((feature) => {
+      if (feature.geometry.type !== 'Polygon') {
+        return false;
+      }
+      const next_connection_level = GeojsonService.extractLevelFromFeature(feature);
+      if (next_connection_level !== null && typeof next_connection_level === 'object') {
+        return next_connection_level.min === current_max;
+      }
+    });
+
+    if (next_connection.length === 0) {
+      return [];
+    }
+
+    const next_levels = GeojsonService.extractLevelFromFeature(next_connection[0]);
+    let next_levels_max = -100;
+    if (next_levels !== null && typeof next_levels === 'object') {
+      next_levels_max = next_levels.max;
+    }
+
+    usableConnections.push(next_connection[0]);
+    if (next_levels_max >= endLevel) {
+      break;
+    } else {
+      current_connection = next_connection[0];
+    }
+  }
+  usableConnections.reverse();
+
+  return usableConnections;
 };

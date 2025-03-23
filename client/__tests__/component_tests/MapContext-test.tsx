@@ -123,10 +123,15 @@ describe('MapContext', () => {
     }
 
     await act(async () => {
-      await mapContext?.loadRouteFromCoordinates([-73.57, 45.5], [-73.58, 45.51], 'walking');
+      await mapContext?.loadRouteFromCoordinates(
+        [-73.57, 45.5],
+        [-73.58, 45.51],
+        'walking',
+        'walking'
+      );
     });
 
-    expect(getRoute).toHaveBeenCalledWith([-73.57, 45.5], [-73.58, 45.51], 'walking');
+    expect(getRoute).toHaveBeenCalledWith([-73.57, 45.5], [-73.58, 45.51], 'walking', 'walking');
 
     expect(mockFitBounds).toHaveBeenCalledWith([-73.5, 45.6], [-73.6, 45.5], 50, 1500);
 
@@ -357,7 +362,7 @@ describe('MapContext', () => {
       await mapContext?.loadRouteFromCoordinates([-73.57, 45.5], [-73.58, 45.51]);
     });
 
-    expect(getRoute).toHaveBeenCalledWith([-73.57, 45.5], [-73.58, 45.51], 'walking');
+    expect(getRoute).toHaveBeenCalledWith([-73.57, 45.5], [-73.58, 45.51], 'walking', 'walking');
     expect(mapContext?.cameraRef.current?.fitBounds).toHaveBeenCalled();
   });
 });
