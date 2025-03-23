@@ -310,4 +310,29 @@ describe('MapView', () => {
       })
     );
   });
+  it('renders start and end location markers in RoutePlanning state', () => {
+    const { useMap } = require('@/modules/map/MapContext');
+    useMap.mockReturnValueOnce({
+      state: MapState.RoutePlanning,
+      startLocation: mockStartLocation,
+      endLocation: mockEndLocation,
+      userLocation: null,
+      mapRef: mockMapRef,
+      cameraRef: mockCameraRef,
+      centerCoordinate: [0, 0],
+      zoomLevel: 12,
+      pitchLevel: 0,
+      route: mockRoute,
+      level: null,
+      indoorMap: null,
+      updateSelectedMapIfNeeded: mockUpdateSelectedMapIfNeeded,
+      onMapPress: mockOnMapPress,
+    });
+
+    const { UNSAFE_getAllByType } = renderWithProviders(<MapView />);
+    const { MarkerView } = require('@rnmapbox/maps');
+
+    expect(UNSAFE_getAllByType).not.toBeNull();
+    expect(MarkerView).not.toBeNull();
+  });
 });
