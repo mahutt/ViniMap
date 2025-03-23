@@ -236,7 +236,7 @@ export const getConnectionsBetween = (
   startLevel = endLevel;
   endLevel = temp;
 
-  const getPathForDisabled = mode === 'handicap' ? true : false;
+  const getPathForDisabled = mode === 'handicap';
   let possibleConnections = indoorMap.geojson.features.filter(
     (feature) =>
       (feature.properties?.highway === 'elevator' && getPathForDisabled) ||
@@ -325,10 +325,9 @@ export const getDisjointConnections = (
       break;
     } else {
       current_connection = next_conection[0];
-      continue;
     }
   }
   usableConnections.reverse();
 
-  return usableConnections as Feature<Polygon>[];
+  return usableConnections;
 };

@@ -38,7 +38,7 @@ export function RoutePlanner() {
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
 
-  const [selectedIndoorMode, setIndoorSelectedMode] = React.useState<string>('walking');
+  const [selectedIndoorMode, setSelectedIndoorMode] = React.useState<string>('walking');
 
   const {
     loadRouteFromCoordinates,
@@ -147,7 +147,7 @@ export function RoutePlanner() {
 
   const handleTransportMode = async (mode: string) => {
     if (indoorMap != null) {
-      setIndoorSelectedMode(mode);
+      setSelectedIndoorMode(mode);
     } else {
       setSelectedMode(mode);
     }
