@@ -1,8 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Pressable, Text } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import { formatDuration } from '@/modules/map/MapService';
-import { FontAwesome5 } from '@expo/vector-icons';
 
 interface TransportModesProps {
   selectedMode: string;

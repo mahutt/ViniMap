@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { getRoute } from '@/modules/map/MapService';
 import TransportModes from './ui/RoutePlanner Components/TransportModes';

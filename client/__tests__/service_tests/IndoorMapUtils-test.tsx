@@ -628,17 +628,16 @@ describe('getStartEndLevels', () => {
   });
 });
 
+// Mock data
+const createMockFeature = (props: any): Feature<Polygon | LineString> => ({
+  type: 'Feature',
+  properties: props,
+  geometry: {
+    type: 'Polygon',
+    coordinates: [[[0, 0]]],
+  },
+});
 describe('getConnectionsBetween', () => {
-  // Mock data
-  const createMockFeature = (props: any): Feature<Polygon | LineString> => ({
-    type: 'Feature',
-    properties: props,
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[[0, 0]]],
-    },
-  });
-
   const mockLevel1 = 1;
   const mockLevel2 = 2;
   const mockLevel3 = 3;
@@ -737,21 +736,10 @@ describe('getConnectionsBetween', () => {
 });
 
 describe('getDisjointConnections', () => {
-  // Mock data
-  const createMockFeature = (props: any): Feature<Polygon> => ({
-    type: 'Feature',
-    properties: props,
-    geometry: {
-      type: 'Polygon',
-      coordinates: [[[0, 0]]],
-    },
-  });
-
   const mockLevel1 = 1;
   const mockLevel3 = 3;
   const mockLevel5 = 5;
 
-  // Create features with various level ranges
   const stairsLevel1To2 = createMockFeature({ stairs: 'yes', level: '1;2' });
   const stairsLevel2To3 = createMockFeature({ stairs: 'yes', level: '2;3' });
   const stairsLevel3To5 = createMockFeature({ stairs: 'yes', level: '3;5' });
@@ -759,7 +747,6 @@ describe('getDisjointConnections', () => {
   const elevatorLevel1To3 = createMockFeature({ highway: 'elevator', level: '1;3' });
   const invalidTypeFeature = createMockFeature({ stairs: 'yes', level: '1;3' });
 
-  // Make invalid feature have non-polygon geometry
   invalidTypeFeature.geometry = {
     type: 'LineString',
     coordinates: [
@@ -768,7 +755,6 @@ describe('getDisjointConnections', () => {
     ],
   } as any;
 
-  // Mock GeojsonService.extractLevelFromFeature
   beforeEach(() => {
     jest.clearAllMocks();
     jest.spyOn(GeojsonService, 'extractLevelFromFeature').mockImplementation((feature) => {
