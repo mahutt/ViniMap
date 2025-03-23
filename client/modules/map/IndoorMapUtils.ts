@@ -300,7 +300,7 @@ export const getDisjointConnections = (
       current_max = current_level.max;
     }
 
-    const next_conection = possibleConnections.filter((feature) => {
+    const next_connection = possibleConnections.filter((feature) => {
       if (feature.geometry.type !== 'Polygon') {
         return false;
       }
@@ -310,21 +310,21 @@ export const getDisjointConnections = (
       }
     });
 
-    if (next_conection.length === 0) {
+    if (next_connection.length === 0) {
       return [];
     }
 
-    const next_levels = GeojsonService.extractLevelFromFeature(next_conection[0]);
+    const next_levels = GeojsonService.extractLevelFromFeature(next_connection[0]);
     let next_levels_max = -100;
     if (next_levels !== null && typeof next_levels === 'object') {
       next_levels_max = next_levels.max;
     }
 
-    usableConnections.push(next_conection[0]);
+    usableConnections.push(next_connection[0]);
     if (next_levels_max >= endLevel) {
       break;
     } else {
-      current_connection = next_conection[0];
+      current_connection = next_connection[0];
     }
   }
   usableConnections.reverse();
