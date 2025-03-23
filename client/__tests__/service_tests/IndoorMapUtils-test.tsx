@@ -7,6 +7,7 @@ import {
   getStartEndLevels,
   getClosestLevels,
   getConnectionsBetween,
+  getDisjointConnections,
 } from '@/modules/map/IndoorMapUtils';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { IndoorMap } from '../../modules/map/Types';

@@ -13,6 +13,10 @@ const MODES = [
   { name: 'driving', icon: 'car-outline' },
   { name: 'shuttle', icon: 'bus-outline' },
 ];
+const INDOOR_MODES = [
+  { name: 'handicap', icon: 'accessibility-outline' },
+  { name: 'walking', icon: 'walk-outline' },
+];
 
 export function RoutePlanner() {
   const [durations, setDurations] = React.useState<{ [key: string]: number | null }>({
@@ -20,6 +24,7 @@ export function RoutePlanner() {
     cycling: null,
     driving: null,
     shuttle: null,
+    handicap: null,
   });
 
   const [distances, setDistances] = React.useState<{ [key: string]: number | null }>({
@@ -27,10 +32,13 @@ export function RoutePlanner() {
     cycling: null,
     driving: null,
     shuttle: null,
+    handicap: null,
   });
 
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
+
+  const [selectedIndoorMode, setIndoorSelectedMode] = React.useState<string>('walking');
 
   const {
     loadRouteFromCoordinates,
@@ -57,6 +65,7 @@ export function RoutePlanner() {
         cycling: cyclingRoute?.duration ?? null,
         driving: drivingRoute?.duration ?? null,
         shuttle: shuttleRoute?.duration ?? null,
+        handicap: walkingRoute?.duration ?? null,
       });
 
       setDistances({
@@ -64,6 +73,7 @@ export function RoutePlanner() {
         cycling: cyclingRoute?.distance ?? null,
         driving: drivingRoute?.distance ?? null,
         shuttle: shuttleRoute?.distance ?? null,
+        handicap: walkingRoute?.duration ?? null,
       });
 
       setIsRouteFound(!!(walkingRoute || cyclingRoute || drivingRoute));
@@ -98,14 +108,21 @@ export function RoutePlanner() {
     if (durations.shuttle == null && selectedMode === 'shuttle') {
       setSelectedMode('driving');
     }
-  }, [durations, distances, selectedMode]);
+  }, [durations, distances, selectedMode, selectedIndoorMode]);
 
   const getModeIcon = (modeName: string) => {
     const mode = MODES.find((m) => m.name === modeName);
     if (!mode) return null;
     return (
       <Ionicons
-        name={mode.icon as 'walk-outline' | 'bicycle-outline' | 'car-outline' | 'bus-outline'}
+        name={
+          mode.icon as
+            | 'walk-outline'
+            | 'bicycle-outline'
+            | 'car-outline'
+            | 'bus-outline'
+            | 'accessibility-outline'
+        }
         size={24}
         color="black"
       />
@@ -113,7 +130,11 @@ export function RoutePlanner() {
   };
 
   const handleTransportMode = async (mode: string) => {
-    setSelectedMode(mode);
+    if (indoorMap != null) {
+      setIndoorSelectedMode(mode);
+    } else {
+      setSelectedMode(mode);
+    }
   };
 
   return (
@@ -122,11 +143,11 @@ export function RoutePlanner() {
         <View style={styles.locationRangeForm}>
           <InputFields />
           <TransportModes
-            selectedMode={selectedMode}
+            selectedMode={indoorMap == null ? selectedMode : selectedIndoorMode}
             onMode={handleTransportMode}
             durations={durations}
             isRouteFound={isRouteFound}
-            modes={MODES}
+            modes={indoorMap == null ? MODES : INDOOR_MODES}
           />
         </View>
       </View>
