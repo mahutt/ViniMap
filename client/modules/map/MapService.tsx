@@ -161,7 +161,6 @@ export const getIndoorRoute = (
     if (!steps) {
       return null;
     }
-    // console.log(steps);
 
     distance += getDistanceFromPositions(startPosition, endPosition);
     segments.push({
@@ -188,7 +187,6 @@ const getIndoorOutdoorRoute = async (
 ): Promise<Route | null> => {
   const entrances = GeojsonHelper.extractEntrances(indoorMap.geojson);
   if (entrances.length === 0) {
-    console.log('77777777777777777777777777777here');
     return null;
   }
   const entrance: Feature<Point> = entrances[0];
@@ -199,13 +197,6 @@ const getIndoorOutdoorRoute = async (
     mode
   );
   if (!indoorRoute || !outdoorRoute) {
-    if (outdoorRoute) {
-      console.log('=====================OUT GOOD====================');
-    }
-    if (indoorRoute) {
-      console.log('=====================In GOOD====================');
-    }
-    console.log('8888888888888888888888888888888here');
     return null;
   }
   return {
