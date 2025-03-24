@@ -7,8 +7,7 @@ import layers from '@/modules/map/style/DefaultLayers';
 import { filterWithLevel } from '@/modules/map/IndoorMapUtils';
 import { images } from '@/assets';
 import { useTask } from '@/providers/TaskContext';
-import poiFeatureCollection from '@/assets/geojson/pois.json';
-import type { FeatureCollection } from 'geojson';
+import PointsOfInterestService from '@/services/PointsOfInterestService';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -68,7 +67,7 @@ export default function MapView() {
         pitch={pitchLevel}
       />
       <Mapbox.Images images={images} />
-      <Mapbox.ShapeSource id="outdoor-pois" shape={poiFeatureCollection as FeatureCollection}>
+      <Mapbox.ShapeSource id="outdoor-pois" shape={PointsOfInterestService.getFeatureCollection()}>
         <Mapbox.SymbolLayer
           id="outdoor-poi-icons"
           sourceID="outdoor-pois"

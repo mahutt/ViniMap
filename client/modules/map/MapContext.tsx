@@ -168,16 +168,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
       const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);
       if (clickedPOI) {
-        return {
-          name: clickedPOI.name,
-          coordinates: clickedPOI.coordinates,
-          data: {
-            address: clickedPOI.address,
-            isOpen: clickedPOI.openingHours.isOpen,
-            hours: clickedPOI.openingHours.hours,
-            description: clickedPOI.description ?? '',
-          },
-        };
+        return clickedPOI;
       }
 
       return await fetchLocationData(coordinates);
