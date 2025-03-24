@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, Text, View, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { findNextClass, ClassItem, ScheduleData } from '../services/NextClassService';
+import { ClassItem, ScheduleData } from '@/modules/map/Types';
+import { findNextClass } from '@/services/NextClassService';
 
 interface NextClassButtonProps {
   scheduleData: ScheduleData;
