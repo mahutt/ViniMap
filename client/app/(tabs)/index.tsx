@@ -31,7 +31,7 @@ export default function HomeScreen() {
       )}
       {state === MapState.Idle && <CenterLocationButton />}
       {state === MapState.Information && <LocationInfo />}
-      {state === MapState.RoutePlanning && <RoutePlanner />}
+      {(state === MapState.RoutePlanning || state === MapState.TaskNavigation) && <RoutePlanner />}
       <MapHint />
       <FloorControl />
     </View>

@@ -1,3 +1,4 @@
+import { useMap, MapState } from '@/modules/map/MapContext';
 import { useTask } from '@/providers/TaskContext';
 import React, { useRef } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
@@ -5,10 +6,11 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 const TaskFrame = () => {
   const scrollViewRef = useRef<ScrollView>(null);
   const { taskRouteDescriptions } = useTask();
+  const { setState } = useMap();
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.doneButton}>
+      <TouchableOpacity style={styles.doneButton} onPress={() => setState(MapState.Idle)}>
         <Text style={styles.doneButtonText}>Done</Text>
       </TouchableOpacity>
 
@@ -90,6 +92,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 12,
     borderRadius: 10,
+    zIndex: 1,
   },
   doneButtonText: {
     color: 'white',

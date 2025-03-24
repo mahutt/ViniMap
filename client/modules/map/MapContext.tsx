@@ -25,6 +25,7 @@ export enum MapState {
   Information,
   SelectingStartLocation,
   SelectingEndLocation,
+  TaskNavigation,
 }
 
 const DEFAULT_COORDINATES: Coordinates = [-73.5789, 45.4973];

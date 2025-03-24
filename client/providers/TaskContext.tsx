@@ -6,9 +6,7 @@ type TaskContextType = {
   selectedTasks: Task[];
   setSelectedTasks: (tasks: Task[]) => void;
   tasks: Task[];
-  setTasks: (tasks: Task[]) => void;
-  isTaskPlanning: boolean;
-  setIsTaskPlanning: (isPlanning: boolean) => void;
+  setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
   taskRouteDescriptions: TaskRouteDescription[];
   setTaskRouteDescriptions: (taskTimes: TaskRouteDescription[]) => void;
 };
@@ -27,14 +25,11 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   });
 
   const [selectedTasks, setSelectedTasks] = useState<Task[]>([]);
-  const [isTaskPlanning, setIsTaskPlanning] = useState<boolean>(false);
   const [taskRouteDescriptions, setTaskRouteDescriptions] = useState<TaskRouteDescription[]>([]);
 
   useEffect(() => {
     try {
-      if (tasks.length > 0) {
-        storage.set('allTasks', JSON.stringify(tasks));
-      }
+      storage.set('allTasks', JSON.stringify(tasks));
     } catch (error) {
       console.error('Error saving tasks:', error);
     }
@@ -46,12 +41,10 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setSelectedTasks,
       tasks,
       setTasks,
-      isTaskPlanning,
-      setIsTaskPlanning,
       taskRouteDescriptions,
       setTaskRouteDescriptions,
     }),
-    [selectedTasks, tasks, isTaskPlanning, taskRouteDescriptions]
+    [selectedTasks, tasks, taskRouteDescriptions]
   );
 
   return <TaskContext.Provider value={contextValue}>{children}</TaskContext.Provider>;

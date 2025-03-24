@@ -8,7 +8,6 @@ import TransportModes from './ui/RoutePlanner Components/TransportModes';
 import BottomFrame from './ui/RoutePlanner Components/BottomFrame';
 import InputFields from './ui/RoutePlanner Components/InputFields';
 import TaskFrame from './TaskFrame';
-import { useTask } from '@/providers/TaskContext';
 import TaskRouteHeader from './TaskRouteHeader';
 
 const MODES = [
@@ -41,8 +40,6 @@ export function RoutePlanner() {
 
   const [selectedMode, setSelectedMode] = React.useState<string>('walking');
   const [isRouteFound, setIsRouteFound] = React.useState(false);
-
-  const { isTaskPlanning } = useTask();
 
   const [selectedIndoorMode, setSelectedIndoorMode] = React.useState<string>('walking');
 
@@ -161,7 +158,7 @@ export function RoutePlanner() {
 
   return (
     <>
-      {isTaskPlanning ? (
+      {state === MapState.TaskNavigation ? (
         <TaskRouteHeader />
       ) : (
         <View style={styles.inputContainer}>
@@ -177,7 +174,7 @@ export function RoutePlanner() {
           </View>
         </View>
       )}
-      {route !== null && isTaskPlanning ? (
+      {route !== null && state === MapState.TaskNavigation ? (
         <TaskFrame />
       ) : (
         <BottomFrame
