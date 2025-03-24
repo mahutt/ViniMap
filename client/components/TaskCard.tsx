@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
+    flex: 1,
   },
   square: {
     width: 24,
@@ -62,15 +63,6 @@ const styles = StyleSheet.create({
   itemText: {
     maxWidth: '80%',
     color: '#000',
-  },
-  circular: {
-    width: 20,
-    height: 20,
-    backgroundColor: '#852C3A',
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 3,
   },
   actionButtons: {
     flexDirection: 'row',

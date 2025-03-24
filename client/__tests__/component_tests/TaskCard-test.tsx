@@ -1,7 +1,9 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
+import { TouchableOpacity } from 'react-native';
 import TaskCard from '@/components/TaskCard';
 
+// Mock the IconSymbol component
 jest.mock('@/components/ui/IconSymbol', () => ({
   IconSymbol: () => 'IconSymbol',
 }));
@@ -14,6 +16,10 @@ describe('TaskCard', () => {
     onSelect: jest.fn(),
     modifyTask: jest.fn(),
   };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   it('matches the snapshot', () => {
     const { toJSON } = render(<TaskCard {...mockProps} />);
@@ -32,29 +38,29 @@ describe('TaskCard', () => {
   });
 
   it('calls onSelect when the checkbox is pressed', () => {
-    const { getAllByRole } = render(<TaskCard {...mockProps} />);
+    const { UNSAFE_getAllByType } = render(<TaskCard {...mockProps} />);
+    const touchables = UNSAFE_getAllByType(TouchableOpacity);
 
-    const touchableElements = getAllByRole('button');
-    fireEvent.press(touchableElements[0]);
-
+    // The first TouchableOpacity should be the selection square
+    fireEvent.press(touchables[0]);
     expect(mockProps.onSelect).toHaveBeenCalledTimes(1);
   });
 
   it('calls modifyTask when the edit button is pressed', () => {
-    const { getAllByRole } = render(<TaskCard {...mockProps} />);
+    const { UNSAFE_getAllByType } = render(<TaskCard {...mockProps} />);
+    const touchables = UNSAFE_getAllByType(TouchableOpacity);
 
-    const touchableElements = getAllByRole('button');
-    fireEvent.press(touchableElements[1]);
-
+    // The second TouchableOpacity should be the edit button
+    fireEvent.press(touchables[1]);
     expect(mockProps.modifyTask).toHaveBeenCalledTimes(1);
   });
 
   it('calls onDelete when the delete button is pressed', () => {
-    const { getAllByRole } = render(<TaskCard {...mockProps} />);
+    const { UNSAFE_getAllByType } = render(<TaskCard {...mockProps} />);
+    const touchables = UNSAFE_getAllByType(TouchableOpacity);
 
-    const touchableElements = getAllByRole('button');
-    fireEvent.press(touchableElements[2]);
-
+    // The third TouchableOpacity should be the delete button
+    fireEvent.press(touchables[2]);
     expect(mockProps.onDelete).toHaveBeenCalledTimes(1);
   });
 });
