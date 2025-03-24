@@ -25,9 +25,7 @@ jest.mock('@/modules/map/MapService', () => ({
 }));
 
 jest.mock('@/services/PointsOfInterestService', () => ({
-  getAllPOIs: jest.fn(() => []),
-  shouldShowPOIs: jest.fn(() => false),
-  findClosestPOI: jest.fn(),
+  getFeatureCollection: jest.fn(),
 }));
 
 jest.mock('@/modules/map/IndoorMapUtils', () => ({
