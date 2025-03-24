@@ -86,7 +86,7 @@ export const findNextClass = (scheduleData: ScheduleData): ClassItem | null => {
 
     const futureDates = Object.keys(scheduleData)
       .filter((date) => date > currentDateStr)
-      .sort();
+      .sort((a, b) => a.localeCompare(b));
 
     if (futureDates.length > 0) {
       const nextDate = futureDates[0];
