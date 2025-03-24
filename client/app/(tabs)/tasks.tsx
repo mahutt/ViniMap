@@ -14,7 +14,6 @@ import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useTask } from '@/providers/TaskContext';
 import LocationsAutocomplete from '@/components/LocationsAutocomplete';
-import { getLocations } from '@/modules/map/MapService';
 import TaskCard from '@/components/TaskCard';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { TaskService } from '@/services/TaskService';

@@ -7,7 +7,7 @@ export default function TaskRouteHeader() {
   const { selectedTasks } = useTask();
   const { state, setState } = useMap();
 
-  if (!(state === MapState.TaskNavigation) || selectedTasks.length === 0) {
+  if (state !== MapState.TaskNavigation || selectedTasks.length === 0) {
     return;
   }
 
