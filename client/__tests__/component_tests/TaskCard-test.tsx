@@ -1,9 +1,7 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import { TouchableOpacity } from 'react-native';
 import TaskCard from '@/components/TaskCard';
 
-// Mock the IconSymbol component
 jest.mock('@/components/ui/IconSymbol', () => ({
   IconSymbol: () => 'IconSymbol',
 }));
@@ -38,29 +36,36 @@ describe('TaskCard', () => {
   });
 
   it('calls onSelect when the checkbox is pressed', () => {
-    const { UNSAFE_getAllByType } = render(<TaskCard {...mockProps} />);
-    const touchables = UNSAFE_getAllByType(TouchableOpacity);
+    const { UNSAFE_getAllByProps } = render(<TaskCard {...mockProps} />);
 
-    // The first TouchableOpacity should be the selection square
+    const touchables = UNSAFE_getAllByProps({ activeOpacity: 0.7 });
     fireEvent.press(touchables[0]);
     expect(mockProps.onSelect).toHaveBeenCalledTimes(1);
   });
 
   it('calls modifyTask when the edit button is pressed', () => {
-    const { UNSAFE_getAllByType } = render(<TaskCard {...mockProps} />);
-    const touchables = UNSAFE_getAllByType(TouchableOpacity);
+    const { UNSAFE_getAllByProps } = render(<TaskCard {...mockProps} />);
 
-    // The second TouchableOpacity should be the edit button
-    fireEvent.press(touchables[1]);
+    const editButtons = UNSAFE_getAllByProps({
+      children: 'IconSymbol',
+      style: expect.objectContaining({ backgroundColor: '#852C3A' }),
+    });
+
+    fireEvent.press(editButtons[0]);
+
     expect(mockProps.modifyTask).toHaveBeenCalledTimes(1);
   });
 
   it('calls onDelete when the delete button is pressed', () => {
-    const { UNSAFE_getAllByType } = render(<TaskCard {...mockProps} />);
-    const touchables = UNSAFE_getAllByType(TouchableOpacity);
+    const { UNSAFE_getAllByProps } = render(<TaskCard {...mockProps} />);
 
-    // The third TouchableOpacity should be the delete button
-    fireEvent.press(touchables[2]);
+    const buttons = UNSAFE_getAllByProps({
+      children: 'IconSymbol',
+      style: expect.objectContaining({ backgroundColor: '#852C3A' }),
+    });
+
+    fireEvent.press(buttons[1]);
+
     expect(mockProps.onDelete).toHaveBeenCalledTimes(1);
   });
 });

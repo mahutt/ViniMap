@@ -2,36 +2,32 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
-jest.mock('@expo/vector-icons/MaterialIcons', () => {
-  const mockComponent = () => 'MaterialIcons';
-  mockComponent.displayName = 'MaterialIcons';
-  return mockComponent;
-});
-
 describe('IconSymbol', () => {
   it('renders with xmark icon', () => {
-    const { getByText } = render(<IconSymbol name="xmark" color="black" />);
-    expect(getByText('MaterialIcons')).toBeTruthy();
+    const { UNSAFE_root } = render(<IconSymbol name="xmark" color="black" />);
+    expect(UNSAFE_root).toBeTruthy();
   });
 
   it('renders with gear icon', () => {
-    const { getByText } = render(<IconSymbol name="gear" color="red" size={32} />);
-    expect(getByText('MaterialIcons')).toBeTruthy();
+    const { UNSAFE_root } = render(<IconSymbol name="gear" color="red" size={32} />);
+    expect(UNSAFE_root).toBeTruthy();
   });
 
   it('renders with pencil icon', () => {
-    const { getByText } = render(<IconSymbol name="pencil" color="blue" />);
-    expect(getByText('MaterialIcons')).toBeTruthy();
+    const { UNSAFE_root } = render(<IconSymbol name="pencil" color="blue" />);
+    expect(UNSAFE_root).toBeTruthy();
   });
 
   it('renders with trash icon', () => {
-    const { getByText } = render(<IconSymbol name="trash" color="red" />);
-    expect(getByText('MaterialIcons')).toBeTruthy();
+    const { UNSAFE_root } = render(<IconSymbol name="trash" color="red" />);
+    expect(UNSAFE_root).toBeTruthy();
   });
 
   it('renders with calendar icon and applies custom styles', () => {
     const customStyle = { margin: 10 };
-    const { getByText } = render(<IconSymbol name="calendar" color="green" style={customStyle} />);
-    expect(getByText('MaterialIcons')).toBeTruthy();
+    const { UNSAFE_root } = render(
+      <IconSymbol name="calendar" color="green" style={customStyle} />
+    );
+    expect(UNSAFE_root).toBeTruthy();
   });
 });

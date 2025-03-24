@@ -12,22 +12,24 @@ interface TaskCardProps {
 
 const TaskCard = ({ text, selected, onDelete, onSelect, modifyTask }: TaskCardProps) => {
   return (
-    <View style={styles.item}>
-      <View style={styles.itemLeft}>
-        <TouchableOpacity onPress={onSelect} activeOpacity={0.7}>
-          <View style={[styles.square, selected && styles.selectedSquare]} />
-        </TouchableOpacity>
-        <Text style={styles.itemText}>{text}</Text>
+    <TouchableOpacity onPress={modifyTask}>
+      <View style={styles.item}>
+        <View style={styles.itemLeft}>
+          <TouchableOpacity onPress={onSelect} activeOpacity={0.7}>
+            <View style={[styles.square, selected && styles.selectedSquare]} />
+          </TouchableOpacity>
+          <Text style={styles.itemText}>{text}</Text>
+        </View>
+        <View style={styles.actionButtons}>
+          <TouchableOpacity style={styles.iconButton} onPress={modifyTask}>
+            <IconSymbol name="pencil" size={16} color="white" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.iconButton} onPress={onDelete}>
+            <IconSymbol name="trash" size={16} color="white" />
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.actionButtons}>
-        <TouchableOpacity style={styles.iconButton} onPress={modifyTask}>
-          <IconSymbol name="pencil" size={16} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={onDelete}>
-          <IconSymbol name="trash" size={16} color="white" />
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -46,7 +48,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    flex: 1,
   },
   square: {
     width: 24,
