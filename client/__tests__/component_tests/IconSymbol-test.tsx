@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import { IconSymbol } from '@/components/ui/IconSymbol';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 jest.mock('@expo/vector-icons/MaterialIcons', () => {
   const mockComponent = () => 'MaterialIcons';
