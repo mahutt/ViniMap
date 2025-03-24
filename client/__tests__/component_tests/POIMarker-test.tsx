@@ -29,7 +29,7 @@ describe('POIMarker Component', () => {
   const POI_CONFIG = [
     { type: 'bixi', icon: 'bicycle-outline', color: '#5cb85c' },
     { type: 'metro', icon: 'subway-outline', color: '#0d6efd' },
-    { type: 'bus', icon: 'bus-outline', color: '#6f42c1' },
+    { type: 'bus_station', icon: 'bus-outline', color: '#6f42c1' },
     { type: 'restaurant', icon: 'restaurant-outline', color: '#fd7e14' },
     { type: 'park', icon: 'leaf-outline', color: '#20c997' },
     { type: 'library', icon: 'book-outline', color: '#6c757d' },

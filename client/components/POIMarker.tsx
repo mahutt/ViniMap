@@ -11,7 +11,7 @@ interface POIMarkerProps {
 const iconMap: Record<POIType, keyof typeof Ionicons.glyphMap> = {
   bixi: 'bicycle-outline',
   metro: 'subway-outline',
-  bus: 'bus-outline',
+  bus_station: 'bus-outline',
   restaurant: 'restaurant-outline',
   park: 'leaf-outline',
   library: 'book-outline',
@@ -22,7 +22,7 @@ const iconMap: Record<POIType, keyof typeof Ionicons.glyphMap> = {
 const colorMap: Record<POIType, string> = {
   bixi: '#5cb85c',
   metro: '#0d6efd',
-  bus: '#6f42c1',
+  bus_station: '#6f42c1',
   restaurant: '#fd7e14',
   park: '#20c997',
   library: '#6c757d',

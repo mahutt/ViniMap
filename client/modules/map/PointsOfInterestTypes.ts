@@ -3,7 +3,7 @@ import { Coordinates } from '@/modules/map/Types';
 export type POIType =
   | 'bixi'
   | 'metro'
-  | 'bus'
+  | 'bus_station'
   | 'restaurant'
   | 'park'
   | 'library'

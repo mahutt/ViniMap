@@ -65,7 +65,7 @@
       "name": "Station Guy-Concordia (St-Mathieu/De Maisonneuve)",
       "coordinates": [-73.580727, 45.494608],
       "address": "Guy-Concordia, 1445 Guy St, Montreal, Quebec H3H 2L5",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -77,7 +77,7 @@
       "name": "Station Guy-Concordia (Guy / De Maisonneuve)",
       "coordinates": [-73.579078, 45.495688],
       "address": "Guy-Concordia, 1445 Guy St, Montreal, Quebec H3H 2L5",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -257,7 +257,7 @@
       "name": "Station Guy-Concordia (Guy / De Maisonneuve)",
       "coordinates": [-73.5796058, 45.4959217],
       "address": "1445 Guy St, Montreal, Quebec H3H 2L5",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -269,7 +269,7 @@
       "name": "Côte-des-Neiges / Summerhill",
       "coordinates": [-73.5839845, 45.4965027],
       "address": "Montreal, QC H3H 1T9",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -401,7 +401,7 @@
       "name": "René-Lévesque / Bishop",
       "coordinates": [-73.5737142, 45.4954342],
       "address": "Montreal, QC H3G 2M5",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -701,7 +701,7 @@
       "name": "Sherbrooke / Bishop",
       "coordinates": [-73.5799549, 45.4981896],
       "address": "Montreal, QC H3G 1K4",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -785,7 +785,7 @@
       "name": "René-Lévesque / Guy",
       "coordinates": [-73.575437, 45.493588],
       "address": "Montreal, QC",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -797,7 +797,7 @@
       "name": "Sherbrooke / Côte-des-Neiges",
       "coordinates": [-73.581755, 45.496397],
       "address": "Montreal, QC H3H 1T4",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -809,7 +809,7 @@
       "name": "Sherbrooke / Saint-Mathieu",
       "coordinates": [-73.582497, 45.495555],
       "address": "Montreal, QC H3H 1E4",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -821,7 +821,7 @@
       "name": "Station Guy-Concordia (Maisonneuve / St-Mathieu)",
       "coordinates": [-73.580236, 45.494947],
       "address": "Accès A, 1801 St Mathieu St, Montreal, Quebec H3H 1J9",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -833,7 +833,7 @@
       "name": "Guy / Sainte-Catherine",
       "coordinates": [-73.57707, 45.494623],
       "address": "Montreal, QC H3G 1S8",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -845,7 +845,7 @@
       "name": "De Maisonneuve / de la Montagne",
       "coordinates": [-73.576877, 45.498892],
       "address": "Montreal, QC H3G 1S8",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -857,7 +857,7 @@
       "name": "Sainte-Catherine / Saint-Mathieu",
       "coordinates": [-73.579306, 45.493687],
       "address": "Montreal, QC H3G 1S8",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -869,7 +869,7 @@
       "name": "René-Lévesque / Guy",
       "coordinates": [-73.575009, 45.494038],
       "address": "Montreal, QC H3G 1S8",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -881,7 +881,7 @@
       "name": "De Maisonneuve / Bishop",
       "coordinates": [-73.578074, 45.497525],
       "address": "De Maisonneuve / Bishop",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -893,7 +893,7 @@
       "name": "Station Guy-Concordia (De Maisonneuve/St-Mathieu)",
       "coordinates": [-73.580889, 45.49435],
       "address": "Address unavailable",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -905,7 +905,7 @@
       "name": "Guy / René-Lévesque",
       "coordinates": [-73.574736, 45.493792],
       "address": "Montreal, QC H3H 2K7",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -917,7 +917,7 @@
       "name": "Saint-Mathieu / Sherbrooke",
       "coordinates": [-73.582679, 45.49577],
       "address": "Montreal, QC H3H 1E3",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -929,7 +929,7 @@
       "name": "Sherbrooke / Saint-Marc",
       "coordinates": [-73.583478, 45.494448],
       "address": "Montreal, QC H3H 1E3",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -941,7 +941,7 @@
       "name": "du Docteur-Penfield / Redpath",
       "coordinates": [-73.583821, 45.499478],
       "address": "Montreal, QC H3G 1B8",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -953,7 +953,7 @@
       "name": "Sainte-Catherine / de la Montagne",
       "coordinates": [-73.575059, 45.497763],
       "address": "Montreal, QC H3G 1P6",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -1637,7 +1637,7 @@
       "name": "Université Concordia / Campus Loyola",
       "coordinates": [-73.63854899206329, 45.45790405657016],
       "address": "Montreal, QC H4B 1R6",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -1649,7 +1649,7 @@
       "name": "Université Concordia / Campus Loyola",
       "coordinates": [-73.63907217997065, 45.457596683606525],
       "address": "Montreal, QC H4B 1R6",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -1661,7 +1661,7 @@
       "name": "Sherbrooke / West Broadway",
       "coordinates": [-73.64008538443713, 45.45676157079121],
       "address": "Montreal, QC H4B 1R6",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -1673,7 +1673,7 @@
       "name": "West Broadway / Sherbrooke",
       "coordinates": [-73.6403160543925, 45.456611056327],
       "address": "Montreal, QC H4B 1R6",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"
@@ -1685,7 +1685,7 @@
       "name": "West Broadway / De Terrebonne",
       "coordinates": [-73.64227339644337, 45.45749226578458],
       "address": "Montreal, QC H4B 1R6",
-      "type": "bus",
+      "type": "bus_station",
       "openingHours": {
         "isOpen": true,
         "hours": "24/7"

@@ -7,7 +7,7 @@ import { POIType } from '../modules/map/PointsOfInterestTypes';
 const iconMap: Record<POIType, keyof typeof Ionicons.glyphMap> = {
   bixi: 'bicycle-outline',
   metro: 'subway-outline',
-  bus: 'bus-outline',
+  bus_station: 'bus-outline',
   restaurant: 'restaurant-outline',
   park: 'leaf-outline',
   library: 'book-outline',

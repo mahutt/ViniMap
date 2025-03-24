@@ -29,7 +29,7 @@ exports[`POIMarker Component renders correctly with snapshot for each POI type: 
 />
 `;
 
-exports[`POIMarker Component renders correctly with snapshot for each POI type: POIMarker with type bus 1`] = `
+exports[`POIMarker Component renders correctly with snapshot for each POI type: POIMarker with type bus_station 1`] = `
 <View
   style={
     [
