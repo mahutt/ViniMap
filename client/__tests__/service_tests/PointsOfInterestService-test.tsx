@@ -97,6 +97,7 @@ describe('PointsOfInterestService', () => {
             isOpen: true,
             hours: '9-5',
             description: 'Test description 1',
+            type: 'restaurant',
           },
         });
       });
@@ -124,6 +125,7 @@ describe('PointsOfInterestService', () => {
           description: 'Test description 1',
           hours: '9-5',
           isOpen: true,
+          type: 'restaurant',
         },
       });
       expect(calculateEuclideanDistance).toHaveBeenCalledTimes(3);
@@ -157,6 +159,7 @@ describe('PointsOfInterestService', () => {
           description: 'Test description 1',
           hours: '9-5',
           isOpen: true,
+          type: 'restaurant',
         },
       });
     });
@@ -181,6 +184,7 @@ describe('PointsOfInterestService', () => {
           description: 'Test description 2',
           hours: '10-6',
           isOpen: true,
+          type: 'park',
         },
       });
     });

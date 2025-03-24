@@ -14,6 +14,7 @@ const extractLocation = (feature: Feature<Point>): Location => {
       isOpen: true,
       hours: feature.properties?.opening_hours,
       description: feature.properties?.description,
+      type: feature.properties?.amenity,
     },
   };
 };

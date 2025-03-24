@@ -2,17 +2,15 @@ import { MapState, useMap } from '@/modules/map/MapContext';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
-import { POIType } from '../modules/map/PointsOfInterestTypes';
 
-const iconMap: Record<POIType, keyof typeof Ionicons.glyphMap> = {
-  bixi: 'bicycle-outline',
-  metro: 'subway-outline',
+const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
+  bicycle_rental: 'bicycle-outline',
+  subway_station: 'subway-outline',
   bus_station: 'bus-outline',
   restaurant: 'restaurant-outline',
   park: 'leaf-outline',
   library: 'book-outline',
-  shopping: 'cart-outline',
-  other: 'location-outline',
+  location: 'location-outline',
 };
 
 export function LocationInfo() {
@@ -23,9 +21,7 @@ export function LocationInfo() {
   }
 
   const isCustomPOI = endLocation?.data?.hours !== undefined;
-
-  const poiType = isCustomPOI ? endLocation?.data?.type || 'other' : 'other';
-  const iconName = iconMap[poiType as POIType] || 'location';
+  const iconName = iconMap[endLocation?.data?.type] || 'location';
 
   return (
     <View style={styles.container}>
