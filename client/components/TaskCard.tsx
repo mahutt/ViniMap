@@ -12,22 +12,19 @@ interface TaskCardProps {
 
 const TaskCard = ({ text, selected, onDelete, onSelect, modifyTask }: TaskCardProps) => {
   return (
-    <View style={styles.item}>
-      <View style={styles.itemLeft}>
-        <TouchableOpacity onPress={onSelect} activeOpacity={0.7}>
-          <View style={[styles.square, selected && styles.selectedSquare]} />
-        </TouchableOpacity>
-        <Text style={styles.itemText}>{text}</Text>
-      </View>
-      <View style={styles.actionButtons}>
-        <TouchableOpacity style={styles.iconButton} onPress={modifyTask}>
-          <IconSymbol name="pencil" size={16} color="white" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton} onPress={onDelete}>
-          <IconSymbol name="trash" size={16} color="white" />
+    <TouchableOpacity onPress={modifyTask}>
+      <View style={styles.item}>
+        <View style={styles.itemLeft}>
+          <TouchableOpacity onPress={onSelect} activeOpacity={0.7}>
+            <View style={[styles.square, selected && styles.selectedSquare]} />
+          </TouchableOpacity>
+          <Text style={styles.itemText}>{text}</Text>
+        </View>
+        <TouchableOpacity style={styles.circular} onPress={onDelete}>
+          <IconSymbol name="xmark" size={14} color="white" />
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -71,19 +68,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 3,
-  },
-  actionButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  iconButton: {
-    width: 28,
-    height: 28,
-    backgroundColor: '#852C3A',
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 8,
   },
 });
 
