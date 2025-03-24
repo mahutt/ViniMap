@@ -1,10 +1,4 @@
-export interface ClassItem {
-  className: string;
-  location: string;
-  time: string;
-}
-
-export type ScheduleData = Record<string, ClassItem[]>;
+import { ScheduleData, ClassItem } from '@/modules/map/Types';
 
 // format date as YYYY-MM-DD (helper function)
 const formatDateToYYYYMMDD = (date: Date): string => {
