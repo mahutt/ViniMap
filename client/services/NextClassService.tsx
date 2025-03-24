@@ -49,7 +49,7 @@ export const findNextClass = (scheduleData: ScheduleData): ClassItem | null => {
 
           const classStartTimeMinutes = hour * 60 + minute;
           return classStartTimeMinutes > currentTimeMinutes;
-        } catch (e) {
+        } catch (_) {
           return true;
         }
       });
@@ -75,7 +75,7 @@ export const findNextClass = (scheduleData: ScheduleData): ClassItem | null => {
             };
 
             return getTimeMinutes(a.time) - getTimeMinutes(b.time);
-          } catch (e) {
+          } catch (_) {
             return 0;
           }
         });

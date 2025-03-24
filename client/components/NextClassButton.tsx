@@ -23,7 +23,7 @@ const NextClassButton: React.FC<NextClassButtonProps> = ({ scheduleData, onNavig
       } else {
         Alert.alert('No Classes', 'There are no classes scheduled.');
       }
-    } catch (error) {
+    } catch (_) {
       Alert.alert('Error', 'Something went wrong while finding your class. Please try again.');
     }
   };
