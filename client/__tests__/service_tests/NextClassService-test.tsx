@@ -1,30 +1,6 @@
-import { findNextClass, ClassItem, ScheduleData } from '@/services/NextClassService';
+import { findNextClass, ScheduleData } from '@/services/NextClassService';
 
-const mockDate = (isoDate: string) => {
-  const originalDate = global.Date;
-
-  class MockDate extends originalDate {
-    constructor(...args: [any?]) {
-      if (args.length === 0) {
-        super(isoDate);
-      } else {
-        super(...args);
-      }
-    }
-
-    static now() {
-      return new originalDate(isoDate).getTime();
-    }
-  }
-
-  global.Date = MockDate as DateConstructor;
-
-  return () => {
-    global.Date = originalDate;
-  };
-};
-
-function mockDateAlternative(dateString: string) {
+function mockDate(dateString: string) {
   const originalDate = Date;
   global.Date = jest.fn(() => new originalDate(dateString)) as any;
   return () => {
@@ -38,7 +14,7 @@ describe('findNextClass', () => {
   });
 
   test('returns the next upcoming class on the same day', () => {
-    const resetDate = mockDateAlternative('2023-05-15T10:30:00');
+    const resetDate = mockDate('2023-05-15T10:30:00');
 
     const scheduleData: ScheduleData = {
       '2023-05-15': [
@@ -60,7 +36,7 @@ describe('findNextClass', () => {
   });
 
   test('returns the first class of the next day when no more classes today', () => {
-    const resetDate = mockDateAlternative('2023-05-15T18:30:00');
+    const resetDate = mockDate('2023-05-15T18:30:00');
 
     const scheduleData: ScheduleData = {
       '2023-05-15': [
@@ -85,7 +61,7 @@ describe('findNextClass', () => {
   });
 
   test('correctly handles PM time format', () => {
-    const resetDate = mockDateAlternative('2023-05-15T13:30:00');
+    const resetDate = mockDate('2023-05-15T13:30:00');
 
     const scheduleData: ScheduleData = {
       '2023-05-15': [
@@ -108,7 +84,7 @@ describe('findNextClass', () => {
   });
 
   test('correctly handles 12 AM and 12 PM edge cases', () => {
-    const resetDate = mockDateAlternative('2023-05-15T11:30:00');
+    const resetDate = mockDate('2023-05-15T11:30:00');
 
     const scheduleData: ScheduleData = {
       '2023-05-15': [
@@ -131,7 +107,7 @@ describe('findNextClass', () => {
   });
 
   test('finds first class on future date when no classes today', () => {
-    const resetDate = mockDateAlternative('2023-05-15T10:30:00');
+    const resetDate = mockDate('2023-05-15T10:30:00');
 
     const scheduleData: ScheduleData = {
       '2023-05-14': [
@@ -170,7 +146,7 @@ describe('findNextClass', () => {
   });
 
   test('handles malformed time format gracefully', () => {
-    const resetDate = mockDateAlternative('2023-05-15T10:30:00');
+    const resetDate = mockDate('2023-05-15T10:30:00');
 
     const scheduleData: ScheduleData = {
       '2023-05-15': [
