@@ -18,6 +18,51 @@ const equalLocations = (a: Location | null, b: Location | null): boolean => {
   return a.coordinates[0] === b.coordinates[0] && a.coordinates[1] === b.coordinates[1];
 };
 
+const extrusionLayerStyle = {
+  // Most keys need to be camelCased for React Native
+  id: 'building-extrusion',
+  type: 'fillExtrusion', // Changed from 'fill-extrusion'
+  source: 'composite',
+  sourceLayer: 'building', // Changed from 'source-layer'
+  minZoomLevel: 12, // Changed from 'minzoom'
+  maxZoomLevel: 16.8, // Changed from 'maxzoom'
+  filter: [
+    'all',
+    ['==', ['get', 'extrude'], 'true'],
+    [
+      'any',
+      [
+        'match',
+        ['id'],
+        [
+          1110145740, 103248058, 17189298, 103521746, 979438074, 103896385, 22080570, 103248055,
+          545014554, 47331993, 47332007, 604324457, 604324456, 604324455, 47332003, 17887805,
+          604324442, 604324441, 47332009, 604324443, 47332006, 795012497, 47331997, 17887804,
+          17887803, 604324438, 129437736, 47332005, 604019520,
+        ],
+        true,
+        false,
+      ],
+      ['match', ['get', 'building_id'], [103248064, 22080581, 22080570, 22080572], true, false],
+    ],
+  ],
+  paint: {
+    // Paint properties use camelCase in React Native Mapbox
+    fillExtrusionColor: ['interpolate', ['linear'], ['zoom'], 0, '#912338', 22, '#912338'],
+    fillExtrusionHeight: [
+      'interpolate',
+      ['linear'],
+      ['zoom'],
+      0,
+      ['get', 'height'],
+      22,
+      ['get', 'height'],
+    ],
+    fillExtrusionBase: ['get', 'min_height'],
+    fillExtrusionOpacity: 0.83,
+  },
+};
+
 export default function MapView() {
   const {
     state,
@@ -66,7 +111,51 @@ export default function MapView() {
         animationDuration={2000}
         pitch={pitchLevel}
       />
+
       <Mapbox.Images images={images} />
+
+      <Mapbox.ShapeSource id="composite" url="mapbox://mapbox.mapbox-streets-v8">
+        <Mapbox.FillExtrusionLayer
+          id="building (1)"
+          sourceID="composite"
+          sourceLayerID="building"
+          minZoomLevel={12} // Only show buildings when zoomed in enough
+          maxZoomLevel={16.8} // Max zoom level for buildings
+          style={{
+            fillExtrusionHeight: ['get', 'height'],
+            fillExtrusionColor: '#912338',
+            fillExtrusionBase: 0,
+            fillExtrusionOpacity: 0.83,
+          }}
+          filter={[
+            'all',
+            ['==', ['get', 'extrude'], 'true'],
+            [
+              'any',
+              [
+                'match',
+                ['id'],
+                [
+                  1110145740, 103248058, 17189298, 103521746, 979438074, 103896385, 22080570,
+                  103248055, 545014554, 47331993, 47332007, 604324457, 604324456, 604324455,
+                  47332003, 17887805, 604324442, 604324441, 47332009, 604324443, 47332006,
+                  795012497, 47331997, 17887804, 17887803, 604324438, 129437736, 47332005,
+                  604019520,
+                ],
+                true,
+                false,
+              ],
+              [
+                'match',
+                ['get', 'building_id'],
+                [103248064, 22080581, 22080570, 22080572],
+                true,
+                false,
+              ],
+            ],
+          ]}
+        />
+      </Mapbox.ShapeSource>
       <Mapbox.ShapeSource id="outdoor-pois" shape={PointsOfInterestService.getFeatureCollection()}>
         <Mapbox.SymbolLayer
           id="outdoor-poi-icons"
