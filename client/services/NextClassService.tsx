@@ -19,7 +19,7 @@ export const parseTimeToMinutes = (timeStr: string): number => {
     if (cleanTimeStr.toLowerCase().includes('am') || cleanTimeStr.toLowerCase().includes('pm')) {
       isPM = cleanTimeStr.toLowerCase().includes('pm');
 
-      const timePart = cleanTimeStr.replace(/\s*[ap]m\s*$/i, '').trim();
+      const timePart = cleanTimeStr.replace(/\s{0,3}(?:[ap]m)\s{0,3}$/i, '').trim();
 
       const [hourStr, minuteStr] = timePart.split(':');
       hour = parseInt(hourStr, 10);
