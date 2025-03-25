@@ -1,19 +1,11 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import TaskCard from '@/components/TaskCard';
-import { OpaqueColorValue, StyleProp, TextStyle } from 'react-native';
-
-type IconSymbolProps = {
-  name: string;
-  size?: number;
-  color: string | OpaqueColorValue;
-  style?: StyleProp<TextStyle>;
-};
 
 jest.mock('@/components/ui/IconSymbol', () => {
   const React = require('react');
   return {
-    IconSymbol: function MockIconSymbol(props: IconSymbolProps) {
+    IconSymbol: function MockIconSymbol() {
       return React.createElement('ViewManagerAdapter_SymbolModule');
     },
   };
@@ -67,17 +59,14 @@ describe('TaskCard', () => {
 
   it('calls appropriate handlers when the component is rendered and used', () => {
     const { UNSAFE_root } = render(<TaskCard {...mockProps} />);
-
     expect(mockProps.modifyTask).not.toHaveBeenCalled();
     expect(mockProps.onDelete).not.toHaveBeenCalled();
     expect(mockProps.onSelect).not.toHaveBeenCalled();
-
     expect(UNSAFE_root).toBeTruthy();
   });
 
   it('passes the correct props to TaskCard', () => {
     render(<TaskCard {...mockProps} />);
-
     expect(mockProps.text).toBe('Sample Task');
     expect(mockProps.selected).toBe(false);
     expect(typeof mockProps.onDelete).toBe('function');
