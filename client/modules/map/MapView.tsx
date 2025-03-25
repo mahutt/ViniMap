@@ -109,7 +109,7 @@ export default function MapView() {
         </Mapbox.MarkerView>
       )}
 
-      {state === MapState.RoutePlanning && (
+      {(state === MapState.RoutePlanning || state === MapState.TaskNavigation) && (
         <>
           {startLocation && !equalLocations(startLocation, userLocation) && (
             <Mapbox.MarkerView id="start" coordinate={startLocation.coordinates}>

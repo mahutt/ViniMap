@@ -14,21 +14,13 @@ import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useTask } from '@/providers/TaskContext';
 import LocationsAutocomplete from '@/components/LocationsAutocomplete';
-import { getLocations } from '@/modules/map/MapService';
 import TaskCard from '@/components/TaskCard';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { TaskService } from '@/services/TaskService';
 import { useRouter } from 'expo-router';
 
 export default function TasksScreen() {
-  const {
-    selectedTasks,
-    setSelectedTasks,
-    tasks,
-    setTasks,
-    setIsTaskPlanning,
-    setTaskRouteDescriptions,
-  } = useTask();
+  const { selectedTasks, setSelectedTasks, tasks, setTasks, setTaskRouteDescriptions } = useTask();
   const { setState, setRoute, flyTo, userLocation } = useMap();
 
   const taskList = useRef(new TaskList());
@@ -75,8 +67,7 @@ export default function TasksScreen() {
 
   const deleteTask = (id: string) => {
     caretaker.current.save();
-    taskList.current.setTasks(tasks.filter((task) => task.id !== id));
-    setTasks([...taskList.current.getTasks()]);
+    setTasks((prev) => prev.filter((task) => task.id !== id));
   };
 
   const getPreviouseState = () => {
@@ -176,9 +167,7 @@ export default function TasksScreen() {
       }
     }, 50);
 
-    setState(MapState.RoutePlanning);
-
-    setIsTaskPlanning(true);
+    setState(MapState.TaskNavigation);
   };
 
   return (
@@ -246,11 +235,8 @@ export default function TasksScreen() {
                 <LocationsAutocomplete
                   query={taskLocation}
                   callback={async (location) => {
-                    setTaskLocation(location.name ?? '');
-                    const locationResults = await getLocations(taskLocation);
-                    if (locationResults.length > 0) {
-                      setNewTaskLocation(locationResults[0]);
-                    }
+                    setTaskLocation(location.name ?? 'Un-named Location');
+                    setNewTaskLocation(location);
                     setAutocompleteVisible(false);
                   }}
                 />

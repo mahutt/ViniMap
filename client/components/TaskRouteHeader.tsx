@@ -4,10 +4,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 export default function TaskRouteHeader() {
-  const { isTaskPlanning, selectedTasks } = useTask();
-  const { setState } = useMap();
+  const { selectedTasks } = useTask();
+  const { state, setState } = useMap();
 
-  if (!isTaskPlanning || selectedTasks.length === 0) {
+  if (state !== MapState.TaskNavigation || selectedTasks.length === 0) {
     return;
   }
 

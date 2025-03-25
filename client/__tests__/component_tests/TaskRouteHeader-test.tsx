@@ -38,14 +38,14 @@ describe('TaskRouteHeader', () => {
     expect(toJSON()).toMatchSnapshot();
   });
 
-  it('should not render when isTaskPlanning is false', () => {
+  it('should not render when in RoutePlanning state', () => {
     (useTask as jest.Mock).mockReturnValue({
-      isTaskPlanning: false,
       selectedTasks: [{ text: 'Test Task' }],
     });
 
     (useMap as jest.Mock).mockReturnValue({
       setState: jest.fn(),
+      state: 1, // RoutePlanning
     });
 
     const { toJSON } = render(<TaskRouteHeader />);
