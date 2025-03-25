@@ -1,9 +1,19 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import TaskCard from '@/components/TaskCard';
+import { OpaqueColorValue, StyleProp, TextStyle } from 'react-native';
+
+type IconSymbolProps = {
+  name: string;
+  size?: number;
+  color: string | OpaqueColorValue;
+  style?: StyleProp<TextStyle>;
+};
 
 jest.mock('@/components/ui/IconSymbol', () => ({
-  IconSymbol: () => 'IconSymbol',
+  IconSymbol: (props: IconSymbolProps) => {
+    return <React.Fragment>IconSymbol</React.Fragment>;
+  },
 }));
 
 describe('TaskCard', () => {
@@ -46,26 +56,22 @@ describe('TaskCard', () => {
   it('calls modifyTask when the edit button is pressed', () => {
     const { UNSAFE_getAllByProps } = render(<TaskCard {...mockProps} />);
 
-    const editButtons = UNSAFE_getAllByProps({
-      children: 'IconSymbol',
+    const iconButtons = UNSAFE_getAllByProps({
       style: expect.objectContaining({ backgroundColor: '#852C3A' }),
     });
 
-    fireEvent.press(editButtons[0]);
-
+    fireEvent.press(iconButtons[0]);
     expect(mockProps.modifyTask).toHaveBeenCalledTimes(1);
   });
 
   it('calls onDelete when the delete button is pressed', () => {
     const { UNSAFE_getAllByProps } = render(<TaskCard {...mockProps} />);
 
-    const buttons = UNSAFE_getAllByProps({
-      children: 'IconSymbol',
+    const iconButtons = UNSAFE_getAllByProps({
       style: expect.objectContaining({ backgroundColor: '#852C3A' }),
     });
 
-    fireEvent.press(buttons[1]);
-
+    fireEvent.press(iconButtons[1]);
     expect(mockProps.onDelete).toHaveBeenCalledTimes(1);
   });
 });
