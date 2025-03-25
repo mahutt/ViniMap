@@ -2,16 +2,13 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 
-jest.mock('@expo/vector-icons/MaterialIcons', () => {
-  const MockedMaterialIcons = (props: {
-    color: string | object;
-    size: number;
-    name?: string;
-    style?: any;
-  }): JSX.Element => <>{JSON.stringify(props)}</>;
-
-  return MockedMaterialIcons;
-});
+jest.mock(
+  '@expo/vector-icons/MaterialIcons',
+  () =>
+    function MockedMaterialIcons(props: any) {
+      return JSON.stringify(props);
+    }
+);
 
 describe('IconSymbol', () => {
   it('renders with xmark icon', () => {

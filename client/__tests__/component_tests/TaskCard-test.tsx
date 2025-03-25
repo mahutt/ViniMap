@@ -1,19 +1,9 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import TaskCard from '@/components/TaskCard';
-import { OpaqueColorValue, StyleProp, TextStyle } from 'react-native';
-
-type IconSymbolProps = {
-  name: string;
-  size?: number;
-  color: string | OpaqueColorValue;
-  style?: StyleProp<TextStyle>;
-};
 
 jest.mock('@/components/ui/IconSymbol', () => ({
-  IconSymbol: (props: IconSymbolProps) => {
-    return <React.Fragment>IconSymbol</React.Fragment>;
-  },
+  IconSymbol: () => 'IconSymbol',
 }));
 
 describe('TaskCard', () => {
