@@ -2,44 +2,62 @@ import PointsOfInterestService from '@/services/PointsOfInterestService';
 import { Coordinates } from '@/modules/map/Types';
 import { calculateEuclideanDistance } from '@/modules/map/MapUtils';
 import LocalLocations from '@/services/LocalLocations';
-import poiData from '@/data/PointsOfInterest.json';
+import type { FeatureCollection, Point } from 'geojson';
 
 // Mock dependencies
 jest.mock('@/modules/map/MapUtils', () => ({
   calculateEuclideanDistance: jest.fn(),
 }));
 
-jest.mock('@/data/PointsOfInterest.json', () => ({
-  pointsOfInterest: [
-    {
-      id: '1',
-      name: 'Test POI 1',
-      type: 'restaurant',
-      coordinates: { lat: 40.7128, lng: -74.006 },
-      address: '123 Test St',
-      openingHours: { isOpen: true, hours: '9-5' },
-      description: 'Test description 1',
-    },
-    {
-      id: '2',
-      name: 'Test POI 2',
-      type: 'park',
-      coordinates: { lat: 40.7138, lng: -74.016 },
-      address: '456 Test Ave',
-      openingHours: { isOpen: false, hours: '10-6' },
-      description: 'Test description 2',
-    },
-    {
-      id: '3',
-      name: 'Test POI 3',
-      type: 'restaurant',
-      coordinates: { lat: 40.7148, lng: -74.026 },
-      address: '789 Test Blvd',
-      openingHours: { isOpen: true, hours: '8-10' },
-      description: null,
-    },
-  ],
-}));
+jest.mock(
+  '@/assets/geojson/pois.json',
+  (): FeatureCollection<Point> => ({
+    type: 'FeatureCollection',
+    features: [
+      {
+        type: 'Feature',
+        properties: {
+          name: 'Test POI 1',
+          addr: '123 Test St',
+          opening_hours: '9-5',
+          description: 'Test description 1',
+          amenity: 'restaurant',
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [-74.006, 40.7128],
+        },
+      },
+      {
+        type: 'Feature',
+        properties: {
+          name: 'Test POI 2',
+          addr: '456 Test Ave',
+          opening_hours: '10-6',
+          description: 'Test description 2',
+          amenity: 'park',
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [-74.016, 40.7138],
+        },
+      },
+      {
+        type: 'Feature',
+        properties: {
+          addr: '789 Test Blvd',
+          opening_hours: '8-10',
+          description: 'Public restaurant',
+          amenity: 'restaurant',
+        },
+        geometry: {
+          type: 'Point',
+          coordinates: [-74.026, 40.7148],
+        },
+      },
+    ],
+  })
+);
 
 jest.mock('@/services/LocalLocations', () => {
   const mockInstance = {
@@ -62,7 +80,7 @@ describe('PointsOfInterestService', () => {
         require('@/services/PointsOfInterestService');
 
         const localLocationsInstance = LocalLocations.getInstance();
-        expect(localLocationsInstance.add).toHaveBeenCalledTimes(3);
+        expect(localLocationsInstance.add).toHaveBeenCalledTimes(2); // Test POI 3 doesn't have a name property
 
         // Test one call to verify the correct callback function
         const firstCall = (localLocationsInstance.add as jest.Mock).mock.calls[0];
@@ -73,37 +91,16 @@ describe('PointsOfInterestService', () => {
         const result = callback('Test POI 1');
         expect(result).toEqual({
           name: 'Test POI 1',
-          coordinates: { lat: 40.7128, lng: -74.006 },
+          coordinates: [-74.006, 40.7128],
           data: {
             address: '123 Test St',
             isOpen: true,
             hours: '9-5',
             description: 'Test description 1',
+            type: 'restaurant',
           },
         });
       });
-    });
-  });
-
-  describe('getAllPOIs', () => {
-    it('should return all points of interest', () => {
-      const allPOIs = PointsOfInterestService.getAllPOIs();
-      expect(allPOIs).toEqual(poiData.pointsOfInterest);
-      expect(allPOIs.length).toBe(3);
-    });
-  });
-
-  describe('getPOIsByType', () => {
-    it('should return POIs filtered by type', () => {
-      const restaurants = PointsOfInterestService.getPOIsByType('restaurant');
-      expect(restaurants.length).toBe(2);
-      expect(restaurants[0].id).toBe('1');
-      expect(restaurants[1].id).toBe('3');
-    });
-
-    it('should return empty array if no POIs of given type exist', () => {
-      const hospitals = PointsOfInterestService.getPOIsByType('hospital');
-      expect(hospitals).toEqual([]);
     });
   });
 
@@ -113,14 +110,24 @@ describe('PointsOfInterestService', () => {
 
       // Mock distance calculations for each POI
       (calculateEuclideanDistance as jest.Mock).mockImplementation((coords, poiCoords) => {
-        if (poiCoords.lat === 40.7128 && poiCoords.lng === -74.006) return 0.0002; // POI 1 (closest)
-        if (poiCoords.lat === 40.7138 && poiCoords.lng === -74.016) return 0.0004; // POI 2
-        if (poiCoords.lat === 40.7148 && poiCoords.lng === -74.026) return 0.0008; // POI 3 (outside radius)
+        if (poiCoords[1] === 40.7128 && poiCoords[0] === -74.006) return 0.0002; // POI 1 (closest)
+        if (poiCoords[1] === 40.7138 && poiCoords[0] === -74.016) return 0.0004; // POI 2
+        if (poiCoords[1] === 40.7148 && poiCoords[0] === -74.026) return 0.0008; // POI 3 (outside radius)
         return 1; // Default
       });
 
       const closest = PointsOfInterestService.findClosestPOI(userCoordinates, 0.0005);
-      expect(closest).toEqual(poiData.pointsOfInterest[0]);
+      expect(closest).toEqual({
+        name: 'Test POI 1',
+        coordinates: [-74.006, 40.7128],
+        data: {
+          address: '123 Test St',
+          description: 'Test description 1',
+          hours: '9-5',
+          isOpen: true,
+          type: 'restaurant',
+        },
+      });
       expect(calculateEuclideanDistance).toHaveBeenCalledTimes(3);
     });
 
@@ -139,12 +146,22 @@ describe('PointsOfInterestService', () => {
 
       // Mock distance calculations
       (calculateEuclideanDistance as jest.Mock).mockImplementation((coords, poiCoords) => {
-        if (poiCoords.lat === 40.7128 && poiCoords.lng === -74.006) return 0.0003; // Within default radius
-        return 0.001; // Outside default radius
+        if (poiCoords[1] === 40.7128 && poiCoords[0] === -74.006) return 0.0003; // Within default radius
+        return 0.001;
       });
 
       const closest = PointsOfInterestService.findClosestPOI(userCoordinates);
-      expect(closest).toEqual(poiData.pointsOfInterest[0]);
+      expect(closest).toEqual({
+        name: 'Test POI 1',
+        coordinates: [-74.006, 40.7128],
+        data: {
+          address: '123 Test St',
+          description: 'Test description 1',
+          hours: '9-5',
+          isOpen: true,
+          type: 'restaurant',
+        },
+      });
     });
 
     it('should select the closest POI when multiple are within radius', () => {
@@ -152,40 +169,24 @@ describe('PointsOfInterestService', () => {
 
       // Mock multiple POIs within radius but with different distances
       (calculateEuclideanDistance as jest.Mock).mockImplementation((coords, poiCoords) => {
-        if (poiCoords.lat === 40.7128 && poiCoords.lng === -74.006) return 0.0003; // POI 1
-        if (poiCoords.lat === 40.7138 && poiCoords.lng === -74.016) return 0.0002; // POI 2 (closest)
-        if (poiCoords.lat === 40.7148 && poiCoords.lng === -74.026) return 0.0004; // POI 3
+        if (poiCoords[1] === 40.7128 && poiCoords[0] === -74.006) return 0.0003; // POI 1
+        if (poiCoords[1] === 40.7138 && poiCoords[0] === -74.016) return 0.0002; // POI 2 (closest)
+        if (poiCoords[1] === 40.7148 && poiCoords[0] === -74.026) return 0.0004; // POI 3
         return 1; // Default
       });
 
       const closest = PointsOfInterestService.findClosestPOI(userCoordinates, 0.0005);
-      expect(closest).toEqual(poiData.pointsOfInterest[1]);
-    });
-  });
-
-  describe('getPOIById', () => {
-    it('should return a POI by ID if it exists', () => {
-      const poi = PointsOfInterestService.getPOIById('2');
-      expect(poi).toEqual(poiData.pointsOfInterest[1]);
-    });
-
-    it('should return undefined if POI with given ID does not exist', () => {
-      const poi = PointsOfInterestService.getPOIById('nonexistent');
-      expect(poi).toBeUndefined();
-    });
-  });
-
-  describe('shouldShowPOIs', () => {
-    it('should return true when zoom level is >= 15', () => {
-      expect(PointsOfInterestService.shouldShowPOIs(15)).toBe(true);
-      expect(PointsOfInterestService.shouldShowPOIs(16)).toBe(true);
-      expect(PointsOfInterestService.shouldShowPOIs(20)).toBe(true);
-    });
-
-    it('should return false when zoom level is < 15', () => {
-      expect(PointsOfInterestService.shouldShowPOIs(14)).toBe(false);
-      expect(PointsOfInterestService.shouldShowPOIs(10)).toBe(false);
-      expect(PointsOfInterestService.shouldShowPOIs(0)).toBe(false);
+      expect(closest).toEqual({
+        name: 'Test POI 2',
+        coordinates: [-74.016, 40.7138],
+        data: {
+          address: '456 Test Ave',
+          description: 'Test description 2',
+          hours: '10-6',
+          isOpen: true,
+          type: 'park',
+        },
+      });
     });
   });
 });

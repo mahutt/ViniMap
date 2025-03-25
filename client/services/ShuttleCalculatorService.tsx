@@ -12,15 +12,17 @@ class ShuttleCalculatorService {
       return 'Invalid campus';
     }
 
-    const currentMinutes = this.convertToMinutes(currentTime);
+    let result = '24h 0m';
 
+    const currentMinutes = this.convertToMinutes(currentTime);
     for (const departure of departures) {
       const departureMinutes = this.convertToMinutes(departure);
       if (departureMinutes >= currentMinutes) {
-        return this.formatTimeDifference(currentMinutes, departureMinutes);
+        result = this.formatTimeDifference(currentMinutes, departureMinutes);
+        break;
       }
     }
-    return '24h 0m';
+    return result;
   }
 
   private static convertToMinutes(time: string): number {

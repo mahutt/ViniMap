@@ -12,4 +12,10 @@ export const images: {
   soda: require('@/assets/icons/soda.png'),
   escalator: require('@/assets/icons/escalator.png'),
   stairs: require('@/assets/icons/stairs.png'),
+  bus_station: require('@/assets/icons/bus_station.png'),
+  bicycle_rental: require('@/assets/icons/bicycle_rental.png'),
+  library: require('@/assets/icons/library.png'),
+  subway_station: require('@/assets/icons/subway_station.png'),
+  park: require('@/assets/icons/park.png'),
+  location: require('@/assets/icons/location.png'),
 };

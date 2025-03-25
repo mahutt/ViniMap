@@ -1,62 +1,61 @@
-import { Coordinates } from '@/modules/map/Types';
-import poiData from '@/data/PointsOfInterest.json';
-import { POIData, PointOfInterest } from '../modules/map/PointsOfInterestTypes';
+import { Coordinates, Location } from '@/modules/map/Types';
 import { calculateEuclideanDistance } from '@/modules/map/MapUtils';
-
+import poiFeatureCollection from '@/assets/geojson/pois.json';
+import type { Feature, FeatureCollection, Point } from 'geojson';
 import LocalLocations from './LocalLocations';
-for (const poi of poiData.pointsOfInterest) {
-  LocalLocations.getInstance().add(poi.name, (name: string) => {
-    return {
-      name: name,
-      coordinates: poi.coordinates as Coordinates,
-      data: {
-        address: poi.address,
-        isOpen: poi.openingHours.isOpen,
-        hours: poi.openingHours.hours,
-        description: poi.description,
-      },
-    };
-  });
-}
+
+const extractLocation = (feature: Feature<Point>): Location => {
+  return {
+    name: feature.properties?.name,
+    coordinates: feature.geometry.coordinates,
+    data: {
+      address: feature.properties?.addr,
+      // Currently, we assume all POIs are open
+      isOpen: true,
+      hours: feature.properties?.opening_hours,
+      description: feature.properties?.description,
+      type: feature.properties?.amenity,
+    },
+  };
+};
 class PointsOfInterestService {
-  private readonly poiData: POIData;
+  private readonly featureCollection: FeatureCollection<Point>;
 
   constructor() {
-    this.poiData = poiData as POIData;
+    // We only support POIs that are Points
+    this.featureCollection = poiFeatureCollection as FeatureCollection<Point>;
   }
 
-  getAllPOIs(): PointOfInterest[] {
-    return this.poiData.pointsOfInterest;
+  getFeatureCollection(): FeatureCollection<Point> {
+    return this.featureCollection;
   }
 
-  getPOIsByType(type: string): PointOfInterest[] {
-    return this.poiData.pointsOfInterest.filter((poi) => poi.type === type);
-  }
-
-  findClosestPOI(coordinates: Coordinates, radius: number = 0.0005): PointOfInterest | null {
-    let closestPOI: PointOfInterest | null = null;
+  findClosestPOI(coordinates: Coordinates, radius: number = 0.0005): Location | null {
+    let closestFeature: Feature<Point> | null = null;
     let closestDistance = Infinity;
 
-    for (const poi of this.poiData.pointsOfInterest) {
-      const distance = calculateEuclideanDistance(coordinates, poi.coordinates);
+    for (const feature of this.featureCollection.features) {
+      const distance = calculateEuclideanDistance(coordinates, feature.geometry.coordinates);
 
       if (distance <= radius && distance < closestDistance) {
         closestDistance = distance;
-        closestPOI = poi;
+        closestFeature = feature;
       }
     }
 
-    return closestPOI;
-  }
-
-  getPOIById(id: string): PointOfInterest | undefined {
-    return this.poiData.pointsOfInterest.find((poi) => poi.id === id);
-  }
-
-  shouldShowPOIs(zoomLevel: number): boolean {
-    // Show POIs when zoomed in enough
-    return zoomLevel >= 15;
+    if (closestFeature === null) return null;
+    return extractLocation(closestFeature);
   }
 }
 
-export default new PointsOfInterestService();
+const pointsOfInterestService = new PointsOfInterestService();
+
+// Add outdoor POIs to location input autocomplete
+for (const poi of pointsOfInterestService.getFeatureCollection().features) {
+  if (!poi.properties?.name) continue;
+  LocalLocations.getInstance().add(poi.properties.name, (_: string) => {
+    return extractLocation(poi);
+  });
+}
+
+export default pointsOfInterestService;

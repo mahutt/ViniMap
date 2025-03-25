@@ -1,15 +1,13 @@
-import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import Mapbox from '@rnmapbox/maps';
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { MapState, useMap } from './MapContext';
 import { Location, ExpressionSpecification } from '@/modules/map/Types';
-import PointsOfInterestService from '@/services/PointsOfInterestService';
-import { PointOfInterest } from './PointsOfInterestTypes';
-import POIMarker from '@/components/POIMarker';
 import layers from '@/modules/map/style/DefaultLayers';
 import { filterWithLevel } from '@/modules/map/IndoorMapUtils';
 import { images } from '@/assets';
 import { useTask } from '@/providers/TaskContext';
+import PointsOfInterestService from '@/services/PointsOfInterestService';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -40,16 +38,6 @@ export default function MapView() {
 
   const { selectedTasks } = useTask();
 
-  const [pointsOfInterest, setPointsOfInterest] = useState<PointOfInterest[]>([]);
-  const [showPOIs, setShowPOIs] = useState(false);
-
-  useEffect(() => {
-    const allPOIs = PointsOfInterestService.getAllPOIs();
-    setPointsOfInterest(allPOIs);
-
-    setShowPOIs(PointsOfInterestService.shouldShowPOIs(zoomLevel));
-  }, [zoomLevel]);
-
   const filterFN = useCallback(
     (filter: ExpressionSpecification) => {
       let filterFn: (filter: ExpressionSpecification) => ExpressionSpecification;
@@ -79,23 +67,23 @@ export default function MapView() {
         pitch={pitchLevel}
       />
       <Mapbox.Images images={images} />
-      {showPOIs &&
-        pointsOfInterest.map((poi) => (
-          <Mapbox.MarkerView
-            key={poi.id}
-            id={`poi-${poi.id}`}
-            coordinate={poi.coordinates}
-            anchor={{ x: 0.5, y: 0.5 }}>
-            <TouchableOpacity
-              onPress={() => {
-                onMapPress({ geometry: { coordinates: poi.coordinates } });
-              }}
-              activeOpacity={0.7}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}>
-              <POIMarker type={poi.type} />
-            </TouchableOpacity>
-          </Mapbox.MarkerView>
-        ))}
+      <Mapbox.ShapeSource id="outdoor-pois" shape={PointsOfInterestService.getFeatureCollection()}>
+        <Mapbox.SymbolLayer
+          id="outdoor-poi-icons"
+          sourceID="outdoor-pois"
+          style={{
+            iconSize: 1,
+            iconImage: '{amenity}',
+            iconAnchor: 'center',
+            symbolSpacing: 250,
+            symbolPlacement: 'point',
+            visibility: 'visible',
+            iconOptional: false,
+            iconAllowOverlap: false,
+            iconOpacity: ['interpolate', ['linear'], ['zoom'], 13, 0, 14, 1],
+          }}
+        />
+      </Mapbox.ShapeSource>
 
       {endLocation && !equalLocations(endLocation, userLocation) && (
         <Mapbox.MarkerView id="end" coordinate={endLocation.coordinates}>
