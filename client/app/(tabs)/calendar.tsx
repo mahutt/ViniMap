@@ -21,6 +21,7 @@ import { Location } from '@/modules/map/Types';
 import { getBuildingCoordinates } from '@/services/BuildingService';
 import ProfilePicture from '@/components/ProfilePicture';
 import { Ionicons } from '@expo/vector-icons';
+import NextClassButton from '@/components/NextClassButton';
 
 const { width } = Dimensions.get('window');
 
@@ -325,6 +326,7 @@ export default function Calendar() {
               <Text style={styles.noSchedule}>No classes scheduled</Text>
             )}
           </View>
+          <NextClassButton scheduleData={scheduleData} onNavigateToClass={handleClassClick} />
         </View>
       </View>
     </SafeAreaView>

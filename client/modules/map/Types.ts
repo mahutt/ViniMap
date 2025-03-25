@@ -73,3 +73,14 @@ export interface TaskRouteDescription {
   text: string;
   time: string;
 }
+
+/**
+ * Next Class on Calendar
+ */
+export interface ClassItem {
+  className: string;
+  location: string;
+  time: string;
+}
+
+export type ScheduleData = Record<string, ClassItem[]>;
