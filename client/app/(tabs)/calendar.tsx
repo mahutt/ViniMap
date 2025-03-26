@@ -2,15 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import GoogleService from '@/services/GoogleService';
 import * as Google from 'expo-auth-session/providers/google';
-import {
-  StyleSheet,
-  Dimensions,
-  SafeAreaView,
-  View,
-  Text,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
+import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Alert } from 'react-native';
 import moment from 'moment';
 import SimpleModal from '@/components/CalendarIdBox';
 import CalendarSelectionModal from '@/components/CalendarSelectionModal';
@@ -176,19 +168,6 @@ export default function Calendar() {
   const handleCloseCalendarSelectionModal = () => {
     setCalendarSelectionModalVisible(false);
   };
-
-  const weeks = React.useMemo(() => {
-    const start = moment().startOf('week');
-    return Array.from({ length: 5 }).map((_, adj) => {
-      return Array.from({ length: 7 }).map((_, index) => {
-        const date = moment(start).add(adj, 'week').add(index, 'day');
-        return {
-          weekday: date.format('ddd'),
-          date: date.toDate(),
-        };
-      });
-    });
-  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
