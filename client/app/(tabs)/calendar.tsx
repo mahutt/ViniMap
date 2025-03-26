@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'expo-router';
 import GoogleService from '@/services/GoogleService';
 import * as Google from 'expo-auth-session/providers/google';
@@ -28,6 +28,13 @@ export default function Calendar() {
   // google auth request
   const [request, response, promptAsync] = Google.useAuthRequest(GoogleService.config);
 
+  const handleCalendarSelect = useCallback(
+    async (calendarId: string): Promise<void> => {
+      await fetchCalendarEvents(calendarId);
+    },
+    [fetchCalendarEvents]
+  );
+
   useEffect(() => {
     const initializeApp = async () => {
       try {
@@ -56,10 +63,6 @@ export default function Calendar() {
       handleGoogleLogin(access_token);
     }
   }, [response]);
-
-  const handleCalendarSelect = async (calendarId: string): Promise<void> => {
-    await fetchCalendarEvents(calendarId);
-  };
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
     const buildingCoordinates: Coordinates = getBuildingCoordinates(classItem.location);
@@ -103,24 +106,27 @@ export default function Calendar() {
     }
   };
 
-  const handleGoogleLogin = async (accessToken: string) => {
-    try {
-      const userData = await GoogleService.getUserInfo(accessToken);
-      GoogleService.saveUserInfo(userData, accessToken);
+  const handleGoogleLogin = useCallback(
+    async (accessToken: string) => {
+      try {
+        const userData = await GoogleService.getUserInfo(accessToken);
+        GoogleService.saveUserInfo(userData, accessToken);
 
-      setIsLoggedIn(true);
-      setUserInfo(userData);
-      updateAuthStatus(true);
-      setCalendarIdModalVisible(false);
+        setIsLoggedIn(true);
+        setUserInfo(userData);
+        updateAuthStatus(true);
+        setCalendarIdModalVisible(false);
 
-      setTimeout(() => {
-        setCalendarSelectionModalVisible(true);
-      }, 300);
-    } catch (error) {
-      console.error('Error during Google login:', error);
-      Alert.alert('Login Failed', 'Could not complete the login process.');
-    }
-  };
+        setTimeout(() => {
+          setCalendarSelectionModalVisible(true);
+        }, 300);
+      } catch (error) {
+        console.error('Error during Google login:', error);
+        Alert.alert('Login Failed', 'Could not complete the login process.');
+      }
+    },
+    [updateAuthStatus]
+  );
 
   const handleSignOut = async () => {
     try {
