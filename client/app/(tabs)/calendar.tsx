@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import GoogleService from '@/services/GoogleService';
 import * as Google from 'expo-auth-session/providers/google';
@@ -10,8 +10,8 @@ import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { Location, ScheduleData } from '@/modules/map/Types';
 import { getBuildingCoordinates } from '@/services/BuildingService';
 import ProfilePicture from '@/components/ProfilePicture';
-import NextClassButton from '@/components/NextClassButton';
 import WeekPicker from '@/components/WeekPicker';
+import ScheduleDisplay from '@/components/ScheduleDisplay';
 
 export default function Calendar() {
   const [value, setValue] = useState(new Date());
@@ -194,31 +194,8 @@ export default function Calendar() {
             <ProfilePicture isLoggedIn={isLoggedIn} userInfo={userInfo} styles={styles} />
           </TouchableOpacity>
         </View>
-
         <WeekPicker value={value} setValue={setValue} />
-
-        <View style={styles.calendarItemCard}>
-          <Text style={styles.subtitle}>
-            {value.toLocaleDateString('en-US', { dateStyle: 'full' })}
-          </Text>
-          <View style={styles.scheduleContainer}>
-            {scheduleData[moment(value).format('YYYY-MM-DD')]?.length > 0 ? (
-              scheduleData[moment(value).format('YYYY-MM-DD')].map((item) => (
-                <TouchableOpacity key={item.time} onPress={() => handleClassClick(item)}>
-                  <View style={styles.scheduleBlock}>
-                    <Text style={styles.className}>{item.className}</Text>
-                    <Text style={styles.classDetails}>
-                      {item.location} - {item.time}
-                    </Text>
-                  </View>
-                </TouchableOpacity>
-              ))
-            ) : (
-              <Text style={styles.noSchedule}>No classes scheduled</Text>
-            )}
-          </View>
-          <NextClassButton scheduleData={scheduleData} onNavigateToClass={handleClassClick} />
-        </View>
+        <ScheduleDisplay date={value} scheduleData={scheduleData} onClassClick={handleClassClick} />
       </View>
     </SafeAreaView>
   );
@@ -240,41 +217,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: '#1d1d1d',
     marginBottom: 12,
-  },
-  subtitle: {
-    fontSize: 17,
-    fontWeight: '600',
-    color: '#999',
-    marginBottom: 12,
-  },
-  scheduleContainer: {
-    marginTop: 10,
-  },
-  scheduleBlock: {
-    backgroundColor: '#852C3A',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  className: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#fff',
-  },
-  classDetails: {
-    fontSize: 14,
-    color: '#dce6ff',
-  },
-  noSchedule: {
-    textAlign: 'center',
-    fontSize: 16,
-    color: '#999',
-    marginTop: 20,
-  },
-  calendarItemCard: {
-    flex: 1,
-    paddingHorizontal: 16,
-    paddingVertical: 24,
   },
   profileButton: {
     width: 40,
