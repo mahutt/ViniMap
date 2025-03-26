@@ -6,6 +6,7 @@ import { MapProvider } from '@/modules/map/MapContext';
 
 jest.mock('@/modules/map/MapService', () => ({
   getLocations: jest.fn(() => Promise.resolve([{ name: 'Mock Location', coordinates: [0, 0] }])),
+  getIndoorMapFromPosition: jest.fn(() => Promise.resolve({ id: 'Mock Indoor Map' })),
 }));
 
 const renderComponent = () =>

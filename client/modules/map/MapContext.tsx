@@ -8,7 +8,7 @@ import React, {
   useEffect,
 } from 'react';
 import Mapbox from '@rnmapbox/maps';
-import { fetchLocationData, getRoute } from './MapService';
+import { fetchLocationData, getIndoorMapFromPosition, getRoute } from './MapService';
 import { Location, Coordinates, Route, Level, IndoorMap } from './Types';
 import { indoorMaps } from './IndoorMap';
 import type { BBox, Position } from 'geojson';
@@ -44,6 +44,7 @@ type MapContextType = {
   startLocation: Location | null;
   endLocation: Location | null;
   userLocation: Location | null;
+  userBuilding: IndoorMap | null;
   route: Route | null;
   setRoute: (route: Route | null) => void;
   setCenterCoordinate: (centerCoordinate: Position) => void;
@@ -79,6 +80,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [startLocation, setStartLocation] = useState<Location | null>(null);
   const [endLocation, setEndLocation] = useState<Location | null>(null);
   const [userLocation, setUserLocation] = useState<Location | null>(null);
+  const [userBuilding, setUserBuilding] = useState<IndoorMap | null>(null);
   const [route, setRoute] = useState<Route | null>(null);
 
   const [indoorMap, setIndoorMap] = useState<IndoorMap | null>(null);
@@ -217,22 +219,25 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     [state, endLocation, getLocationFromCoordinates]
   );
 
+  const userPositionUpdateCallback = useCallback(async (position: Position) => {
+    setUserLocation({
+      name: 'Current location',
+      coordinates: position,
+    });
+    const updatedUserBuilding = await getIndoorMapFromPosition(position, indoorMaps);
+    setUserBuilding(updatedUserBuilding);
+  }, []);
+
   useEffect(() => {
     let subscription: LocationSubscription;
     CoordinateService.getCurrentCoordinates().then((coords) => {
-      setUserLocation({
-        name: 'Current location',
-        coordinates: coords,
-      });
+      userPositionUpdateCallback(coords);
     });
     (async () => {
       subscription = await watchPositionAsync(
         { timeInterval: 5000, distanceInterval: 5 },
         (location) =>
-          setUserLocation({
-            name: 'Current location',
-            coordinates: [location.coords.longitude, location.coords.latitude],
-          })
+          userPositionUpdateCallback([location.coords.longitude, location.coords.latitude])
       );
     })();
     return () => {
@@ -301,6 +306,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       startLocation,
       endLocation,
       userLocation,
+      userBuilding,
       route,
       setRoute,
       setCenterCoordinate,
@@ -323,6 +329,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       startLocation,
       endLocation,
       userLocation,
+      userBuilding,
       route,
       flyTo,
       pitchLevel,

@@ -457,4 +457,28 @@ const formatDuration = (seconds: number | null): string => {
   return `${minutes} min`;
 };
 
+/**
+ *
+ * @param position the position for which to find the indoor map
+ * @param indoorMaps the list of indoor maps to search through
+ * @returns the indoor map that contains the given position, or null if no indoor map contains the position
+ */
+export const getIndoorMapFromPosition = async (
+  position: Position,
+  indoorMaps: IndoorMap[]
+): Promise<IndoorMap | null> => {
+  for (const indoorMap of indoorMaps) {
+    const [west, south, east, north] = indoorMap.bounds;
+    if (
+      position[0] >= west &&
+      position[0] <= east &&
+      position[1] >= south &&
+      position[1] <= north
+    ) {
+      return indoorMap;
+    }
+  }
+  return null;
+};
+
 export { getLocations, getRoute, fetchLocationData, formatDuration };
