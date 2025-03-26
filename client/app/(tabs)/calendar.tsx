@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import GoogleService from '@/services/GoogleService';
-import * as Google from 'expo-auth-session/providers/google';
 import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Alert } from 'react-native';
 import moment from 'moment';
 import SimpleModal from '@/components/CalendarIdBox';
@@ -12,30 +11,24 @@ import { getBuildingCoordinates } from '@/services/BuildingService';
 import ProfilePicture from '@/components/ProfilePicture';
 import WeekPicker from '@/components/WeekPicker';
 import ScheduleDisplay from '@/components/ScheduleDisplay';
+import { useGoogleAuth } from '@/hooks/useGoogleAuth';
 
 export default function Calendar() {
   const [value, setValue] = useState(new Date());
   const [scheduleData, setScheduleData] = useState<ScheduleData>({});
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState<{ picture?: string } | null>(null);
   const router = useRouter();
   const [calendarIdModalVisible, setCalendarIdModalVisible] = useState(false);
   const [calendarSelectionModalVisible, setCalendarSelectionModalVisible] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const { setState, setEndLocation } = useMap();
-
-  // google auth request
-  const [request, response, promptAsync] = Google.useAuthRequest(GoogleService.config);
+  const { isLoggedIn, userInfo, handleGoogleSignIn, handleGoogleLogin, handleSignOut } =
+    useGoogleAuth();
 
   useEffect(() => {
     const initializeApp = async () => {
       try {
         const isAuthenticated = await GoogleService.isSignedIn();
-        const storedUserInfo = isAuthenticated ? GoogleService.getUserInfoFromStorage() : null;
-
-        setIsLoggedIn(isAuthenticated);
-        setUserInfo(storedUserInfo);
 
         if (isAuthenticated) {
           const calendarId = GoogleService.getSelectedCalendarId();
@@ -54,11 +47,21 @@ export default function Calendar() {
   }, []);
 
   useEffect(() => {
-    if (response?.type === 'success') {
-      const { access_token } = response.params;
-      handleGoogleLogin(access_token);
+    if (isLoggedIn && calendarIdModalVisible) {
+      setCalendarIdModalVisible(false);
+      setTimeout(() => {
+        setCalendarSelectionModalVisible(true);
+      }, 300);
     }
-  }, [response]);
+  }, [isLoggedIn, calendarIdModalVisible]);
+
+  const handleSignOutAndClear = async () => {
+    const success = await handleSignOut();
+
+    if (success) {
+      setScheduleData({});
+    }
+  };
 
   useEffect(() => {
     GoogleService.saveCalendarData(scheduleData);
@@ -122,45 +125,6 @@ export default function Calendar() {
     }, 300);
   };
 
-  const handleGoogleSignIn = () => {
-    if (request) {
-      promptAsync();
-    } else {
-      Alert.alert('Error', 'Cannot initialize Google Sign-In');
-    }
-  };
-
-  const handleGoogleLogin = async (accessToken: string) => {
-    try {
-      const userData = await GoogleService.getUserInfo(accessToken);
-      GoogleService.saveUserInfo(userData, accessToken);
-
-      setIsLoggedIn(true);
-      setUserInfo(userData);
-      setCalendarIdModalVisible(false);
-
-      setTimeout(() => {
-        setCalendarSelectionModalVisible(true);
-      }, 300);
-    } catch (error) {
-      console.error('Error during Google login:', error);
-      Alert.alert('Login Failed', 'Could not complete the login process.');
-    }
-  };
-
-  const handleSignOut = async () => {
-    try {
-      await GoogleService.signOut();
-
-      setIsLoggedIn(false);
-      setUserInfo(null);
-      setScheduleData({});
-    } catch (error) {
-      console.error('Error signing out:', error);
-      Alert.alert('Error', 'Failed to sign out. Please try again.');
-    }
-  };
-
   const handleCloseCalendarIdModal = () => {
     setCalendarIdModalVisible(false);
   };
@@ -184,7 +148,7 @@ export default function Calendar() {
         onClose={handleCloseCalendarSelectionModal}
         onSelect={handleCalendarSelect}
         onEnterCalendarId={handleManualCalendarIdEntry}
-        onSignOut={handleSignOut}
+        onSignOut={handleSignOutAndClear}
       />
 
       <View style={styles.container}>
