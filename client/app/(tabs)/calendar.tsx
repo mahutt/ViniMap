@@ -5,7 +5,6 @@ import * as Google from 'expo-auth-session/providers/google';
 import {
   StyleSheet,
   Dimensions,
-  TouchableWithoutFeedback,
   SafeAreaView,
   View,
   Text,
@@ -13,22 +12,16 @@ import {
   Alert,
 } from 'react-native';
 import moment from 'moment';
-import Swiper from 'react-native-swiper';
 import SimpleModal from '@/components/CalendarIdBox';
 import CalendarSelectionModal from '@/components/CalendarSelectionModal';
 import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
 import { Location, ScheduleData } from '@/modules/map/Types';
 import { getBuildingCoordinates } from '@/services/BuildingService';
 import ProfilePicture from '@/components/ProfilePicture';
-import { Ionicons } from '@expo/vector-icons';
 import NextClassButton from '@/components/NextClassButton';
 import WeekPicker from '@/components/WeekPicker';
 
-const { width } = Dimensions.get('window');
-
 export default function Calendar() {
-  const swiper = useRef<Swiper | null>(null);
-  const [week, setWeek] = useState(0);
   const [value, setValue] = useState(new Date());
   const [scheduleData, setScheduleData] = useState<ScheduleData>({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -269,11 +262,6 @@ const styles = StyleSheet.create({
     color: '#1d1d1d',
     marginBottom: 12,
   },
-  picker: {
-    flex: 1,
-    maxHeight: 74,
-    paddingVertical: 12,
-  },
   subtitle: {
     fontSize: 17,
     fontWeight: '600',
@@ -304,28 +292,6 @@ const styles = StyleSheet.create({
     color: '#999',
     marginTop: 20,
   },
-  itemRow: {
-    width: width,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 12,
-  },
-  item: {
-    flex: 1,
-    height: 50,
-    marginHorizontal: 4,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#e3e3e3',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  weekDayText: {
-    fontSize: 12,
-  },
-  dateText: {
-    fontSize: 20,
-  },
   calendarItemCard: {
     flex: 1,
     paddingHorizontal: 16,
@@ -344,16 +310,5 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 2,
     borderColor: '#852C3A',
-  },
-  navButton: {
-    padding: 0,
-    zIndex: 10,
-    height: 50,
-    width: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  disabledNavButton: {
-    opacity: 0.5,
   },
 });
