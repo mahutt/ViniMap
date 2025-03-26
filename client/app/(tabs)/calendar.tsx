@@ -35,6 +35,28 @@ export default function Calendar() {
     [fetchCalendarEvents]
   );
 
+  const handleGoogleLogin = useCallback(
+    async (accessToken: string) => {
+      try {
+        const userData = await GoogleService.getUserInfo(accessToken);
+        GoogleService.saveUserInfo(userData, accessToken);
+
+        setIsLoggedIn(true);
+        setUserInfo(userData);
+        updateAuthStatus(true);
+        setCalendarIdModalVisible(false);
+
+        setTimeout(() => {
+          setCalendarSelectionModalVisible(true);
+        }, 300);
+      } catch (error) {
+        console.error('Error during Google login:', error);
+        Alert.alert('Login Failed', 'Could not complete the login process.');
+      }
+    },
+    [updateAuthStatus]
+  );
+
   useEffect(() => {
     const initializeApp = async () => {
       try {
@@ -55,14 +77,14 @@ export default function Calendar() {
     };
 
     initializeApp();
-  }, []);
+  }, [handleCalendarSelect, updateAuthStatus]);
 
   useEffect(() => {
     if (response?.type === 'success') {
       const { access_token } = response.params;
       handleGoogleLogin(access_token);
     }
-  }, [response]);
+  }, [response, handleGoogleLogin]);
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
     const buildingCoordinates: Coordinates = getBuildingCoordinates(classItem.location);
@@ -105,28 +127,6 @@ export default function Calendar() {
       Alert.alert('Error', 'Cannot initialize Google Sign-In');
     }
   };
-
-  const handleGoogleLogin = useCallback(
-    async (accessToken: string) => {
-      try {
-        const userData = await GoogleService.getUserInfo(accessToken);
-        GoogleService.saveUserInfo(userData, accessToken);
-
-        setIsLoggedIn(true);
-        setUserInfo(userData);
-        updateAuthStatus(true);
-        setCalendarIdModalVisible(false);
-
-        setTimeout(() => {
-          setCalendarSelectionModalVisible(true);
-        }, 300);
-      } catch (error) {
-        console.error('Error during Google login:', error);
-        Alert.alert('Login Failed', 'Could not complete the login process.');
-      }
-    },
-    [updateAuthStatus]
-  );
 
   const handleSignOut = async () => {
     try {

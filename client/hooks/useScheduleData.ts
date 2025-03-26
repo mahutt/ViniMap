@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import moment from 'moment';
 import GoogleService from '@/services/GoogleService';
 import { ScheduleData } from '@/modules/map/Types';
@@ -29,7 +29,7 @@ export const useScheduleData = () => {
     GoogleService.saveCalendarData(scheduleData);
   }, [scheduleData]);
 
-  const fetchCalendarEvents = async (calendarId: string): Promise<void> => {
+  const fetchCalendarEvents = useCallback(async (calendarId: string): Promise<void> => {
     if (calendarId.trim() === '') return;
 
     try {
@@ -51,19 +51,22 @@ export const useScheduleData = () => {
     } catch (error) {
       console.error('Error fetching calendar events:', error);
     }
-  };
+  }, []);
 
-  const clearScheduleData = () => {
+  const clearScheduleData = useCallback(() => {
     setScheduleData({});
     GoogleService.saveCalendarData({});
-  };
+  }, []);
 
-  const updateAuthStatus = (status: boolean) => {
-    setIsAuthenticated(status);
-    if (!status) {
-      clearScheduleData();
-    }
-  };
+  const updateAuthStatus = useCallback(
+    (status: boolean) => {
+      setIsAuthenticated(status);
+      if (!status) {
+        clearScheduleData();
+      }
+    },
+    [clearScheduleData]
+  );
 
   return {
     scheduleData,
