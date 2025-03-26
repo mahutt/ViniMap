@@ -13,13 +13,9 @@ export const useScheduleData = () => {
         const authStatus = await GoogleService.isSignedIn();
         setIsAuthenticated(authStatus);
 
-        if (authStatus) {
-          const calendarData = GoogleService.getCalendarData();
-          if (calendarData && Object.keys(calendarData).length > 0) {
-            setScheduleData(calendarData);
-          }
-        } else {
-          setScheduleData({});
+        const calendarData = GoogleService.getCalendarData();
+        if (calendarData && Object.keys(calendarData).length > 0) {
+          setScheduleData(calendarData);
         }
       } catch (error) {
         console.error('Error checking auth and loading schedule data:', error);
@@ -30,13 +26,11 @@ export const useScheduleData = () => {
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      GoogleService.saveCalendarData(scheduleData);
-    }
-  }, [scheduleData, isAuthenticated]);
+    GoogleService.saveCalendarData(scheduleData);
+  }, [scheduleData]);
 
   const fetchCalendarEvents = async (calendarId: string): Promise<void> => {
-    if (calendarId.trim() === '' || !isAuthenticated) return;
+    if (calendarId.trim() === '') return;
 
     try {
       const calendarJson = await GoogleService.fetchCalendarEvents(calendarId);
@@ -76,5 +70,6 @@ export const useScheduleData = () => {
     fetchCalendarEvents,
     clearScheduleData,
     updateAuthStatus,
+    isAuthenticated,
   };
 };
