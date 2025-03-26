@@ -1,6 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import moment from 'moment';
+import { render } from '@testing-library/react-native';
 import WeekPicker from '@/components/WeekPicker';
 
 jest.mock('react-native/Libraries/Utilities/Dimensions', () => ({
@@ -10,7 +9,7 @@ jest.mock('react-native/Libraries/Utilities/Dimensions', () => ({
 // Mock Swiper component
 jest.mock('react-native-swiper', () => {
   const React = require('react');
-  return React.forwardRef(
+  const SwiperMock = React.forwardRef(
     (
       {
         children,
