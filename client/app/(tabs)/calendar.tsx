@@ -17,11 +17,12 @@ import Swiper from 'react-native-swiper';
 import SimpleModal from '@/components/CalendarIdBox';
 import CalendarSelectionModal from '@/components/CalendarSelectionModal';
 import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
-import { Location } from '@/modules/map/Types';
+import { Location, ScheduleData } from '@/modules/map/Types';
 import { getBuildingCoordinates } from '@/services/BuildingService';
 import ProfilePicture from '@/components/ProfilePicture';
 import { Ionicons } from '@expo/vector-icons';
 import NextClassButton from '@/components/NextClassButton';
+import WeekPicker from '@/components/WeekPicker';
 
 const { width } = Dimensions.get('window');
 
@@ -29,23 +30,18 @@ export default function Calendar() {
   const swiper = useRef<Swiper | null>(null);
   const [week, setWeek] = useState(0);
   const [value, setValue] = useState(new Date());
-  const [scheduleData, setScheduleData] = useState<
-    Record<string, { className: string; location: string; time: string }[]>
-  >({});
-
-  // google auth request
-  const [request, response, promptAsync] = Google.useAuthRequest(GoogleService.config);
-
+  const [scheduleData, setScheduleData] = useState<ScheduleData>({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState<{ picture?: string } | null>(null);
-
-  const { setEndLocation } = useMap();
-  const { setState } = useMap();
   const router = useRouter();
-
   const [calendarIdModalVisible, setCalendarIdModalVisible] = useState(false);
   const [calendarSelectionModalVisible, setCalendarSelectionModalVisible] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const { setState, setEndLocation } = useMap();
+
+  // google auth request
+  const [request, response, promptAsync] = Google.useAuthRequest(GoogleService.config);
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -227,84 +223,7 @@ export default function Calendar() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.picker}>
-          <Swiper
-            index={0}
-            ref={swiper}
-            loop={false}
-            showsPagination={false}
-            onIndexChanged={(ind) => {
-              if (ind < 0 || ind > 4) return;
-              setValue(
-                moment(value)
-                  .add(ind - week, 'week')
-                  .toDate()
-              );
-              setTimeout(() => {
-                setWeek(ind);
-
-                if (swiper.current) {
-                  swiper.current.scrollTo(ind, false);
-                }
-              }, 10);
-            }}>
-            {weeks.map((dates) => (
-              <View style={styles.itemRow} key={dates[0].date.toISOString()}>
-                <TouchableOpacity
-                  style={[styles.navButton, week <= 0 && styles.disabledNavButton]}
-                  disabled={week <= 0}
-                  onPress={() => {
-                    if (week > 0) {
-                      const newWeek = week - 1;
-                      setWeek(newWeek);
-                      swiper.current?.scrollTo(newWeek);
-                      setValue(moment(value).subtract(1, 'week').toDate());
-                    }
-                  }}>
-                  <Ionicons name="chevron-back" size={16} color={week <= 0 ? '#cccccc' : 'black'} />
-                </TouchableOpacity>
-                {dates.map((item) => {
-                  const isActive = value.toDateString() === item.date.toDateString();
-                  return (
-                    <TouchableWithoutFeedback
-                      key={item.date.toISOString()}
-                      onPress={() => setValue(item.date)}>
-                      <View
-                        style={[
-                          styles.item,
-                          isActive && { backgroundColor: '#111', borderColor: '#111' },
-                        ]}>
-                        <Text style={[styles.weekDayText, isActive && { color: '#fff' }]}>
-                          {item.weekday}
-                        </Text>
-                        <Text style={[styles.dateText, isActive && { color: '#fff' }]}>
-                          {item.date.getDate()}
-                        </Text>
-                      </View>
-                    </TouchableWithoutFeedback>
-                  );
-                })}
-                <TouchableOpacity
-                  style={[styles.navButton, week >= 4 && styles.disabledNavButton]}
-                  disabled={week >= 4}
-                  onPress={() => {
-                    if (week < 4) {
-                      const newWeek = week + 1;
-                      setWeek(newWeek);
-                      swiper.current?.scrollTo(newWeek);
-                      setValue(moment(value).add(1, 'week').toDate());
-                    }
-                  }}>
-                  <Ionicons
-                    name="chevron-forward"
-                    size={16}
-                    color={week >= 4 ? '#cccccc' : 'black'}
-                  />
-                </TouchableOpacity>
-              </View>
-            ))}
-          </Swiper>
-        </View>
+        <WeekPicker value={value} setValue={setValue} />
 
         <View style={styles.calendarItemCard}>
           <Text style={styles.subtitle}>
