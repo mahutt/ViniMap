@@ -3,19 +3,18 @@ import { useRouter } from 'expo-router';
 import GoogleService from '@/services/GoogleService';
 import * as Google from 'expo-auth-session/providers/google';
 import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Alert } from 'react-native';
-import moment from 'moment';
 import SimpleModal from '@/components/CalendarIdBox';
 import CalendarSelectionModal from '@/components/CalendarSelectionModal';
 import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
-import { Location, ScheduleData } from '@/modules/map/Types';
+import { Location } from '@/modules/map/Types';
 import { getBuildingCoordinates } from '@/services/BuildingService';
 import ProfilePicture from '@/components/ProfilePicture';
 import WeekPicker from '@/components/WeekPicker';
 import ScheduleDisplay from '@/components/ScheduleDisplay';
+import { useScheduleData } from '@/hooks/useScheduleData';
 
 export default function Calendar() {
   const [value, setValue] = useState(new Date());
-  const [scheduleData, setScheduleData] = useState<ScheduleData>({});
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState<{ picture?: string } | null>(null);
   const router = useRouter();
@@ -24,6 +23,7 @@ export default function Calendar() {
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const { setState, setEndLocation } = useMap();
+  const { scheduleData, fetchCalendarEvents, updateAuthStatus } = useScheduleData();
 
   // google auth request
   const [request, response, promptAsync] = Google.useAuthRequest(GoogleService.config);
@@ -36,14 +36,11 @@ export default function Calendar() {
 
         setIsLoggedIn(isAuthenticated);
         setUserInfo(storedUserInfo);
+        updateAuthStatus(isAuthenticated);
 
         if (isAuthenticated) {
           const calendarId = GoogleService.getSelectedCalendarId();
           handleCalendarSelect(calendarId);
-          const calendarData = GoogleService.getCalendarData();
-          if (calendarData && Object.keys(calendarData).length > 0) {
-            setScheduleData(calendarData);
-          }
         }
       } catch (error) {
         console.error('Error initializing app:', error);
@@ -60,32 +57,8 @@ export default function Calendar() {
     }
   }, [response]);
 
-  useEffect(() => {
-    GoogleService.saveCalendarData(scheduleData);
-  }, [scheduleData]);
-
   const handleCalendarSelect = async (calendarId: string): Promise<void> => {
-    if (calendarId.trim() === '') return;
-
-    try {
-      const calendarJson = await GoogleService.fetchCalendarEvents(calendarId);
-      const newScheduleData = GoogleService.extractScheduleData(calendarJson);
-
-      const updatedScheduleData: Record<
-        string,
-        { className: string; location: string; time: string }[]
-      > = {};
-
-      Object.keys(newScheduleData).forEach((date) => {
-        const momentDate = moment(date).format('YYYY-MM-DD');
-        updatedScheduleData[momentDate] = newScheduleData[date];
-      });
-
-      setScheduleData(updatedScheduleData);
-      GoogleService.saveCalendarData(updatedScheduleData);
-    } catch (error) {
-      console.error('Error fetching calendar events:', error);
-    }
+    await fetchCalendarEvents(calendarId);
   };
 
   const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
@@ -137,6 +110,7 @@ export default function Calendar() {
 
       setIsLoggedIn(true);
       setUserInfo(userData);
+      updateAuthStatus(true);
       setCalendarIdModalVisible(false);
 
       setTimeout(() => {
@@ -154,7 +128,7 @@ export default function Calendar() {
 
       setIsLoggedIn(false);
       setUserInfo(null);
-      setScheduleData({});
+      updateAuthStatus(false);
     } catch (error) {
       console.error('Error signing out:', error);
       Alert.alert('Error', 'Failed to sign out. Please try again.');
