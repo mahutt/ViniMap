@@ -16,6 +16,7 @@ export const useScheduleData = () => {
         const calendarData = GoogleService.getCalendarData();
         if (calendarData && Object.keys(calendarData).length > 0) {
           setScheduleData(calendarData);
+          GoogleService.saveCalendarData(calendarData);
         }
       } catch (error) {
         console.error('Error checking auth and loading schedule data:', error);
@@ -24,10 +25,6 @@ export const useScheduleData = () => {
 
     checkAuthAndLoadData();
   }, []);
-
-  useEffect(() => {
-    GoogleService.saveCalendarData(scheduleData);
-  }, [scheduleData]);
 
   const fetchCalendarEvents = useCallback(async (calendarId: string): Promise<void> => {
     if (calendarId.trim() === '') return;
