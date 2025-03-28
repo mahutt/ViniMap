@@ -8,7 +8,7 @@ import { filterWithLevel } from '@/modules/map/IndoorMapUtils';
 import { images } from '@/assets';
 import { useTask } from '@/providers/TaskContext';
 import PointsOfInterestService from '@/services/PointsOfInterestService';
-import { campbusMapboxIds } from './IndoorMap';
+import { campusMapboxIds } from './IndoorMap';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -94,7 +94,7 @@ export default function MapView() {
           filter={[
             'all',
             ['==', ['get', 'extrude'], 'true'],
-            ['match', ['id'], campbusMapboxIds, true, false],
+            ['match', ['id'], campusMapboxIds, true, false],
           ]}
         />
       </Mapbox.ShapeSource>

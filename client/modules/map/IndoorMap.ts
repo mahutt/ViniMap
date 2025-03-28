@@ -224,6 +224,6 @@ const indoorMaps: IndoorMap[] = rawIndoorMaps.map((rawIndoorMap) => {
   return indoorMap;
 });
 
-const campbusMapboxIds = indoorMaps.flatMap((indoorMap) => indoorMap.mapboxIds);
+const campusMapboxIds = indoorMaps.flatMap((indoorMap) => indoorMap.mapboxIds);
 
-export { indoorMaps, campbusMapboxIds };
+export { indoorMaps, campusMapboxIds };
