@@ -2,10 +2,16 @@ import ShuttleCalculatorService from '@/services/ShuttleCalculatorService';
 import { Coordinates } from './MapContext';
 import { IndoorMap, Location, Route, Segment } from './Types';
 import { calculateEuclideanDistance } from './MapUtils';
-import { footwaysForLevel, getConnectionsBetween, getStartEndLevels } from './IndoorMapUtils';
+import {
+  bboxCenter,
+  footwaysForLevel,
+  getConnectionsBetween,
+  getStartEndLevels,
+} from './IndoorMapUtils';
 import DijkstraService from '@/services/DijkstrasService';
 import type { Feature, Point, Polygon, Position } from 'geojson';
 import GeojsonHelper from '@/services/GeojsonService';
+import { default as turfDistance } from '@turf/distance';
 
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
@@ -463,22 +469,33 @@ const formatDuration = (seconds: number | null): string => {
  * @param indoorMaps the list of indoor maps to search through
  * @returns the indoor map that contains the given position, or null if no indoor map contains the position
  */
-export const getIndoorMapFromPosition = async (
+export const getIndoorMapFromPosition = (
   position: Position,
   indoorMaps: IndoorMap[]
-): Promise<IndoorMap | null> => {
-  for (const indoorMap of indoorMaps) {
+): IndoorMap | null => {
+  const candidateIndoorMaps = indoorMaps.filter((indoorMap) => {
     const [west, south, east, north] = indoorMap.bounds;
-    if (
-      position[0] >= west &&
-      position[0] <= east &&
-      position[1] >= south &&
-      position[1] <= north
-    ) {
-      return indoorMap;
+    return (
+      position[0] >= west && position[0] <= east && position[1] >= south && position[1] <= north
+    );
+  });
+
+  if (candidateIndoorMaps.length === 0) {
+    return null;
+  } else if (candidateIndoorMaps.length === 1) {
+    return candidateIndoorMaps[0];
+  }
+
+  let minimumDistance = Number.POSITIVE_INFINITY;
+  let closestMap = candidateIndoorMaps[0];
+  for (const map of candidateIndoorMaps) {
+    const distance = turfDistance(position, bboxCenter(map.bounds));
+    if (distance < minimumDistance) {
+      closestMap = map;
+      minimumDistance = distance;
     }
   }
-  return null;
+  return closestMap;
 };
 
 export { getLocations, getRoute, fetchLocationData, formatDuration };

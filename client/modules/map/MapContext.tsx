@@ -152,21 +152,13 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         }
       }
 
-      for (let indoorMap of indoorMaps) {
-        if (
-          overlap(indoorMap.bounds, [
-            coordinates[0],
-            coordinates[1],
-            coordinates[0],
-            coordinates[1],
-          ])
-        ) {
-          return {
-            coordinates,
-            name: indoorMap.id,
-            data: { address: indoorMap.id, isOpen: false },
-          };
-        }
+      const selectedIndoorMap = getIndoorMapFromPosition(coordinates, indoorMaps);
+      if (selectedIndoorMap) {
+        return {
+          coordinates,
+          name: selectedIndoorMap.id,
+          data: { address: selectedIndoorMap.id, isOpen: false },
+        };
       }
 
       const clickedPOI = PointsOfInterestService.findClosestPOI(coordinates);

@@ -12,6 +12,17 @@ import clGeojson from '@/assets/geojson/cl.json';
 import fbGeojson from '@/assets/geojson/fb.json';
 import nunsGeojson from '@/assets/geojson/nuns.json';
 import vaGeojson from '@/assets/geojson/va.json';
+import sdGeojson from '@/assets/geojson/sd.json';
+import pcGeojson from '@/assets/geojson/pc.json';
+import raGeojson from '@/assets/geojson/ra.json';
+import psGeojson from '@/assets/geojson/ps.json';
+import pyGeojson from '@/assets/geojson/py.json';
+import rfGeojson from '@/assets/geojson/rf.json';
+import ccGeojson from '@/assets/geojson/cc.json';
+import adGeojson from '@/assets/geojson/ad.json';
+import fcGeojson from '@/assets/geojson/fc.json';
+import cjGeojson from '@/assets/geojson/cj.json';
+import siGeojson from '@/assets/geojson/si.json';
 
 import GeojsonService from '@/services/GeojsonService';
 import type { Feature, Polygon } from 'geojson';
@@ -30,58 +41,113 @@ const getAllRooms = (geojson: IndoorMapGeoJSON): Feature<Polygon>[] => {
 const rawIndoorMaps = [
   {
     id: 'Hall Building',
-    mapboxId: 22080570,
+    mapboxIds: [22080570],
     geojson: hallGeojson,
   },
   {
     id: 'Webster Library',
-    mapboxId: 22080572,
+    mapboxIds: [22080572],
     geojson: websterGeojson,
   },
   {
     id: 'EV Building',
-    mapboxId: 103248064,
+    mapboxIds: [103248064],
     geojson: evGeojson,
   },
   {
     id: 'ER Building',
-    mapboxId: 103896385,
+    mapboxIds: [103896385],
     geojson: erGeojson,
   },
   {
     id: 'Learning Square',
-    mapboxId: 979438074,
+    mapboxIds: [979438074],
     geojson: lsGeojson,
   },
   {
     id: 'John Molson School of Business',
-    mapboxId: 22080581,
+    mapboxIds: [22080581],
     geojson: jmsbGeojson,
   },
   {
     id: 'FB - Faubourg Tower',
-    mapboxId: 103248058,
+    mapboxIds: [103248058],
     geojson: fbGeojson,
   },
   {
     id: 'Grey Nuns Building',
-    mapboxId: 17189298,
+    mapboxIds: [17189298],
     geojson: nunsGeojson,
   },
   {
     id: 'CL Building',
-    mapboxId: 103248055,
+    mapboxIds: [103248055],
     geojson: clGeojson,
   },
   {
     id: 'VA - Visual Arts Building',
-    mapboxId: 103521746,
+    mapboxIds: [103521746],
     geojson: vaGeojson,
   },
   {
     id: 'VLandVE',
-    mapboxId: -1,
+    mapboxIds: [604324442, 604324441, 47332009, 604324443],
     geojson: VLandVEfloors,
+  },
+  {
+    id: 'Stinger Dome',
+    mapboxIds: [129437736],
+    geojson: sdGeojson,
+  },
+  {
+    id: 'Perform Center',
+    mapboxIds: [604019520],
+    geojson: pcGeojson,
+  },
+  {
+    id: 'Recreation and Althletics Complex',
+    mapboxIds: [47332005],
+    geojson: raGeojson,
+  },
+  {
+    id: 'Physical Services',
+    mapboxIds: [47332006],
+    geojson: psGeojson,
+  },
+  {
+    id: 'Psychology Building',
+    mapboxIds: [17887805],
+    geojson: pyGeojson,
+  },
+  {
+    id: 'Loyola Jesuit Hall and Conference Center',
+    mapboxIds: [604324455],
+    geojson: rfGeojson,
+  },
+  {
+    id: 'Central Building',
+    mapboxIds: [604324456],
+    geojson: ccGeojson,
+  },
+  {
+    id: 'Administration Building',
+    mapboxIds: [604324457],
+    geojson: adGeojson,
+  },
+  {
+    id: 'F.C. Smith Building',
+    mapboxIds: [47332003],
+    geojson: fcGeojson,
+  },
+  {
+    id: 'Communication Studies and Journalism Building',
+    mapboxIds: [47332007],
+    geojson: cjGeojson,
+  },
+  {
+    id: 'Saint Ignatius of Loyola Church',
+    mapboxIds: [47331997],
+    geojson: siGeojson,
   },
 ];
 
@@ -91,7 +157,7 @@ const indoorMaps: IndoorMap[] = rawIndoorMaps.map((rawIndoorMap) => {
   );
   const indoorMap: IndoorMap = {
     id: rawIndoorMap.id,
-    mapboxId: rawIndoorMap.mapboxId,
+    mapboxIds: rawIndoorMap.mapboxIds,
     bounds: bounds,
     geojson: rawIndoorMap.geojson as IndoorMapGeoJSON,
     levelsRange: levelsRange,

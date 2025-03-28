@@ -48,7 +48,7 @@ export type LevelsRange = {
 
 export interface IndoorMap {
   id: string;
-  mapboxId: number;
+  mapboxIds: number[];
   bounds: BBox;
   geojson: IndoorMapGeoJSON;
   levelsRange: LevelsRange;
