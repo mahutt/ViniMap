@@ -235,7 +235,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     return () => {
       if (subscription) subscription.remove();
     };
-  }, []);
+  }, [userPositionUpdateCallback]);
 
   const flyTo = useMemo(
     () => (newCenterCoordinate: Position, newZoomLevel?: number) => {
