@@ -72,7 +72,7 @@ const rawIndoorMaps = [
   },
   {
     id: 'John Molson School of Business',
-    mapboxIds: [22080581],
+    mapboxIds: [1109876433, 1109876436, 1109876434, 1109876435],
     geojson: jmsbGeojson,
   },
   {
