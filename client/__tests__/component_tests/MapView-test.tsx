@@ -96,6 +96,14 @@ jest.mock('@rnmapbox/maps', () => {
   });
   MockImages.displayName = 'Images';
 
+  const MockFillExtrusionLayer = React.forwardRef(function MockFillExtrusionLayer(
+    props: any,
+    ref: any
+  ) {
+    return null;
+  });
+  MockFillExtrusionLayer.displayName = 'FillExtrusionLayer';
+
   return {
     setAccessToken: jest.fn(),
     MapView: MockMapView,
@@ -108,6 +116,7 @@ jest.mock('@rnmapbox/maps', () => {
     SymbolLayer: MockSymbolLayer,
     Callout: MockCallout,
     Images: MockImages,
+    FillExtrusionLayer: MockFillExtrusionLayer,
   };
 });
 
