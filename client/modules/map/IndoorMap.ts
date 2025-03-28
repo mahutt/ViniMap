@@ -57,7 +57,7 @@ const rawIndoorMaps = [
   },
   {
     id: 'EV Building',
-    mapboxIds: [103248064],
+    mapboxIds: [1110145740, 1110145744, 1110145741, 356036803, 1110145743],
     geojson: evGeojson,
   },
   {
