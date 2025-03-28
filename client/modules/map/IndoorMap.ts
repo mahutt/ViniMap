@@ -27,6 +27,7 @@ import hcGeojson from '@/assets/geojson/hc.json';
 import hbGeojson from '@/assets/geojson/hb.json';
 import haGeojson from '@/assets/geojson/ha.json';
 import huGeojson from '@/assets/geojson/hu.json';
+import spGeojson from '@/assets/geojson/sp.json';
 
 import GeojsonService from '@/services/GeojsonService';
 import type { Feature, Polygon } from 'geojson';
@@ -172,6 +173,11 @@ const rawIndoorMaps = [
     id: 'Applied Science Hub',
     mapboxIds: [795012497],
     geojson: huGeojson,
+  },
+  {
+    id: 'Richard J. Renaud Science Complex',
+    mapboxIds: [47331993],
+    geojson: spGeojson,
   },
 ];
 
