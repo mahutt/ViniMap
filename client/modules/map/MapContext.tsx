@@ -216,7 +216,7 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       name: 'Current location',
       coordinates: position,
     });
-    const updatedUserBuilding = await getIndoorMapFromPosition(position, indoorMaps);
+    const updatedUserBuilding = getIndoorMapFromPosition(position, indoorMaps);
     setUserBuilding(updatedUserBuilding);
   }, []);
 

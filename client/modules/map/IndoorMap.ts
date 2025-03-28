@@ -52,7 +52,10 @@ const rawIndoorMaps = [
   },
   {
     id: 'Webster Library',
-    mapboxIds: [22080572],
+    mapboxIds: [
+      1110900192, 1110900193, 1110900197, 1110900196, 1110900194, 1110900195, 1110900190,
+      1110900191,
+    ],
     geojson: websterGeojson,
   },
   {
@@ -221,4 +224,6 @@ const indoorMaps: IndoorMap[] = rawIndoorMaps.map((rawIndoorMap) => {
   return indoorMap;
 });
 
-export { indoorMaps };
+const campbusMapboxIds = indoorMaps.flatMap((indoorMap) => indoorMap.mapboxIds);
+
+export { indoorMaps, campbusMapboxIds };

@@ -8,6 +8,7 @@ import { filterWithLevel } from '@/modules/map/IndoorMapUtils';
 import { images } from '@/assets';
 import { useTask } from '@/providers/TaskContext';
 import PointsOfInterestService from '@/services/PointsOfInterestService';
+import { campbusMapboxIds } from './IndoorMap';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -93,24 +94,7 @@ export default function MapView() {
           filter={[
             'all',
             ['==', ['get', 'extrude'], 'true'],
-            [
-              'any',
-              [
-                'match',
-                ['id'],
-                [
-                  1110145740, 103248058, 17189298, 103521746, 979438074, 103896385, 22080570,
-                  103248055, 545014554, 47331993, 47332007, 604324457, 604324456, 604324455,
-                  47332003, 17887805, 604324442, 604324441, 47332009, 604324443, 47332006,
-                  795012497, 47331997, 17887804, 17887803, 604324438, 129437736, 47332005,
-                  604019520, 1110145744, 1110145741, 356036803, 1110145743, 1109876433, 1109876436,
-                  1109876434, 1109876435,
-                ],
-                true,
-                false,
-              ],
-              ['match', ['get', 'building_id'], [22080570, 22080572], true, false],
-            ],
+            ['match', ['id'], campbusMapboxIds, true, false],
           ]}
         />
       </Mapbox.ShapeSource>
