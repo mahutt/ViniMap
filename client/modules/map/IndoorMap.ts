@@ -23,6 +23,10 @@ import adGeojson from '@/assets/geojson/ad.json';
 import fcGeojson from '@/assets/geojson/fc.json';
 import cjGeojson from '@/assets/geojson/cj.json';
 import siGeojson from '@/assets/geojson/si.json';
+import hcGeojson from '@/assets/geojson/hc.json';
+import hbGeojson from '@/assets/geojson/hb.json';
+import haGeojson from '@/assets/geojson/ha.json';
+import huGeojson from '@/assets/geojson/hu.json';
 
 import GeojsonService from '@/services/GeojsonService';
 import type { Feature, Polygon } from 'geojson';
@@ -148,6 +152,26 @@ const rawIndoorMaps = [
     id: 'Saint Ignatius of Loyola Church',
     mapboxIds: [47331997],
     geojson: siGeojson,
+  },
+  {
+    id: 'Hingston Hall (HC)',
+    mapboxIds: [604324438],
+    geojson: hcGeojson,
+  },
+  {
+    id: 'Hingston Hall (HB)',
+    mapboxIds: [17887804],
+    geojson: hbGeojson,
+  },
+  {
+    id: 'Hingston Hall (HA)',
+    mapboxIds: [17887803],
+    geojson: haGeojson,
+  },
+  {
+    id: 'Applied Science Hub',
+    mapboxIds: [795012497],
+    geojson: huGeojson,
   },
 ];
 
