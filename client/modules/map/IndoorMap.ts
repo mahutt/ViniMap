@@ -28,6 +28,7 @@ import hbGeojson from '@/assets/geojson/hb.json';
 import haGeojson from '@/assets/geojson/ha.json';
 import huGeojson from '@/assets/geojson/hu.json';
 import spGeojson from '@/assets/geojson/sp.json';
+import geGeojson from '@/assets/geojson/ge.json';
 
 import GeojsonService from '@/services/GeojsonService';
 import type { Feature, Polygon } from 'geojson';
@@ -178,6 +179,11 @@ const rawIndoorMaps = [
     id: 'Richard J. Renaud Science Complex',
     mapboxIds: [47331993],
     geojson: spGeojson,
+  },
+  {
+    id: 'Centre for Structural and Functional Genomics',
+    mapboxIds: [545014554],
+    geojson: geGeojson,
   },
 ];
 
