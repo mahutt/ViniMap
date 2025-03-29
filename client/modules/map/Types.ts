@@ -67,7 +67,7 @@ export interface Task {
   text: string;
   location: Location;
   startTime: Date;
-  duration: Number; // Assume in minutes
+  duration: number; // In minutes
   endTime: Date;
 }
 
