@@ -82,9 +82,9 @@ export default function MapView() {
             fillExtrusionHeight: ['get', 'height'],
             fillExtrusionColor: [
               'case',
-              ['in', ['id'], userBuilding?.mapboxIds ?? []],
+              ['in', ['id'], userBuilding?.mapboxIds ?? [-1]],
               '#0000FF',
-              ['in', ['get', 'building_id'], userBuilding?.mapboxIds ?? []],
+              ['in', ['get', 'building_id'], userBuilding?.mapboxIds ?? [-1]],
               '#0000FF',
               '#912338',
             ],
