@@ -18,6 +18,7 @@ import TaskCard from '@/components/TaskCard';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { TaskService } from '@/services/TaskService';
 import { useRouter } from 'expo-router';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function TasksScreen() {
   const { selectedTasks, setSelectedTasks, tasks, setTasks, setTaskRouteDescriptions } = useTask();
@@ -28,6 +29,9 @@ export default function TasksScreen() {
 
   const [taskName, setTaskName] = useState('');
   const [taskLocation, setTaskLocation] = useState('');
+
+  const [taskStartTime, setTaskStartTime] = useState(new Date(new Date().setHours(0, 0, 0, 0)));
+  const [taskDuration, setTaskDuration] = useState<number>(0);
 
   const [autocompleteVisible, setAutocompleteVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -45,15 +49,20 @@ export default function TasksScreen() {
     if (tasks.length > 0) {
       taskList.current.setTasks(tasks);
     }
+
+    console.log(tasks);
   }, [tasks]);
 
   const addTask = () => {
-    if (!taskName.trim() || !taskLocation.trim()) return;
+    if (!taskName.trim()) return;
 
     const newTask: Task = {
       id: tasks.length.toString(),
       text: taskName,
       location: newTaskLocation,
+      startTime: taskStartTime,
+      duration: taskDuration,
+      endTime: new Date(taskStartTime.getTime() + taskDuration * 60000),
     };
 
     caretaker.current.save();
@@ -67,6 +76,7 @@ export default function TasksScreen() {
 
   const deleteTask = (id: string) => {
     caretaker.current.save();
+    taskList.current.removeTask(id);
     setTasks((prev) => prev.filter((task) => task.id !== id));
   };
 
@@ -142,6 +152,9 @@ export default function TasksScreen() {
       id: '1000',
       text: 'First Tasks',
       location: currentLocation,
+      startTime: new Date(),
+      duration: 0,
+      endTime: new Date(),
     };
 
     const tasksForRouting: Task[] = [];
@@ -229,6 +242,40 @@ export default function TasksScreen() {
               }}
               onBlur={() => setTimeout(() => setAutocompleteVisible(false), 200)}
             />
+
+            <View style={styles.timeInputs}>
+              <View style={styles.dateTimePickerContainer}>
+                <Text>Start Time:</Text>
+                <DateTimePicker
+                  value={taskStartTime}
+                  mode="time"
+                  display="default"
+                  onChange={(event, selectedTime) => {
+                    if (selectedTime) {
+                      setTaskStartTime(selectedTime);
+                    }
+                  }}
+                />
+              </View>
+
+              <View style={styles.dateTimePickerContainer}>
+                <Text>Duration</Text>
+                <TextInput
+                  placeholder="min"
+                  style={styles.durationInput}
+                  value={taskDuration === 0 ? '' : taskDuration.toString()}
+                  keyboardType="numeric"
+                  onChangeText={(text) => {
+                    if (text === '') {
+                      setTaskDuration(0);
+                    } else {
+                      const minutes = parseInt(text, 10);
+                      setTaskDuration(isNaN(minutes) ? 0 : minutes);
+                    }
+                  }}
+                />
+              </View>
+            </View>
 
             {autocompleteVisible && (
               <View style={{ width: '100%' }}>
@@ -359,5 +406,25 @@ const styles = StyleSheet.create({
   plusButtonText: {
     fontSize: 24,
     color: '#FFF',
+  },
+  dateTimePickerContainer: {
+    backgroundColor: '#FFF',
+    paddingVertical: 5,
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    flexDirection: 'column',
+    flex: 1,
+  },
+  durationInput: {
+    backgroundColor: '#FFF',
+    borderColor: '#ddd',
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 10,
+    width: 100,
+  },
+  timeInputs: {
+    width: '100%',
+    flexDirection: 'row',
   },
 });

@@ -66,6 +66,9 @@ export interface Task {
   id: string;
   text: string;
   location: Location;
+  startTime: Date;
+  duration: Number; // Assume in minutes
+  endTime: Date;
 }
 
 export interface TaskRouteDescription {
