@@ -25,6 +25,7 @@ jest.mock('@/modules/map/MapService', () => ({
       distance: 2000,
     })
   ),
+  getIndoorMapFromPosition: jest.fn(() => Promise.resolve(null)),
 }));
 jest.mock('expo-location', () => ({
   watchPositionAsync: jest.fn(() => Promise.resolve({ remove: jest.fn() })),

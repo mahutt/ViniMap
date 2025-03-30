@@ -8,6 +8,7 @@ import { filterWithLevel } from '@/modules/map/IndoorMapUtils';
 import { images } from '@/assets';
 import { useTask } from '@/providers/TaskContext';
 import PointsOfInterestService from '@/services/PointsOfInterestService';
+import { campusMapboxIds } from './IndoorMap';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -24,6 +25,7 @@ export default function MapView() {
     startLocation,
     endLocation,
     userLocation,
+    userBuilding,
     mapRef,
     cameraRef,
     centerCoordinate,
@@ -66,7 +68,36 @@ export default function MapView() {
         animationDuration={2000}
         pitch={pitchLevel}
       />
+
       <Mapbox.Images images={images} />
+
+      <Mapbox.ShapeSource id="composite" url="mapbox://mapbox.mapbox-streets-v8" existing>
+        <Mapbox.FillExtrusionLayer
+          id="building (1)"
+          sourceID="composite"
+          sourceLayerID="building"
+          minZoomLevel={12} // Only show buildings when zoomed in enough
+          maxZoomLevel={16.8} // Max zoom level for buildings
+          style={{
+            fillExtrusionHeight: ['get', 'height'],
+            fillExtrusionColor: [
+              'case',
+              ['in', ['id'], userBuilding?.mapboxIds ?? [-1]],
+              '#0000FF',
+              ['in', ['get', 'building_id'], userBuilding?.mapboxIds ?? [-1]],
+              '#0000FF',
+              '#912338',
+            ],
+            fillExtrusionBase: 0,
+            fillExtrusionOpacity: 0.83,
+          }}
+          filter={[
+            'all',
+            ['==', ['get', 'extrude'], 'true'],
+            ['match', ['id'], campusMapboxIds, true, false],
+          ]}
+        />
+      </Mapbox.ShapeSource>
       <Mapbox.ShapeSource id="outdoor-pois" shape={PointsOfInterestService.getFeatureCollection()}>
         <Mapbox.SymbolLayer
           id="outdoor-poi-icons"
