@@ -31,7 +31,7 @@ export default function TasksScreen() {
   const [taskLocation, setTaskLocation] = useState('');
 
   const [taskStartTime, setTaskStartTime] = useState(new Date(new Date().setHours(0, 0, 0, 0)));
-  const [taskDuration, setTaskDuration] = useState<number>(0);
+  const [taskDuration, setTaskDuration] = useState<number | null>(0);
 
   const [autocompleteVisible, setAutocompleteVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -60,7 +60,8 @@ export default function TasksScreen() {
       location: newTaskLocation,
       startTime: taskStartTime,
       duration: taskDuration,
-      endTime: new Date(taskStartTime.getTime() + taskDuration * 60000),
+      endTime:
+        taskDuration === null ? null : new Date(taskStartTime.getTime() + taskDuration * 60000),
     };
 
     caretaker.current.save();

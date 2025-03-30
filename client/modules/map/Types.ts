@@ -67,8 +67,8 @@ export interface Task {
   text: string;
   location: Location;
   startTime: Date;
-  duration: number; // In minutes
-  endTime: Date;
+  duration: number | null; // In minutes
+  endTime: Date | null;
 }
 
 export interface TaskRouteDescription {
