@@ -49,8 +49,6 @@ export default function TasksScreen() {
     if (tasks.length > 0) {
       taskList.current.setTasks(tasks);
     }
-
-    console.log(tasks);
   }, [tasks]);
 
   const addTask = () => {
