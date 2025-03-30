@@ -242,7 +242,7 @@ export default function TasksScreen() {
             />
 
             <View style={styles.timeInputs}>
-              <View style={styles.dateTimePickerContainer}>
+              <View style={styles.timeInputContainer}>
                 <Text>Start Time:</Text>
                 <DateTimePicker
                   value={taskStartTime}
@@ -256,7 +256,7 @@ export default function TasksScreen() {
                 />
               </View>
 
-              <View style={styles.dateTimePickerContainer}>
+              <View style={styles.timeInputContainer}>
                 <Text>Duration</Text>
                 <TextInput
                   placeholder="min"
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: '#FFF',
   },
-  dateTimePickerContainer: {
+  timeInputContainer: {
     backgroundColor: '#FFF',
     paddingVertical: 5,
     justifyContent: 'flex-start',
