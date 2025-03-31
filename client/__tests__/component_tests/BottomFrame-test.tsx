@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BottomFrame from '@/components/ui/RoutePlanner Components/BottomFrame';
 import { formatDuration } from '@/modules/map/MapService';
