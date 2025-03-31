@@ -6,12 +6,13 @@ import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Alert } from 'r
 import SimpleModal from '@/components/CalendarIdBox';
 import CalendarSelectionModal from '@/components/CalendarSelectionModal';
 import { Coordinates, MapState, useMap } from '@/modules/map/MapContext';
-import { Location } from '@/modules/map/Types';
+import { ClassItem, Location } from '@/modules/map/Types';
 import { getBuildingCoordinates } from '@/services/BuildingService';
 import ProfilePicture from '@/components/ProfilePicture';
 import WeekPicker from '@/components/WeekPicker';
 import ScheduleDisplay from '@/components/ScheduleDisplay';
 import { useScheduleData } from '@/hooks/useScheduleData';
+import LocalLocations from '@/services/LocalLocations';
 
 export default function Calendar() {
   const [value, setValue] = useState(new Date());
@@ -86,15 +87,25 @@ export default function Calendar() {
     }
   }, [response, handleGoogleLogin]);
 
-  const handleClassClick = (classItem: { className: string; location: string; time: string }) => {
-    const buildingCoordinates: Coordinates = getBuildingCoordinates(classItem.location);
-    const location: Location = {
-      name: classItem.className,
-      coordinates: buildingCoordinates,
-      data: {
-        address: classItem.location,
-      },
-    };
+  const handleClassClick = (classItem: ClassItem) => {
+    let location: Location | null = null;
+
+    const possibleClassLocations = LocalLocations.getInstance().autocomplete(
+      classItem.location.toLocaleUpperCase()
+    );
+
+    if (possibleClassLocations.length > 0) {
+      location = possibleClassLocations[0];
+    } else {
+      const buildingCoordinates: Coordinates = getBuildingCoordinates(classItem.location);
+      location = {
+        name: classItem.className,
+        coordinates: buildingCoordinates,
+        data: {
+          address: classItem.location,
+        },
+      };
+    }
     setEndLocation(location);
     setState(MapState.Information);
     router.push('/');
