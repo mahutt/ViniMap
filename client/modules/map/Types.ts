@@ -52,6 +52,8 @@ export interface IndoorMap {
   bounds: BBox;
   geojson: IndoorMapGeoJSON;
   levelsRange: LevelsRange;
+  addr: string;
+  opening_hours: string;
 }
 
 /**
