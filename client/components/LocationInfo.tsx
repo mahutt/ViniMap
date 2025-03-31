@@ -41,8 +41,8 @@ export function LocationInfo() {
 
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
         {isCustomPOI && <Ionicons name={iconName} size={16} color="#852C3A" />}
-        {isCustomPOI && endLocation?.data?.description && (
-          <Text style={styles.descriptionText}>{endLocation.data.description}</Text>
+        {isCustomPOI && endLocation?.data?.category && (
+          <Text style={styles.categoryText}>{endLocation.data.category}</Text>
         )}
       </View>
 
@@ -62,6 +62,10 @@ export function LocationInfo() {
       </View>
 
       <Text style={styles.addressText}>{endLocation?.data?.address}</Text>
+
+      {endLocation?.data?.description && (
+        <Text style={styles.descriptionText}>{endLocation?.data?.description}</Text>
+      )}
 
       <TouchableOpacity style={styles.button} onPress={getDirections}>
         <Ionicons name="arrow-forward-outline" size={24} color="#fff" style={styles.icon} />
@@ -122,6 +126,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'gray',
   },
+  descriptionText: {
+    marginTop: 8,
+    fontSize: 16,
+    color: 'gray',
+  },
   isOpen: {
     fontSize: 16,
   },
@@ -133,7 +142,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '5%',
     borderRadius: 25,
     justifyContent: 'center',
-    marginTop: '8%',
+    marginTop: 20,
   },
   icon: {
     marginRight: 10,
@@ -148,7 +157,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#666',
   },
-  descriptionText: {
+  categoryText: {
     fontSize: 16,
     color: '#333',
   },

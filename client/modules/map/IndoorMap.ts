@@ -51,6 +51,8 @@ const rawIndoorMaps = [
     geojson: hallGeojson,
     addr: '1455 Blvd. De Maisonneuve Ouest, Montreal, Quebec H3G 1M8',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty:
+      'Geography, Planning and Environment, Political Science, Sociology and Anthropology, Economics, School of Irish Studies',
   },
   {
     id: 'Webster Library (LB)',
@@ -61,6 +63,7 @@ const rawIndoorMaps = [
     geojson: websterGeojson,
     addr: 'Pavillion J.W. McConnell Bldg, 1400 Maisonneuve Blvd W, Montreal, Quebec H3G 1M8',
     opening_hours: '24/7',
+    faculty: 'Education, English, Études françaises, History, Mathematics and Statistics',
   },
   {
     id: 'Engineering, CS, and VA Integrated Complex (EV)',
@@ -68,6 +71,7 @@ const rawIndoorMaps = [
     geojson: evGeojson,
     addr: '1515 Saint-Catherine St W, Montreal, Quebec H3G 2H7',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: 'Faculty of Fine Arts, Gina Cody School of Engineering and Computer Science',
   },
   {
     id: 'ER Building (ER)',
@@ -75,6 +79,7 @@ const rawIndoorMaps = [
     geojson: erGeojson,
     addr: '2155 Guy St, Montreal, Quebec H3H 2L9',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: 'Computer Science and Software Engineering, Creative Arts Therapies, Urban Studies',
   },
   {
     id: 'Learning Square (LS)',
@@ -82,6 +87,7 @@ const rawIndoorMaps = [
     geojson: lsGeojson,
     addr: '1535 Blvd. De Maisonneuve Ouest, Montreal, Quebec H3G 1M9',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: '',
   },
   {
     id: 'John Molson Building (MB)',
@@ -89,6 +95,8 @@ const rawIndoorMaps = [
     geojson: jmsbGeojson,
     addr: '1600 Blvd. De Maisonneuve Ouest, Montreal, Quebec H3H 0A1',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty:
+      'Contemporary Dance, Finance, Management, Marketing, Music, Supply Chain & Business Technology Management, Theatre',
   },
   {
     id: 'Faubourg Tower (FB)',
@@ -96,6 +104,7 @@ const rawIndoorMaps = [
     geojson: fbGeojson,
     addr: '1600 Saint-Catherine St W, Montreal, Quebec H3H 2S7',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: 'Classics, Modern Languages & Linguistics, Mel Hoppenheim School of Cinema',
   },
   {
     id: 'Grey Nuns Building (GN)',
@@ -103,6 +112,7 @@ const rawIndoorMaps = [
     geojson: nunsGeojson,
     addr: '1190 Guy St, Montreal, Quebec H3H 2L4',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: 'Dept. of Philosophy (temporary)',
   },
   {
     id: 'CL Building (CL)',
@@ -110,6 +120,7 @@ const rawIndoorMaps = [
     geojson: clGeojson,
     addr: '1665 Saint-Catherine St W, Montreal, Quebec H3H 2S7',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: '',
   },
   {
     id: 'Visual Arts Building (VA)',
@@ -117,6 +128,7 @@ const rawIndoorMaps = [
     geojson: vaGeojson,
     addr: '1395 René-Lévesque Blvd W, Montreal, Quebec H3G 2M5',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: 'Art Education, Art History, Creative Arts Therapies, Studio Arts',
   },
   {
     id: 'Vanier Library (VL / VE)',
@@ -124,6 +136,7 @@ const rawIndoorMaps = [
     geojson: VLandVEfloors,
     addr: '7141 Sherbrooke St W, Montreal, Quebec H4B 1R6',
     opening_hours: '24/7',
+    faculty: 'Applied Human Sciences',
   },
   {
     id: 'Stinger Dome (SD)',
@@ -131,6 +144,7 @@ const rawIndoorMaps = [
     geojson: sdGeojson,
     addr: '7200 Sherbrooke St W, Montreal, Quebec H4B 1R3',
     opening_hours: 'Mo-Su 09:00-22:00',
+    faculty: '',
   },
   {
     id: 'Perform Center (PC)',
@@ -138,6 +152,7 @@ const rawIndoorMaps = [
     geojson: pcGeojson,
     addr: '7200 Sherbrooke St W, Montreal, Quebec H4B 1R6',
     opening_hours: 'Mo-Fr 06:30-22:00; Sa-Su 08:00-18:00',
+    faculty: '',
   },
   {
     id: 'Recreation and Althletics Complex (RA)',
@@ -145,6 +160,7 @@ const rawIndoorMaps = [
     geojson: raGeojson,
     addr: '7200 Sherbrooke St W, Montreal, Quebec H4B 1R6',
     opening_hours: 'Mo-Fr 06:30-22:00; Sa-Su 08:00-18:00',
+    faculty: '',
   },
   {
     id: 'Physical Services (PS)',
@@ -152,6 +168,7 @@ const rawIndoorMaps = [
     geojson: psGeojson,
     addr: 'Montreal, Quebec H4B 2B9',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: '',
   },
   {
     id: 'Psychology Building (PY)',
@@ -159,6 +176,7 @@ const rawIndoorMaps = [
     geojson: pyGeojson,
     addr: '7141 Sherbrooke St W, Montreal, Quebec H4B 1R6',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: 'Centre for clinical research in health (CCRH), Psychology',
   },
   {
     id: 'Loyola Jesuit Hall and Conference Center (RF)',
@@ -166,6 +184,7 @@ const rawIndoorMaps = [
     geojson: rfGeojson,
     addr: '7141 Sherbrooke St W, Montreal, Quebec H4B 1E1',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: '',
   },
   {
     id: 'Central Building (CC)',
@@ -173,6 +192,7 @@ const rawIndoorMaps = [
     geojson: ccGeojson,
     addr: '7141 Sherbrooke St W, Montreal, Quebec H4B 1E1',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: '',
   },
   {
     id: 'Administration Building (AD)',
@@ -180,6 +200,7 @@ const rawIndoorMaps = [
     geojson: adGeojson,
     addr: '7141 Sherbrooke St W, Montreal, Quebec H4B 1E1',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: 'Faculty of Arts & Science',
   },
   {
     id: 'F.C. Smith Building (FC)',
@@ -187,6 +208,7 @@ const rawIndoorMaps = [
     geojson: fcGeojson,
     addr: '7141 Sherbrooke St W, Montreal, Quebec H4B 1R6',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: '',
   },
   {
     id: 'Communication Studies and Journalism Building (CJ)',
@@ -194,6 +216,7 @@ const rawIndoorMaps = [
     geojson: cjGeojson,
     addr: '7141 Sherbrooke St W, Montreal, Quebec H4B 1R6',
     opening_hours: 'Mo-Fr 08:00-18:00',
+    faculty: 'Communication Studies, Journalism',
   },
   {
     id: 'Saint Ignatius of Loyola Church (SI)',
@@ -201,6 +224,7 @@ const rawIndoorMaps = [
     geojson: siGeojson,
     addr: '4455 Rue West Broadway, Montréal, QC H4B 2A7',
     opening_hours: 'Mo-Fr 08:00-16:00; Sa 15:45-17:30; Su 10:00-11:00',
+    faculty: '',
   },
   {
     id: 'Hingston Hall (HC)',
@@ -208,6 +232,7 @@ const rawIndoorMaps = [
     geojson: hcGeojson,
     addr: 'Hingston Hall C, Montreal, Quebec H4B, Canada',
     opening_hours: '24/7',
+    faculty: '',
   },
   {
     id: 'Hingston Hall (HB)',
@@ -215,6 +240,7 @@ const rawIndoorMaps = [
     geojson: hbGeojson,
     addr: 'Hingston Hall B, Montreal, Quebec H4B, Canada',
     opening_hours: '24/7',
+    faculty: '',
   },
   {
     id: 'Hingston Hall (HA)',
@@ -222,6 +248,7 @@ const rawIndoorMaps = [
     geojson: haGeojson,
     addr: 'Hingston Hall A, Montreal, Quebec H4B, Canada',
     opening_hours: '24/7',
+    faculty: '',
   },
   {
     id: 'Applied Science Hub (HU)',
@@ -229,6 +256,7 @@ const rawIndoorMaps = [
     geojson: huGeojson,
     addr: '7141 Sherbrooke St W, Montreal, Quebec H4B 1R6',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: '',
   },
   {
     id: 'Richard J. Renaud Science Complex (SP)',
@@ -236,6 +264,8 @@ const rawIndoorMaps = [
     geojson: spGeojson,
     addr: '3475 Rue West Broadway, Montréal, QC H4B 2A7',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty:
+      'Biology, Chemistry and Biochemistry, Health, Kinesiology & Applied Physiology, Physics, Psychology',
   },
   {
     id: 'Centre for Structural and Functional Genomics (GE)',
@@ -243,6 +273,7 @@ const rawIndoorMaps = [
     geojson: geGeojson,
     addr: '7141 Sherbrooke St W, Montreal, Quebec H4B 1R6',
     opening_hours: 'Mo-Fr 09:00-17:00',
+    faculty: '',
   },
 ];
 
@@ -258,6 +289,7 @@ const indoorMaps: IndoorMap[] = rawIndoorMaps.map((rawIndoorMap) => {
     levelsRange: levelsRange,
     addr: rawIndoorMap.addr,
     opening_hours: rawIndoorMap.opening_hours,
+    faculty: rawIndoorMap.faculty,
   };
   const rooms = getAllRooms(indoorMap.geojson);
   for (const room of rooms) {

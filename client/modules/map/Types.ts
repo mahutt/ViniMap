@@ -54,6 +54,7 @@ export interface IndoorMap {
   levelsRange: LevelsRange;
   addr: string;
   opening_hours: string;
+  faculty: string;
 }
 
 /**

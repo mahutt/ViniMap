@@ -162,7 +162,8 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
             isOpen: true,
             type: 'university',
             hours: selectedIndoorMap.opening_hours,
-            description: 'Campus Building',
+            category: 'Campus Building',
+            description: selectedIndoorMap.faculty,
           },
         };
       }
