@@ -262,11 +262,11 @@ export default function TasksScreen() {
                 <TextInput
                   placeholder="min"
                   style={styles.durationInput}
-                  value={taskDuration === 0 ? '' : taskDuration.toString()}
+                  value={taskDuration === null || taskDuration === 0 ? '' : taskDuration.toString()}
                   keyboardType="numeric"
                   onChangeText={(text) => {
                     if (text === '') {
-                      setTaskDuration(0);
+                      setTaskDuration(null);
                     } else {
                       const minutes = parseInt(text, 10);
                       setTaskDuration(isNaN(minutes) ? 0 : minutes);
