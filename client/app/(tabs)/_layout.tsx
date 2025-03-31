@@ -52,15 +52,10 @@ const TabLayout = ({ colorScheme }: { colorScheme: 'light' | 'dark' }) => (
           tabBarButton: HapticTab,
           tabBarBackground: TabBarBackground,
           tabBarStyle: Platform.select({
-            ios: {
-              position: 'absolute',
-              height: 80,
-              paddingBottom: 20,
-            },
             default: {
-              height: 70,
-              paddingTop: 10,
-              paddingBottom: 10,
+              height: 80,
+              paddingTop: 5,
+              paddingBottom: 20,
             },
           }),
           tabBarItemStyle: {

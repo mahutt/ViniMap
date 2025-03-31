@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, Pressable, Text, Animated } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { View, StyleSheet, Text, Animated } from 'react-native';
 import { formatDuration } from '@/modules/map/MapService';
 
 interface BottomFrameProps {
@@ -24,15 +23,6 @@ export function BottomFrame({ selectedMode, modeIcon, durations, distances }: Bo
             </Text>
             {modeIcon}
           </View>
-          <Pressable style={styles.startButton} onPress={() => {}}>
-            <Ionicons
-              name="navigate-outline"
-              size={16}
-              color="white"
-              style={styles.startButtonIcon}
-            />
-            <Text style={styles.startButtonText}>Start</Text>
-          </Pressable>
         </View>
       </View>
     </Animated.View>
@@ -42,15 +32,16 @@ export function BottomFrame({ selectedMode, modeIcon, durations, distances }: Bo
 const styles = StyleSheet.create({
   infoContainer: {
     position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
     zIndex: 10,
     backgroundColor: 'white',
     padding: 30,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    height: '25%',
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    bottom: 0,
   },
   boldText: {
     fontWeight: 'bold',
