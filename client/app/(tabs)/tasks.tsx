@@ -52,7 +52,7 @@ export default function TasksScreen() {
   }, [tasks]);
 
   const addTask = () => {
-    if (!taskName.trim()) return;
+    if (!taskName.trim() || !taskLocation.trim()) return;
 
     const newTask: Task = {
       id: tasks.length.toString(),
