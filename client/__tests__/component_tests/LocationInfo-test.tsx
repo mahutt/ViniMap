@@ -111,8 +111,8 @@ describe('LocationInfo Component', () => {
   });
 
   test('closes the info panel when close button is pressed', () => {
-    const { getByText } = render(<LocationInfo />);
-    const closeButton = getByText('×');
+    const { getByTestId } = render(<LocationInfo />);
+    const closeButton = getByTestId('close-button');
     fireEvent.press(closeButton);
 
     expect(mockSetState).toHaveBeenCalledWith(MapState.Idle);

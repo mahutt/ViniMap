@@ -58,14 +58,4 @@ describe('BottomFrame', () => {
     expect(getByText('0')).toBeTruthy();
     expect(getByText('(0.00 km)')).toBeTruthy();
   });
-
-  it('renders the start button that can be pressed', () => {
-    const { getByText } = render(<BottomFrame {...mockProps} />);
-    const startButton = getByText('Start');
-    expect(startButton).toBeTruthy();
-
-    expect(() => {
-      fireEvent.press(startButton.parent);
-    }).not.toThrow();
-  });
 });

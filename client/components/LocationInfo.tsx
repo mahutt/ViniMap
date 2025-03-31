@@ -29,7 +29,10 @@ export function LocationInfo() {
     <View style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.nameText}>{endLocation?.name}</Text>
-        <TouchableOpacity style={styles.closeButton} onPress={() => setState(MapState.Idle)}>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => setState(MapState.Idle)}
+          testID="close-button">
           <Text style={styles.closeText}>
             <IconSymbol name="xmark" size={15} color="#333" />
           </Text>
