@@ -157,7 +157,14 @@ export const MapProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         return {
           coordinates,
           name: selectedIndoorMap.id,
-          data: { address: selectedIndoorMap.id, isOpen: false },
+          data: {
+            address: selectedIndoorMap.addr,
+            isOpen: true,
+            type: 'university',
+            hours: selectedIndoorMap.opening_hours,
+            category: 'Campus Building',
+            description: selectedIndoorMap.faculty,
+          },
         };
       }
 

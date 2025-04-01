@@ -2,6 +2,7 @@ import { MapState, useMap } from '@/modules/map/MapContext';
 import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { IconSymbol } from './ui/IconSymbol';
 
 const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
   bicycle_rental: 'bicycle-outline',
@@ -11,6 +12,7 @@ const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
   park: 'leaf-outline',
   library: 'book-outline',
   location: 'location-outline',
+  university: 'school-outline',
 };
 
 export function LocationInfo() {
@@ -25,29 +27,44 @@ export function LocationInfo() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.closeButton} onPress={() => setState(MapState.Idle)}>
-        <Text style={styles.closeText}>×</Text>
-      </TouchableOpacity>
-
       <View style={styles.headerContainer}>
-        {isCustomPOI && (
-          <Ionicons name={iconName} size={24} color="#852C3A" style={styles.poiIcon} />
-        )}
         <Text style={styles.nameText}>{endLocation?.name}</Text>
+        <TouchableOpacity
+          style={styles.closeButton}
+          onPress={() => setState(MapState.Idle)}
+          testID="close-button">
+          <Text style={styles.closeText}>
+            <IconSymbol name="xmark" size={15} color="#333" />
+          </Text>
+        </TouchableOpacity>
+      </View>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+        {isCustomPOI && <Ionicons name={iconName} size={16} color="#852C3A" />}
+        {isCustomPOI && endLocation?.data?.category && (
+          <Text style={styles.categoryText}>{endLocation.data.category}</Text>
+        )}
+      </View>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        <Text style={[styles.isOpen, { color: endLocation?.data?.isOpen ? 'green' : 'red' }]}>
+          {endLocation?.data?.isOpen ? 'Open Now' : 'Closed Now'}
+        </Text>
+
+        {isCustomPOI && endLocation?.data?.hours && (
+          <>
+            <Text>•</Text>
+            <Text numberOfLines={1} ellipsizeMode="tail" style={styles.hoursText}>
+              Hours: {endLocation.data.hours}
+            </Text>
+          </>
+        )}
       </View>
 
       <Text style={styles.addressText}>{endLocation?.data?.address}</Text>
 
-      <Text style={[styles.isOpen, { color: endLocation?.data?.isOpen ? 'green' : 'red' }]}>
-        {endLocation?.data?.isOpen ? 'Open Now' : 'Closed Now'}
-      </Text>
-
-      {isCustomPOI && endLocation?.data?.hours && (
-        <Text style={styles.hoursText}>Hours: {endLocation.data.hours}</Text>
-      )}
-
-      {isCustomPOI && endLocation?.data?.description && (
-        <Text style={styles.descriptionText}>{endLocation.data.description}</Text>
+      {endLocation?.data?.description && (
+        <Text style={styles.descriptionText}>{endLocation?.data?.description}</Text>
       )}
 
       <TouchableOpacity style={styles.button} onPress={getDirections}>
@@ -64,10 +81,12 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
-    height: '40%',
+    display: 'flex',
+    flexDirection: 'column',
     backgroundColor: 'white',
     justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
+    gap: 4,
     padding: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
@@ -78,10 +97,19 @@ const styles = StyleSheet.create({
     elevation: 5,
     zIndex: 10,
   },
+  headerContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  nameText: {
+    flex: 1,
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
   closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
     backgroundColor: '#ccc',
     borderRadius: 15,
     width: 30,
@@ -94,13 +122,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     lineHeight: 20,
   },
-  nameText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    marginTop: 10,
-  },
   addressText: {
+    fontSize: 16,
+    color: 'gray',
+  },
+  descriptionText: {
+    marginTop: 8,
     fontSize: 16,
     color: 'gray',
   },
@@ -115,7 +142,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: '5%',
     borderRadius: 25,
     justifyContent: 'center',
-    marginTop: '8%',
+    marginTop: 20,
   },
   icon: {
     marginRight: 10,
@@ -125,24 +152,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
-  headerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  poiIcon: {
-    marginRight: 10,
-  },
   hoursText: {
-    fontSize: 14,
+    flex: 1,
+    fontSize: 16,
     color: '#666',
-    marginBottom: 5,
   },
-  descriptionText: {
-    fontSize: 14,
+  categoryText: {
+    fontSize: 16,
     color: '#333',
-    marginTop: 5,
-    marginBottom: 10,
   },
 });

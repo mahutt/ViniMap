@@ -24,7 +24,7 @@ const CenterLocationButton = () => {
 const styles = StyleSheet.create({
   button: {
     position: 'absolute',
-    bottom: 100,
+    bottom: 36,
     right: 36,
     backgroundColor: '#852C3A',
     zIndex: 100,

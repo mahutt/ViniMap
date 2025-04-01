@@ -96,7 +96,7 @@ describe('PointsOfInterestService', () => {
             address: '123 Test St',
             isOpen: true,
             hours: '9-5',
-            description: 'Test description 1',
+            category: 'Test description 1',
             type: 'restaurant',
           },
         });
@@ -122,7 +122,7 @@ describe('PointsOfInterestService', () => {
         coordinates: [-74.006, 40.7128],
         data: {
           address: '123 Test St',
-          description: 'Test description 1',
+          category: 'Test description 1',
           hours: '9-5',
           isOpen: true,
           type: 'restaurant',
@@ -156,7 +156,7 @@ describe('PointsOfInterestService', () => {
         coordinates: [-74.006, 40.7128],
         data: {
           address: '123 Test St',
-          description: 'Test description 1',
+          category: 'Test description 1',
           hours: '9-5',
           isOpen: true,
           type: 'restaurant',
@@ -181,7 +181,7 @@ describe('PointsOfInterestService', () => {
         coordinates: [-74.016, 40.7138],
         data: {
           address: '456 Test Ave',
-          description: 'Test description 2',
+          category: 'Test description 2',
           hours: '10-6',
           isOpen: true,
           type: 'park',

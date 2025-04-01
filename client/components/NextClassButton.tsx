@@ -42,7 +42,7 @@ const NextClassButton: React.FC<NextClassButtonProps> = ({ scheduleData, onNavig
 const styles = StyleSheet.create({
   nextClassButtonContainer: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 0,
     right: 20,
     zIndex: 10,
   },

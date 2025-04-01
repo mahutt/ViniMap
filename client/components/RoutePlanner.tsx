@@ -191,6 +191,7 @@ const styles = StyleSheet.create({
   inputContainer: {
     position: 'absolute',
     paddingTop: 70,
+    top: 0,
     left: 0,
     right: 0,
     zIndex: 10,

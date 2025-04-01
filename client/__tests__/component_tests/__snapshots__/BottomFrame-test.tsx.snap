@@ -10,10 +10,11 @@ exports[`BottomFrame renders correctly with provided props 1`] = `
       "borderTopLeftRadius": 20,
       "borderTopRightRadius": 20,
       "bottom": 0,
-      "height": "25%",
       "justifyContent": "flex-start",
+      "left": 0,
       "padding": 30,
       "position": "absolute",
+      "right": 0,
       "zIndex": 10,
     }
   }
@@ -74,71 +75,6 @@ exports[`BottomFrame renders correctly with provided props 1`] = `
           name="walk-outline"
           size={24}
         />
-      </View>
-      <View
-        accessibilityState={
-          {
-            "busy": undefined,
-            "checked": undefined,
-            "disabled": undefined,
-            "expanded": undefined,
-            "selected": undefined,
-          }
-        }
-        accessibilityValue={
-          {
-            "max": undefined,
-            "min": undefined,
-            "now": undefined,
-            "text": undefined,
-          }
-        }
-        accessible={true}
-        collapsable={false}
-        focusable={true}
-        onBlur={[Function]}
-        onClick={[Function]}
-        onFocus={[Function]}
-        onResponderGrant={[Function]}
-        onResponderMove={[Function]}
-        onResponderRelease={[Function]}
-        onResponderTerminate={[Function]}
-        onResponderTerminationRequest={[Function]}
-        onStartShouldSetResponder={[Function]}
-        style={
-          {
-            "alignItems": "center",
-            "backgroundColor": "#852C3A",
-            "borderRadius": 25,
-            "flexDirection": "row",
-            "justifyContent": "center",
-            "margin": 20,
-            "paddingHorizontal": "5%",
-            "paddingVertical": "3%",
-          }
-        }
-      >
-        <Ionicons
-          color="white"
-          name="navigate-outline"
-          size={16}
-          style={
-            {
-              "marginRight": 10,
-            }
-          }
-        />
-        <Text
-          style={
-            {
-              "color": "#fff",
-              "fontSize": 18,
-              "fontWeight": "bold",
-            }
-          }
-        >
-          Start
-        </Text>
       </View>
     </View>
   </View>

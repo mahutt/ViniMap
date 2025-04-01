@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 import { Ionicons } from '@expo/vector-icons';
 import BottomFrame from '@/components/ui/RoutePlanner Components/BottomFrame';
 import { formatDuration } from '@/modules/map/MapService';
@@ -57,15 +57,5 @@ describe('BottomFrame', () => {
     const { getByText } = render(<BottomFrame {...propsWithNulls} />);
     expect(getByText('0')).toBeTruthy();
     expect(getByText('(0.00 km)')).toBeTruthy();
-  });
-
-  it('renders the start button that can be pressed', () => {
-    const { getByText } = render(<BottomFrame {...mockProps} />);
-    const startButton = getByText('Start');
-    expect(startButton).toBeTruthy();
-
-    expect(() => {
-      fireEvent.press(startButton.parent);
-    }).not.toThrow();
   });
 });
