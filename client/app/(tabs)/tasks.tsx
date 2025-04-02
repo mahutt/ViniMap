@@ -249,7 +249,8 @@ export default function TasksScreen() {
                   value={taskStartTime}
                   mode="time"
                   display="default"
-                  onChange={(event, selectedTime) => {
+                  style={{ zIndex: 1000 }}
+                  onChange={(_, selectedTime) => {
                     if (selectedTime) {
                       setTaskStartTime(selectedTime);
                     }
