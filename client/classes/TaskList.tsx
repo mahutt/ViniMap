@@ -15,6 +15,10 @@ export class TaskList {
     this.tasks.push(task);
   }
 
+  removeTask(id: string) {
+    this.tasks = this.tasks.filter((task) => task.id !== id);
+  }
+
   save(): TaskListMemento {
     return new TaskListMemento(this.tasks);
   }

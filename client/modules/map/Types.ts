@@ -70,6 +70,9 @@ export interface Task {
   id: string;
   text: string;
   location: Location;
+  startTime: Date;
+  duration: number | null; // In minutes
+  endTime: Date | null;
 }
 
 export interface TaskRouteDescription {
