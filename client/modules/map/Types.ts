@@ -10,6 +10,7 @@ import {
     Coordinates: [longitude, latitude]
 */
 export type Coordinates = Position;
+export type { Position };
 
 export interface Segment {
   id: string;
