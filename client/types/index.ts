@@ -3,8 +3,8 @@ import { Location } from '@/modules/map/Types';
 export interface Task {
   id: string;
   text: string;
-  location: Location;
-  startTime: Date;
+  location: Location | null;
+  startTime: Date | null;
   duration: number | null; // In minutes
 }
 

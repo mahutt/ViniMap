@@ -130,6 +130,8 @@ export default function TasksScreen() {
   };
 
   const generateRoute = async () => {
+    await generateMissingDurations(testTasks);
+
     const currentCoords = userLocation?.coordinates;
 
     let currentLocation: Location;
