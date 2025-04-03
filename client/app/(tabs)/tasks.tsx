@@ -8,7 +8,8 @@ import {
   ScrollView,
   Modal,
 } from 'react-native';
-import { Location, Task } from '@/modules/map/Types';
+
+import { Task, Location } from '@/types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -60,8 +61,6 @@ export default function TasksScreen() {
       location: newTaskLocation,
       startTime: taskStartTime,
       duration: taskDuration,
-      endTime:
-        taskDuration === null ? null : new Date(taskStartTime.getTime() + taskDuration * 60000),
     };
 
     caretaker.current.save();
@@ -153,7 +152,6 @@ export default function TasksScreen() {
       location: currentLocation,
       startTime: new Date(),
       duration: 0,
-      endTime: new Date(),
     };
 
     const tasksForRouting: Task[] = [];
