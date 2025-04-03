@@ -37,7 +37,7 @@ export default function TasksScreen() {
   const [autocompleteVisible, setAutocompleteVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [modifiableTask, setModifiableTask] = useState<Task>();
+  const [modifiableTask, setModifiableTask] = useState<Task | null>(null);
 
   const [newTaskLocation, setNewTaskLocation] = useState<Location>({
     name: '',
@@ -53,7 +53,7 @@ export default function TasksScreen() {
   }, [tasks]);
 
   const addTask = () => {
-    if (!taskName.trim() || !taskLocation.trim()) return;
+    if (!taskName.trim()) return;
 
     const newTask: Task = {
       id: tasks.length.toString(),
@@ -126,7 +126,7 @@ export default function TasksScreen() {
     setModalVisible(false);
     setTaskName('');
     setTaskLocation('');
-    setModifiableTask(undefined);
+    setModifiableTask(null);
   };
 
   const generateRoute = async () => {
@@ -208,7 +208,12 @@ export default function TasksScreen() {
         </ScrollView>
 
         <View style={styles.allInputsContainer}>
-          <TouchableOpacity style={styles.plusButton} onPress={() => setModalVisible(true)}>
+          <TouchableOpacity
+            style={styles.plusButton}
+            onPress={() => {
+              setModifiableTask(null);
+              setModalVisible(true);
+            }}>
             <Text style={styles.plusButtonText}>+</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.pathButton} onPress={generateRoute}>
