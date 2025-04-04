@@ -190,7 +190,7 @@ export default function TasksScreen() {
     const totalDistance = partialRoutes.reduce((acc, route) => acc + route.distance, 0);
     const segments = partialRoutes.flatMap((route) => route.segments);
     for (let i = 0; i < segments.length; i++) {
-      segments[i].id = ('segement' + i).toString();
+      segments[i].id = ('segment-' + i).toString();
     }
     const taskRoute: Route = {
       duration: totalDuration,
