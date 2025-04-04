@@ -170,7 +170,11 @@ export default function TasksScreen() {
     // and with no location at this point are implicitly discarded, as the location
     const coreTasks = coreTaskCandidates
       .filter((task) => task.location !== null)
-      .sort((a, b) => (a.startTime?.getTime() || 0) - (b.startTime?.getTime() || 0));
+      .sort((a, b) => {
+        const aHour = a.startTime?.getHours() || 0;
+        const bHour = b.startTime?.getHours() || 0;
+        return aHour - bHour;
+      });
 
     // const taskRoute = await getMultiRoute(
     //   [userLocation].concat(coreTasks.map((task) => task.location!)),
