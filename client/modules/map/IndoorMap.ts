@@ -317,35 +317,4 @@ const indoorMaps: IndoorMap[] = rawIndoorMaps.map((rawIndoorMap) => {
 
 const campusMapboxIds = indoorMaps.flatMap((indoorMap) => indoorMap.mapboxIds);
 
-const getDisconnectedRoomsForBuilding = (indoorMap: IndoorMap): void => {
-  const disconnectedRooms: string[] = [];
-  for (let i = indoorMap.levelsRange.min; i <= indoorMap.levelsRange.max; i++) {
-    const footways = footwaysForLevel(indoorMap, i);
-    const rooms = indoorMap.geojson.features.filter(
-      (feature) => feature.properties?.ref && feature.properties?.level === String(i)
-    );
-    for (const room of rooms) {
-      const roomPositionOptions = GeojsonService.findLinesIntersect(
-        footways,
-        room as Feature<Polygon>
-      );
-
-      if (roomPositionOptions.length === 0) {
-        console.log(roomPositionOptions.length + ': ' + room.properties?.ref);
-        disconnectedRooms.push(room.properties?.ref);
-      }
-    }
-  }
-  // console.log(disconnectedRooms);
-};
-
-const getAllDisconnectedRooms = (indoorMaps: IndoorMap[]): void => {
-  console.log('--------------All Disconnected Rooms Below---------------');
-  for (const indoorMap of indoorMaps) {
-    getDisconnectedRoomsForBuilding(indoorMap);
-  }
-};
-
-getAllDisconnectedRooms(indoorMaps);
-
 export { indoorMaps, campusMapboxIds };
