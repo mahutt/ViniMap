@@ -65,7 +65,7 @@ const getRoute = async (
     );
   }
 
-  // If the start and end locations are in different different indoor maps
+  // If the start and end locations are in different indoor maps
   if (
     startLocation.data?.level &&
     endLocation.data?.level &&

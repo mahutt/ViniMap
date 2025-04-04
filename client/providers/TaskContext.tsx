@@ -1,4 +1,4 @@
-import { Task, TaskRouteDescription } from '@/modules/map/Types';
+import { Task } from '@/types';
 import { storage } from '@/services/StorageService';
 import { createContext, useState, useContext, ReactNode, useEffect, useMemo } from 'react';
 
@@ -7,8 +7,6 @@ type TaskContextType = {
   setSelectedTasks: (tasks: Task[]) => void;
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
-  taskRouteDescriptions: TaskRouteDescription[];
-  setTaskRouteDescriptions: (taskTimes: TaskRouteDescription[]) => void;
 };
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -25,7 +23,6 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   });
 
   const [selectedTasks, setSelectedTasks] = useState<Task[]>([]);
-  const [taskRouteDescriptions, setTaskRouteDescriptions] = useState<TaskRouteDescription[]>([]);
 
   useEffect(() => {
     try {
@@ -41,10 +38,8 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setSelectedTasks,
       tasks,
       setTasks,
-      taskRouteDescriptions,
-      setTaskRouteDescriptions,
     }),
-    [selectedTasks, tasks, taskRouteDescriptions]
+    [selectedTasks, tasks]
   );
 
   return <TaskContext.Provider value={contextValue}>{children}</TaskContext.Provider>;
