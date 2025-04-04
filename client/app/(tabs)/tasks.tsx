@@ -147,29 +147,29 @@ export default function TasksScreen() {
   };
 
   const generateRoute = async () => {
-    // await generateMissingDurations(testTasks);
-
     if (!userLocation) {
       console.error('User location is not available');
       return;
     }
 
-    const testTasks = tasks;
-    const tasksWithStartTime = testTasks.filter((task) => task.startTime !== null);
-    const tasksWithoutStartTime = testTasks.filter((task) => task.startTime === null);
-    await generateMissingLocations(testTasks, [
+    const testTasks = selectedTasks;
+    const coreTaskCandidates = testTasks.filter((task) => task.startTime !== null);
+    const fillerTasks = testTasks.filter((task) => task.startTime === null);
+
+    const generateDurationsPromise = generateMissingDurations(testTasks);
+    const generateLocationsPromise = generateMissingLocations(testTasks, [
       userLocation.coordinates[0],
       userLocation.coordinates[1],
     ]);
 
-    for (const task of testTasks) {
-      console.log(task.text);
-      console.log(task.location);
-    }
+    // Generating missing durations and locations for all tasks
+    await Promise.all([generateDurationsPromise, generateLocationsPromise]);
 
     // Core tasks have a start time and a location - tasks with a set time
-    // and with no location at this point are implicitly discarded
-    const coreTasks = tasksWithStartTime.filter((task) => task.location !== null);
+    // and with no location at this point are implicitly discarded, as the location
+    const coreTasks = coreTaskCandidates
+      .filter((task) => task.location !== null)
+      .sort((a, b) => (a.startTime?.getTime() || 0) - (b.startTime?.getTime() || 0));
 
     // const taskRoute = await getMultiRoute(
     //   [userLocation].concat(coreTasks.map((task) => task.location!)),
