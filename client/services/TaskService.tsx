@@ -1,56 +1,44 @@
 import { getRoute } from '@/modules/map/MapService';
-import { Route, Task, Segment, TaskRouteDescription } from '@/modules/map/Types';
-import uuid from 'react-native-uuid';
+import { Route, Task, Location } from '@/types';
 
 export class TaskService {
-  static async getOptimalRouteForPaths(
-    listOfTasks: Task[],
-    setTaskTime: (taskTime: TaskRouteDescription[]) => void
-  ): Promise<Route> {
-    if (listOfTasks.length <= 0) {
-      throw new Error('No tasks are selected');
-    }
-    let totalDistance = 0;
-    let totalDuration = 0;
-    let fullSegments: Segment[] = [];
-
-    let taskDescriptions: TaskRouteDescription[] = [];
-
-    for (let i = 0; i < listOfTasks.length - 1; i++) {
-      const startCoordinates = listOfTasks[i].location;
-      const endCoordinates = listOfTasks[i + 1].location;
-
-      try {
-        const route = await getRoute(startCoordinates, endCoordinates, 'walking');
-
-        if (route?.segments?.length) {
-          totalDistance += route.distance;
-          totalDuration += route.duration;
-
-          const taskText = listOfTasks[i + 1].text;
-
-          const taskDescription = {
-            id: uuid.v4().toString(),
-            text: taskText,
+  static async getOptimalRouteForPaths(startLocation: Location, tasks: Task[]): Promise<Route[]> {
+    // Needs to be refactored so that mapbox's api is leveraged to generate the shortest path
+    const routePromises: Promise<Route>[] = [];
+    const iterableTasks: Task[] = [
+      {
+        id: 'user-location',
+        text: 'user-location',
+        location: startLocation,
+        startTime: new Date(),
+        duration: 0,
+      },
+      ...tasks,
+    ];
+    for (let i = 0; i < iterableTasks.length - 1; i++) {
+      routePromises.push(
+        (async () => {
+          const startLocation = iterableTasks[i].location!;
+          const endLocation = iterableTasks[i + 1].location!;
+          const route = await getRoute(startLocation, endLocation, 'walking');
+          if (!route) {
+            throw new Error(
+              `Route not found between ${startLocation.name} and ${endLocation.name}`
+            );
+          }
+          route.segments.forEach((segment) => {
+            segment.taskId = iterableTasks[i + 1].id;
+          });
+          iterableTasks[i + 1].data = {
             time:
               route.duration >= 3600
                 ? (route.duration / 3600).toFixed(2) + ' h'
                 : Math.round(route.duration / 60) + ' min',
           };
-
-          taskDescriptions.push(taskDescription);
-          fullSegments = [...fullSegments, ...route.segments];
-        }
-      } catch (error) {
-        console.error(`Error generating route from task ${i} to ${i + 1}:`, error);
-      }
+          return route;
+        })()
+      );
     }
-
-    setTaskTime(taskDescriptions);
-    return {
-      duration: totalDuration,
-      distance: totalDistance,
-      segments: fullSegments,
-    };
+    return await Promise.all(routePromises);
   }
 }

@@ -5,8 +5,11 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-nati
 
 const TaskFrame = () => {
   const scrollViewRef = useRef<ScrollView>(null);
-  const { taskRouteDescriptions } = useTask();
+  const { selectedTasks } = useTask();
   const { setState } = useMap();
+
+  // Later, I can get the inactive tasks.
+  const activeTasks = selectedTasks.filter((task) => task.data !== undefined);
 
   return (
     <View style={styles.container}>
@@ -18,16 +21,16 @@ const TaskFrame = () => {
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollView}>
-        {taskRouteDescriptions.length === 0 ? (
+        {activeTasks.length === 0 ? (
           <Text style={styles.noTasksText}>No tasks available</Text>
         ) : (
-          taskRouteDescriptions.map((item, index) => (
+          activeTasks.map((item, index) => (
             <View key={item.id} style={styles.textContainer}>
               <View style={styles.circle}>
                 <Text style={styles.circleText}>{index + 1}</Text>
               </View>
               <Text style={styles.text}>
-                {item.text} - <Text style={styles.boldText}>{item.time}</Text>
+                {item.text} - <Text style={styles.boldText}>{item.data?.time}</Text>
               </Text>
             </View>
           ))

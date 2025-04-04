@@ -17,6 +17,7 @@ export interface Segment {
   type: 'solid' | 'dashed';
   steps: Coordinates[];
   level?: Level;
+  taskId?: string;
 }
 
 /**
@@ -65,12 +66,6 @@ export interface Location {
   name: string | null;
   coordinates: Coordinates;
   data?: any;
-}
-
-export interface TaskRouteDescription {
-  id: string;
-  text: string;
-  time: string;
 }
 
 /**
