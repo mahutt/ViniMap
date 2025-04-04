@@ -31,15 +31,18 @@ export default function TasksScreen() {
   const [taskName, setTaskName] = useState('');
   const [taskLocation, setTaskLocation] = useState('');
 
-  const [taskStartTime, setTaskStartTime] = useState(new Date(new Date().setHours(0, 0, 0, 0)));
+  const [taskStartTime, setTaskStartTime] = useState<Date | null>(
+    new Date(new Date().setHours(0, 0, 0, 0))
+  );
   const [taskDuration, setTaskDuration] = useState<number | null>(0);
+  const [showStartTimePicker, setShowStartTimePicker] = useState(false);
 
   const [autocompleteVisible, setAutocompleteVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
   const [modifiableTask, setModifiableTask] = useState<Task | null>(null);
 
-  const [newTaskLocation, setNewTaskLocation] = useState<Location>({
+  const [newTaskLocation, setNewTaskLocation] = useState<Location | null>({
     name: '',
     coordinates: [0, 0],
   });
@@ -70,6 +73,7 @@ export default function TasksScreen() {
 
     setTaskName('');
     setTaskLocation('');
+    setTaskStartTime(null);
   };
 
   const deleteTask = (id: string) => {
@@ -118,7 +122,13 @@ export default function TasksScreen() {
 
     const updatedTasks = tasks.map((task) =>
       task.id === modifiableTask.id
-        ? { ...task, text: taskName, location: { ...task.location, name: taskLocation } }
+        ? {
+            ...task,
+            text: taskName,
+            location: newTaskLocation || { ...task.location, name: taskLocation },
+            startTime: taskStartTime,
+            duration: taskDuration,
+          }
         : task
     );
 
@@ -182,6 +192,19 @@ export default function TasksScreen() {
     setState(MapState.TaskNavigation);
   };
 
+  const toggleStartTimePicker = () => {
+    setShowStartTimePicker(!showStartTimePicker);
+  };
+
+  const clearStartTime = () => {
+    setTaskStartTime(null);
+  };
+
+  const clearLocation = () => {
+    setTaskLocation('');
+    setNewTaskLocation(null);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.tasksWrapper}>
@@ -214,6 +237,10 @@ export default function TasksScreen() {
             style={styles.plusButton}
             onPress={() => {
               setModifiableTask(null);
+              setTaskName('');
+              setTaskLocation('');
+              setTaskStartTime(null);
+              setTaskDuration(null);
               setModalVisible(true);
             }}>
             <Text style={styles.plusButtonText}>+</Text>
@@ -236,31 +263,56 @@ export default function TasksScreen() {
               onChangeText={setTaskName}
             />
 
-            <TextInput
-              placeholder="Location"
-              style={styles.inputText}
-              value={taskLocation}
-              onChangeText={(text) => {
-                setTaskLocation(text);
-                setAutocompleteVisible(text.length > 0);
-              }}
-              onBlur={() => setTimeout(() => setAutocompleteVisible(false), 200)}
-            />
+            <View style={styles.inputWithClearContainer}>
+              <TextInput
+                placeholder="Location"
+                style={[styles.inputText, styles.inputWithClear]}
+                value={taskLocation}
+                onChangeText={(text) => {
+                  setTaskLocation(text);
+                  setAutocompleteVisible(text.length > 0);
+                }}
+                onBlur={() => setTimeout(() => setAutocompleteVisible(false), 200)}
+              />
+              {taskLocation ? (
+                <TouchableOpacity style={styles.clearButton} onPress={clearLocation}>
+                  <Text style={styles.clearButtonText}>✕</Text>
+                </TouchableOpacity>
+              ) : null}
+            </View>
 
             <View style={styles.timeInputs}>
               <View style={styles.timeInputContainer}>
                 <Text>Start Time:</Text>
-                <DateTimePicker
-                  value={taskStartTime}
-                  mode="time"
-                  display="default"
-                  style={{ zIndex: 1000 }}
-                  onChange={(_, selectedTime) => {
-                    if (selectedTime) {
-                      setTaskStartTime(selectedTime);
-                    }
-                  }}
-                />
+                {taskStartTime ? (
+                  <View style={styles.timeDisplayContainer}>
+                    <Text>
+                      {taskStartTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </Text>
+                    <TouchableOpacity onPress={clearStartTime} style={styles.timeClearButton}>
+                      <Text style={styles.clearButtonText}>✕</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : showStartTimePicker ? (
+                  <View style={styles.timeInputContainer}>
+                    <DateTimePicker
+                      value={taskStartTime ?? new Date()}
+                      mode="time"
+                      display="default"
+                      style={{ zIndex: 1000 }}
+                      onChange={(_, selectedTime) => {
+                        setShowStartTimePicker(false);
+                        if (selectedTime) {
+                          setTaskStartTime(selectedTime);
+                        }
+                      }}
+                    />
+                  </View>
+                ) : (
+                  <TouchableOpacity onPress={toggleStartTimePicker} style={styles.addTimeButton}>
+                    <Text style={styles.addTimeButtonText}>Set Time</Text>
+                  </TouchableOpacity>
+                )}
               </View>
 
               <View style={styles.timeInputContainer}>
@@ -431,5 +483,47 @@ const styles = StyleSheet.create({
   timeInputs: {
     width: '100%',
     flexDirection: 'row',
+  },
+  timeDisplayContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f0f0f0',
+    padding: 8,
+    borderRadius: 8,
+    marginTop: 5,
+  },
+  timeClearButton: {
+    marginLeft: 8,
+    alignItems: 'center',
+  },
+  addTimeButton: {
+    backgroundColor: '#f0f0f0',
+    padding: 8,
+    borderRadius: 8,
+    marginTop: 5,
+  },
+  addTimeButtonText: {
+    color: '#852C3A',
+  },
+  inputWithClear: {
+    paddingRight: 40,
+  },
+  inputWithClearContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    position: 'relative',
+  },
+  clearButton: {
+    position: 'absolute',
+    right: 10,
+    top: 5,
+    height: 30,
+    width: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  clearButtonText: {
+    fontSize: 16,
+    color: '#852C3A',
   },
 });
