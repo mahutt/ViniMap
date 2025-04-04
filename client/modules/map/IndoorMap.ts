@@ -340,7 +340,7 @@ const getDisconnectedRoomsForBuilding = (indoorMap: IndoorMap): void => {
 };
 
 const getAllDisconnectedRooms = (indoorMaps: IndoorMap[]): void => {
-  console.log('--------------All Disconnected Rooms---------------');
+  console.log('--------------All Disconnected Rooms Below---------------');
   for (const indoorMap of indoorMaps) {
     getDisconnectedRoomsForBuilding(indoorMap);
   }
