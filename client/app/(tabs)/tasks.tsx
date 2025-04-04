@@ -38,9 +38,7 @@ export default function TasksScreen() {
   const [taskName, setTaskName] = useState('');
   const [taskLocation, setTaskLocation] = useState('');
 
-  const [taskStartTime, setTaskStartTime] = useState<Date | null>(
-    new Date(new Date().setHours(0, 0, 0, 0))
-  );
+  const [taskStartTime, setTaskStartTime] = useState<Date | null>(null);
   const [taskDuration, setTaskDuration] = useState<number | null>(0);
   const [showStartTimePicker, setShowStartTimePicker] = useState(false);
 
@@ -121,6 +119,8 @@ export default function TasksScreen() {
     setTaskLocation(tempTask.location?.name ?? '');
     setNewTaskLocation(tempTask.location);
 
+    setTaskStartTime(tempTask.startTime);
+    setTaskDuration(tempTask.duration);
     setModalVisible(true);
   };
 
@@ -143,6 +143,7 @@ export default function TasksScreen() {
     setModalVisible(false);
     setTaskName('');
     setTaskLocation('');
+
     setModifiableTask(null);
   };
 

@@ -14,8 +14,20 @@ const TaskContext = createContext<TaskContextType | undefined>(undefined);
 export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [tasks, setTasks] = useState<Task[]>(() => {
     try {
-      const savedTasks = storage.getString('allTasks');
-      return savedTasks ? JSON.parse(savedTasks) : [];
+      const savedTasksString = storage.getString('allTasks');
+
+      if (!savedTasksString) {
+        return [];
+      }
+
+      const savedTasks: Task[] = JSON.parse(savedTasksString);
+      savedTasks.map((task) => {
+        if (task.startTime) {
+          task.startTime = new Date(task.startTime);
+        }
+        return task;
+      });
+      return savedTasks;
     } catch (error) {
       console.error('Error loading tasks from storage:', error);
       return [];
