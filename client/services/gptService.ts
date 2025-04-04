@@ -60,6 +60,8 @@ export const generateMissingDurations = async (tasks: Task[]): Promise<void> => 
 };
 
 export const generateMissingLocations = async (tasks: Task[], bias: Position): Promise<void> => {
+  // Improvement: Average the locations of tasks with locations (together with the bias)
+  // and use that as the bias for the tasks without locations.
   const locationPromises = tasks
     .filter((task) => task.location === null)
     .map(async (task) => {
