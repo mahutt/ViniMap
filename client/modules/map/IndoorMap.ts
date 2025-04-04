@@ -33,7 +33,6 @@ import geGeojson from '@/assets/geojson/ge.json';
 import GeojsonService from '@/services/GeojsonService';
 import type { Feature, Polygon } from 'geojson';
 import { center } from '@turf/turf';
-import { footwaysForLevel } from './IndoorMapUtils';
 
 const getAllRooms = (geojson: IndoorMapGeoJSON): Feature<Polygon>[] => {
   const rooms: Feature<Polygon>[] = [];
