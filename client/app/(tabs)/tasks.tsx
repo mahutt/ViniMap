@@ -9,7 +9,7 @@ import {
   Modal,
 } from 'react-native';
 
-import { Task, Location } from '@/types';
+import { Task, Location, Route } from '@/types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -20,10 +20,17 @@ import { MapState, useMap } from '@/modules/map/MapContext';
 import { TaskService } from '@/services/TaskService';
 import { useRouter } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import {
+  generateMissingDurations,
+  generateMissingLocations,
+  inferLocation,
+} from '@/services/gptService';
+import { getRoute } from '@/modules/map/MapService';
+import CoordinateService from '@/services/CoordinateService';
 
 export default function TasksScreen() {
-  const { selectedTasks, setSelectedTasks, tasks, setTasks, setTaskRouteDescriptions } = useTask();
-  const { setState, setRoute, flyTo, userLocation } = useMap();
+  const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
+  const { setState, setRoute, flyTo, userLocation, cameraRef } = useMap();
 
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
@@ -101,7 +108,6 @@ export default function TasksScreen() {
   };
 
   const editTask = (id: string) => {
-    console.log('Trying to modify');
     const tempTask = tasks.find((task) => task.id === id);
 
     if (!tempTask) {
@@ -112,7 +118,8 @@ export default function TasksScreen() {
     setModifiableTask(tempTask);
 
     setTaskName(tempTask.text);
-    setTaskLocation(tempTask.location.name ?? '');
+    setTaskLocation(tempTask.location?.name ?? '');
+    setNewTaskLocation(tempTask.location);
 
     setModalVisible(true);
   };
@@ -125,7 +132,7 @@ export default function TasksScreen() {
         ? {
             ...task,
             text: taskName,
-            location: newTaskLocation || { ...task.location, name: taskLocation },
+            location: newTaskLocation,
             startTime: taskStartTime,
             duration: taskDuration,
           }
@@ -140,52 +147,70 @@ export default function TasksScreen() {
   };
 
   const generateRoute = async () => {
-    await generateMissingDurations(testTasks);
+    // await generateMissingDurations(testTasks);
 
-    const currentCoords = userLocation?.coordinates;
-
-    let currentLocation: Location;
-
-    if (currentCoords) {
-      currentLocation = {
-        name: 'Current Location',
-        coordinates: currentCoords,
-      };
-    } else {
-      currentLocation = {
-        name: 'Default Location: Concordia Hall Building',
-        coordinates: [-73.57845, 45.497042],
-      };
+    if (!userLocation) {
+      console.error('User location is not available');
+      return;
     }
 
-    const currentLocationTask: Task = {
-      id: '1000',
-      text: 'First Tasks',
-      location: currentLocation,
-      startTime: new Date(),
-      duration: 0,
+    const testTasks = tasks;
+    const tasksWithStartTime = testTasks.filter((task) => task.startTime !== null);
+    const tasksWithoutStartTime = testTasks.filter((task) => task.startTime === null);
+    await generateMissingLocations(testTasks, [
+      userLocation.coordinates[0],
+      userLocation.coordinates[1],
+    ]);
+
+    for (const task of testTasks) {
+      console.log(task.text);
+      console.log(task.location);
+    }
+
+    // Core tasks have a start time and a location - tasks with a set time
+    // and with no location at this point are implicitly discarded
+    const coreTasks = tasksWithStartTime.filter((task) => task.location !== null);
+
+    // const taskRoute = await getMultiRoute(
+    //   [userLocation].concat(coreTasks.map((task) => task.location!)),
+    //   'walking'
+    // );
+
+    const partialRoutes = await TaskService.getOptimalRouteForPaths(userLocation, coreTasks);
+
+    // should be removed eventually
+    setSelectedTasks(coreTasks);
+
+    const totalDuration = partialRoutes.reduce((acc, route) => acc + route.duration, 0);
+    const totalDistance = partialRoutes.reduce((acc, route) => acc + route.distance, 0);
+    const segments = partialRoutes.flatMap((route) => route.segments);
+    for (let i = 0; i < segments.length; i++) {
+      segments[i].id = ('segement' + i).toString();
+    }
+    const taskRoute: Route = {
+      duration: totalDuration,
+      distance: totalDistance,
+      segments: segments,
     };
 
-    const tasksForRouting: Task[] = [];
-
-    tasksForRouting.push(currentLocationTask);
-    tasksForRouting.push(...selectedTasks);
-
-    let newRoute = await TaskService.getOptimalRouteForPaths(
-      tasksForRouting,
-      setTaskRouteDescriptions
-    );
-
-    for (let i = 0; i < newRoute.segments.length; i++) {
-      newRoute.segments[i].id = ('segement' + i).toString();
+    if (!taskRoute) {
+      console.error('Failed to generate route');
+      return;
     }
 
-    setRoute(newRoute);
+    setRoute(taskRoute);
     router.push('/');
 
     setTimeout(() => {
-      if (userLocation) {
-        flyTo(userLocation.coordinates, 17);
+      // This is duplicate code that should be refactored
+      if (taskRoute.segments.length > 0 && cameraRef.current) {
+        const bounds = CoordinateService.calculateRouteCoordinateBounds(taskRoute);
+        cameraRef.current.fitBounds(
+          bounds.ne,
+          bounds.sw,
+          50, // padding
+          1500 // animation duration
+        );
       }
     }, 50);
 
