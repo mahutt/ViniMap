@@ -20,12 +20,6 @@ import { MapState, useMap } from '@/modules/map/MapContext';
 import { TaskService } from '@/services/TaskService';
 import { useRouter } from 'expo-router';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {
-  generateMissingDurations,
-  generateMissingLocations,
-  inferLocation,
-} from '@/services/gptService';
-import { getRoute } from '@/modules/map/MapService';
 import CoordinateService from '@/services/CoordinateService';
 
 export default function TasksScreen() {
@@ -154,147 +148,11 @@ export default function TasksScreen() {
     }
 
     const testTasks = selectedTasks;
-    const coreTaskCandidates = testTasks.filter((task) => task.startTime !== null);
-    let fillerTasks = testTasks.filter((task) => task.startTime === null);
 
-    const generateDurationsPromise = generateMissingDurations(testTasks);
-    const generateLocationsPromise = generateMissingLocations(testTasks, [
-      userLocation.coordinates[0],
-      userLocation.coordinates[1],
-    ]);
-
-    // Generating missing durations and locations for all tasks
-    await Promise.all([generateDurationsPromise, generateLocationsPromise]);
-
-    // Core tasks have a start time and a location - tasks with a set time
-    // and with no location at this point are implicitly discarded
-    let coreTasks = coreTaskCandidates
-      .filter((task) => task.location !== null)
-      .sort((a, b) => {
-        const aHour = a.startTime?.getHours() || 0;
-        const bHour = b.startTime?.getHours() || 0;
-        return aHour - bHour;
-      });
-
-    // const taskRoute = await getMultiRoute(
-    //   [userLocation].concat(coreTasks.map((task) => task.location!)),
-    //   'walking'
-    // );
-
-    let partialRoutes = await TaskService.getOptimalRouteForPaths(userLocation, coreTasks);
-
-    // START FILLING IN FILLER TASKS
-    const updatedPartialRoutes: Route[] = [];
-    const updatedCoreTasks: Task[] = [];
-    const usedFillerTaskIds = new Set<string>();
-    fillerTasks = fillerTasks.filter((task) => task.location !== null); // drop filler tasks with no location
-    for (let i = 0; i < partialRoutes.length; i++) {
-      const startTask =
-        i === 0 ? { duration: 0, startTime: new Date(), location: userLocation } : coreTasks[i - 1];
-      const endTask = coreTasks[i];
-      const route = partialRoutes[i];
-
-      const maximumFreeTime =
-        (endTask.startTime?.getTime() ?? 0) -
-        ((startTask.startTime?.getTime() ?? 0) + (startTask.duration ?? 0) * 60 * 1000) -
-        route.duration * 1000;
-
-      // Obtain all combinations of filler tasks that fit within the maximum free time
-      const unusedFillerTasks = fillerTasks.filter((task) => !usedFillerTaskIds.has(task.id));
-      const feasibleFillerTaskCombinations: Task[][] = [];
-      for (const taskCombination of TaskService.allCombinations<Task>(unusedFillerTasks)) {
-        if (taskCombination.length === 0) continue;
-        const totalDuration = taskCombination.reduce((acc, task) => acc + (task.duration ?? 0), 0);
-        if (totalDuration * 60 * 1000 <= maximumFreeTime) {
-          feasibleFillerTaskCombinations.push(taskCombination);
-        }
-      }
-
-      // Order each combination to minimize travel distance
-      const orderedFillerTaskCombinations: { distance: number; tasks: Task[] }[] =
-        feasibleFillerTaskCombinations.map((combination) =>
-          TaskService.travelDistanceAwareReOrder(
-            combination,
-            startTask.location!,
-            endTask.location!
-          )
-        );
-
-      // Order the combinations themselves by task count (decreasing) and travel distance (increasing)
-      const orderedFillerTaskCombinationsSorted = orderedFillerTaskCombinations.sort((a, b) => {
-        const taskCountDiff = b.tasks.length - a.tasks.length; // descending
-        if (taskCountDiff === 0) {
-          return a.distance - b.distance; // ascending
-        }
-        return taskCountDiff;
-      });
-
-      let routeWasUpdated = false;
-      for (const permutation of orderedFillerTaskCombinationsSorted) {
-        const permutationRoutes = await TaskService.getOptimalRouteForPaths(startTask.location!, [
-          ...permutation.tasks,
-          endTask,
-        ]);
-
-        // Units: seconds
-        const permutationRouteDuration = permutationRoutes.reduce(
-          (acc, route) => acc + route.duration,
-          0
-        );
-
-        // Units: Minutes
-        const permutationTasksDuration = permutation.tasks.reduce(
-          (acc, task) => acc + (task.duration ?? 0),
-          0
-        );
-        const totalDurationSeconds = permutationRouteDuration + permutationTasksDuration * 60;
-        if (totalDurationSeconds * 1000 <= maximumFreeTime && permutationRoutes.length > 0) {
-          // Add permutationRoutes to the updated partialRoutes
-          updatedPartialRoutes.push(...permutationRoutes);
-          updatedCoreTasks.push(...permutation.tasks, endTask);
-          routeWasUpdated = true;
-
-          // Mark the tasks as used
-          for (const task of permutation.tasks) {
-            usedFillerTaskIds.add(task.id);
-          }
-
-          break;
-        }
-      }
-      // Don't squeeze in any filler tasks:
-      if (!routeWasUpdated) {
-        updatedPartialRoutes.push(route);
-        updatedCoreTasks.push(endTask);
-      }
-    }
-    partialRoutes = updatedPartialRoutes;
-    coreTasks = updatedCoreTasks;
-    // END FILLING IN FILLER TASKS
-
-    // START USE REST OF FILLER TASKS
-    const remainingFillerTasks = fillerTasks.filter((task) => !usedFillerTaskIds.has(task.id));
-    if (remainingFillerTasks.length > 0) {
-      const remainingRoute = await TaskService.getOptimalRouteForPaths(
-        coreTasks[coreTasks.length - 1].location!,
-        remainingFillerTasks
-      );
-      partialRoutes.push(...remainingRoute);
-      coreTasks.push(...remainingFillerTasks);
-    }
-    // END USE REST OF FILLER TASKS
-
-    const totalDuration = partialRoutes.reduce((acc, route) => acc + route.duration, 0);
-    const totalDistance = partialRoutes.reduce((acc, route) => acc + route.distance, 0);
-    const segments = partialRoutes.flatMap((route) => route.segments);
-    for (let i = 0; i < segments.length; i++) {
-      segments[i].id = ('segment-' + i).toString();
-    }
-    const taskRoute: Route = {
-      duration: totalDuration,
-      distance: totalDistance,
-      segments: segments,
-    };
+    const { tasks: coreTasks, route: taskRoute } = await TaskService.generateTaskRoute(
+      userLocation,
+      testTasks
+    );
 
     // should be removed eventually
     setSelectedTasks(coreTasks);
