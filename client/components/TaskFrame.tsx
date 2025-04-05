@@ -1,16 +1,18 @@
 import { useMap, MapState } from '@/modules/map/MapContext';
 import { useTask } from '@/providers/TaskContext';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { TaskService } from '@/services/TaskService';
 
 const TaskFrame = () => {
   const scrollViewRef = useRef<ScrollView>(null);
-  const { selectedTasks } = useTask();
-  const { setState } = useMap();
-  const [completedTasks, setCompletedTasks] = useState<string[]>([]);
+  const { selectedTasks, markTask, setSelectedTasks } = useTask();
+  const { setState, setRoute, userLocation } = useMap();
 
   // Later, I can get the inactive tasks.
   const activeTasks = selectedTasks.filter((task) => task.data !== undefined);
+
+  const [reloadRoute, setReloadRoute] = React.useState(false);
 
   const formatDuration = (minutes: number | null) => {
     if (!minutes) return '';
@@ -26,12 +28,21 @@ const TaskFrame = () => {
     }
   };
 
-  // need to fix
+  useEffect(() => {
+    if (!reloadRoute) return;
+    if (!userLocation) return;
+    const tasksToRoute = selectedTasks.filter((task) => !task.completed);
+    TaskService.generateTaskRoute(userLocation, tasksToRoute).then(({ route, tasks }) => {
+      setRoute(route);
+      setReloadRoute(false);
+    });
+  }, [selectedTasks, reloadRoute, userLocation, setRoute, setSelectedTasks]);
+
   const handleTaskComplete = (taskId: string) => {
-    if (completedTasks.includes(taskId)) {
-      setCompletedTasks(completedTasks.filter((id) => id !== taskId));
-    } else {
-      setCompletedTasks([...completedTasks, taskId]);
+    const task = selectedTasks.find((task) => task.id === taskId);
+    if (task) {
+      markTask(taskId, !task.completed);
+      setReloadRoute(true);
     }
   };
 
@@ -41,7 +52,7 @@ const TaskFrame = () => {
     }
 
     const taskItems = activeTasks.map((item, index) => {
-      const isCompleted = completedTasks.includes(item.id);
+      const isCompleted = item.completed;
 
       return (
         <View key={item.id} style={styles.textContainer}>
