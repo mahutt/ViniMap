@@ -64,7 +64,7 @@ const TaskFrame = () => {
             <View style={styles.taskDetails}>
               <Text style={[styles.timeText, isCompleted && styles.completedText]}>
                 <Text style={[styles.boldText, isCompleted && styles.completedText]}>
-                  {item.data?.time}
+                  {item.data?.time + ' away'}
                 </Text>
               </Text>
               <Text style={[styles.durationText, isCompleted && styles.completedText]}>
