@@ -11,9 +11,6 @@ export class TaskService {
     route: Route;
     tasks: Task[];
   }> {
-    const coreTaskCandidates = tasks.filter((task) => task.startTime !== null);
-    let fillerTasks = tasks.filter((task) => task.startTime === null);
-
     const generateDurationsPromise = generateMissingDurations(tasks);
     const generateLocationsPromise = generateMissingLocations(tasks, [
       startLocation.coordinates[0],
@@ -25,6 +22,8 @@ export class TaskService {
 
     // Core tasks have a start time and a location - tasks with a set time
     // and with no location at this point are implicitly discarded
+    const coreTaskCandidates = tasks.filter((task) => task.startTime !== null);
+    let fillerTasks = tasks.filter((task) => task.startTime === null && task.location !== null);
     let coreTasks = coreTaskCandidates
       .filter((task) => task.location !== null)
       .sort((a, b) => {
