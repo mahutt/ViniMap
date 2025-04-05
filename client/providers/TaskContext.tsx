@@ -5,7 +5,7 @@ import { createContext, useState, useContext, ReactNode, useEffect, useMemo } fr
 type TaskContextType = {
   selectedTasks: Task[];
   setSelectedTasks: (tasks: Task[]) => void;
-  markTaskAsCompleted: (taskId: string) => void;
+  markTask: (taskId: string, completionState: boolean) => void;
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 };
@@ -45,9 +45,9 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [tasks]);
 
-  const markTaskAsCompleted = (taskId: string) => {
+  const markTask = (taskId: string, completionState: boolean) => {
     setSelectedTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === taskId ? { ...task, completed: true } : task))
+      prevTasks.map((task) => (task.id === taskId ? { ...task, completed: completionState } : task))
     );
   };
 
@@ -55,7 +55,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     () => ({
       selectedTasks,
       setSelectedTasks,
-      markTaskAsCompleted,
+      markTask,
       tasks,
       setTasks,
     }),
