@@ -129,8 +129,10 @@ export class TaskService {
     // START USE REST OF FILLER TASKS
     const remainingFillerTasks = fillerTasks.filter((task) => !usedFillerTaskIds.has(task.id));
     if (remainingFillerTasks.length > 0) {
+      const fromLocation =
+        coreTasks.length > 0 ? coreTasks[coreTasks.length - 1].location! : startLocation;
       const remainingRoute = await TaskService.getOptimalRouteForPaths(
-        coreTasks[coreTasks.length - 1].location!,
+        fromLocation,
         remainingFillerTasks
       );
       partialRoutes.push(...remainingRoute);
