@@ -5,6 +5,7 @@ import { createContext, useState, useContext, ReactNode, useEffect, useMemo } fr
 type TaskContextType = {
   selectedTasks: Task[];
   setSelectedTasks: (tasks: Task[]) => void;
+  markTaskAsCompleted: (taskId: string) => void;
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
 };
@@ -44,10 +45,17 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [tasks]);
 
+  const markTaskAsCompleted = (taskId: string) => {
+    setSelectedTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === taskId ? { ...task, completed: true } : task))
+    );
+  };
+
   const contextValue = useMemo(
     () => ({
       selectedTasks,
       setSelectedTasks,
+      markTaskAsCompleted,
       tasks,
       setTasks,
     }),

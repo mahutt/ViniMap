@@ -5,6 +5,7 @@ export interface Task {
   text: string;
   location: Location | null;
   startTime: Date | null;
+  completed?: boolean;
   duration: number | null; // In minutes
   data?: {
     time: string;
