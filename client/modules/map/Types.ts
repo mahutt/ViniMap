@@ -10,12 +10,14 @@ import {
     Coordinates: [longitude, latitude]
 */
 export type Coordinates = Position;
+export type { Position };
 
 export interface Segment {
   id: string;
   type: 'solid' | 'dashed';
   steps: Coordinates[];
   level?: Level;
+  taskId?: string;
 }
 
 /**
@@ -64,21 +66,6 @@ export interface Location {
   name: string | null;
   coordinates: Coordinates;
   data?: any;
-}
-
-export interface Task {
-  id: string;
-  text: string;
-  location: Location;
-  startTime: Date;
-  duration: number | null; // In minutes
-  endTime: Date | null;
-}
-
-export interface TaskRouteDescription {
-  id: string;
-  text: string;
-  time: string;
 }
 
 /**

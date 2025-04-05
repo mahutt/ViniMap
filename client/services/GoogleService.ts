@@ -2,6 +2,7 @@ import { storage } from './StorageService';
 import { Alert } from 'react-native';
 import * as WebBrowser from 'expo-web-browser';
 import * as Google from 'expo-auth-session/providers/google';
+import { Position, Location } from '@/types';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -227,6 +228,35 @@ class GoogleService {
       console.error('Error getting calendar data:', error);
       return {};
     }
+  }
+
+  async findPlace(query: string, bias: Position): Promise<Location | null> {
+    const baseUrl = 'https://maps.googleapis.com/maps/api/place/findplacefromtext/json';
+
+    const params = new URLSearchParams({
+      fields: 'formatted_address,name,rating,opening_hours,geometry',
+      input: query,
+      inputtype: 'textquery',
+      locationbias: `circle:2000@${bias[1]},${bias[0]}`,
+      key: GOOGLE_API_KEY,
+    });
+
+    const response = await fetch(`${baseUrl}?${params}`);
+    const options = (await response.json()).candidates;
+    if (!options || options.length === 0) {
+      return null;
+    }
+    const place = options[0];
+    const location: Location = {
+      name: place.name,
+      coordinates: [place.geometry.location.lng, place.geometry.location.lat],
+      data: {
+        addr: place.formatted_address,
+        rating: place.rating,
+        opening_hours: place.opening_hours,
+      },
+    };
+    return location;
   }
 }
 

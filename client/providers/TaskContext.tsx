@@ -1,14 +1,13 @@
-import { Task, TaskRouteDescription } from '@/modules/map/Types';
+import { Task } from '@/types';
 import { storage } from '@/services/StorageService';
 import { createContext, useState, useContext, ReactNode, useEffect, useMemo } from 'react';
 
 type TaskContextType = {
   selectedTasks: Task[];
   setSelectedTasks: (tasks: Task[]) => void;
+  markTask: (taskId: string, completionState: boolean) => void;
   tasks: Task[];
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>;
-  taskRouteDescriptions: TaskRouteDescription[];
-  setTaskRouteDescriptions: (taskTimes: TaskRouteDescription[]) => void;
 };
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -16,8 +15,19 @@ const TaskContext = createContext<TaskContextType | undefined>(undefined);
 export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [tasks, setTasks] = useState<Task[]>(() => {
     try {
-      const savedTasks = storage.getString('allTasks');
-      return savedTasks ? JSON.parse(savedTasks) : [];
+      const savedTasksString = storage.getString('allTasks');
+
+      if (!savedTasksString) {
+        return [];
+      }
+
+      const savedTasks: Task[] = JSON.parse(savedTasksString);
+      savedTasks.forEach((task) => {
+        if (task.startTime) {
+          task.startTime = new Date(task.startTime);
+        }
+      });
+      return savedTasks;
     } catch (error) {
       console.error('Error loading tasks from storage:', error);
       return [];
@@ -25,7 +35,6 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   });
 
   const [selectedTasks, setSelectedTasks] = useState<Task[]>([]);
-  const [taskRouteDescriptions, setTaskRouteDescriptions] = useState<TaskRouteDescription[]>([]);
 
   useEffect(() => {
     try {
@@ -35,16 +44,21 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, [tasks]);
 
+  const markTask = (taskId: string, completionState: boolean) => {
+    setSelectedTasks((prevTasks) =>
+      prevTasks.map((task) => (task.id === taskId ? { ...task, completed: completionState } : task))
+    );
+  };
+
   const contextValue = useMemo(
     () => ({
       selectedTasks,
       setSelectedTasks,
+      markTask,
       tasks,
       setTasks,
-      taskRouteDescriptions,
-      setTaskRouteDescriptions,
     }),
-    [selectedTasks, tasks, taskRouteDescriptions]
+    [selectedTasks, tasks]
   );
 
   return <TaskContext.Provider value={contextValue}>{children}</TaskContext.Provider>;
