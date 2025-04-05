@@ -1,4 +1,4 @@
-import type { Feature, LineString, Polygon, GeoJSON } from 'geojson';
+import type { Feature, LineString } from 'geojson';
 import tunnelGeojson from '@/assets/geojson/tunnel.json';
 import { IndoorMap, Route } from './Types';
 
