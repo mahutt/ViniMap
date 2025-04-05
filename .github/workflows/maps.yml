@@ -1,0 +1,27 @@
+name: Indoor Map Integrity Check
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+jobs:
+  verify-map:
+    name: Verify Map Integrity
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Set up Node
+        uses: actions/setup-node@v4
+      - name: Install dependencies
+        run: npm install
+      - name: Compile TypeScript
+        run: npx tsc scripts/VerifyMapIntegrity.ts --esModuleInterop --resolveJsonModule --module commonjs --target es2020
+      - name: Run map integrity verification
+        run: node scripts/VerifyMapIntegrity.js
