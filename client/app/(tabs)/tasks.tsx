@@ -272,6 +272,18 @@ export default function TasksScreen() {
     coreTasks = updatedCoreTasks;
     // END FILLING IN FILLER TASKS
 
+    // START USE REST OF FILLER TASKS
+    const remainingFillerTasks = fillerTasks.filter((task) => !usedFillerTaskIds.has(task.id));
+    if (remainingFillerTasks.length > 0) {
+      const remainingRoute = await TaskService.getOptimalRouteForPaths(
+        coreTasks[coreTasks.length - 1].location!,
+        remainingFillerTasks
+      );
+      partialRoutes.push(...remainingRoute);
+      coreTasks.push(...remainingFillerTasks);
+    }
+    // END USE REST OF FILLER TASKS
+
     const totalDuration = partialRoutes.reduce((acc, route) => acc + route.duration, 0);
     const totalDistance = partialRoutes.reduce((acc, route) => acc + route.distance, 0);
     const segments = partialRoutes.flatMap((route) => route.segments);
