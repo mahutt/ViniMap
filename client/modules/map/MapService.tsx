@@ -230,7 +230,7 @@ const getIndoorIndoorRoute = async (
   const endEntrance: Feature<Point> = endEntrances[0];
 
   const startIndoorRoute = getIndoorRoute(startIndoorMap, startFeature, startEntrance, indoorMode);
-  const endIndoorRoute = getIndoorRoute(endIndoorMap, endEntrance, endFeature, indoorMode);
+  const endIndoorRoute = getIndoorRoute(endIndoorMap, endFeature, endEntrance, indoorMode);
   const outdoorRoute = await getRouteFromMapbox(
     startEntrance.geometry.coordinates,
     endEntrance.geometry.coordinates,
