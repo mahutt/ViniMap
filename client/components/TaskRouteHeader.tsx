@@ -1,12 +1,15 @@
 import { useMap, MapState } from '@/modules/map/MapContext';
 import { useTask } from '@/providers/TaskContext';
 import { Ionicons } from '@expo/vector-icons';
+import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Alert } from 'react-native';
 
 export default function TaskRouteHeader() {
   const { selectedTasks } = useTask();
   const { state, setState } = useMap();
+
+  const [done, setDone] = useState(false);
 
   if (state !== MapState.TaskNavigation || selectedTasks.length === 0) {
     return;
@@ -15,6 +18,8 @@ export default function TaskRouteHeader() {
   const targetTask = selectedTasks.find((task) => !task.completed);
   const taskNumber = selectedTasks.findIndex((task) => !task.completed) + 1;
   if (!targetTask) {
+    if (done) return;
+    setDone(true);
     Alert.alert('🎉 All done!', "You'll be brought back to the map screen", [
       {
         text: 'OK',
