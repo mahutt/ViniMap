@@ -27,8 +27,8 @@ export class TaskService {
     let coreTasks = coreTaskCandidates
       .filter((task) => task.location !== null)
       .sort((a, b) => {
-        const aHour = a.startTime?.getHours() || 0;
-        const bHour = b.startTime?.getHours() || 0;
+        const aHour = a.startTime?.getHours() ?? 0;
+        const bHour = b.startTime?.getHours() ?? 0;
         return aHour - bHour;
       });
 
@@ -74,13 +74,9 @@ export class TaskService {
         );
 
       // Order the combinations themselves by task count (decreasing) and travel distance (increasing)
-      const orderedFillerTaskCombinationsSorted = orderedFillerTaskCombinations.sort((a, b) => {
-        const taskCountDiff = b.tasks.length - a.tasks.length; // descending
-        if (taskCountDiff === 0) {
-          return a.distance - b.distance; // ascending
-        }
-        return taskCountDiff;
-      });
+      const orderedFillerTaskCombinationsSorted = TaskService.orderTaskCombinations(
+        orderedFillerTaskCombinations
+      );
 
       let routeWasUpdated = false;
       for (const permutation of orderedFillerTaskCombinationsSorted) {
@@ -355,5 +351,22 @@ export class TaskService {
     }
 
     return totalDistance;
+  }
+
+  /**
+   * Helper function to order task combinations based on task count and distance
+   * @param combinations - Array of combinations to be ordered
+   * @returns Ordered array of combinations based on task count and distance
+   */
+  private static orderTaskCombinations(combinations: { distance: number; tasks: Task[] }[]) {
+    const combinationsCopy = [...combinations];
+    combinationsCopy.sort((a, b) => {
+      const taskCountDiff = b.tasks.length - a.tasks.length; // descending
+      if (taskCountDiff === 0) {
+        return a.distance - b.distance; // ascending
+      }
+      return taskCountDiff;
+    });
+    return combinationsCopy;
   }
 }

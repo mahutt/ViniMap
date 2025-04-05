@@ -1,15 +1,10 @@
 import { TaskService } from '@/services/TaskService';
 import { getRoute } from '@/modules/map/MapService';
 import { Task } from '@/types';
-import uuid from 'react-native-uuid';
 
 // Mocks
 jest.mock('@/modules/map/MapService', () => ({
   getRoute: jest.fn(),
-}));
-
-jest.mock('react-native-uuid', () => ({
-  v4: jest.fn(),
 }));
 
 describe('TaskService', () => {
@@ -70,9 +65,6 @@ describe('TaskService', () => {
         segments: [{ id: 'segment2' }],
       };
 
-      // Mock UUIDs
-      (uuid.v4 as jest.Mock).mockReturnValueOnce('uuid-task-2').mockReturnValueOnce('uuid-task-3');
-
       (getRoute as jest.Mock).mockImplementation((start, end) => {
         if (
           JSON.stringify(start.coordinates) === JSON.stringify([1, 1]) &&
@@ -129,8 +121,6 @@ describe('TaskService', () => {
         segments: [{ id: 'longSegment' }],
       };
 
-      (uuid.v4 as jest.Mock).mockReturnValueOnce('uuid-task-2');
-
       (getRoute as jest.Mock).mockResolvedValue(mockRoute);
 
       await TaskService.getOptimalRouteForPaths({ name: 'Task 1', coordinates: [1, 1] }, tasks);
@@ -164,8 +154,6 @@ describe('TaskService', () => {
           duration: null,
         },
       ];
-
-      (uuid.v4 as jest.Mock).mockReturnValueOnce('uuid-task-2');
 
       (getRoute as jest.Mock)
         .mockResolvedValueOnce({

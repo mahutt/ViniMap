@@ -22,11 +22,10 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
 
       const savedTasks: Task[] = JSON.parse(savedTasksString);
-      savedTasks.map((task) => {
+      savedTasks.forEach((task) => {
         if (task.startTime) {
           task.startTime = new Date(task.startTime);
         }
-        return task;
       });
       return savedTasks;
     } catch (error) {
