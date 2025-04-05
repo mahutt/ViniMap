@@ -1,4 +1,3 @@
-// client/__tests__/service_tests/gptService-test.tsx
 
 import {
     inferDuration,
