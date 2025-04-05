@@ -1,22 +1,16 @@
-import { IndoorMap } from '@/modules/map/Types';
-import { indoorMaps } from '@/modules/map/IndoorMap';
-import { footwaysForLevel } from '@/modules/map/IndoorMapUtils';
-import GeojsonService from '@/services/GeojsonService';
-import type { Feature, Polygon } from 'geojson';
+const { indoorMaps } = require('../modules/map/IndoorMap');
+const { footwaysForLevel } = require('../modules/map/IndoorMapUtils');
+const GeojsonService = require('../services/GeojsonService').default;
 
-const getDisconnectedRoomsForBuilding = (indoorMap: IndoorMap): string[] => {
-  const disconnectedRooms: string[] = [];
+const getDisconnectedRoomsForBuilding = (indoorMap) => {
+  const disconnectedRooms = [];
   for (let i = indoorMap.levelsRange.min; i <= indoorMap.levelsRange.max; i++) {
     const footways = footwaysForLevel(indoorMap, i);
     const rooms = indoorMap.geojson.features.filter(
       (feature) => feature.properties?.ref && feature.properties?.level === String(i)
     );
     for (const room of rooms) {
-      const roomPositionOptions = GeojsonService.findLinesIntersect(
-        footways,
-        room as Feature<Polygon>
-      );
-
+      const roomPositionOptions = GeojsonService.findLinesIntersect(footways, room);
       if (roomPositionOptions.length === 0) {
         disconnectedRooms.push(room.properties?.ref);
       }
@@ -25,13 +19,12 @@ const getDisconnectedRoomsForBuilding = (indoorMap: IndoorMap): string[] => {
   return disconnectedRooms;
 };
 
-const verifyMapIntegrity = (indoorMaps: IndoorMap[]): number => {
-  const allDisconnectedRooms: string[] = [];
+const verifyMapIntegrity = (indoorMaps) => {
+  const allDisconnectedRooms = [];
   for (const indoorMap of indoorMaps) {
     const currentDisconnectedRooms = getDisconnectedRoomsForBuilding(indoorMap);
     allDisconnectedRooms.push(...currentDisconnectedRooms);
   }
-
   if (allDisconnectedRooms.length > 0) {
     console.log('--------------All Disconnected Rooms Below---------------');
     for (const room of allDisconnectedRooms) {
