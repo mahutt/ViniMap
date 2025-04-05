@@ -18,7 +18,7 @@ const TaskFrame = () => {
     if (!minutes) return '';
 
     if (minutes < 60) {
-      return `[${minutes} min]`;
+      return `Duration: ${minutes} min`;
     } else {
       const hours = Math.floor(minutes / 60);
       const remainingMinutes = minutes % 60;
