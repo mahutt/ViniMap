@@ -263,6 +263,16 @@ export default function TasksScreen() {
                   <Text style={styles.clearButtonText}>✕</Text>
                 </TouchableOpacity>
               ) : null}
+              {autocompleteVisible && (
+                <LocationsAutocomplete
+                  query={taskLocation}
+                  callback={async (location) => {
+                    setTaskLocation(location.name ?? 'Un-named Location');
+                    setNewTaskLocation(location);
+                    setAutocompleteVisible(false);
+                  }}
+                />
+              )}
             </View>
 
             <View style={styles.timeInputs}>
@@ -317,19 +327,6 @@ export default function TasksScreen() {
                 />
               </View>
             </View>
-
-            {autocompleteVisible && (
-              <View style={{ width: '100%' }}>
-                <LocationsAutocomplete
-                  query={taskLocation}
-                  callback={async (location) => {
-                    setTaskLocation(location.name ?? 'Un-named Location');
-                    setNewTaskLocation(location);
-                    setAutocompleteVisible(false);
-                  }}
-                />
-              </View>
-            )}
 
             <TouchableOpacity
               style={styles.addButton}
