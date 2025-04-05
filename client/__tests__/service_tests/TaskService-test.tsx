@@ -1,6 +1,6 @@
 import { TaskService } from '@/services/TaskService';
 import { getRoute } from '@/modules/map/MapService';
-import { Task } from '@/modules/map/Types';
+import { Task } from '@/types';
 import uuid from 'react-native-uuid';
 
 // Mocks
@@ -21,9 +21,15 @@ describe('TaskService', () => {
 
   describe('getOptimalRouteForPaths', () => {
     it('should throw an error when no tasks are provided', async () => {
-      await expect(TaskService.getOptimalRouteForPaths([], mockSetTaskTime)).rejects.toThrow(
-        'No tasks are selected'
-      );
+      await expect(
+        TaskService.getOptimalRouteForPaths(
+          {
+            name: 'Task 1',
+            coordinates: [1, 1],
+          },
+          []
+        )
+      ).rejects.toThrow('No tasks are selected');
       expect(mockSetTaskTime).not.toHaveBeenCalled();
     });
 
@@ -33,16 +39,22 @@ describe('TaskService', () => {
           id: 'task-1',
           location: { name: 'Task 1', coordinates: [1, 1] },
           text: 'Task 1',
+          startTime: null,
+          duration: null,
         },
         {
           id: 'task-2',
           location: { name: 'Task 2', coordinates: [2, 2] },
           text: 'Task 2',
+          startTime: null,
+          duration: null,
         },
         {
           id: 'task-3',
           location: { name: 'Task 3', coordinates: [3, 3] },
           text: 'Task 3',
+          startTime: null,
+          duration: null,
         },
       ];
 
@@ -76,7 +88,10 @@ describe('TaskService', () => {
         return Promise.reject(new Error('Unexpected route'));
       });
 
-      const result = await TaskService.getOptimalRouteForPaths(tasks, mockSetTaskTime);
+      const result = await TaskService.getOptimalRouteForPaths(
+        { name: 'Task 1', coordinates: [1, 1] },
+        tasks
+      );
 
       expect(result).toEqual({
         distance: 300,
@@ -96,11 +111,15 @@ describe('TaskService', () => {
           id: 'task-1',
           location: { name: 'Task 1', coordinates: [1, 1] },
           text: 'Task 1',
+          startTime: null,
+          duration: null,
         },
         {
           id: 'task-2',
           location: { name: 'Task 2', coordinates: [2, 2] },
           text: 'Task 2',
+          startTime: null,
+          duration: null,
         },
       ];
 
@@ -114,7 +133,7 @@ describe('TaskService', () => {
 
       (getRoute as jest.Mock).mockResolvedValue(mockRoute);
 
-      await TaskService.getOptimalRouteForPaths(tasks, mockSetTaskTime);
+      await TaskService.getOptimalRouteForPaths({ name: 'Task 1', coordinates: [1, 1] }, tasks);
 
       expect(mockSetTaskTime).toHaveBeenCalledWith([
         { id: 'uuid-task-2', text: 'Task 2', time: '2.50 h' },
@@ -127,16 +146,22 @@ describe('TaskService', () => {
           id: 'task-1',
           location: { name: 'Task 1', coordinates: [1, 1] },
           text: 'Task 1',
+          startTime: null,
+          duration: null,
         },
         {
           id: 'task-2',
           location: { name: 'Task 2', coordinates: [2, 2] },
           text: 'Task 2',
+          startTime: null,
+          duration: null,
         },
         {
           id: 'task-3',
           location: { name: 'Task 3', coordinates: [3, 3] },
           text: 'Task 3',
+          startTime: null,
+          duration: null,
         },
       ];
 
@@ -152,7 +177,13 @@ describe('TaskService', () => {
 
       jest.spyOn(console, 'error').mockImplementation();
 
-      const result = await TaskService.getOptimalRouteForPaths(tasks, mockSetTaskTime);
+      const result = await TaskService.getOptimalRouteForPaths(
+        {
+          name: 'Task 1',
+          coordinates: [1, 1],
+        },
+        tasks
+      );
 
       expect(console.error).toHaveBeenCalledWith(
         'Error generating route from task 1 to 2:',
