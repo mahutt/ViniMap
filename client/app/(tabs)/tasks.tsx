@@ -167,7 +167,7 @@ export default function TasksScreen() {
     await Promise.all([generateDurationsPromise, generateLocationsPromise]);
 
     // Core tasks have a start time and a location - tasks with a set time
-    // and with no location at this point are implicitly discarded, as the location
+    // and with no location at this point are implicitly discarded
     let coreTasks = coreTaskCandidates
       .filter((task) => task.location !== null)
       .sort((a, b) => {
