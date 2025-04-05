@@ -1,6 +1,6 @@
 import { getRoute } from '@/modules/map/MapService';
 import { calculateEuclideanDistance } from '@/modules/map/MapUtils';
-import { Route, Task, Location, Position } from '@/types';
+import { Route, Task, Location } from '@/types';
 import { generateMissingDurations, generateMissingLocations } from './gptService';
 
 export class TaskService {

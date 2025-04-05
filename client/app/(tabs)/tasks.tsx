@@ -9,7 +9,7 @@ import {
   Modal,
 } from 'react-native';
 
-import { Task, Location, Route } from '@/types';
+import { Task, Location } from '@/types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
@@ -24,7 +24,7 @@ import CoordinateService from '@/services/CoordinateService';
 
 export default function TasksScreen() {
   const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
-  const { setState, setRoute, flyTo, userLocation, cameraRef } = useMap();
+  const { setState, setRoute, userLocation, cameraRef } = useMap();
 
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
