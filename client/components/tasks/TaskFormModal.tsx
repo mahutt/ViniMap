@@ -26,7 +26,7 @@ export default function TaskFormModal({
   setNewTaskLocation,
   autocompleteVisible,
   setAutocompleteVisible,
-}: {
+}: Readonly<{
   modalVisible: boolean;
   setModalVisible: (visible: boolean) => void;
   taskName: string;
@@ -45,11 +45,10 @@ export default function TaskFormModal({
   addTask: () => void;
   modifiableTask?: Task | null;
   saveTaskChanges?: () => void;
-  newTaskLocation?: Location | null;
   setNewTaskLocation: (location: Location | null) => void;
   autocompleteVisible?: boolean;
   setAutocompleteVisible: (visible: boolean) => void;
-}) {
+}>) {
   return (
     <Modal visible={modalVisible} transparent={true} animationType="fade">
       <View style={styles.modalContainer}>

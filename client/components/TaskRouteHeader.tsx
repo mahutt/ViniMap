@@ -2,8 +2,7 @@ import { useMap, MapState } from '@/modules/map/MapContext';
 import { useTask } from '@/providers/TaskContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
 export default function TaskRouteHeader() {
   const { selectedTasks } = useTask();

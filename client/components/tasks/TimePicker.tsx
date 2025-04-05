@@ -8,14 +8,14 @@ export default function TimePicker({
   setShowStartTimePicker,
   toggleStartTimePicker,
   clearStartTime,
-}: {
+}: Readonly<{
   taskStartTime: Date | null;
   setTaskStartTime: (time: Date | null) => void;
   showStartTimePicker: boolean;
   setShowStartTimePicker: (show: boolean) => void;
   toggleStartTimePicker: () => void;
   clearStartTime: () => void;
-}) {
+}>) {
   if (taskStartTime) {
     return (
       <View style={styles.timeDisplayContainer}>

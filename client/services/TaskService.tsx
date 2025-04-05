@@ -27,8 +27,8 @@ export class TaskService {
     let coreTasks = coreTaskCandidates
       .filter((task) => task.location !== null)
       .sort((a, b) => {
-        const aHour = a.startTime?.getHours() || 0;
-        const bHour = b.startTime?.getHours() || 0;
+        const aHour = a.startTime?.getHours() ?? 0;
+        const bHour = b.startTime?.getHours() ?? 0;
         return aHour - bHour;
       });
 
