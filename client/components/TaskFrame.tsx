@@ -1,15 +1,76 @@
 import { useMap, MapState } from '@/modules/map/MapContext';
 import { useTask } from '@/providers/TaskContext';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 
 const TaskFrame = () => {
   const scrollViewRef = useRef<ScrollView>(null);
   const { selectedTasks } = useTask();
   const { setState } = useMap();
+  const [completedTasks, setCompletedTasks] = useState<string[]>([]);
 
   // Later, I can get the inactive tasks.
   const activeTasks = selectedTasks.filter((task) => task.data !== undefined);
+
+  const formatDuration = (minutes: number | null) => {
+    if (!minutes) return '';
+
+    if (minutes < 60) {
+      return `[${minutes} min]`;
+    } else {
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      return remainingMinutes > 0
+        ? `Duration: ${hours}h ${remainingMinutes}m`
+        : `Duration: ${hours}h`;
+    }
+  };
+
+  // need to fix
+  const handleTaskComplete = (taskId: string) => {
+    if (completedTasks.includes(taskId)) {
+      setCompletedTasks(completedTasks.filter((id) => id !== taskId));
+    } else {
+      setCompletedTasks([...completedTasks, taskId]);
+    }
+  };
+
+  const showTasks = () => {
+    if (activeTasks.length === 0) {
+      return <Text style={styles.noTasksText}>No tasks available</Text>;
+    }
+
+    const taskItems = activeTasks.map((item, index) => {
+      const isCompleted = completedTasks.includes(item.id);
+
+      return (
+        <View key={item.id} style={styles.textContainer}>
+          <View style={styles.circle}>
+            <Text style={styles.circleText}>{index + 1}</Text>
+          </View>
+          <View style={styles.taskContent}>
+            <Text style={[styles.text, isCompleted && styles.completedText]}>{item.text}</Text>
+            <View style={styles.taskDetails}>
+              <Text style={[styles.timeText, isCompleted && styles.completedText]}>
+                <Text style={[styles.boldText, isCompleted && styles.completedText]}>
+                  {item.data?.time}
+                </Text>
+              </Text>
+              <Text style={[styles.durationText, isCompleted && styles.completedText]}>
+                {formatDuration(item.duration)}
+              </Text>
+            </View>
+          </View>
+          <TouchableOpacity
+            style={[styles.checkmark, isCompleted && styles.checkmarkCompleted]}
+            onPress={() => handleTaskComplete(item.id)}
+          />
+        </View>
+      );
+    });
+
+    return taskItems;
+  };
 
   return (
     <View style={styles.container}>
@@ -21,20 +82,7 @@ const TaskFrame = () => {
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollView}>
-        {activeTasks.length === 0 ? (
-          <Text style={styles.noTasksText}>No tasks available</Text>
-        ) : (
-          activeTasks.map((item, index) => (
-            <View key={item.id} style={styles.textContainer}>
-              <View style={styles.circle}>
-                <Text style={styles.circleText}>{index + 1}</Text>
-              </View>
-              <Text style={styles.text}>
-                {item.text} - <Text style={styles.boldText}>{item.data?.time}</Text>
-              </Text>
-            </View>
-          ))
-        )}
+        {showTasks()}
       </ScrollView>
     </View>
   );
@@ -105,6 +153,41 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
     color: 'gray',
+  },
+  taskDetails: {
+    flexDirection: 'row',
+    marginTop: 4,
+  },
+  timeText: {
+    fontSize: 14,
+    color: '#555',
+    marginRight: 10,
+  },
+  durationText: {
+    fontSize: 14,
+    color: '#555',
+    fontStyle: 'italic',
+  },
+  checkmark: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginLeft: 10,
+    backgroundColor: 'white',
+  },
+  checkmarkCompleted: {
+    backgroundColor: '#000',
+  },
+  completedText: {
+    textDecorationLine: 'line-through',
+    color: '#888',
+  },
+  taskContent: {
+    flex: 1,
   },
 });
 
