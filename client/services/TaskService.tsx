@@ -135,6 +135,7 @@ export class TaskService {
     }
     // END USE REST OF FILLER TASKS
 
+    const useTunnel = partialRoutes.some((route) => route.tunnel);
     const totalDuration = partialRoutes.reduce((acc, route) => acc + route.duration, 0);
     const totalDistance = partialRoutes.reduce((acc, route) => acc + route.distance, 0);
     const segments = partialRoutes.flatMap((route) => route.segments);
@@ -145,6 +146,7 @@ export class TaskService {
       duration: totalDuration,
       distance: totalDistance,
       segments: segments,
+      tunnel: useTunnel,
     };
 
     return {
