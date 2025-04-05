@@ -44,7 +44,7 @@ export const inferLocation = async (
   // const prompt = `Please find a location for this task based on the task title: "${taskTitle}".
   // For example, "Get coffee" should return "Coffee Shop" and "Go to the library" should return "Library".`;
   // const args = await performToolCall(prompt, OPENAI_TOOLS.queryLocation);
-  //   const query = (args?.location as string) ?? taskTitle;
+  // const query = (args?.location as string) ?? taskTitle;
   const query = taskTitle;
   return await googleService.findPlace(query, bias);
 };

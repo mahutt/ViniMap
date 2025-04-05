@@ -9907,6 +9907,21 @@
                     45.49518780972
                 ]
             }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "level": "-2",
+                "entrance": "tunnel",
+                "door": "hinged"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -73.57860726621,
+                    45.49554150648
+                ]
+            }
         }
     ]
 }

@@ -20990,6 +20990,45 @@
                     45.49753839603
                 ]
             }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "highway": "footway",
+                "level": "1"
+            },
+            "geometry": {
+                "type": "LineString",
+                "coordinates": [
+                    [
+                        -73.57858870246,
+                        45.49707815174
+                    ],
+                    [
+                        -73.57856426305,
+                        45.49713558852
+                    ],
+                    [
+                        -73.57867085018,
+                        45.49718484354
+                    ]
+                ]
+            }
+        },
+        {
+            "type": "Feature",
+            "properties": {
+                "door": "hinged",
+                "entrance": "tunnel",
+                "level": "1"
+            },
+            "geometry": {
+                "type": "Point",
+                "coordinates": [
+                    -73.57858870246,
+                    45.49707815174
+                ]
+            }
         }
     ]
 }

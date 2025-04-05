@@ -12,6 +12,7 @@ import DijkstraService from '@/services/DijkstrasService';
 import type { Feature, Point, Polygon, Position } from 'geojson';
 import GeojsonHelper from '@/services/GeojsonService';
 import { default as turfDistance } from '@turf/distance';
+import { shouldUseTunnel, tunnelRoute } from './UndergroundTunnel';
 
 const MAPBOX_ACCESS_TOKEN = process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 let GOOGLE_API_KEY = process.env.EXPO_PUBLIC_GOOGLEMAPS_API_KEY as string;
@@ -226,16 +227,28 @@ const getIndoorIndoorRoute = async (
   // If either building does not have an entrance, we cannot find a route
   if (startEntrances.length === 0 || endEntrances.length === 0) return null;
 
-  const startEntrance: Feature<Point> = startEntrances[0];
-  const endEntrance: Feature<Point> = endEntrances[0];
+  let startEntrance: Feature<Point>;
+  let endEntrance: Feature<Point>;
+  // If the indoor maps are Hall and JMSB, we need to find the route through the tunnel
+  const useTunnel = shouldUseTunnel(startIndoorMap, endIndoorMap);
+
+  startEntrance = useTunnel
+    ? startEntrances.find((e) => e.properties?.entrance === 'tunnel') ?? startEntrances[0]
+    : startEntrances[0];
+
+  endEntrance = useTunnel
+    ? endEntrances.find((e) => e.properties?.entrance === 'tunnel') ?? endEntrances[0]
+    : endEntrances[0];
 
   const startIndoorRoute = getIndoorRoute(startIndoorMap, startFeature, startEntrance, indoorMode);
   const endIndoorRoute = getIndoorRoute(endIndoorMap, endFeature, endEntrance, indoorMode);
-  const outdoorRoute = await getRouteFromMapbox(
-    startEntrance.geometry.coordinates,
-    endEntrance.geometry.coordinates,
-    mode
-  );
+  const outdoorRoute = useTunnel
+    ? tunnelRoute
+    : await getRouteFromMapbox(
+        startEntrance.geometry.coordinates,
+        endEntrance.geometry.coordinates,
+        mode
+      );
 
   if (!startIndoorRoute || !endIndoorRoute || !outdoorRoute) return null;
 
@@ -248,6 +261,7 @@ const getIndoorIndoorRoute = async (
     duration: startIndoorRoute.duration + outdoorRoute.duration + endIndoorRoute.duration,
     distance: startIndoorRoute.distance + outdoorRoute.distance + endIndoorRoute.distance,
     segments: [...startIndoorRoute.segments, ...outdoorRoute.segments, ...endIndoorRoute.segments],
+    tunnel: useTunnel,
   };
 };
 

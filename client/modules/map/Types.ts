@@ -30,6 +30,7 @@ export interface Route {
   duration: number;
   distance: number;
   segments: Segment[];
+  tunnel?: boolean;
 }
 
 export interface LayerSpecification {
