@@ -91,7 +91,7 @@ describe('CoordinateService', () => {
 
   it('should return fallback coordinates when location retrieval times out', async () => {
     // Timeout for the test
-    jest.setTimeout(10000); 
+    jest.setTimeout(10000);
     // Mocking the permission request as granted
     mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
       status: 'granted' as Location.PermissionStatus,
@@ -99,29 +99,20 @@ describe('CoordinateService', () => {
       expires: 'never',
       canAskAgain: true,
     });
-  
+
     // Mock the location retrieval to simulate a timeout
-    mockedLocation.getCurrentPositionAsync.mockImplementation(() =>
-      new Promise((_, reject) => {
-        // Simulating a delay that exceeds the test timeout
-        setTimeout(() => reject(new Error('Location retrieval timed out')), 6000);  // 6 seconds for the timeout
-      })
+    mockedLocation.getCurrentPositionAsync.mockImplementation(
+      () =>
+        new Promise((_, reject) => {
+          // Simulating a delay that exceeds the test timeout
+          setTimeout(() => reject(new Error('Location retrieval timed out')), 6000); // 6 seconds for the timeout
+        })
     );
-  
+
     // Testing the behavior when the timeout occurs
-    try {
-      const coordinates = await CoordinateService.getCurrentCoordinates();
-      expect(coordinates).toEqual([-73.577913, 45.494836]);  
-    } catch (error: unknown) {  
-      if (error instanceof Error) {
-        expect(error.message).toBe('Location retrieval timed out'); 
-      } else {
-        throw error; 
-      }
-    }
+    const coordinates = await CoordinateService.getCurrentCoordinates();
+    expect(coordinates).toEqual([-73.577913, 45.494836]);
   });
-  
-  
 
   it('should handle timeout for location retrieval', async () => {
     mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
