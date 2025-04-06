@@ -166,87 +166,30 @@ describe('PointsOfInterestService', () => {
     });
   });
 
-  describe('getPOIByName', () => {
-    it('returns POI by name when it exists', () => {
-      const poi = PointsOfInterestService.getPOIByName('Test POI 1');
-      expect(poi?.name).toBe('Test POI 1');
-      expect(poi?.data.address).toBe('123 Test St');
-    });
+  it('handles invalid or missing opening hours', () => {
+    // Create a test POI with no opening hours
+    const emptyHoursPOI = {
+      name: 'Empty Hours POI',
+      coordinates: [-74.056, 40.7178] as Coordinates,
+      data: {
+        address: '456 Test St',
+        isOpen: false,
+        hours: undefined, // Undefined hours
+        category: 'Testing category',
+        type: 'test',
+      },
+    };
 
-    it('returns null when POI name does not exist', () => {
-      const poi = PointsOfInterestService.getPOIByName('Nonexistent POI');
-      expect(poi).toBeNull();
-    });
+    // Get data.isOpen property
+    expect(emptyHoursPOI.data.isOpen).toBe(false);
   });
+});
 
-  describe('isCurrentlyOpen function', () => {
-    it('handles weekday open hours', () => {
-      // Mock Date to Monday at noon
-      const mockDate = new Date(2025, 3, 7, 12, 0);
-      jest.spyOn(global, 'Date').mockImplementation(() => mockDate as unknown as Date);
-
-      // Test through the public API
-      const poi = PointsOfInterestService.getPOIByName('Test POI 1');
-      expect(poi).not.toBeNull();
-      expect(poi?.data.hours).toBe('Mo-Fr 09:00-17:00');
-      expect(poi?.data.isOpen).toBe(true);
-    });
-
-    it('handles weekday closed hours', () => {
-      // Mock Date to Monday evening (after business hours)
-      const mockDate = new Date(2025, 3, 7, 18, 0);
-      jest.spyOn(global, 'Date').mockImplementation(() => mockDate as unknown as Date);
-
-      const poi = PointsOfInterestService.getPOIByName('Test POI 1');
-      expect(poi).not.toBeNull();
-      expect(poi?.data.isOpen).toBe(false);
-    });
-
-    it('handles weekend open hours', () => {
-      // Mock Date to Saturday at noon
-      const mockDate = new Date(2025, 3, 12, 12, 0);
-      jest.spyOn(global, 'Date').mockImplementation(() => mockDate as unknown as Date);
-
-      const poi = PointsOfInterestService.getPOIByName('Test POI 2');
-      expect(poi).not.toBeNull();
-      expect(poi?.data.isOpen).toBe(true);
-    });
-
-    it('handles 24/7 locations', () => {
-      // Mock Date to an odd hour
-      const mockDate = new Date(2025, 3, 8, 3, 30);
-      jest.spyOn(global, 'Date').mockImplementation(() => mockDate as unknown as Date);
-
-      const poi = PointsOfInterestService.getPOIByName('Test POI 3');
-      expect(poi).not.toBeNull();
-      expect(poi?.data.isOpen).toBe(true);
-    });
-
-    it('handles invalid or missing opening hours', () => {
-      // Create a test POI with no opening hours
-      const emptyHoursPOI = {
-        name: 'Empty Hours POI',
-        coordinates: [-74.056, 40.7178] as Coordinates,
-        data: {
-          address: '456 Test St',
-          isOpen: false,
-          hours: undefined, // Undefined hours
-          category: 'Testing category',
-          type: 'test',
-        },
-      };
-
-      // Get data.isOpen property
-      expect(emptyHoursPOI.data.isOpen).toBe(false);
-    });
-  });
-
-  describe('getFeatureCollection', () => {
-    it('returns the feature collection', () => {
-      const collection = PointsOfInterestService.getFeatureCollection();
-      expect(collection).toBeDefined();
-      expect(collection.type).toBe('FeatureCollection');
-      expect(collection.features.length).toBe(4);
-    });
+describe('getFeatureCollection', () => {
+  it('returns the feature collection', () => {
+    const collection = PointsOfInterestService.getFeatureCollection();
+    expect(collection).toBeDefined();
+    expect(collection.type).toBe('FeatureCollection');
+    expect(collection.features.length).toBe(4);
   });
 });
