@@ -71,7 +71,7 @@ export const generateMissingLocations = async (tasks: Task[], bias: Position): P
   await Promise.all(locationPromises);
 };
 
-const OPENAI_TOOLS = {
+export const OPENAI_TOOLS = {
   setDuration: {
     type: 'function',
     name: 'set_task_duration',
