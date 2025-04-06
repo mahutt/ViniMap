@@ -295,16 +295,30 @@ export class TaskService {
       currentLocation = nextTask.location!;
     }
 
+    TaskService.optimizeReOrder(result, startLocation, endLocation);
+
+    let totalDistance = TaskService.calculateTotalDistance([
+      startLocation,
+      ...result.map((task) => task.location!),
+      endLocation,
+    ]);
+    return {
+      distance: totalDistance,
+      tasks: result,
+    };
+  }
+
+  private static optimizeReOrder(tasks: Task[], startLocation: Location, endLocation: Location) {
     // Check if we should swap any adjacent tasks to optimize for the final destination
     // This is an optional optimization to see if we can improve the route
     let improved = true;
-    while (improved && result.length > 1) {
+    while (improved && tasks.length > 1) {
       improved = false;
 
-      for (let i = 0; i < result.length - 1; i++) {
+      for (let i = 0; i < tasks.length - 1; i++) {
         const currentOrder = [
           ...(i === 0 ? [startLocation] : []),
-          ...result.map((task) => task.location),
+          ...tasks.map((task) => task.location),
           endLocation,
         ];
 
@@ -318,22 +332,12 @@ export class TaskService {
 
         // If swapping improves the total distance, swap tasks in the result
         if (swappedDistance < currentDistance) {
-          [result[i], result[i + 1]] = [result[i + 1], result[i]];
+          [tasks[i], tasks[i + 1]] = [tasks[i + 1], tasks[i]];
           improved = true;
           break;
         }
       }
     }
-
-    let totalDistance = TaskService.calculateTotalDistance([
-      startLocation,
-      ...result.map((task) => task.location!),
-      endLocation,
-    ]);
-    return {
-      distance: totalDistance,
-      tasks: result,
-    };
   }
 
   /**
