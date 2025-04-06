@@ -64,6 +64,7 @@ export default function TasksScreen() {
     setTaskName('');
     setTaskLocation('');
     setTaskStartTime(null);
+    setTaskDuration(null);
   };
 
   const deleteTask = (id: string) => {
