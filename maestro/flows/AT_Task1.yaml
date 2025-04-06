@@ -1,0 +1,37 @@
+appId: com.anonymous.client
+---
+- tapOn: 'Tasks, tab, 3 of 4'
+- tapOn: '+'
+- tapOn: 'Task name'
+- inputText: 'borrow book from library'
+- tapOn: 'Location'
+- inputText: 'Webst'
+- tapOn: 'Webster Library'
+- tapOn: 'min'
+- inputText: 10
+- tapOn: Add Task
+- tapOn: 'Close'
+- tapOn: '+'
+- tapOn: 'Task name'
+- inputText: 'make photocopies for notes'
+- tapOn: 'Location'
+- inputText: 'H8'
+- tapOn: 'H801'
+- tapOn: 'min'
+- inputText: 5
+- tapOn:
+    point: '50%,50%'
+- tapOn: 'Add Task'
+- tapOn: 'Close'
+- tapOn:
+    point: '15%,23%'
+- tapOn:
+    point: '15%,31%'
+- tapOn: 'Generate Path'
+- tapOn:
+    point: '92%,71%'
+- tapOn:
+    point: '92%,76%'
+- tapOn:
+    text: '0%'
+    index: 3
