@@ -34,7 +34,56 @@ export class TaskService {
 
     let partialRoutes = await TaskService.getOptimalRouteForPaths(startLocation, coreTasks);
 
-    // START FILLING IN FILLER TASKS
+    const { updatedRoutes, updatedTasks, usedFillerTaskIds } =
+      await TaskService.attemptFillerTaskPlacement(
+        fillerTasks,
+        coreTasks,
+        partialRoutes,
+        startLocation
+      );
+    partialRoutes = updatedRoutes;
+    coreTasks = updatedTasks;
+
+    // START USE REST OF FILLER TASKS
+    const remainingFillerTasks = fillerTasks.filter((task) => !usedFillerTaskIds.has(task.id));
+    if (remainingFillerTasks.length > 0) {
+      const fromLocation =
+        coreTasks.length > 0 ? coreTasks[coreTasks.length - 1].location! : startLocation;
+      const remainingRoute = await TaskService.getOptimalRouteForPaths(
+        fromLocation,
+        remainingFillerTasks
+      );
+      partialRoutes.push(...remainingRoute);
+      coreTasks.push(...remainingFillerTasks);
+    }
+    // END USE REST OF FILLER TASKS
+
+    const useTunnel = partialRoutes.some((route) => route.tunnel);
+    const totalDuration = partialRoutes.reduce((acc, route) => acc + route.duration, 0);
+    const totalDistance = partialRoutes.reduce((acc, route) => acc + route.distance, 0);
+    const segments = partialRoutes.flatMap((route) => route.segments);
+    for (let i = 0; i < segments.length; i++) {
+      segments[i].id = ('segment-' + i).toString();
+    }
+    const taskRoute: Route = {
+      duration: totalDuration,
+      distance: totalDistance,
+      segments: segments,
+      tunnel: useTunnel,
+    };
+
+    return {
+      route: taskRoute,
+      tasks: coreTasks,
+    };
+  }
+
+  private static async attemptFillerTaskPlacement(
+    fillerTasks: Task[],
+    coreTasks: Task[],
+    partialRoutes: Route[],
+    startLocation: Location
+  ) {
     const updatedPartialRoutes: Route[] = [];
     const updatedCoreTasks: Task[] = [];
     const usedFillerTaskIds = new Set<string>();
@@ -117,41 +166,10 @@ export class TaskService {
         updatedCoreTasks.push(endTask);
       }
     }
-    partialRoutes = updatedPartialRoutes;
-    coreTasks = updatedCoreTasks;
-    // END FILLING IN FILLER TASKS
-
-    // START USE REST OF FILLER TASKS
-    const remainingFillerTasks = fillerTasks.filter((task) => !usedFillerTaskIds.has(task.id));
-    if (remainingFillerTasks.length > 0) {
-      const fromLocation =
-        coreTasks.length > 0 ? coreTasks[coreTasks.length - 1].location! : startLocation;
-      const remainingRoute = await TaskService.getOptimalRouteForPaths(
-        fromLocation,
-        remainingFillerTasks
-      );
-      partialRoutes.push(...remainingRoute);
-      coreTasks.push(...remainingFillerTasks);
-    }
-    // END USE REST OF FILLER TASKS
-
-    const useTunnel = partialRoutes.some((route) => route.tunnel);
-    const totalDuration = partialRoutes.reduce((acc, route) => acc + route.duration, 0);
-    const totalDistance = partialRoutes.reduce((acc, route) => acc + route.distance, 0);
-    const segments = partialRoutes.flatMap((route) => route.segments);
-    for (let i = 0; i < segments.length; i++) {
-      segments[i].id = ('segment-' + i).toString();
-    }
-    const taskRoute: Route = {
-      duration: totalDuration,
-      distance: totalDistance,
-      segments: segments,
-      tunnel: useTunnel,
-    };
-
     return {
-      route: taskRoute,
-      tasks: coreTasks,
+      updatedRoutes: updatedPartialRoutes,
+      updatedTasks: updatedCoreTasks,
+      usedFillerTaskIds: usedFillerTaskIds,
     };
   }
 
