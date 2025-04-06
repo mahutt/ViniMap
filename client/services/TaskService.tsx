@@ -11,29 +11,28 @@ export class TaskService {
     route: Route;
     tasks: Task[];
   }> {
+    // Phase 1: Missing Field Inference
     const generateDurationsPromise = generateMissingDurations(tasks);
-    const generateLocationsPromise = generateMissingLocations(tasks, [
-      startLocation.coordinates[0],
-      startLocation.coordinates[1],
-    ]);
-
-    // Generating missing durations and locations for all tasks
+    const generateLocationsPromise = generateMissingLocations(tasks, startLocation.coordinates);
     await Promise.all([generateDurationsPromise, generateLocationsPromise]);
 
-    // Core tasks have a start time and a location - tasks with a set time
-    // and with no location at this point are implicitly discarded
-    const coreTaskCandidates = tasks.filter((task) => task.startTime !== null);
-    let fillerTasks = tasks.filter((task) => task.startTime === null && task.location !== null);
-    let coreTasks = coreTaskCandidates
-      .filter((task) => task.location !== null)
+    // Phase 2: Core Route Generation
+    let coreTasks = [...tasks]
+      .filter((task) => task.location !== null && task.duration !== null && task.startTime !== null)
       .sort((a, b) => {
-        const aHour = a.startTime?.getHours() ?? 0;
-        const bHour = b.startTime?.getHours() ?? 0;
+        const aHour = a.startTime!.getTime();
+        const bHour = b.startTime!.getTime();
         return aHour - bHour;
       });
 
-    let partialRoutes = await TaskService.getOptimalRouteForPaths(startLocation, coreTasks);
+    // The core route is made up of these partial routes, but we do
+    // not stitch them together until insertion / appending is done
+    let partialRoutes = await TaskService.getMultiRoute(startLocation, coreTasks);
 
+    // Phase 3: Filler Task Insertion
+    let fillerTasks = [...tasks].filter(
+      (task) => task.location !== null && task.duration !== null && task.startTime === null
+    );
     const { updatedRoutes, updatedTasks, usedFillerTaskIds } =
       await TaskService.attemptFillerTaskPlacement(
         fillerTasks,
@@ -42,22 +41,21 @@ export class TaskService {
         startLocation
       );
     partialRoutes = updatedRoutes;
-    coreTasks = updatedTasks;
+    const participatingTasks = updatedTasks;
 
-    // START USE REST OF FILLER TASKS
+    // Phase 4: Filler Task Appending
     const remainingFillerTasks = fillerTasks.filter((task) => !usedFillerTaskIds.has(task.id));
     if (remainingFillerTasks.length > 0) {
       const fromLocation =
-        coreTasks.length > 0 ? coreTasks[coreTasks.length - 1].location! : startLocation;
-      const remainingRoute = await TaskService.getOptimalRouteForPaths(
-        fromLocation,
-        remainingFillerTasks
-      );
-      partialRoutes.push(...remainingRoute);
-      coreTasks.push(...remainingFillerTasks);
+        participatingTasks.length > 0
+          ? participatingTasks[participatingTasks.length - 1].location!
+          : startLocation;
+      const finalStretch = await TaskService.getMultiRoute(fromLocation, remainingFillerTasks);
+      partialRoutes.push(...finalStretch);
+      participatingTasks.push(...remainingFillerTasks);
     }
-    // END USE REST OF FILLER TASKS
 
+    // Route Stitching
     const useTunnel = partialRoutes.some((route) => route.tunnel);
     const totalDuration = partialRoutes.reduce((acc, route) => acc + route.duration, 0);
     const totalDistance = partialRoutes.reduce((acc, route) => acc + route.distance, 0);
@@ -74,7 +72,7 @@ export class TaskService {
 
     return {
       route: taskRoute,
-      tasks: coreTasks,
+      tasks: participatingTasks,
     };
   }
 
@@ -166,7 +164,7 @@ export class TaskService {
     updatedCoreTasks: Task[]
   ): Promise<Task[]> {
     for (const permutation of orderedFillerTaskCombinationsSorted) {
-      const permutationRoutes = await TaskService.getOptimalRouteForPaths(startTask.location!, [
+      const permutationRoutes = await TaskService.getMultiRoute(startTask.location!, [
         ...permutation.tasks,
         endTask,
       ]);
@@ -195,8 +193,7 @@ export class TaskService {
     return [];
   }
 
-  static async getOptimalRouteForPaths(startLocation: Location, tasks: Task[]): Promise<Route[]> {
-    // Needs to be refactored so that mapbox's api is leveraged to generate the shortest path
+  static async getMultiRoute(startLocation: Location, tasks: Task[]): Promise<Route[]> {
     const routePromises: Promise<Route>[] = [];
     const iterableTasks: Task[] = [
       {
