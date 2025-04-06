@@ -1,0 +1,92 @@
+appId: com.anonymous.client
+---
+- tapOn: 'Tasks, tab, 3 of 4'
+- tapOn: '+'
+- tapOn: 'Task name'
+- inputText: 'borrow book from library'
+- tapOn: 'Location'
+- inputText: 'Webst'
+- tapOn: 'Webster Library'
+- tapOn: 'min'
+- inputText: '10'
+- tapOn: 'Add Task'
+- tapOn: 'Close'
+- tapOn: '+'
+- tapOn: 'Task name'
+- inputText: 'make photocopies for notes'
+- tapOn: 'Location'
+- inputText: 'H8'
+- tapOn: 'H801'
+- tapOn: 'min'
+- inputText: '5'
+- swipe:
+    start: '50%,50%'
+    end: '50%,50%'
+    duration: 50
+- tapOn: 'Add Task'
+- tapOn: 'Close'
+- tapOn: '+'
+- tapOn: 'Task name'
+- inputText: 'get coffee'
+- tapOn: 'Set Time'
+- tapOn: 'Time Picker'
+- swipe:
+    start: '32%,46%'
+    end: '32%,46%'
+    duration: 50
+- tapOn: 'Add Task'
+- tapOn: 'Close'
+- tapOn: '+'
+- tapOn: 'Task name'
+- inputText: 'go to soen 390 tutorial'
+- tapOn: 'Location'
+- inputText: 'H92'
+- tapOn: 'H920'
+- tapOn: 'min'
+- inputText: '45'
+- tapOn: 'Add Task'
+- tapOn: 'Close'
+- swipe:
+    start: '15%,23%'
+    end: '15%,23%'
+    duration: 50
+- swipe:
+    start: '15%,31%'
+    end: '15%,31%'
+    duration: 50
+- swipe:
+    start: '15%,38%'
+    end: '15%,38%'
+    duration: 50
+- swipe:
+    start: '15%,46%'
+    end: '15%,46%'
+    duration: 50
+- swipe:
+    start: '92%,70%'
+    end: '92%,70%'
+    duration: 50
+- swipe:
+    start: '93%,76%'
+    end: '93%,76%'
+    duration: 50
+- swipe:
+    start: '92%,87%'
+    end: '92%,87%'
+    duration: 50
+- swipe:
+    start: '92%,76%'
+    end: '92%,76%'
+    duration: 50
+- swipe:
+    start: '92%,82%'
+    end: '92%,82%'
+    duration: 50
+- swipe:
+    start: '92%,76%'
+    end: '92%,76%'
+    duration: 50
+- swipe:
+    start: '50%,56%'
+    end: '50%,56%'
+    duration: 50
