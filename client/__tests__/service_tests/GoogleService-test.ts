@@ -254,6 +254,59 @@ describe('GoogleService', () => {
       await expect(GoogleService.fetchUserCalendars()).rejects.toThrow('Failed to fetch calendars');
     });
 
+    it('should return location data when a place is found', async () => {
+      const query = 'some place';
+      const bias = [37.7749, -122.4194]; // San Francisco coordinates
+    
+      const mockResponse = {
+        candidates: [
+          {
+            name: 'Test Place',
+            geometry: {
+              location: { lat: 37.7749, lng: -122.4194 },
+            },
+            formatted_address: 'Test Place Address',
+            rating: 4.5,
+            opening_hours: { weekday_text: ['Mon-Fri: 9am - 5pm'] },
+          },
+        ],
+      };
+    
+      global.fetch = jest.fn().mockResolvedValueOnce({
+        json: () => Promise.resolve(mockResponse),
+      });
+    
+      const location = await GoogleService.findPlace(query, bias);
+    
+      expect(location).toEqual({
+        name: 'Test Place',
+        coordinates: [-122.4194, 37.7749],
+        data: {
+          addr: 'Test Place Address',
+          rating: 4.5,
+          opening_hours: { weekday_text: ['Mon-Fri: 9am - 5pm'] },
+        },
+      });
+    });
+    
+    it('should return null if no place is found', async () => {
+      const query = 'nonexistent place';
+      const bias = [37.7749, -122.4194]; // San Francisco coordinates
+    
+      const mockResponse = {
+        candidates: [],
+      };
+    
+      global.fetch = jest.fn().mockResolvedValueOnce({
+        json: () => Promise.resolve(mockResponse),
+      });
+    
+      const location = await GoogleService.findPlace(query, bias);
+    
+      expect(location).toBeNull();
+    });
+    
+
     it('should throw error when fetching calendars without auth token', async () => {
       (storage.getString as jest.Mock).mockReturnValue(null);
 
