@@ -127,41 +127,19 @@ export class TaskService {
         orderedFillerTaskCombinations
       );
 
-      let routeWasUpdated = false;
-      for (const permutation of orderedFillerTaskCombinationsSorted) {
-        const permutationRoutes = await TaskService.getOptimalRouteForPaths(startTask.location!, [
-          ...permutation.tasks,
-          endTask,
-        ]);
-
-        // Units: seconds
-        const permutationRouteDuration = permutationRoutes.reduce(
-          (acc, route) => acc + route.duration,
-          0
-        );
-
-        // Units: Minutes
-        const permutationTasksDuration = permutation.tasks.reduce(
-          (acc, task) => acc + (task.duration ?? 0),
-          0
-        );
-        const totalDurationSeconds = permutationRouteDuration + permutationTasksDuration * 60;
-        if (totalDurationSeconds * 1000 <= maximumFreeTime && permutationRoutes.length > 0) {
-          // Add permutationRoutes to the updated partialRoutes
-          updatedPartialRoutes.push(...permutationRoutes);
-          updatedCoreTasks.push(...permutation.tasks, endTask);
-          routeWasUpdated = true;
-
-          // Mark the tasks as used
-          for (const task of permutation.tasks) {
-            usedFillerTaskIds.add(task.id);
-          }
-
-          break;
-        }
+      let usedTasks = await TaskService.attemptPermutationPlacement(
+        orderedFillerTaskCombinationsSorted,
+        startTask,
+        endTask,
+        maximumFreeTime,
+        updatedPartialRoutes,
+        updatedCoreTasks
+      );
+      for (const task of usedTasks) {
+        usedFillerTaskIds.add(task.id);
       }
-      // Don't squeeze in any filler tasks:
-      if (!routeWasUpdated) {
+
+      if (usedTasks.length === 0) {
         updatedPartialRoutes.push(route);
         updatedCoreTasks.push(endTask);
       }
@@ -171,6 +149,50 @@ export class TaskService {
       updatedTasks: updatedCoreTasks,
       usedFillerTaskIds: usedFillerTaskIds,
     };
+  }
+
+  private static async attemptPermutationPlacement(
+    orderedFillerTaskCombinationsSorted: { distance: number; tasks: Task[] }[],
+    startTask:
+      | Task
+      | {
+          duration: number;
+          startTime: Date;
+          location: Location;
+        },
+    endTask: Task,
+    maximumFreeTime: number,
+    updatedPartialRoutes: Route[],
+    updatedCoreTasks: Task[]
+  ): Promise<Task[]> {
+    for (const permutation of orderedFillerTaskCombinationsSorted) {
+      const permutationRoutes = await TaskService.getOptimalRouteForPaths(startTask.location!, [
+        ...permutation.tasks,
+        endTask,
+      ]);
+
+      // Units: seconds
+      const permutationRouteDuration = permutationRoutes.reduce(
+        (acc, route) => acc + route.duration,
+        0
+      );
+
+      // Units: Minutes
+      const permutationTasksDuration = permutation.tasks.reduce(
+        (acc, task) => acc + (task.duration ?? 0),
+        0
+      );
+      const totalDurationSeconds = permutationRouteDuration + permutationTasksDuration * 60;
+      if (totalDurationSeconds * 1000 <= maximumFreeTime && permutationRoutes.length > 0) {
+        // Add permutationRoutes to the updated partialRoutes
+        updatedPartialRoutes.push(...permutationRoutes);
+        updatedCoreTasks.push(...permutation.tasks, endTask);
+
+        // Mark the tasks as used
+        return permutation.tasks;
+      }
+    }
+    return [];
   }
 
   static async getOptimalRouteForPaths(startLocation: Location, tasks: Task[]): Promise<Route[]> {
