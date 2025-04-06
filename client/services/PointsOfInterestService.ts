@@ -75,7 +75,7 @@ const isCurrentTimeInRange = (currentTime: number, timeRange: string): boolean =
   return currentTime >= startTimeMinutes && currentTime < endTimeMinutes;
 };
 
-export function isCurrentlyOpen(openingHours?: string): boolean {
+function isCurrentlyOpen(openingHours?: string): boolean {
   if (openingHours === '24/7') return true;
 
   if (!openingHours) return false;
@@ -160,4 +160,5 @@ for (const poi of pointsOfInterestService.getFeatureCollection().features) {
   });
 }
 
+export { isCurrentlyOpen };
 export default pointsOfInterestService;

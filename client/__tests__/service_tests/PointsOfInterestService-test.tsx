@@ -1,4 +1,4 @@
-import PointsOfInterestService from '@/services/PointsOfInterestService';
+import PointsOfInterestService, { isCurrentlyOpen } from '@/services/PointsOfInterestService';
 import { Coordinates } from '@/modules/map/Types';
 import { calculateEuclideanDistance } from '@/modules/map/MapUtils';
 import LocalLocations from '@/services/LocalLocations';
@@ -166,30 +166,46 @@ describe('PointsOfInterestService', () => {
     });
   });
 
-  it('handles invalid or missing opening hours', () => {
-    // Create a test POI with no opening hours
-    const emptyHoursPOI = {
-      name: 'Empty Hours POI',
-      coordinates: [-74.056, 40.7178] as Coordinates,
-      data: {
-        address: '456 Test St',
-        isOpen: false,
-        hours: undefined, // Undefined hours
-        category: 'Testing category',
-        type: 'test',
-      },
-    };
+  describe('isCurrentlyOpen', () => {
+    beforeEach(() => {
+      // Freeze time to a known Monday at 10:00
+      jest.useFakeTimers().setSystemTime(new Date('2023-01-02T10:00:00'));
+    });
 
-    // Get data.isOpen property
-    expect(emptyHoursPOI.data.isOpen).toBe(false);
+    it('returns true for 24/7 locations', () => {
+      expect(isCurrentlyOpen('24/7')).toBe(true);
+    });
+
+    it('returns false for undefined hours', () => {
+      expect(isCurrentlyOpen(undefined)).toBe(false);
+    });
+
+    it('handles locations open on specific days and times', () => {
+      // Weekday during business hours
+      expect(isCurrentlyOpen('Mo-Fr 09:00-17:00')).toBe(true);
+
+      // Weekday outside business hours
+      jest.setSystemTime(new Date('2023-01-02T18:00:00'));
+      expect(isCurrentlyOpen('Mo-Fr 09:00-17:00')).toBe(false);
+
+      // Weekend for a weekday-only location
+      jest.setSystemTime(new Date('2023-01-07T10:00:00')); // Saturday
+      expect(isCurrentlyOpen('Mo-Fr 09:00-17:00')).toBe(false);
+    });
+
+    it('handles complex opening hours', () => {
+      // Location open every day from 00:00 to 24:00
+      jest.setSystemTime(new Date('2023-01-07T12:00:00')); // Saturday
+      expect(isCurrentlyOpen('Mo-Su 00:00-24:00')).toBe(true);
+    });
   });
-});
 
-describe('getFeatureCollection', () => {
-  it('returns the feature collection', () => {
-    const collection = PointsOfInterestService.getFeatureCollection();
-    expect(collection).toBeDefined();
-    expect(collection.type).toBe('FeatureCollection');
-    expect(collection.features.length).toBe(4);
+  describe('getFeatureCollection', () => {
+    it('returns the feature collection', () => {
+      const collection = PointsOfInterestService.getFeatureCollection();
+      expect(collection).toBeDefined();
+      expect(collection.type).toBe('FeatureCollection');
+      expect(collection.features.length).toBe(4);
+    });
   });
 });
