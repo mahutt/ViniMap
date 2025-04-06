@@ -4,23 +4,72 @@ import poiFeatureCollection from '@/assets/geojson/pois.json';
 import type { Feature, FeatureCollection, Point } from 'geojson';
 import LocalLocations from './LocalLocations';
 
+const dayMap: Record<number, string> = {
+  0: 'Su',
+  1: 'Mo',
+  2: 'Tu',
+  3: 'We',
+  4: 'Th',
+  5: 'Fr',
+  6: 'Sa',
+};
+
+const isCurrentDayInRange = (currentDayCode: string, dayRange: string): boolean => {
+  const dayRanges = dayRange.split(',');
+
+  for (const range of dayRanges) {
+    if (range.includes('-')) {
+      const [startDay, endDay] = range.split('-');
+      const days = Object.values(dayMap);
+      const startDayIndex = days.indexOf(startDay);
+      const endDayIndex = days.indexOf(endDay);
+      const currentDayIndex = days.indexOf(currentDayCode);
+
+      if (startDayIndex !== -1 && endDayIndex !== -1 && currentDayIndex !== -1) {
+        if (startDayIndex <= endDayIndex) {
+          if (currentDayIndex >= startDayIndex && currentDayIndex <= endDayIndex) {
+            return true;
+          }
+        } else {
+          if (currentDayIndex >= startDayIndex || currentDayIndex <= endDayIndex) {
+            return true;
+          }
+        }
+      }
+    } else if (range === currentDayCode) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const isCurrentTimeInRange = (currentTime: number, timeRange: string): boolean => {
+  const [startTime, endTime] = timeRange.split('-');
+
+  const startParts = startTime.split(':').map(Number);
+  const endParts = endTime.split(':').map(Number);
+  const startTimeMinutes = startParts[0] * 60 + (startParts[1] || 0);
+
+  let endTimeMinutes = endParts[0] * 60 + (endParts[1] || 0);
+  if (endParts[0] === 24) {
+    endTimeMinutes = 24 * 60;
+  }
+  if (endTimeMinutes <= startTimeMinutes) {
+    endTimeMinutes += 24 * 60;
+  }
+
+  return currentTime >= startTimeMinutes && currentTime < endTimeMinutes;
+};
+
 const isCurrentlyOpen = (openingHours?: string): boolean => {
   if (!openingHours) return false;
+
   const now = new Date();
   const currentDay = now.getDay();
   const currentHour = now.getHours();
   const currentMinute = now.getMinutes();
   const currentTime = currentHour * 60 + currentMinute;
-
-  const dayMap: Record<number, string> = {
-    0: 'Su',
-    1: 'Mo',
-    2: 'Tu',
-    3: 'We',
-    4: 'Th',
-    5: 'Fr',
-    6: 'Sa',
-  };
   const currentDayCode = dayMap[currentDay];
 
   const ruleSets = openingHours.split(';').map((set) => set.trim());
@@ -33,51 +82,16 @@ const isCurrentlyOpen = (openingHours?: string): boolean => {
 
     const dayRange = parts[0];
     const timeRange = parts[1];
-    const dayRanges = dayRange.split(',');
 
-    let isDayIncluded = false;
-
-    for (const range of dayRanges) {
-      if (range.includes('-')) {
-        const [startDay, endDay] = range.split('-');
-        const days = Object.values(dayMap);
-        const startDayIndex = days.indexOf(startDay);
-        const endDayIndex = days.indexOf(endDay);
-        const currentDayIndex = days.indexOf(currentDayCode);
-
-        if (startDayIndex !== -1 && endDayIndex !== -1 && currentDayIndex !== -1) {
-          if (startDayIndex <= endDayIndex) {
-            isDayIncluded = currentDayIndex >= startDayIndex && currentDayIndex <= endDayIndex;
-          } else {
-            isDayIncluded = currentDayIndex >= startDayIndex || currentDayIndex <= endDayIndex;
-          }
-
-          if (isDayIncluded) break;
-        }
-      } else if (range === currentDayCode) {
-        isDayIncluded = true;
-        break;
-      }
+    if (!isCurrentDayInRange(currentDayCode, dayRange)) {
+      continue;
     }
 
-    if (!isDayIncluded) continue;
-    if (timeRange) {
-      const [startTime, endTime] = timeRange.split('-');
-
-      const startParts = startTime.split(':').map(Number);
-      const endParts = endTime.split(':').map(Number);
-      const startTimeMinutes = startParts[0] * 60 + (startParts[1] || 0);
-
-      let endTimeMinutes = endParts[0] * 60 + (endParts[1] || 0);
-      if (endParts[0] === 24) {
-        endTimeMinutes = 24 * 60;
-      }
-      if (endTimeMinutes <= startTimeMinutes) {
-        endTimeMinutes += 24 * 60;
-      }
-      return currentTime >= startTimeMinutes && currentTime < endTimeMinutes;
+    if (timeRange && isCurrentTimeInRange(currentTime, timeRange)) {
+      return true;
     }
   }
+
   return false;
 };
 
@@ -125,9 +139,8 @@ class PointsOfInterestService {
 
   getPOIByName(name: string): Location | null {
     const poi = this.featureCollection.features.find((f) => f.properties?.name === name);
-
     if (!poi) return null;
-    return extractLocation(poi as Feature<Point>);
+    return extractLocation(poi);
   }
 }
 
