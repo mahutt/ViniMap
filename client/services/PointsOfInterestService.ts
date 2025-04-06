@@ -14,29 +14,42 @@ const dayMap: Record<number, string> = {
   6: 'Sa',
 };
 
+const isInDayRange = (
+  currentDayIndex: number,
+  startDayIndex: number,
+  endDayIndex: number
+): boolean => {
+  if (startDayIndex <= endDayIndex) {
+    return currentDayIndex >= startDayIndex && currentDayIndex <= endDayIndex;
+  }
+  return currentDayIndex >= startDayIndex || currentDayIndex <= endDayIndex;
+};
+
 const isCurrentDayInRange = (currentDayCode: string, dayRange: string): boolean => {
   const dayRanges = dayRange.split(',');
+  const days = Object.values(dayMap);
+  const currentDayIndex = days.indexOf(currentDayCode);
+
+  if (currentDayIndex === -1) {
+    return false;
+  }
 
   for (const range of dayRanges) {
-    if (range.includes('-')) {
-      const [startDay, endDay] = range.split('-');
-      const days = Object.values(dayMap);
-      const startDayIndex = days.indexOf(startDay);
-      const endDayIndex = days.indexOf(endDay);
-      const currentDayIndex = days.indexOf(currentDayCode);
-
-      if (startDayIndex !== -1 && endDayIndex !== -1 && currentDayIndex !== -1) {
-        if (startDayIndex <= endDayIndex) {
-          if (currentDayIndex >= startDayIndex && currentDayIndex <= endDayIndex) {
-            return true;
-          }
-        } else {
-          if (currentDayIndex >= startDayIndex || currentDayIndex <= endDayIndex) {
-            return true;
-          }
-        }
+    if (!range.includes('-')) {
+      if (range === currentDayCode) {
+        return true;
       }
-    } else if (range === currentDayCode) {
+      continue;
+    }
+    const [startDay, endDay] = range.split('-');
+    const startDayIndex = days.indexOf(startDay);
+    const endDayIndex = days.indexOf(endDay);
+
+    if (startDayIndex === -1 || endDayIndex === -1) {
+      continue;
+    }
+
+    if (isInDayRange(currentDayIndex, startDayIndex, endDayIndex)) {
       return true;
     }
   }
