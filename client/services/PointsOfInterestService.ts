@@ -75,7 +75,7 @@ const isCurrentTimeInRange = (currentTime: number, timeRange: string): boolean =
   return currentTime >= startTimeMinutes && currentTime < endTimeMinutes;
 };
 
-const isCurrentlyOpen = (openingHours?: string): boolean => {
+export function isCurrentlyOpen(openingHours?: string): boolean {
   if (openingHours === '24/7') return true;
 
   if (!openingHours) return false;
@@ -108,7 +108,7 @@ const isCurrentlyOpen = (openingHours?: string): boolean => {
   }
 
   return false;
-};
+}
 
 const extractLocation = (feature: Feature<Point>): Location => {
   return {
@@ -116,7 +116,6 @@ const extractLocation = (feature: Feature<Point>): Location => {
     coordinates: feature.geometry.coordinates,
     data: {
       address: feature.properties?.addr,
-      isOpen: isCurrentlyOpen(feature.properties?.opening_hours),
       hours: feature.properties?.opening_hours,
       category: feature.properties?.description,
       type: feature.properties?.amenity,
