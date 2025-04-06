@@ -40,12 +40,9 @@ export const inferLocation = async (
   taskTitle: string,
   bias: Position
 ): Promise<Location | null> => {
-  // This tool call is consistently returning the task title as the location query.
-  // const prompt = `Please find a location for this task based on the task title: "${taskTitle}".
-  // For example, "Get coffee" should return "Coffee Shop" and "Go to the library" should return "Library".`;
-  // const args = await performToolCall(prompt, OPENAI_TOOLS.queryLocation);
-  // const query = (args?.location as string) ?? taskTitle;
-  const query = taskTitle;
+  const prompt = `What's some place that I can complete the following task? Task title / description: """${taskTitle}"""`;
+  const args = await performToolCall(prompt, OPENAI_TOOLS.queryLocation);
+  const query = (args?.keywords as string) ?? taskTitle;
   return await googleService.findPlace(query, bias);
 };
 
@@ -90,17 +87,17 @@ export const OPENAI_TOOLS = {
   },
   queryLocation: {
     type: 'function',
-    name: 'query_task_location',
-    description: 'Query a location for the task based on the task title',
+    name: 'query_location',
+    description: 'Find a location for the task using keywords',
     parameters: {
       type: 'object',
       properties: {
-        location: {
+        keywords: {
           type: 'string',
-          description: 'Location query based on the task title',
+          description: 'Keywords to find a location for the task',
         },
       },
-      required: ['location'],
+      required: ['keywords'],
       additionalProperties: false,
     },
   },
