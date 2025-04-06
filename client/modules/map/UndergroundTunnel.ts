@@ -7,7 +7,7 @@ const tunnelLineString = tunnelGeojson.features.find(
 ) as Feature<LineString>;
 const tunnelSteps = tunnelLineString.geometry.coordinates;
 const tunnelRoute: Route = {
-  duration: 5 * 60, // Roughly 8 minutes to walk through the tunnel
+  duration: 5 * 60, // Roughly 5 minutes to walk through the tunnel
   distance: 200, // Roughly 200 meters
   segments: [
     {
