@@ -100,11 +100,12 @@ describe('CoordinateService', () => {
       canAskAgain: true,
     });
 
+    const promiseRejectionCallback = (_: any, reject: (reason?: any) => void) => {
+      // Simulating a delay that exceeds the test timeout
+      setTimeout(() => reject(new Error('Location retrieval timed out')), 6000); // 6 seconds for the timeout
+    };
     const simulateLocationTimeout: () => Promise<Location.LocationObject> = () =>
-      new Promise((_, reject) => {
-        // Simulating a delay that exceeds the test timeout
-        setTimeout(() => reject(new Error('Location retrieval timed out')), 6000); // 6 seconds for the timeout
-      });
+      new Promise(promiseRejectionCallback);
 
     // Mock the location retrieval to simulate a timeout
     mockedLocation.getCurrentPositionAsync.mockImplementation(simulateLocationTimeout);
