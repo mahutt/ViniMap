@@ -2,8 +2,12 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import { LocationInfo } from '@/components/LocationInfo';
 import { MapState, useMap } from '@/modules/map/MapContext';
+import { isCurrentlyOpen } from '@/services/PointsOfInterestService';
 
-// Mock the map context
+jest.mock('@/services/PointsOfInterestService', () => ({
+  isCurrentlyOpen: jest.fn(),
+}));
+
 jest.mock('@/modules/map/MapContext', () => {
   const originalModule = jest.requireActual('@/modules/map/MapContext');
 
@@ -34,7 +38,7 @@ describe('LocationInfo Component', () => {
       name: 'Test Location',
       data: {
         address: '123 Test Street',
-        isOpen: true,
+        hours: 'Mo-Fr 09:00-17:00',
       },
     },
   };
@@ -42,6 +46,7 @@ describe('LocationInfo Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     (useMap as jest.Mock).mockReturnValue(defaultProps);
+    (isCurrentlyOpen as jest.Mock).mockReturnValue(true);
   });
 
   test('renders correctly with open location', () => {
@@ -60,16 +65,7 @@ describe('LocationInfo Component', () => {
   });
 
   test('renders correctly with closed location', () => {
-    (useMap as jest.Mock).mockReturnValue({
-      ...defaultProps,
-      endLocation: {
-        ...defaultProps.endLocation,
-        data: {
-          ...defaultProps.endLocation.data,
-          isOpen: false,
-        },
-      },
-    });
+    (isCurrentlyOpen as jest.Mock).mockReturnValue(false);
 
     const { getByText } = render(<LocationInfo />);
 
