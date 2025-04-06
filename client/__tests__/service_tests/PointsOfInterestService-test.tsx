@@ -177,7 +177,7 @@ describe('PointsOfInterestService', () => {
     });
 
     it('returns false for undefined hours', () => {
-      expect(isCurrentlyOpen(undefined)).toBe(false);
+      expect(isCurrentlyOpen()).toBe(false);
     });
 
     it('handles locations open on specific days and times', () => {
