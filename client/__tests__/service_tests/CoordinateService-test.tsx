@@ -89,6 +89,46 @@ describe('CoordinateService', () => {
     expect(mockedLocation.getCurrentPositionAsync).not.toHaveBeenCalled();
   });
 
+  it('should return fallback coordinates when location retrieval times out', async () => {
+    mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
+      status: 'granted' as Location.PermissionStatus,
+      granted: true,
+      expires: 'never',
+      canAskAgain: true,
+    });
+  
+    jest.useFakeTimers(); // Control timers
+  
+    mockedLocation.getCurrentPositionAsync.mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          // Simulate delay beyond timeout
+          setTimeout(() => resolve({
+            coords: {
+              latitude: 1,
+              longitude: 1,
+              altitude: null,
+              accuracy: null,
+              altitudeAccuracy: null,
+              heading: null,
+              speed: null,
+            },
+            timestamp: Date.now(),
+          }), 5000); // 5 seconds to trigger timeout
+        })
+    );
+  
+    const coordinatePromise = CoordinateService.getCurrentCoordinates();
+  
+    jest.advanceTimersByTime(3000); // Trigger 3s timeout
+  
+    const coordinates = await coordinatePromise;
+  
+    expect(coordinates).toEqual([-73.577913, 45.494836]);
+    jest.useRealTimers(); // Reset timers
+  });
+  
+
   it('should handle timeout for location retrieval', async () => {
     mockedLocation.requestForegroundPermissionsAsync.mockResolvedValue({
       status: 'granted' as Location.PermissionStatus,
