@@ -76,6 +76,8 @@ const isCurrentTimeInRange = (currentTime: number, timeRange: string): boolean =
 };
 
 const isCurrentlyOpen = (openingHours?: string): boolean => {
+  if (openingHours === '24/7') return true;
+
   if (!openingHours) return false;
 
   const now = new Date();
@@ -148,12 +150,6 @@ class PointsOfInterestService {
 
     if (closestFeature === null) return null;
     return extractLocation(closestFeature);
-  }
-
-  getPOIByName(name: string): Location | null {
-    const poi = this.featureCollection.features.find((f) => f.properties?.name === name);
-    if (!poi) return null;
-    return extractLocation(poi);
   }
 }
 

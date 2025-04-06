@@ -6,7 +6,7 @@
       "properties": {
         "name": "Unnamed Park",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Public park",
         "amenity": "park"
       },
@@ -20,7 +20,7 @@
       "properties": {
         "name": "Unnamed Park",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Public park",
         "amenity": "park"
       },
@@ -34,7 +34,7 @@
       "properties": {
         "name": "Parc Percy-Walters",
         "addr": "40 Avenue McGregor, Montréal, Québec, H3G 2J8",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Public park (https://montreal.ca/en/places/parc-percy-walters)",
         "amenity": "park"
       },
@@ -48,7 +48,7 @@
       "properties": {
         "name": "3 Brasseurs",
         "addr": "1356 Rue Sainte-Catherine Ouest, Montréal, Québec, H3G 1P6",
-        "opening_hours": "Mo-Su 11:00-01:00",
+        "opening_hours": "24/7",
         "description": "Burger, Pizza;seafood restaurant (https://www.les3brasseurs.ca/fr/trouver-un-3-brasseurs/crescent/)",
         "amenity": "restaurant"
       },
@@ -62,7 +62,7 @@
       "properties": {
         "name": "Le Garden Room",
         "addr": "1445 Rue Bishop, Montréal, Québec",
-        "opening_hours": "Mo-Su 12:00-02:00",
+        "opening_hours": "24/7",
         "description": "Thai restaurant (https://www.legardenroom.com/)",
         "amenity": "restaurant"
       },
@@ -76,7 +76,7 @@
       "properties": {
         "name": "Station Guy-Concordia (St-Mathieu/De Maisonneuve)",
         "addr": "Guy-Concordia, 1445 Guy St, Montreal, Quebec H3H 2L5",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -90,7 +90,7 @@
       "properties": {
         "name": "Station Guy-Concordia (Guy / De Maisonneuve)",
         "addr": "Guy-Concordia, 1445 Guy St, Montreal, Quebec H3H 2L5",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -104,7 +104,7 @@
       "properties": {
         "name": "Sushi Ste-Catherine",
         "addr": "1801 Saint-Catherine St W, Montreal, Quebec H3H 1M2",
-        "opening_hours": "Mo-Su 11:00-23:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -118,7 +118,7 @@
       "properties": {
         "name": "Les Trois amigos",
         "addr": "1657 Rue Sainte-Catherine Ouest, Montréal, QC, H3H 2H8",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Mexican restaurant (http://www.3amigosrestaurant.com)",
         "amenity": "restaurant"
       },
@@ -132,7 +132,7 @@
       "properties": {
         "name": "BBQ Coréen PONY",
         "addr": "1608 Saint-Catherine St W, Montreal, Quebec H3H 2S7",
-        "opening_hours": "Mo-Su 11:30-23:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -146,7 +146,7 @@
       "properties": {
         "name": "Webster Library",
         "addr": "Pavillion J.W. McConnell Bldg, 1400 Maisonneuve Blvd W, Montreal, Quebec H3G 1M8",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Public library",
         "amenity": "library"
       },
@@ -160,7 +160,7 @@
       "properties": {
         "name": "Wienstein & Gavino's",
         "addr": "1434 Crescent Street, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Italian restaurant (https://www.wgmtl.com/)",
         "amenity": "restaurant"
       },
@@ -174,7 +174,7 @@
       "properties": {
         "name": "Ocha Bubble Tea",
         "addr": "1651 Rue Sainte-Catherine Ouest, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Bubble_tea restaurant",
         "amenity": "restaurant"
       },
@@ -188,7 +188,7 @@
       "properties": {
         "name": "Le Pois Penché",
         "addr": "1230 Blvd. De Maisonneuve Ouest, Montreal, Quebec H3G 1V9",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -202,7 +202,7 @@
       "properties": {
         "name": "Nara Reto Lounge",
         "addr": "1333 Boulevard De Maisonneuve Ouest, Montréal, Québec, H3G 2R9",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Mediterranean restaurant",
         "amenity": "restaurant"
       },
@@ -216,7 +216,7 @@
       "properties": {
         "name": "Toro Sushi",
         "addr": "2045 Rue Bishop, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Sushi restaurant",
         "amenity": "restaurant"
       },
@@ -230,7 +230,7 @@
       "properties": {
         "name": "Bice Restaurant",
         "addr": "1504 Rue Sherbrooke Ouest, Montréal, Québec, H3G 1L3",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -244,7 +244,7 @@
       "properties": {
         "name": "Troika",
         "addr": "2171 Rue Crescent, Montréal, Québec, H3G 2C1",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "French restaurant",
         "amenity": "restaurant"
       },
@@ -258,7 +258,7 @@
       "properties": {
         "name": "L'Autre Saison",
         "addr": "2137 Rue Crescent, Montréal, Québec, H3G 2C1",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "French restaurant",
         "amenity": "restaurant"
       },
@@ -272,7 +272,7 @@
       "properties": {
         "name": "L'Académie",
         "addr": "2100 Rue Crescent, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "International restaurant",
         "amenity": "restaurant"
       },
@@ -286,7 +286,7 @@
       "properties": {
         "name": "Restaurant Santa Lucia",
         "addr": "1264 Rue Stanley, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Italian restaurant",
         "amenity": "restaurant"
       },
@@ -300,7 +300,7 @@
       "properties": {
         "name": "Station Guy-Concordia (Guy / De Maisonneuve)",
         "addr": "1445 Guy St, Montreal, Quebec H3H 2L5",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -314,7 +314,7 @@
       "properties": {
         "name": "Côte-des-Neiges / Summerhill",
         "addr": "Montreal, QC H3H 1T9",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -328,7 +328,7 @@
       "properties": {
         "name": "Pho Nguyen",
         "addr": "1452 Rue Saint-Mathieu, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Vietnamese restaurant",
         "amenity": "restaurant"
       },
@@ -342,7 +342,7 @@
       "properties": {
         "name": "Shifu",
         "addr": "1460 Rue Mackay, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-23:00",
+        "opening_hours": "24/7",
         "description": "Chinese restaurant",
         "amenity": "restaurant"
       },
@@ -356,7 +356,7 @@
       "properties": {
         "name": "Sushi Crescent",
         "addr": "1437 Crescent St, Montreal, Quebec H3G 2B2",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -370,7 +370,7 @@
       "properties": {
         "name": "Devi",
         "addr": "1450 Crescent St, Montreal, Quebec H3G 1R1",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Indian restaurant (http://devimontreal.com/)",
         "amenity": "restaurant"
       },
@@ -384,7 +384,7 @@
       "properties": {
         "name": "Qinghua Dumplings (Express)",
         "addr": "1909 Rue Sainte-Catherine Ouest, Montréal, Québec, H3H 1M3",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Asian, Dumpling restaurant",
         "amenity": "restaurant"
       },
@@ -398,7 +398,7 @@
       "properties": {
         "name": "Restaurant Qinghua Dumpling",
         "addr": "1676 Avenue Lincoln, Montréal, Québec, H3H 1G9",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Asian, Dumpling restaurant",
         "amenity": "restaurant"
       },
@@ -412,7 +412,7 @@
       "properties": {
         "name": "Burritoville",
         "addr": "2055 Rue Bishop, Montréal, QC, H3G 2E9",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -426,7 +426,7 @@
       "properties": {
         "name": "Eggspectation",
         "addr": "1313 De Maisonneuve West, Montréal, Québec",
-        "opening_hours": "Mo-Su 06:00-17:00",
+        "opening_hours": "24/7",
         "description": "Breakfast restaurant",
         "amenity": "restaurant"
       },
@@ -440,7 +440,7 @@
       "properties": {
         "name": "Allô! Mon Coco",
         "addr": "1684 Boulevard De Masonneuve Ouest, Montréal, Québec",
-        "opening_hours": "Mo-Su 06:00-16:00",
+        "opening_hours": "24/7",
         "description": "Breakfast restaurant (https://allomoncoco.com/)",
         "amenity": "restaurant"
       },
@@ -454,7 +454,7 @@
       "properties": {
         "name": "Château Kabab",
         "addr": "2140 Guy St, Montreal, Quebec H3H 2N4",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Persian restaurant",
         "amenity": "restaurant"
       },
@@ -468,7 +468,7 @@
       "properties": {
         "name": "René-Lévesque / Bishop",
         "addr": "Montreal, QC H3G 2M5",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -482,7 +482,7 @@
       "properties": {
         "name": "Ferrari Restaurant - Café",
         "addr": "1407 Rue Bishop, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Italian restaurant (https://restoferrari.ca/)",
         "amenity": "restaurant"
       },
@@ -496,7 +496,7 @@
       "properties": {
         "name": "Man-na",
         "addr": "1421 Rue Bishop, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Korean restaurant",
         "amenity": "restaurant"
       },
@@ -510,7 +510,7 @@
       "properties": {
         "name": "Pizza Hut",
         "addr": "1431 Rue bishop, Montréal, Québec, H3G 2E4",
-        "opening_hours": "Mo-Su 10:30-24:00",
+        "opening_hours": "24/7",
         "description": "Pizza restaurant (https://www.pizzahut.ca/huts/ca-1/R34601/)",
         "amenity": "restaurant"
       },
@@ -524,7 +524,7 @@
       "properties": {
         "name": "Messa 14",
         "addr": "1425 Rue Bishop, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Mexican restaurant (http://www.mesa14.com/)",
         "amenity": "restaurant"
       },
@@ -538,7 +538,7 @@
       "properties": {
         "name": "Maison Chaïshaï",
         "addr": "2005 Rue Bishop, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Indian restaurant (http://www.ordercharcos.com/)",
         "amenity": "restaurant"
       },
@@ -552,7 +552,7 @@
       "properties": {
         "name": "Maison Inja - Cuisine Perse",
         "addr": "1458 Sherbrooke St W, Montreal, Quebec H3G 2S8",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -566,7 +566,7 @@
       "properties": {
         "name": "Cocktail Hawaii",
         "addr": "1645 Maisonneuve Blvd W, Montreal, Quebec H3H 2N3",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -580,7 +580,7 @@
       "properties": {
         "name": "NosThés",
         "addr": "1609 Saint-Catherine St W, Montreal, Quebec H3H 1L8",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -594,7 +594,7 @@
       "properties": {
         "name": "Restaurant Traditions",
         "addr": "2330 Guy St, Montreal, Quebec H3H 1E1",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Mediterranean restaurant",
         "amenity": "restaurant"
       },
@@ -608,7 +608,7 @@
       "properties": {
         "name": "Chez Chen",
         "addr": "1618 Avenue Lincoln, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Chinese restaurant",
         "amenity": "restaurant"
       },
@@ -622,7 +622,7 @@
       "properties": {
         "name": "Angela Pizzeria & Restaurant",
         "addr": "1662 Boulevard de Maisonneuve O, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Pizza restaurant",
         "amenity": "restaurant"
       },
@@ -636,7 +636,7 @@
       "properties": {
         "name": "Student Tasty Biryani",
         "addr": "1620 Avenue Lincoln, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -650,7 +650,7 @@
       "properties": {
         "name": "Comptoir du chef",
         "addr": "2153 Guy St, Montreal, Quebec H3H 2R9",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -664,7 +664,7 @@
       "properties": {
         "name": "Thali Cuisine Indienne",
         "addr": "1409 Rue Saint-Marc, Montréal, QC, H3H 2G4",
-        "opening_hours": "Tu-Su 11:30-22:00",
+        "opening_hours": "24/7",
         "description": "Indian restaurant (https://www.thalimontreal.com)",
         "amenity": "restaurant"
       },
@@ -678,7 +678,7 @@
       "properties": {
         "name": "Ici Restaurant Coréen",
         "addr": "1413 Rue Saint-Marc, Montréal, QC, H3H 1M1",
-        "opening_hours": "Mo-Su 11:00-21:00",
+        "opening_hours": "24/7",
         "description": "Korean restaurant",
         "amenity": "restaurant"
       },
@@ -692,7 +692,7 @@
       "properties": {
         "name": "La Belle et le Bœuf",
         "addr": "1620 Saint-Catherine St W, Montreal, Quebec H3A 1L9",
-        "opening_hours": "Mo-Su 12:30-24:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -706,7 +706,7 @@
       "properties": {
         "name": "Burger bar crescent",
         "addr": "1465 Rue Crescent, Montréal, Québec, H3G 2B2",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -734,7 +734,7 @@
       "properties": {
         "name": "Yama",
         "addr": "1415 Rue de la Montagne, Montréal, QC H3G 1Z3",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -748,7 +748,7 @@
       "properties": {
         "name": "COQCOR",
         "addr": "1237 Rue Guy, Montréal, Québec, H3H 2K5",
-        "opening_hours": "Mo-Su 12:00-22:00",
+        "opening_hours": "24/7",
         "description": "Korean_fried_chicken restaurant",
         "amenity": "restaurant"
       },
@@ -762,7 +762,7 @@
       "properties": {
         "name": "Chez la Mere Michel",
         "addr": "1209 Rue Guy, Montréal, Québec, H3H 2K5",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -776,7 +776,7 @@
       "properties": {
         "name": "Trattoria Trestevere",
         "addr": "1237 Crescent St, Montreal, Quebec H3G 2B1",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Italian restaurant",
         "amenity": "restaurant"
       },
@@ -790,7 +790,7 @@
       "properties": {
         "name": "Pizza Chez Danny",
         "addr": "1237 Rue de la Montagne, Montréal, QC H3G 1P1",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -804,7 +804,7 @@
       "properties": {
         "name": "Chez Hailar",
         "addr": "1612 Rue Sherbrooke Ouest, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-23:00",
+        "opening_hours": "24/7",
         "description": "Restaurant (http://www.chezhailar.com)",
         "amenity": "restaurant"
       },
@@ -818,7 +818,7 @@
       "properties": {
         "name": "Sherbrooke / Bishop",
         "addr": "Montreal, QC H3G 1K4",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -832,7 +832,7 @@
       "properties": {
         "name": "Kinton Ramen",
         "addr": "1211 Bishop St, Montreal, Quebec H3G 2E2",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Ramen restaurant",
         "amenity": "restaurant"
       },
@@ -846,7 +846,7 @@
       "properties": {
         "name": "Chez Cora",
         "addr": "1240 Drummond St, Montreal, Quebec H3G 1V7",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Breakfast restaurant (https://www.chezcora.com/)",
         "amenity": "restaurant"
       },
@@ -860,7 +860,7 @@
       "properties": {
         "name": "Schlouppe Bistrot",
         "addr": "2159 Rue Mackay, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Japanese restaurant",
         "amenity": "restaurant"
       },
@@ -874,7 +874,7 @@
       "properties": {
         "name": "Chai Paratha",
         "addr": "2340 Rue Guy, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Pakistani restaurant",
         "amenity": "restaurant"
       },
@@ -888,7 +888,7 @@
       "properties": {
         "name": "K2 Sushi",
         "addr": "1468 Rue Crescent, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Sushi restaurant",
         "amenity": "restaurant"
       },
@@ -902,7 +902,7 @@
       "properties": {
         "name": "Otto Yakitori",
         "addr": "1441 Rue Saint-Mathieu, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -916,7 +916,7 @@
       "properties": {
         "name": "René-Lévesque / Guy",
         "addr": "Montreal, QC",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -930,7 +930,7 @@
       "properties": {
         "name": "Sherbrooke / Côte-des-Neiges",
         "addr": "Montreal, QC H3H 1T4",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -944,7 +944,7 @@
       "properties": {
         "name": "Sherbrooke / Saint-Mathieu",
         "addr": "Montreal, QC H3H 1E4",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -958,7 +958,7 @@
       "properties": {
         "name": "Station Guy-Concordia (Maisonneuve / St-Mathieu)",
         "addr": "Accès A, 1801 St Mathieu St, Montreal, Quebec H3H 1J9",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -972,7 +972,7 @@
       "properties": {
         "name": "Guy / Sainte-Catherine",
         "addr": "Montreal, QC H3G 1S8",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -986,7 +986,7 @@
       "properties": {
         "name": "De Maisonneuve / de la Montagne",
         "addr": "Montreal, QC H3G 1S8",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1000,7 +1000,7 @@
       "properties": {
         "name": "Sainte-Catherine / Saint-Mathieu",
         "addr": "Montreal, QC H3G 1S8",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1014,7 +1014,7 @@
       "properties": {
         "name": "René-Lévesque / Guy",
         "addr": "Montreal, QC H3G 1S8",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1028,7 +1028,7 @@
       "properties": {
         "name": "De Maisonneuve / Bishop",
         "addr": "De Maisonneuve / Bishop",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1042,7 +1042,7 @@
       "properties": {
         "name": "Station Guy-Concordia (De Maisonneuve/St-Mathieu)",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1056,7 +1056,7 @@
       "properties": {
         "name": "Guy / René-Lévesque",
         "addr": "Montreal, QC H3H 2K7",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1070,7 +1070,7 @@
       "properties": {
         "name": "Saint-Mathieu / Sherbrooke",
         "addr": "Montreal, QC H3H 1E3",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1084,7 +1084,7 @@
       "properties": {
         "name": "Sherbrooke / Saint-Marc",
         "addr": "Montreal, QC H3H 1E3",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1098,7 +1098,7 @@
       "properties": {
         "name": "du Docteur-Penfield / Redpath",
         "addr": "Montreal, QC H3G 1B8",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1112,7 +1112,7 @@
       "properties": {
         "name": "Sainte-Catherine / de la Montagne",
         "addr": "Montreal, QC H3G 1P6",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1126,7 +1126,7 @@
       "properties": {
         "name": "Poke Monster",
         "addr": "1225 Blvd. De Maisonneuve Ouest, Montreal, Quebec H3G 1M3",
-        "opening_hours": "Mo-Su 110:00-17:00",
+        "opening_hours": "24/70",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1140,7 +1140,7 @@
       "properties": {
         "name": "La Medusa",
         "addr": "1218 Drummond St, Montreal, Quebec H3G 1V7",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Italian, Pizza restaurant (https://www.lamedusa.ca/)",
         "amenity": "restaurant"
       },
@@ -1154,7 +1154,7 @@
       "properties": {
         "name": "Parma Café",
         "addr": "1202 Bishop St, Montreal, Quebec H3G 2E3",
-        "opening_hours": "Mo-Su 08:00-21:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1168,7 +1168,7 @@
       "properties": {
         "name": "Qing Hua Dumpling",
         "addr": "1675 Boulevard De Maisonneuve Ouest, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1182,7 +1182,7 @@
       "properties": {
         "name": "KimGalbi",
         "addr": "2100 Rue Saint-Mathieu, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1196,7 +1196,7 @@
       "properties": {
         "name": "Guy-Concordia",
         "addr": "1445 Guy St, Montreal, Quebec H3H 2L5",
-        "opening_hours": "Mo-Su 05:00-02:00",
+        "opening_hours": "24/7",
         "description": "Metro station",
         "amenity": "subway_station"
       },
@@ -1210,7 +1210,7 @@
       "properties": {
         "name": "Cuisine AuntDai",
         "addr": "1448 Rue Saint-Mathieu, Montréal, Québec, H3H 2H9",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Chinese restaurant (http://auntdai.com)",
         "amenity": "restaurant"
       },
@@ -1238,7 +1238,7 @@
       "properties": {
         "name": "Bixi",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bike sharing station",
         "amenity": "bicycle_rental"
       },
@@ -1252,7 +1252,7 @@
       "properties": {
         "name": "Bixi",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bike sharing station with 45 docks",
         "amenity": "bicycle_rental"
       },
@@ -1266,7 +1266,7 @@
       "properties": {
         "name": "OFish Bishop",
         "addr": "1429 A Rue Bishop, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1280,7 +1280,7 @@
       "properties": {
         "name": "Sana",
         "addr": "1175A Rue Crescent, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Pakistani, Indian; bangladeshi restaurant",
         "amenity": "restaurant"
       },
@@ -1294,7 +1294,7 @@
       "properties": {
         "name": "Notre Endroit",
         "addr": "1437 Boulevard René-Lévesque Ouest, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-23:00",
+        "opening_hours": "24/7",
         "description": "Indian, South_indian restaurant",
         "amenity": "restaurant"
       },
@@ -1308,7 +1308,7 @@
       "properties": {
         "name": "Escondite",
         "addr": "1224 Rue Drummond, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Mexican restaurant",
         "amenity": "restaurant"
       },
@@ -1322,7 +1322,7 @@
       "properties": {
         "name": "Misoya",
         "addr": "2065A Rue Bishop, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Ramen restaurant",
         "amenity": "restaurant"
       },
@@ -1336,7 +1336,7 @@
       "properties": {
         "name": "Chef Istanbul",
         "addr": "1510 Blvd. De Maisonneuve Ouest, Montreal, Quebec H3G 1N1",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Turkish restaurant",
         "amenity": "restaurant"
       },
@@ -1350,7 +1350,7 @@
       "properties": {
         "name": "Mon Ami",
         "addr": "1488 Rue Sainte-Catherine Ouest, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1364,7 +1364,7 @@
       "properties": {
         "name": "Crossbar",
         "addr": "1390 Boulevard René-Lévesque Ouest, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1378,7 +1378,7 @@
       "properties": {
         "name": "Gyu-Kaku",
         "addr": "1255 Rue Crescent, Montréal, Québec, H3G 2B1",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Japanese, Barbecue restaurant (https://www.gyu-kaku.com/montreal/)",
         "amenity": "restaurant"
       },
@@ -1392,7 +1392,7 @@
       "properties": {
         "name": "Downtown Dhaba",
         "addr": "1668 Boul. de Maisonneuve Ouest, Montréal, Québec",
-        "opening_hours": "Mo-Su 11:00-23:00",
+        "opening_hours": "24/7",
         "description": "Indian restaurant (https://downtowndhaba.com/)",
         "amenity": "restaurant"
       },
@@ -1406,7 +1406,7 @@
       "properties": {
         "name": "Bixi",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bike sharing station",
         "amenity": "bicycle_rental"
       },
@@ -1420,7 +1420,7 @@
       "properties": {
         "name": "Bixi",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bike sharing station",
         "amenity": "bicycle_rental"
       },
@@ -1434,7 +1434,7 @@
       "properties": {
         "name": "Bis Ristorante",
         "addr": "1229 Rue de la Montagne, Montréal, QC H3G 1Z2",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Italian restaurant",
         "amenity": "restaurant"
       },
@@ -1448,7 +1448,7 @@
       "properties": {
         "name": "Sushi Rosa",
         "addr": "1231 Drummond St, Montreal, Quebec H3G 1V8",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Sushi restaurant",
         "amenity": "restaurant"
       },
@@ -1462,7 +1462,7 @@
       "properties": {
         "name": "Poke Bento",
         "addr": "1452 St Mathieu St B, Montreal, Quebec H3H 2H9",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1476,7 +1476,7 @@
       "properties": {
         "name": "Bixi",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bike sharing station",
         "amenity": "bicycle_rental"
       },
@@ -1490,7 +1490,7 @@
       "properties": {
         "name": "Bixi",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bike sharing station with 19 docks",
         "amenity": "bicycle_rental"
       },
@@ -1504,7 +1504,7 @@
       "properties": {
         "name": "Bixi",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bike sharing station with 31 docks",
         "amenity": "bicycle_rental"
       },
@@ -1518,7 +1518,7 @@
       "properties": {
         "name": "I am Pho",
         "addr": "1444 St Mathieu St, Montreal, Quebec H3H 2H9",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Vietnamese restaurant",
         "amenity": "restaurant"
       },
@@ -1532,7 +1532,7 @@
       "properties": {
         "name": "DonDonYa",
         "addr": "1433A Bishop St, Montreal, Quebec H3G 2E4",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1546,7 +1546,7 @@
       "properties": {
         "name": "Chatpata",
         "addr": "1620 Av. Lincoln, Montréal, QC H3H 1G9",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Chinese, Indian restaurant",
         "amenity": "restaurant"
       },
@@ -1560,7 +1560,7 @@
       "properties": {
         "name": "La Hueca by Masa",
         "addr": "Le Faubourg Sainte Catherine, 1616 Saint-Catherine St W, Montreal, Quebec H3H 1L7",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1574,7 +1574,7 @@
       "properties": {
         "name": "Patty Slaps",
         "addr": "1449 Saint-Catherine St W, Montreal, Quebec H3G 1S6",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1588,7 +1588,7 @@
       "properties": {
         "name": "Chimaek Gana",
         "addr": "2080 St Mathieu St, Montreal, Quebec H3H 2J4",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Chicken restaurant",
         "amenity": "restaurant"
       },
@@ -1602,7 +1602,7 @@
       "properties": {
         "name": "Hazukido",
         "addr": "1629 Saint-Catherine St W, Montreal, Quebec H3H 1L8",
-        "opening_hours": "Mo-Su 09:00-19:00",
+        "opening_hours": "24/7",
         "description": "Dessert, Bubble_tea restaurant",
         "amenity": "restaurant"
       },
@@ -1616,7 +1616,7 @@
       "properties": {
         "name": "Bixi",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bike sharing station",
         "amenity": "bicycle_rental"
       },
@@ -1630,7 +1630,7 @@
       "properties": {
         "name": "Bixi",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bike sharing station",
         "amenity": "bicycle_rental"
       },
@@ -1644,7 +1644,7 @@
       "properties": {
         "name": "Bixi",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bike sharing station",
         "amenity": "bicycle_rental"
       },
@@ -1658,7 +1658,7 @@
       "properties": {
         "name": "Bixi",
         "addr": "Address unavailable",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bike sharing station with 19 docks",
         "amenity": "bicycle_rental"
       },
@@ -1672,7 +1672,7 @@
       "properties": {
         "name": "Garage Beirut",
         "addr": "1238 Rue Mackay, Montréal, QC, H3G 2H4",
-        "opening_hours": "Mo-Su 11:00-22:00",
+        "opening_hours": "24/7",
         "description": "Restaurant",
         "amenity": "restaurant"
       },
@@ -1686,7 +1686,7 @@
       "properties": {
         "name": "Fondue Haidilao",
         "addr": "1194 Saint-Catherine St W, Montreal, Quebec H3B 1K1",
-        "opening_hours": "Mo-Su 11:00-04:00",
+        "opening_hours": "24/7",
         "description": "Asian restaurant",
         "amenity": "restaurant"
       },
@@ -1700,7 +1700,7 @@
       "properties": {
         "name": "sparta chicken",
         "addr": "1235 Rue Guy, Montréal, Québec, H3H 2K5",
-        "opening_hours": "Mo-Su 13:00-03:00",
+        "opening_hours": "24/7",
         "description": "Greek_fried_chiken restaurant",
         "amenity": "restaurant"
       },
@@ -1714,7 +1714,7 @@
       "properties": {
         "name": "Cafe Myriade",
         "addr": "1432 Mackay St, Montreal, Quebec H3G 2H7",
-        "opening_hours": "Mo-Su 08:00-19:00",
+        "opening_hours": "24/7",
         "description": "Fresh-roasted coffees brewed in a contemporary space, plus baked goods & croissants.",
         "amenity": "restaurant"
       },
@@ -1728,7 +1728,7 @@
       "properties": {
         "name": "McKibbin's",
         "addr": "1426 Bishop St, Montreal, Quebec H3G 2E6",
-        "opening_hours": "Mo-Su 11:30–03:00",
+        "opening_hours": "24/7",
         "description": "Cozy, woodsy pub (part of a local chain) for Celtic comfort food, live music, pitchers & TV sports.",
         "amenity": "restaurant"
       },
@@ -1742,7 +1742,7 @@
       "properties": {
         "name": "Starbucks",
         "addr": "1457 Saint-Catherine St W, Montreal, Quebec H3G 1S6",
-        "opening_hours": "Mo-Su 06:30-22:00",
+        "opening_hours": "24/7",
         "description": "Seattle-based coffeehouse chain known for its signature roasts, light bites and WiFi availability.",
         "amenity": "restaurant"
       },
@@ -1756,7 +1756,7 @@
       "properties": {
         "name": "Starbucks",
         "addr": "2000 Guy St, Montreal, Quebec H3H 2N4",
-        "opening_hours": "Mo-Su 06:30-22:00",
+        "opening_hours": "24/7",
         "description": "Seattle-based coffeehouse chain known for its signature roasts, light bites and WiFi availability.",
         "amenity": "restaurant"
       },
@@ -1770,7 +1770,7 @@
       "properties": {
         "name": "Java U Guy",
         "addr": "1455 Guy St, Montreal, Quebec H3H 2L5",
-        "opening_hours": "Mo-Su 07:00-21:00",
+        "opening_hours": "24/7",
         "description": "Cafe",
         "amenity": "restaurant"
       },
@@ -1784,7 +1784,7 @@
       "properties": {
         "name": "A&W",
         "addr": "1550 Blvd. De Maisonneuve Ouest #101, Montreal, Quebec H3G 1N1",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Fast-food outlet serving up namesake root beer, plus burgers, chicken & fries.",
         "amenity": "restaurant"
       },
@@ -1798,7 +1798,7 @@
       "properties": {
         "name": "Matcha Zanmai",
         "addr": "1428 Mackay St, Montreal, Quebec H3G 2H9",
-        "opening_hours": "Mo-Su 12:00-22:00",
+        "opening_hours": "24/7",
         "description": "Japanese sweets restaurant",
         "amenity": "restaurant"
       },
@@ -1812,7 +1812,7 @@
       "properties": {
         "name": "Ganadara",
         "addr": "1417 Mackay St, Montreal, Quebec H3G 0H2",
-        "opening_hours": "Mo-Su 11:30-20:30",
+        "opening_hours": "24/7",
         "description": "Hearty Korean favourites, from seafood pancakes to bibimbop, dished up in a bustling, compact venue.",
         "amenity": "restaurant"
       },
@@ -1826,7 +1826,7 @@
       "properties": {
         "name": "Vanier Library",
         "addr": "7141 Sherbrooke St W, Montreal, Quebec H4B 1R6",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Loyola Campus University Library",
         "amenity": "library"
       },
@@ -1854,7 +1854,7 @@
       "properties": {
         "name": "Subway",
         "addr": "7420 Sherbrooke St W, Montreal, Quebec H4B 1R7",
-        "opening_hours": "Mo-Su 07:00-22:00",
+        "opening_hours": "24/7",
         "description": "Casual counter-serve chain for build-your-own sandwiches & salads, with health-conscious options.",
         "amenity": "restaurant"
       },
@@ -1868,7 +1868,7 @@
       "properties": {
         "name": "Université Concordia / Campus Loyola",
         "addr": "Montreal, QC H4B 1R6",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1882,7 +1882,7 @@
       "properties": {
         "name": "Université Concordia / Campus Loyola",
         "addr": "Montreal, QC H4B 1R6",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1896,7 +1896,7 @@
       "properties": {
         "name": "Sherbrooke / West Broadway",
         "addr": "Montreal, QC H4B 1R6",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1910,7 +1910,7 @@
       "properties": {
         "name": "West Broadway / Sherbrooke",
         "addr": "Montreal, QC H4B 1R6",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1924,7 +1924,7 @@
       "properties": {
         "name": "West Broadway / De Terrebonne",
         "addr": "Montreal, QC H4B 1R6",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Bus stop",
         "amenity": "bus_station"
       },
@@ -1938,7 +1938,7 @@
       "properties": {
         "name": "Souvlaki George® Restaurant",
         "addr": "6995 Monkland Ave, Montreal, Quebec H4B 1J8",
-        "opening_hours": "Mo-Su 11:00-21:00",
+        "opening_hours": "24/7",
         "description": "Quick-serve grilled kebab platters, gyro pita combos & North American eats in an informal space.",
         "amenity": "restaurant"
       },
@@ -1952,7 +1952,7 @@
       "properties": {
         "name": "Dagwoods La Sandwicherie",
         "addr": "6969 Sherbrooke St W, Montreal, Quebec H4B 1R1",
-        "opening_hours": "Mo-Su 11:00-21:00",
+        "opening_hours": "24/7",
         "description": "Sandwhich Shop.",
         "amenity": "restaurant"
       },
@@ -1966,7 +1966,7 @@
       "properties": {
         "name": "Recreational park / Parc de loisirs -Concordia University - Loyola Campus",
         "addr": "Montreal, Quebec H4B 1E1",
-        "opening_hours": "Mo-Su 00:00-24:00",
+        "opening_hours": "24/7",
         "description": "Public park, Dogs Allowed",
         "amenity": "park"
       },
