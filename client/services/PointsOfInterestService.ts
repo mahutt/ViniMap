@@ -4,25 +4,129 @@ import poiFeatureCollection from '@/assets/geojson/pois.json';
 import type { Feature, FeatureCollection, Point } from 'geojson';
 import LocalLocations from './LocalLocations';
 
+const dayMap: Record<number, string> = {
+  0: 'Su',
+  1: 'Mo',
+  2: 'Tu',
+  3: 'We',
+  4: 'Th',
+  5: 'Fr',
+  6: 'Sa',
+};
+
+const isInDayRange = (
+  currentDayIndex: number,
+  startDayIndex: number,
+  endDayIndex: number
+): boolean => {
+  if (startDayIndex <= endDayIndex) {
+    return currentDayIndex >= startDayIndex && currentDayIndex <= endDayIndex;
+  }
+  return currentDayIndex >= startDayIndex || currentDayIndex <= endDayIndex;
+};
+
+const isCurrentDayInRange = (currentDayCode: string, dayRange: string): boolean => {
+  const dayRanges = dayRange.split(',');
+  const days = Object.values(dayMap);
+  const currentDayIndex = days.indexOf(currentDayCode);
+
+  if (currentDayIndex === -1) {
+    return false;
+  }
+
+  for (const range of dayRanges) {
+    if (!range.includes('-')) {
+      if (range === currentDayCode) {
+        return true;
+      }
+      continue;
+    }
+    const [startDay, endDay] = range.split('-');
+    const startDayIndex = days.indexOf(startDay);
+    const endDayIndex = days.indexOf(endDay);
+
+    if (startDayIndex === -1 || endDayIndex === -1) {
+      continue;
+    }
+
+    if (isInDayRange(currentDayIndex, startDayIndex, endDayIndex)) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const isCurrentTimeInRange = (currentTime: number, timeRange: string): boolean => {
+  const [startTime, endTime] = timeRange.split('-');
+
+  const startParts = startTime.split(':').map(Number);
+  const endParts = endTime.split(':').map(Number);
+  const startTimeMinutes = startParts[0] * 60 + (startParts[1] || 0);
+
+  let endTimeMinutes = endParts[0] * 60 + (endParts[1] || 0);
+  if (endParts[0] === 24) {
+    endTimeMinutes = 24 * 60;
+  }
+  if (endTimeMinutes <= startTimeMinutes) {
+    endTimeMinutes += 24 * 60;
+  }
+
+  return currentTime >= startTimeMinutes && currentTime < endTimeMinutes;
+};
+
+function isCurrentlyOpen(openingHours?: string): boolean {
+  if (openingHours === '24/7') return true;
+
+  if (!openingHours) return false;
+
+  const now = new Date();
+  const currentDay = now.getDay();
+  const currentHour = now.getHours();
+  const currentMinute = now.getMinutes();
+  const currentTime = currentHour * 60 + currentMinute;
+  const currentDayCode = dayMap[currentDay];
+
+  const ruleSets = openingHours.split(';').map((set) => set.trim());
+
+  for (const ruleSet of ruleSets) {
+    if (!ruleSet) continue;
+
+    const parts = ruleSet.split(' ');
+    if (parts.length < 2) continue;
+
+    const dayRange = parts[0];
+    const timeRange = parts[1];
+
+    if (!isCurrentDayInRange(currentDayCode, dayRange)) {
+      continue;
+    }
+
+    if (timeRange && isCurrentTimeInRange(currentTime, timeRange)) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 const extractLocation = (feature: Feature<Point>): Location => {
   return {
     name: feature.properties?.name,
     coordinates: feature.geometry.coordinates,
     data: {
       address: feature.properties?.addr,
-      // Currently, we assume all POIs are open
-      isOpen: true,
       hours: feature.properties?.opening_hours,
       category: feature.properties?.description,
       type: feature.properties?.amenity,
     },
   };
 };
+
 class PointsOfInterestService {
   private readonly featureCollection: FeatureCollection<Point>;
 
   constructor() {
-    // We only support POIs that are Points
     this.featureCollection = poiFeatureCollection as FeatureCollection<Point>;
   }
 
@@ -49,8 +153,6 @@ class PointsOfInterestService {
 }
 
 const pointsOfInterestService = new PointsOfInterestService();
-
-// Add outdoor POIs to location input autocomplete
 for (const poi of pointsOfInterestService.getFeatureCollection().features) {
   if (!poi.properties?.name) continue;
   LocalLocations.getInstance().add(poi.properties.name, (_: string) => {
@@ -58,4 +160,5 @@ for (const poi of pointsOfInterestService.getFeatureCollection().features) {
   });
 }
 
+export { isCurrentlyOpen };
 export default pointsOfInterestService;

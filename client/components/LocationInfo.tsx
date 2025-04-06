@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React from 'react';
 import { Text, StyleSheet, View, TouchableOpacity } from 'react-native';
 import { IconSymbol } from './ui/IconSymbol';
+import { isCurrentlyOpen } from '@/services/PointsOfInterestService';
 
 const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
   bicycle_rental: 'bicycle-outline',
@@ -24,6 +25,8 @@ export function LocationInfo() {
 
   const isCustomPOI = endLocation?.data?.hours !== undefined;
   const iconName = iconMap[endLocation?.data?.type] || 'location';
+
+  const locationIsOpen = isCustomPOI ? isCurrentlyOpen(endLocation?.data?.hours) : false;
 
   return (
     <View style={styles.container}>
@@ -47,8 +50,8 @@ export function LocationInfo() {
       </View>
 
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-        <Text style={[styles.isOpen, { color: endLocation?.data?.isOpen ? 'green' : 'red' }]}>
-          {endLocation?.data?.isOpen ? 'Open Now' : 'Closed Now'}
+        <Text style={[styles.isOpen, { color: locationIsOpen ? 'green' : 'red' }]}>
+          {locationIsOpen ? 'Open Now' : 'Closed Now'}
         </Text>
 
         {isCustomPOI && endLocation?.data?.hours && (
