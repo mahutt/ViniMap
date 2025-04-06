@@ -342,7 +342,7 @@ export class TaskService {
    * @param locations - Array of locations in the path
    * @returns Total Euclidean distance
    */
-  private static calculateTotalDistance(locations: Location[]): number {
+  static calculateTotalDistance(locations: Location[]): number {
     let totalDistance = 0;
 
     for (let i = 0; i < locations.length - 1; i++) {
