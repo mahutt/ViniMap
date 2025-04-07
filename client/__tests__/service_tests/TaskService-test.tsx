@@ -141,20 +141,71 @@ describe('generateTaskRoute', () => {
   });
 
   // F3
-  //   it('<add description>', async () => {
-  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
-  //     const selectedTasks: Task[] = [];
-  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
-  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
-  //   });
+  it('gracefully handles 0 core tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [6, 1] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 5] },
+        startTime: null,
+        duration: 10,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['f1', 'f2', 'f3']);
+  });
 
   // F4
-  //   it('<add description>', async () => {
-  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
-  //     const selectedTasks: Task[] = [];
-  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
-  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
-  //   });
+  it('gracefully handles 1 core task', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [6, 1] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 5] },
+        startTime: null,
+        duration: 10,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f1', 'f2', 'f3']);
+  });
 
   // F5
   //   it('<add description>', async () => {
@@ -173,12 +224,41 @@ describe('generateTaskRoute', () => {
   //   });
 
   // F7
-  //   it('<add description>', async () => {
-  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
-  //     const selectedTasks: Task[] = [];
-  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
-  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
-  //   });
+  it('gracefully handles 1 filler task', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: new Date('2023-10-01T10:10:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f1', 'c2', 'c3']);
+  });
 
   // F8
   //   it('<add description>', async () => {
