@@ -141,12 +141,34 @@ describe('generateTaskRoute', () => {
   });
 
   // F3
-  //   it('<add description>', async () => {
-  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
-  //     const selectedTasks: Task[] = [];
-  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
-  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
-  //   });
+  it('gracefully handles 0 core tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [6, 1] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 5] },
+        startTime: null,
+        duration: 10,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['f1', 'f2', 'f3']);
+  });
 
   // F4
   //   it('<add description>', async () => {
@@ -205,12 +227,12 @@ describe('generateTaskRoute', () => {
   //   });
 
   // F11
-  //   it('<add description>', async () => {
-  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
-  //     const selectedTasks: Task[] = [];
-  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
-  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
-  //   });
+  // it('<add description>', async () => {
+  //   const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+  //   const selectedTasks: Task[] = []
+  //   const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+  //   expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  // });
 });
 
 describe('travelDistanceAwareReOrder', () => {
