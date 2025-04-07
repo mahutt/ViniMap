@@ -347,25 +347,36 @@ export class TaskService {
 
   private static optimizeReOrder(tasks: Task[], startLocation: Location, endLocation: Location) {
     // Check if we should swap any adjacent tasks to optimize for the final destination
-    // This is an optional optimization to see if we can improve the route
+    if (tasks.length <= 1) return;
+
     let improved = true;
-    while (improved && tasks.length > 1) {
+    let iterations = 0;
+    const maxIterations = tasks.length * tasks.length; // Safety limit to prevent infinite loops
+
+    while (improved && iterations < maxIterations) {
       improved = false;
+      iterations++;
 
       for (let i = 0; i < tasks.length - 1; i++) {
-        const currentOrder = [
-          ...(i === 0 ? [startLocation] : []),
-          ...tasks.map((task) => task.location),
-          endLocation,
+        // Create a route with the current task order
+        const locationArray = [startLocation];
+        for (const task of tasks) {
+          locationArray.push(task.location!);
+        }
+        locationArray.push(endLocation);
+
+        // Create a copy of the current route
+        const swappedLocationArray = [...locationArray];
+
+        // Swap the positions in the route (i+1 and i+2 because we added startLocation at index 0)
+        [swappedLocationArray[i + 1], swappedLocationArray[i + 2]] = [
+          swappedLocationArray[i + 2],
+          swappedLocationArray[i + 1],
         ];
 
-        // Create a modified order with adjacent tasks swapped
-        const swappedOrder = [...currentOrder];
-        [swappedOrder[i + 1], swappedOrder[i + 2]] = [swappedOrder[i + 2], swappedOrder[i + 1]];
-
         // Calculate distances for both orders
-        const currentDistance = TaskService.calculateTotalDistance(currentOrder as Location[]);
-        const swappedDistance = TaskService.calculateTotalDistance(swappedOrder as Location[]);
+        const currentDistance = TaskService.calculateTotalDistance(locationArray);
+        const swappedDistance = TaskService.calculateTotalDistance(swappedLocationArray);
 
         // If swapping improves the total distance, swap tasks in the result
         if (swappedDistance < currentDistance) {
