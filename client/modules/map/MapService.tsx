@@ -303,9 +303,9 @@ const fetchLocationData = async (coordinates: Coordinates): Promise<Location> =>
 
     return {
       coordinates: coordinates,
-      name: data.results[1]?.name || 'Selected Location',
+      name: data.results[1]?.name ?? 'Selected Location',
       data: {
-        address: data.results[0]?.name || 'Address not available',
+        address: data.results[0]?.name ?? 'Address not available',
         isOpen: Boolean(data.results[1].opening_hours),
       },
     };

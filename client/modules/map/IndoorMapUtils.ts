@@ -108,9 +108,9 @@ export function getIndoorFeatureFromCoordinates(
     }
     if (booleanPointInPolygon(coordinates, feature.geometry)) {
       const name =
-        feature?.properties?.name ||
-        getFallbackNameByAmenity(feature?.properties?.amenity) ||
-        feature?.properties?.ref ||
+        feature?.properties?.name ??
+        getFallbackNameByAmenity(feature?.properties?.amenity) ??
+        feature?.properties?.ref ??
         'Unknown room';
       return {
         coordinates,
