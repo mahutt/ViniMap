@@ -197,20 +197,131 @@ describe('generateTaskRoute', () => {
   //   });
 
   // F10
-  //   it('<add description>', async () => {
-  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
-  //     const selectedTasks: Task[] = [];
-  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
-  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
-  //   });
+  it('it should handle 1 filler task between core tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [15, 0] },
+        startTime: new Date('2023-10-01T10:30:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: null,
+        duration: 1,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f1', 'c2', 'c3']);
+  });
 
   // F11
-  //   it('<add description>', async () => {
-  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
-  //     const selectedTasks: Task[] = [];
-  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
-  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
-  //   });
+  it('it should correctly handle more than 5 filler tasks between core tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [50, 0] },
+        startTime: new Date('2023-10-01T14:00:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T15:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [15, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [20, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f4',
+        text: 'task',
+        location: { name: 'location', coordinates: [25, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f5',
+        text: 'task',
+        location: { name: 'location', coordinates: [30, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f6',
+        text: 'task',
+        location: { name: 'location', coordinates: [35, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f7',
+        text: 'task',
+        location: { name: 'location', coordinates: [40, 0] },
+        startTime: null,
+        duration: 1,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual([
+      'c1',
+      'f1',
+      'f2',
+      'f3',
+      'f4',
+      'f5',
+      'f6',
+      'f7',
+      'c2',
+      'c3',
+    ]);
+  });
 });
 
 describe('travelDistanceAwareReOrder', () => {
