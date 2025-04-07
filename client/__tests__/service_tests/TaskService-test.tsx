@@ -87,6 +87,86 @@ describe('generateTaskRoute', () => {
     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
   });
+
+  // F2
+  //   it('<add description>', async () => {
+  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+  //     const selectedTasks: Task[] = [];
+  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  //   });
+
+  // F3
+  //   it('<add description>', async () => {
+  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+  //     const selectedTasks: Task[] = [];
+  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  //   });
+
+  // F4
+  //   it('<add description>', async () => {
+  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+  //     const selectedTasks: Task[] = [];
+  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  //   });
+
+  // F5
+  //   it('<add description>', async () => {
+  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+  //     const selectedTasks: Task[] = [];
+  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  //   });
+
+  // F6
+  //   it('<add description>', async () => {
+  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+  //     const selectedTasks: Task[] = [];
+  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  //   });
+
+  // F7
+  //   it('<add description>', async () => {
+  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+  //     const selectedTasks: Task[] = [];
+  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  //   });
+
+  // F8
+  //   it('<add description>', async () => {
+  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+  //     const selectedTasks: Task[] = [];
+  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  //   });
+
+  // F9
+  //   it('<add description>', async () => {
+  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+  //     const selectedTasks: Task[] = [];
+  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  //   });
+
+  // F10
+  //   it('<add description>', async () => {
+  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+  //     const selectedTasks: Task[] = [];
+  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  //   });
+
+  // F11
+  //   it('<add description>', async () => {
+  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+  //     const selectedTasks: Task[] = [];
+  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  //   });
 });
 
 describe('travelDistanceAwareReOrder', () => {
