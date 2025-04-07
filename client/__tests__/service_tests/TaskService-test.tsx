@@ -1,10 +1,93 @@
 import { TaskService } from '@/services/TaskService';
-import { Task, Location } from '@/types';
+import { Task, Location, Route } from '@/types';
 
-// Mocks
 jest.mock('@/modules/map/MapService', () => ({
-  getRoute: jest.fn(),
+  getRoute: jest.fn(
+    (startLocation: Location, endLocation: Location, _: string): Promise<Route | null> => {
+      const WALK_SPEED = 1;
+
+      const distance = Math.sqrt(
+        Math.pow(endLocation.coordinates[0] - startLocation.coordinates[0], 2) +
+          Math.pow(endLocation.coordinates[1] - startLocation.coordinates[1], 2)
+      );
+
+      return Promise.resolve({
+        duration: Math.round(distance / WALK_SPEED),
+        distance: distance,
+        segments: [
+          {
+            id: '1',
+            type: 'dashed',
+            steps: [startLocation.coordinates, endLocation.coordinates],
+          },
+        ],
+        tunnel: false,
+      });
+    }
+  ),
 }));
+
+jest.mock('@/services/gptService', () => ({
+  generateMissingDurations: jest.fn().mockReturnValue(Promise.resolve()),
+  generateMissingLocations: jest.fn().mockReturnValue(Promise.resolve()),
+}));
+
+describe('generateTaskRoute', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  // F1 (Base Case)
+  it('should return a route with duration and distance', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: new Date('2023-10-01T10:10:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [6, 1] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 5] },
+        startTime: null,
+        duration: 10,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  });
+});
 
 describe('travelDistanceAwareReOrder', () => {
   afterEach(() => {
