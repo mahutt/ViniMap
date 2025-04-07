@@ -151,7 +151,7 @@ class GoogleService {
 
       const formattedEvent = {
         className: event.summary,
-        location: event.location || 'Unknown Location',
+        location: event.location ?? 'Unknown Location',
         time: `${startTime} - ${endTime}`,
       };
 
