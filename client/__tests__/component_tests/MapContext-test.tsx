@@ -176,7 +176,7 @@ describe('MapContext', () => {
     }
 
     await act(async () => {
-      await mapContext?.updateSelectedMapIfNeeded();
+      mapContext?.updateSelectedMapIfNeeded();
     });
 
     await waitFor(() => {
@@ -332,7 +332,7 @@ describe('MapContext', () => {
     };
 
     await act(async () => {
-      await mapContext?.onMapPress(mockEvent);
+      mapContext?.onMapPress(mockEvent);
     });
 
     await waitFor(() => {
