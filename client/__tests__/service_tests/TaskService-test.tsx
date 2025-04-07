@@ -208,7 +208,7 @@ describe('generateTaskRoute', () => {
   });
 
   // F5
-  it('Gracefully handles 5 core tasks', async () => {
+  it('Gracefully handles more than 5 core tasks', async () => {
     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
     const selectedTasks: Task[] = [
       {
