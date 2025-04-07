@@ -261,12 +261,86 @@ describe('generateTaskRoute', () => {
   });
 
   // F8
-  //   it('<add description>', async () => {
-  //     const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
-  //     const selectedTasks: Task[] = [];
-  //     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
-  //     expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
-  //   });
+  it('gracefully handles more than 5 filler tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: new Date('2023-10-01T10:10:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [6, 1] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 5] },
+        startTime: null,
+        duration: 10,
+      },
+      {
+        id: 'f4',
+        text: 'task',
+        location: { name: 'location', coordinates: [1, 8] },
+        startTime: null,
+        duration: 60,
+      },
+      {
+        id: 'f5',
+        text: 'task',
+        location: { name: 'location', coordinates: [1, 7] },
+        startTime: null,
+        duration: 60,
+      },
+      {
+        id: 'f6',
+        text: 'task',
+        location: { name: 'location', coordinates: [1, 6] },
+        startTime: null,
+        duration: 60,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual([
+      'c1',
+      'f2',
+      'f1',
+      'c2',
+      'f3',
+      'c3',
+      'f4',
+      'f5',
+      'f6',
+    ]);
+  });
 
   // F9
   it('it should correctly handle 0 filler tasks between core tasks', async () => {
