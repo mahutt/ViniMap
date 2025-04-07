@@ -45,7 +45,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({
         <View style={styles.modalContainer}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalTitle}>Your Profile</Text>
-            <TouchableOpacity onPress={onClose}>
+            <TouchableOpacity testID="close-button" onPress={onClose}>
               <Feather name="x" size={24} color="#333" />
             </TouchableOpacity>
           </View>

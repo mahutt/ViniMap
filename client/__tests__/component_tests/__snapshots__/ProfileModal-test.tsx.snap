@@ -1,3 +1,534 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`ProfileModal matches the snapshot 1`] = `null`;
+exports[`ProfileModal matches the snapshot 1`] = `
+<Modal
+  animationType="slide"
+  hardwareAccelerated={false}
+  onRequestClose={[MockFunction]}
+  transparent={true}
+  visible={true}
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "rgba(0,0,0,0.5)",
+        "flex": 1,
+        "justifyContent": "center",
+      }
+    }
+  >
+    <View
+      style={
+        {
+          "backgroundColor": "white",
+          "borderRadius": 12,
+          "elevation": 5,
+          "padding": 20,
+          "shadowColor": "#000",
+          "shadowOffset": {
+            "height": 2,
+            "width": 0,
+          },
+          "shadowOpacity": 0.25,
+          "shadowRadius": 3.84,
+          "width": "85%",
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "flexDirection": "row",
+            "justifyContent": "space-between",
+            "marginBottom": 20,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "fontSize": 20,
+              "fontWeight": "700",
+            }
+          }
+        >
+          Your Profile
+        </Text>
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": undefined,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={true}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "opacity": 1,
+            }
+          }
+          testID="close-button"
+        >
+          <Feather
+            color="#333"
+            name="x"
+            size={24}
+          />
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "alignItems": "center",
+            "marginBottom": 20,
+          }
+        }
+      >
+        <Image
+          source={
+            {
+              "uri": "https://example.com/photo.jpg",
+            }
+          }
+          style={
+            {
+              "borderRadius": 40,
+              "height": 80,
+              "marginBottom": 10,
+              "width": 80,
+            }
+          }
+        />
+        <Text
+          style={
+            {
+              "fontSize": 18,
+              "fontWeight": "600",
+              "marginBottom": 5,
+            }
+          }
+        >
+          John Doe
+        </Text>
+        <Text
+          style={
+            {
+              "color": "#666",
+              "fontSize": 14,
+            }
+          }
+        >
+          john.doe@example.com
+        </Text>
+      </View>
+      <View
+        style={
+          {
+            "marginBottom": 20,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "fontSize": 16,
+              "fontWeight": "600",
+              "marginBottom": 10,
+            }
+          }
+        >
+          Your Calendars
+        </Text>
+        <RCTScrollView
+          data={
+            [
+              "Calendar 1",
+              "Calendar 2",
+              "Work Calendar",
+            ]
+          }
+          getItem={[Function]}
+          getItemCount={[Function]}
+          keyExtractor={[Function]}
+          onContentSizeChange={[Function]}
+          onLayout={[Function]}
+          onMomentumScrollBegin={[Function]}
+          onMomentumScrollEnd={[Function]}
+          onScroll={[Function]}
+          onScrollBeginDrag={[Function]}
+          onScrollEndDrag={[Function]}
+          removeClippedSubviews={false}
+          renderItem={[Function]}
+          scrollEventThrottle={0.0001}
+          stickyHeaderIndices={[]}
+          style={
+            {
+              "maxHeight": 120,
+            }
+          }
+          viewabilityConfigCallbackPairs={[]}
+        >
+          <View>
+            <View
+              onFocusCapture={[Function]}
+              onLayout={[Function]}
+              style={null}
+            >
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#f5f5f5",
+                    "borderRadius": 8,
+                    "flexDirection": "row",
+                    "marginBottom": 8,
+                    "opacity": 1,
+                    "padding": 10,
+                  }
+                }
+              >
+                <Feather
+                  color="#852C3A"
+                  name="calendar"
+                  size={16}
+                />
+                <Text
+                  style={
+                    {
+                      "fontSize": 14,
+                      "marginLeft": 10,
+                    }
+                  }
+                >
+                  Calendar 1
+                </Text>
+              </View>
+            </View>
+            <View
+              onFocusCapture={[Function]}
+              onLayout={[Function]}
+              style={null}
+            >
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#f5f5f5",
+                    "borderRadius": 8,
+                    "flexDirection": "row",
+                    "marginBottom": 8,
+                    "opacity": 1,
+                    "padding": 10,
+                  }
+                }
+              >
+                <Feather
+                  color="#852C3A"
+                  name="calendar"
+                  size={16}
+                />
+                <Text
+                  style={
+                    {
+                      "fontSize": 14,
+                      "marginLeft": 10,
+                    }
+                  }
+                >
+                  Calendar 2
+                </Text>
+              </View>
+            </View>
+            <View
+              onFocusCapture={[Function]}
+              onLayout={[Function]}
+              style={null}
+            >
+              <View
+                accessibilityState={
+                  {
+                    "busy": undefined,
+                    "checked": undefined,
+                    "disabled": undefined,
+                    "expanded": undefined,
+                    "selected": undefined,
+                  }
+                }
+                accessibilityValue={
+                  {
+                    "max": undefined,
+                    "min": undefined,
+                    "now": undefined,
+                    "text": undefined,
+                  }
+                }
+                accessible={true}
+                collapsable={false}
+                focusable={true}
+                onClick={[Function]}
+                onResponderGrant={[Function]}
+                onResponderMove={[Function]}
+                onResponderRelease={[Function]}
+                onResponderTerminate={[Function]}
+                onResponderTerminationRequest={[Function]}
+                onStartShouldSetResponder={[Function]}
+                style={
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#f5f5f5",
+                    "borderRadius": 8,
+                    "flexDirection": "row",
+                    "marginBottom": 8,
+                    "opacity": 1,
+                    "padding": 10,
+                  }
+                }
+              >
+                <Feather
+                  color="#852C3A"
+                  name="calendar"
+                  size={16}
+                />
+                <Text
+                  style={
+                    {
+                      "fontSize": 14,
+                      "marginLeft": 10,
+                    }
+                  }
+                >
+                  Work Calendar
+                </Text>
+              </View>
+            </View>
+          </View>
+        </RCTScrollView>
+      </View>
+      <View
+        style={
+          {
+            "backgroundColor": "#e0e0e0",
+            "height": 1,
+            "marginVertical": 15,
+          }
+        }
+      />
+      <View
+        style={
+          {
+            "marginBottom": 20,
+          }
+        }
+      >
+        <Text
+          style={
+            {
+              "fontSize": 16,
+              "fontWeight": "600",
+              "marginBottom": 10,
+            }
+          }
+        >
+          Add Calendar ID
+        </Text>
+        <TextInput
+          onChangeText={[Function]}
+          placeholder="Enter calendar ID"
+          style={
+            {
+              "borderColor": "#ddd",
+              "borderRadius": 8,
+              "borderWidth": 1,
+              "marginBottom": 15,
+              "padding": 12,
+            }
+          }
+          value=""
+        />
+        <View
+          accessibilityState={
+            {
+              "busy": undefined,
+              "checked": undefined,
+              "disabled": true,
+              "expanded": undefined,
+              "selected": undefined,
+            }
+          }
+          accessibilityValue={
+            {
+              "max": undefined,
+              "min": undefined,
+              "now": undefined,
+              "text": undefined,
+            }
+          }
+          accessible={true}
+          collapsable={false}
+          focusable={false}
+          onClick={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          style={
+            {
+              "alignItems": "center",
+              "backgroundColor": "#852C3A",
+              "borderRadius": 8,
+              "opacity": 1,
+              "padding": 12,
+            }
+          }
+        >
+          <Text
+            style={
+              {
+                "color": "white",
+                "fontWeight": "600",
+              }
+            }
+          >
+            Add Calendar
+          </Text>
+        </View>
+      </View>
+      <View
+        accessibilityState={
+          {
+            "busy": undefined,
+            "checked": undefined,
+            "disabled": undefined,
+            "expanded": undefined,
+            "selected": undefined,
+          }
+        }
+        accessibilityValue={
+          {
+            "max": undefined,
+            "min": undefined,
+            "now": undefined,
+            "text": undefined,
+          }
+        }
+        accessible={true}
+        collapsable={false}
+        focusable={true}
+        onClick={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        style={
+          {
+            "alignItems": "center",
+            "backgroundColor": "#333",
+            "borderRadius": 8,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "opacity": 1,
+            "padding": 12,
+          }
+        }
+      >
+        <Feather
+          color="#fff"
+          name="log-out"
+          size={16}
+        />
+        <Text
+          style={
+            {
+              "color": "white",
+              "fontWeight": "600",
+              "marginLeft": 8,
+            }
+          }
+        >
+          Sign Out
+        </Text>
+      </View>
+    </View>
+  </View>
+</Modal>
+`;
