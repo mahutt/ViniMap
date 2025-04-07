@@ -1,28 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  ScrollView,
-  Modal,
-} from 'react-native';
-import { Location, Task } from '@/modules/map/Types';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+
+import { Task, Location } from '@/types';
 import { TaskList } from '@/classes/TaskList';
 import { TaskListCaretaker } from '@/classes/TaskListCaretaker';
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import { useTask } from '@/providers/TaskContext';
-import LocationsAutocomplete from '@/components/LocationsAutocomplete';
 import TaskCard from '@/components/TaskCard';
 import { MapState, useMap } from '@/modules/map/MapContext';
 import { TaskService } from '@/services/TaskService';
 import { useRouter } from 'expo-router';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import CoordinateService from '@/services/CoordinateService';
+import TaskFormModal from '@/components/tasks/TaskFormModal';
 
 export default function TasksScreen() {
-  const { selectedTasks, setSelectedTasks, tasks, setTasks, setTaskRouteDescriptions } = useTask();
-  const { setState, setRoute, flyTo, userLocation } = useMap();
+  const { selectedTasks, setSelectedTasks, tasks, setTasks } = useTask();
+  const { setState, setRoute, userLocation, cameraRef } = useMap();
 
   const taskList = useRef(new TaskList());
   const caretaker = useRef(new TaskListCaretaker(taskList.current));
@@ -30,15 +23,16 @@ export default function TasksScreen() {
   const [taskName, setTaskName] = useState('');
   const [taskLocation, setTaskLocation] = useState('');
 
-  const [taskStartTime, setTaskStartTime] = useState(new Date(new Date().setHours(0, 0, 0, 0)));
+  const [taskStartTime, setTaskStartTime] = useState<Date | null>(null);
   const [taskDuration, setTaskDuration] = useState<number | null>(0);
+  const [showStartTimePicker, setShowStartTimePicker] = useState(false);
 
   const [autocompleteVisible, setAutocompleteVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const [modifiableTask, setModifiableTask] = useState<Task>();
+  const [modifiableTask, setModifiableTask] = useState<Task | null>(null);
 
-  const [newTaskLocation, setNewTaskLocation] = useState<Location>({
+  const [newTaskLocation, setNewTaskLocation] = useState<Location | null>({
     name: '',
     coordinates: [0, 0],
   });
@@ -52,7 +46,7 @@ export default function TasksScreen() {
   }, [tasks]);
 
   const addTask = () => {
-    if (!taskName.trim() || !taskLocation.trim()) return;
+    if (!taskName.trim()) return;
 
     const newTask: Task = {
       id: tasks.length.toString(),
@@ -60,8 +54,6 @@ export default function TasksScreen() {
       location: newTaskLocation,
       startTime: taskStartTime,
       duration: taskDuration,
-      endTime:
-        taskDuration === null ? null : new Date(taskStartTime.getTime() + taskDuration * 60000),
     };
 
     caretaker.current.save();
@@ -71,6 +63,8 @@ export default function TasksScreen() {
 
     setTaskName('');
     setTaskLocation('');
+    setTaskStartTime(null);
+    setTaskDuration(null);
   };
 
   const deleteTask = (id: string) => {
@@ -98,7 +92,6 @@ export default function TasksScreen() {
   };
 
   const editTask = (id: string) => {
-    console.log('Trying to modify');
     const tempTask = tasks.find((task) => task.id === id);
 
     if (!tempTask) {
@@ -109,8 +102,11 @@ export default function TasksScreen() {
     setModifiableTask(tempTask);
 
     setTaskName(tempTask.text);
-    setTaskLocation(tempTask.location.name ?? '');
+    setTaskLocation(tempTask.location?.name ?? '');
+    setNewTaskLocation(tempTask.location);
 
+    setTaskStartTime(tempTask.startTime);
+    setTaskDuration(tempTask.duration);
     setModalVisible(true);
   };
 
@@ -119,7 +115,13 @@ export default function TasksScreen() {
 
     const updatedTasks = tasks.map((task) =>
       task.id === modifiableTask.id
-        ? { ...task, text: taskName, location: { ...task.location, name: taskLocation } }
+        ? {
+            ...task,
+            text: taskName,
+            location: newTaskLocation,
+            startTime: taskStartTime,
+            duration: taskDuration,
+          }
         : task
     );
 
@@ -127,59 +129,56 @@ export default function TasksScreen() {
     setModalVisible(false);
     setTaskName('');
     setTaskLocation('');
-    setModifiableTask(undefined);
+
+    setModifiableTask(null);
   };
 
   const generateRoute = async () => {
-    const currentCoords = userLocation?.coordinates;
-
-    let currentLocation: Location;
-
-    if (currentCoords) {
-      currentLocation = {
-        name: 'Current Location',
-        coordinates: currentCoords,
-      };
-    } else {
-      currentLocation = {
-        name: 'Default Location: Concordia Hall Building',
-        coordinates: [-73.57845, 45.497042],
-      };
+    if (!userLocation) {
+      console.error('User location is not available');
+      return;
     }
 
-    const currentLocationTask: Task = {
-      id: '1000',
-      text: 'First Tasks',
-      location: currentLocation,
-      startTime: new Date(),
-      duration: 0,
-      endTime: new Date(),
-    };
+    const testTasks = selectedTasks;
 
-    const tasksForRouting: Task[] = [];
-
-    tasksForRouting.push(currentLocationTask);
-    tasksForRouting.push(...selectedTasks);
-
-    let newRoute = await TaskService.getOptimalRouteForPaths(
-      tasksForRouting,
-      setTaskRouteDescriptions
+    const { tasks: coreTasks, route: taskRoute } = await TaskService.generateTaskRoute(
+      userLocation,
+      testTasks
     );
 
-    for (let i = 0; i < newRoute.segments.length; i++) {
-      newRoute.segments[i].id = ('segement' + i).toString();
-    }
+    // should be removed eventually
+    setSelectedTasks(coreTasks);
 
-    setRoute(newRoute);
+    setRoute(taskRoute);
     router.push('/');
 
     setTimeout(() => {
-      if (userLocation) {
-        flyTo(userLocation.coordinates, 17);
+      // This is duplicate code that should be refactored
+      if (taskRoute.segments.length > 0 && cameraRef.current) {
+        const bounds = CoordinateService.calculateRouteCoordinateBounds(taskRoute);
+        cameraRef.current.fitBounds(
+          bounds.ne,
+          bounds.sw,
+          50, // padding
+          1500 // animation duration
+        );
       }
     }, 50);
 
     setState(MapState.TaskNavigation);
+  };
+
+  const toggleStartTimePicker = () => {
+    setShowStartTimePicker(!showStartTimePicker);
+  };
+
+  const clearStartTime = () => {
+    setTaskStartTime(null);
+  };
+
+  const clearLocation = () => {
+    setTaskLocation('');
+    setNewTaskLocation(null);
   };
 
   return (
@@ -210,7 +209,16 @@ export default function TasksScreen() {
         </ScrollView>
 
         <View style={styles.allInputsContainer}>
-          <TouchableOpacity style={styles.plusButton} onPress={() => setModalVisible(true)}>
+          <TouchableOpacity
+            style={styles.plusButton}
+            onPress={() => {
+              setModifiableTask(null);
+              setTaskName('');
+              setTaskLocation('');
+              setTaskStartTime(null);
+              setTaskDuration(null);
+              setModalVisible(true);
+            }}>
             <Text style={styles.plusButtonText}>+</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.pathButton} onPress={generateRoute}>
@@ -218,132 +226,35 @@ export default function TasksScreen() {
           </TouchableOpacity>
         </View>
       </View>
-
-      <Modal visible={modalVisible} transparent={true} animationType="fade">
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>{modifiableTask ? 'Edit Task' : 'Add Task'}</Text>
-
-            <TextInput
-              placeholder="Task name"
-              style={styles.inputText}
-              value={taskName}
-              onChangeText={setTaskName}
-            />
-
-            <TextInput
-              placeholder="Location"
-              style={styles.inputText}
-              value={taskLocation}
-              onChangeText={(text) => {
-                setTaskLocation(text);
-                setAutocompleteVisible(text.length > 0);
-              }}
-              onBlur={() => setTimeout(() => setAutocompleteVisible(false), 200)}
-            />
-
-            <View style={styles.timeInputs}>
-              <View style={styles.timeInputContainer}>
-                <Text>Start Time:</Text>
-                <DateTimePicker
-                  value={taskStartTime}
-                  mode="time"
-                  display="default"
-                  style={{ zIndex: 1000 }}
-                  onChange={(_, selectedTime) => {
-                    if (selectedTime) {
-                      setTaskStartTime(selectedTime);
-                    }
-                  }}
-                />
-              </View>
-
-              <View style={styles.timeInputContainer}>
-                <Text>Duration</Text>
-                <TextInput
-                  placeholder="min"
-                  style={styles.durationInput}
-                  value={taskDuration === null || taskDuration === 0 ? '' : taskDuration.toString()}
-                  keyboardType="numeric"
-                  onChangeText={(text) => {
-                    if (text === '') {
-                      setTaskDuration(null);
-                    } else {
-                      const minutes = parseInt(text, 10);
-                      setTaskDuration(isNaN(minutes) ? 0 : minutes);
-                    }
-                  }}
-                />
-              </View>
-            </View>
-
-            {autocompleteVisible && (
-              <View style={{ width: '100%' }}>
-                <LocationsAutocomplete
-                  query={taskLocation}
-                  callback={async (location) => {
-                    setTaskLocation(location.name ?? 'Un-named Location');
-                    setNewTaskLocation(location);
-                    setAutocompleteVisible(false);
-                  }}
-                />
-              </View>
-            )}
-
-            <TouchableOpacity
-              style={styles.addButton}
-              onPress={modifiableTask ? saveTaskChanges : addTask}>
-              <Text style={styles.addButtonText}>{modifiableTask ? 'Save Task' : 'Add Task'}</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => setModalVisible(false)}>
-              <Text style={styles.closeModal}>Close</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+      <TaskFormModal
+        modalVisible={modalVisible}
+        setModalVisible={setModalVisible}
+        taskName={taskName}
+        setTaskName={setTaskName}
+        taskLocation={taskLocation}
+        setTaskLocation={setTaskLocation}
+        taskStartTime={taskStartTime}
+        setTaskStartTime={setTaskStartTime}
+        taskDuration={taskDuration}
+        setTaskDuration={setTaskDuration}
+        showStartTimePicker={showStartTimePicker}
+        setShowStartTimePicker={setShowStartTimePicker}
+        toggleStartTimePicker={toggleStartTimePicker}
+        clearStartTime={clearStartTime}
+        clearLocation={clearLocation}
+        addTask={addTask}
+        modifiableTask={modifiableTask}
+        saveTaskChanges={saveTaskChanges}
+        setNewTaskLocation={setNewTaskLocation}
+        autocompleteVisible={autocompleteVisible}
+        setAutocompleteVisible={setAutocompleteVisible}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#E8EAED', padding: 20 },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
-  },
-  modalContent: {
-    backgroundColor: '#FFF',
-    padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
-    width: '80%',
-  },
-  modalTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 15 },
-  inputText: {
-    backgroundColor: '#FFF',
-    borderColor: '#ddd',
-    borderWidth: 1,
-    width: '100%',
-    padding: 10,
-    borderRadius: 10,
-    marginBottom: 10,
-  },
-  addButton: {
-    backgroundColor: '#852C3A',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 10,
-    marginTop: 10,
-  },
-  addButtonText: {
-    color: '#FFF',
-    fontSize: 16,
-  },
-  closeModal: { color: '#852C3A', marginTop: 15 },
-
   tasksWrapper: { paddingTop: 80 },
   sectionTitle: { fontSize: 24, fontWeight: 'bold' },
   scrollView: {
@@ -356,8 +267,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#E8EAED',
   },
   noTasksText: { textAlign: 'center', marginTop: 20, color: 'gray' },
-
-  inputContainer: { flex: 1, marginRight: 10 },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -369,9 +278,7 @@ const styles = StyleSheet.create({
     color: '#852C3A',
     paddingRight: 10,
   },
-  plusButtonDisabled: {
-    backgroundColor: '#ccc',
-  },
+
   allInputsContainer: {
     flexDirection: 'column',
     alignItems: 'center',
@@ -387,7 +294,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 10,
   },
-
   pathButtonText: {
     fontSize: 18,
     color: '#FFF',
@@ -406,25 +312,5 @@ const styles = StyleSheet.create({
   plusButtonText: {
     fontSize: 24,
     color: '#FFF',
-  },
-  timeInputContainer: {
-    backgroundColor: '#FFF',
-    paddingVertical: 5,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    flexDirection: 'column',
-    flex: 1,
-  },
-  durationInput: {
-    backgroundColor: '#FFF',
-    borderColor: '#ddd',
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 10,
-    width: 100,
-  },
-  timeInputs: {
-    width: '100%',
-    flexDirection: 'row',
   },
 });

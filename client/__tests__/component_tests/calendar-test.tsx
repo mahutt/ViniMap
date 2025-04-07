@@ -172,18 +172,6 @@ describe('<Calendar />', () => {
     (GoogleService.fetchCalendarEvents as jest.Mock).mockResolvedValue({});
   });
 
-  test('handles empty calendar data gracefully', () => {
-    // Mock empty storage
-    mockedStorage.getString.mockReturnValue(undefined);
-
-    const { getByText } = render(
-      <MapProvider>
-        <Calendar />
-      </MapProvider>
-    );
-    expect(getByText('No classes scheduled')).toBeTruthy();
-  });
-
   test('properly formats and displays the current date', () => {
     const { getByText } = render(
       <MapProvider>

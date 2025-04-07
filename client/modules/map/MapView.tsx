@@ -9,6 +9,8 @@ import { images } from '@/assets';
 import { useTask } from '@/providers/TaskContext';
 import PointsOfInterestService from '@/services/PointsOfInterestService';
 import { campusMapboxIds } from './IndoorMap';
+import { tunnelGeojson } from './UndergroundTunnel';
+import type { FeatureCollection } from 'geojson';
 
 Mapbox.setAccessToken(process.env.EXPO_PUBLIC_MAPBOX_ACCESS_TOKEN as string);
 
@@ -136,6 +138,18 @@ export default function MapView() {
             </Mapbox.MarkerView>
           )}
 
+          <Mapbox.ShapeSource id="tunnel" shape={tunnelGeojson as FeatureCollection}>
+            <Mapbox.FillLayer
+              id={'tunnel-fill'}
+              sourceID="tunnel"
+              style={{
+                fillColor: '#A1887F',
+                fillOpacity: ['interpolate', ['linear'], ['zoom'], 14, 0, 15, 1],
+              }}
+              filter={['all', ['==', ['get', 'indoor'], 'area'], route?.tunnel ?? false]}
+            />
+          </Mapbox.ShapeSource>
+
           {route?.segments.map((segment) => (
             <Mapbox.ShapeSource
               key={segment.id}
@@ -170,18 +184,23 @@ export default function MapView() {
             </Mapbox.ShapeSource>
           ))}
 
-          {selectedTasks.map((task, index) => (
-            <Mapbox.MarkerView
-              key={`task-marker-${task.id}`}
-              id={`task-${task.id}`}
-              coordinate={task.location.coordinates}>
-              <View style={styles.markerContainer}>
-                <Text style={styles.markerText}>
-                  {selectedTasks.findIndex((t) => t.id === task.id) + 1}
-                </Text>
-              </View>
-            </Mapbox.MarkerView>
-          ))}
+          {selectedTasks.map((task) => {
+            if (task.location === null) {
+              return null;
+            }
+            return (
+              <Mapbox.MarkerView
+                key={`task-marker-${task.id}`}
+                id={`task-${task.id}`}
+                coordinate={task.location.coordinates}>
+                <View style={styles.markerContainer}>
+                  <Text style={styles.markerText}>
+                    {selectedTasks.findIndex((t) => t.id === task.id) + 1}
+                  </Text>
+                </View>
+              </Mapbox.MarkerView>
+            );
+          })}
         </>
       )}
       {indoorMap !== null && (

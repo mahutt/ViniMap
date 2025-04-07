@@ -1,173 +1,735 @@
 import { TaskService } from '@/services/TaskService';
-import { getRoute } from '@/modules/map/MapService';
-import { Task } from '@/modules/map/Types';
-import uuid from 'react-native-uuid';
+import { Task, Location, Route } from '@/types';
 
-// Mocks
 jest.mock('@/modules/map/MapService', () => ({
-  getRoute: jest.fn(),
+  getRoute: jest.fn(
+    (startLocation: Location, endLocation: Location, _: string): Promise<Route | null> => {
+      const WALK_SPEED = 1;
+
+      const distance = Math.sqrt(
+        Math.pow(endLocation.coordinates[0] - startLocation.coordinates[0], 2) +
+          Math.pow(endLocation.coordinates[1] - startLocation.coordinates[1], 2)
+      );
+
+      return Promise.resolve({
+        duration: Math.round(distance / WALK_SPEED),
+        distance: distance,
+        segments: [
+          {
+            id: '1',
+            type: 'dashed',
+            steps: [startLocation.coordinates, endLocation.coordinates],
+          },
+        ],
+        tunnel: false,
+      });
+    }
+  ),
 }));
 
-jest.mock('react-native-uuid', () => ({
-  v4: jest.fn(),
+jest.mock('@/services/gptService', () => ({
+  generateMissingDurations: jest.fn().mockReturnValue(Promise.resolve()),
+  generateMissingLocations: jest.fn().mockReturnValue(Promise.resolve()),
 }));
 
-describe('TaskService', () => {
-  const mockSetTaskTime = jest.fn();
-
-  beforeEach(() => {
+describe('generateTaskRoute', () => {
+  afterEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('getOptimalRouteForPaths', () => {
-    it('should throw an error when no tasks are provided', async () => {
-      await expect(TaskService.getOptimalRouteForPaths([], mockSetTaskTime)).rejects.toThrow(
-        'No tasks are selected'
-      );
-      expect(mockSetTaskTime).not.toHaveBeenCalled();
-    });
+  // F1 (Base Case)
+  it('should return a route with duration and distance', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: new Date('2023-10-01T10:10:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [6, 1] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 5] },
+        startTime: null,
+        duration: 10,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f2', 'f1', 'c2', 'f3', 'c3']);
+  });
 
-    it('should return a route with expected properties when tasks are provided', async () => {
-      const tasks: Task[] = [
-        {
-          id: 'task-1',
-          location: { name: 'Task 1', coordinates: [1, 1] },
-          text: 'Task 1',
-        },
-        {
-          id: 'task-2',
-          location: { name: 'Task 2', coordinates: [2, 2] },
-          text: 'Task 2',
-        },
-        {
-          id: 'task-3',
-          location: { name: 'Task 3', coordinates: [3, 3] },
-          text: 'Task 3',
-        },
-      ];
+  // F2
+  it('throws an error when a null startLocation is passed', async () => {
+    const startLocation: Location = null as unknown as Location;
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: new Date('2023-10-01T10:10:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [6, 1] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 5] },
+        startTime: null,
+        duration: 10,
+      },
+    ];
+    await expect(TaskService.generateTaskRoute(startLocation, [...selectedTasks])).rejects.toThrow(
+      `Cannot read properties of null (reading 'coordinates')`
+    );
+  });
 
-      const mockRoute1 = {
-        distance: 100,
-        duration: 300,
-        segments: [{ id: 'segment1' }],
-      };
+  // F3
+  it('gracefully handles 0 core tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [6, 1] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 5] },
+        startTime: null,
+        duration: 10,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['f1', 'f2', 'f3']);
+  });
 
-      const mockRoute2 = {
-        distance: 200,
-        duration: 600,
-        segments: [{ id: 'segment2' }],
-      };
+  // F4
+  it('gracefully handles 1 core task', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [6, 1] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 5] },
+        startTime: null,
+        duration: 10,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f1', 'f2', 'f3']);
+  });
 
-      // Mock UUIDs
-      (uuid.v4 as jest.Mock).mockReturnValueOnce('uuid-task-2').mockReturnValueOnce('uuid-task-3');
+  // F5
+  it('Gracefully handles more than 5 core tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: new Date('2023-10-01T10:10:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [6, 1] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 5] },
+        startTime: null,
+        duration: 10,
+      },
+      {
+        id: 'c4',
+        text: 'task',
+        location: { name: 'location', coordinates: [15, 10] },
+        startTime: new Date('2023-10-01T12:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'c5',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 12] },
+        startTime: new Date('2023-10-01T12:10:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'c6',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 12] },
+        startTime: new Date('2023-10-01T12:20:00Z'),
+        duration: 3,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual([
+      'c1',
+      'f2',
+      'f1',
+      'c2',
+      'f3',
+      'c3',
+      'c4',
+      'c5',
+      'c6',
+    ]);
+  });
 
-      (getRoute as jest.Mock).mockImplementation((start, end) => {
-        if (
-          JSON.stringify(start.coordinates) === JSON.stringify([1, 1]) &&
-          JSON.stringify(end.coordinates) === JSON.stringify([2, 2])
-        ) {
-          return Promise.resolve(mockRoute1);
-        } else if (
-          JSON.stringify(start.coordinates) === JSON.stringify([2, 2]) &&
-          JSON.stringify(end.coordinates) === JSON.stringify([3, 3])
-        ) {
-          return Promise.resolve(mockRoute2);
-        }
-        return Promise.reject(new Error('Unexpected route'));
-      });
+  // F6
+  it('Gracefully handles routes with 0 filler tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: new Date('2023-10-01T10:10:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'c4',
+        text: 'task',
+        location: { name: 'location', coordinates: [15, 10] },
+        startTime: new Date('2023-10-01T12:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'c5',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 12] },
+        startTime: new Date('2023-10-01T12:10:00Z'),
+        duration: 3,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'c2', 'c3', 'c4', 'c5']);
+  });
 
-      const result = await TaskService.getOptimalRouteForPaths(tasks, mockSetTaskTime);
+  // F7
+  it('gracefully handles 1 filler task', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: new Date('2023-10-01T10:10:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f1', 'c2', 'c3']);
+  });
 
-      expect(result).toEqual({
-        distance: 300,
-        duration: 900,
-        segments: [{ id: 'segment1' }, { id: 'segment2' }],
-      });
+  // F8
+  it('gracefully handles more than 5 filler tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: new Date('2023-10-01T10:10:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [7, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [6, 1] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 5] },
+        startTime: null,
+        duration: 10,
+      },
+      {
+        id: 'f4',
+        text: 'task',
+        location: { name: 'location', coordinates: [1, 8] },
+        startTime: null,
+        duration: 60,
+      },
+      {
+        id: 'f5',
+        text: 'task',
+        location: { name: 'location', coordinates: [1, 7] },
+        startTime: null,
+        duration: 60,
+      },
+      {
+        id: 'f6',
+        text: 'task',
+        location: { name: 'location', coordinates: [1, 6] },
+        startTime: null,
+        duration: 60,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual([
+      'c1',
+      'f2',
+      'f1',
+      'c2',
+      'f3',
+      'c3',
+      'f4',
+      'f5',
+      'f6',
+    ]);
+  });
 
-      expect(mockSetTaskTime).toHaveBeenCalledWith([
-        { id: 'uuid-task-2', text: 'Task 2', time: '5 min' },
-        { id: 'uuid-task-3', text: 'Task 3', time: '10 min' },
-      ]);
-    });
+  // F9
+  it('it should correctly handle 0 filler tasks between core tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [15, 0] },
+        startTime: new Date('2023-10-01T10:30:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'c2', 'c3']);
+  });
 
-    it('should handle route time formatting correctly for durations >= 1 hour', async () => {
-      const tasks: Task[] = [
-        {
-          id: 'task-1',
-          location: { name: 'Task 1', coordinates: [1, 1] },
-          text: 'Task 1',
-        },
-        {
-          id: 'task-2',
-          location: { name: 'Task 2', coordinates: [2, 2] },
-          text: 'Task 2',
-        },
-      ];
+  // F10
+  it('it should handle 1 filler task between core tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [15, 0] },
+        startTime: new Date('2023-10-01T10:30:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T11:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: null,
+        duration: 1,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual(['c1', 'f1', 'c2', 'c3']);
+  });
 
-      const mockRoute = {
-        distance: 1000,
-        duration: 3600 * 2.5,
-        segments: [{ id: 'longSegment' }],
-      };
+  // F11
+  it('it should correctly handle more than 5 filler tasks between core tasks', async () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const selectedTasks: Task[] = [
+      {
+        id: 'c1',
+        text: 'task',
+        location: { name: 'location', coordinates: [5, 0] },
+        startTime: new Date('2023-10-01T10:00:00Z'),
+        duration: 1,
+      },
+      {
+        id: 'c2',
+        text: 'task',
+        location: { name: 'location', coordinates: [50, 0] },
+        startTime: new Date('2023-10-01T14:00:00Z'),
+        duration: 2,
+      },
+      {
+        id: 'c3',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 10] },
+        startTime: new Date('2023-10-01T15:00:00Z'),
+        duration: 3,
+      },
+      {
+        id: 'f1',
+        text: 'task',
+        location: { name: 'location', coordinates: [10, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f2',
+        text: 'task',
+        location: { name: 'location', coordinates: [15, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f3',
+        text: 'task',
+        location: { name: 'location', coordinates: [20, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f4',
+        text: 'task',
+        location: { name: 'location', coordinates: [25, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f5',
+        text: 'task',
+        location: { name: 'location', coordinates: [30, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f6',
+        text: 'task',
+        location: { name: 'location', coordinates: [35, 0] },
+        startTime: null,
+        duration: 1,
+      },
+      {
+        id: 'f7',
+        text: 'task',
+        location: { name: 'location', coordinates: [40, 0] },
+        startTime: null,
+        duration: 1,
+      },
+    ];
+    const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
+    expect(result.tasks.map((task) => task.id)).toEqual([
+      'c1',
+      'f1',
+      'f2',
+      'f3',
+      'f4',
+      'f5',
+      'f6',
+      'f7',
+      'c2',
+      'c3',
+    ]);
+  });
+});
 
-      (uuid.v4 as jest.Mock).mockReturnValueOnce('uuid-task-2');
+describe('travelDistanceAwareReOrder', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-      (getRoute as jest.Mock).mockResolvedValue(mockRoute);
+  it('should return the original task and distance when given an empty array', () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const endLocation: Location = { name: 'End', coordinates: [10, 10] };
+    const tasks: Task[] = [];
 
-      await TaskService.getOptimalRouteForPaths(tasks, mockSetTaskTime);
+    const result = TaskService.travelDistanceAwareReOrder(tasks, startLocation, endLocation);
 
-      expect(mockSetTaskTime).toHaveBeenCalledWith([
-        { id: 'uuid-task-2', text: 'Task 2', time: '2.50 h' },
-      ]);
-    });
+    expect(result.tasks).toEqual([]);
+    expect(result.distance).toBeDefined();
+  });
 
-    it('should handle errors when getting routes and continue processing', async () => {
-      const tasks: Task[] = [
-        {
-          id: 'task-1',
-          location: { name: 'Task 1', coordinates: [1, 1] },
-          text: 'Task 1',
-        },
-        {
-          id: 'task-2',
-          location: { name: 'Task 2', coordinates: [2, 2] },
-          text: 'Task 2',
-        },
-        {
-          id: 'task-3',
-          location: { name: 'Task 3', coordinates: [3, 3] },
-          text: 'Task 3',
-        },
-      ];
+  it('should return the original task and distance when given a single task', () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const endLocation: Location = { name: 'End', coordinates: [10, 10] };
+    const tasks: Task[] = [
+      {
+        id: '1',
+        text: 'Task 1',
+        location: { name: 'Location 1', coordinates: [5, 5] },
+        startTime: null,
+        duration: 30,
+      },
+    ];
 
-      (uuid.v4 as jest.Mock).mockReturnValueOnce('uuid-task-2');
+    const result = TaskService.travelDistanceAwareReOrder(tasks, startLocation, endLocation);
 
-      (getRoute as jest.Mock)
-        .mockResolvedValueOnce({
-          distance: 100,
-          duration: 300,
-          segments: [{ id: 'segment1' }],
-        })
-        .mockRejectedValueOnce(new Error('Route calculation failed'));
+    expect(result.tasks).toEqual(tasks);
+    expect(result.distance).toBeDefined();
+  });
 
-      jest.spyOn(console, 'error').mockImplementation();
+  it('should reorder multiple tasks based on proximity', () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const endLocation: Location = { name: 'End', coordinates: [10, 10] };
+    const tasks: Task[] = [
+      {
+        id: '1',
+        text: 'Far Task',
+        location: { name: 'Location Far', coordinates: [8, 8] },
+        startTime: null,
+        duration: 30,
+      },
+      {
+        id: '2',
+        text: 'Near Task',
+        location: { name: 'Location Near', coordinates: [1, 1] },
+        startTime: null,
+        duration: 30,
+      },
+    ];
 
-      const result = await TaskService.getOptimalRouteForPaths(tasks, mockSetTaskTime);
+    const result = TaskService.travelDistanceAwareReOrder(tasks, startLocation, endLocation);
 
-      expect(console.error).toHaveBeenCalledWith(
-        'Error generating route from task 1 to 2:',
-        expect.any(Error)
-      );
+    // Expecting tasks to be reordered with nearest first
+    expect(result.tasks[0].id).toBe('2'); // Near task
+    expect(result.tasks[1].id).toBe('1'); // Far task
+    expect(result.tasks.length).toBe(2);
+    expect(result.distance).toBeDefined();
+  });
 
-      expect(result).toEqual({
-        distance: 100,
-        duration: 300,
-        segments: [{ id: 'segment1' }],
-      });
+  it('should correctly implement the optimization logic for the final destination', () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const endLocation: Location = { name: 'End', coordinates: [10, 0] };
 
-      expect(mockSetTaskTime).toHaveBeenCalledWith([
-        { id: 'uuid-task-2', text: 'Task 2', time: '5 min' },
-      ]);
-    });
+    // The greedy approach should not return the optimal solution given the tasks below
+    const tasks: Task[] = [
+      {
+        id: '1',
+        text: 'Task 1',
+        location: { name: 'Location 1', coordinates: [2, 0] },
+        startTime: null,
+        duration: 30,
+      },
+      {
+        id: '2',
+        text: 'Task 2',
+        location: { name: 'Location 2', coordinates: [5, 7] },
+        startTime: null,
+        duration: 30,
+      },
+      {
+        id: '3',
+        text: 'Task 3',
+        location: { name: 'Location 3', coordinates: [8, 0] },
+        startTime: null,
+        duration: 30,
+      },
+    ];
+
+    const result = TaskService.travelDistanceAwareReOrder(tasks, startLocation, endLocation);
+    expect(result.distance).toBeCloseTo(19.23, 2);
+  });
+
+  it('should not swap tasks when no improvement is possible', () => {
+    const startLocation: Location = { name: 'Start', coordinates: [0, 0] };
+    const endLocation: Location = { name: 'End', coordinates: [10, 0] };
+
+    const tasks: Task[] = [
+      {
+        id: '1',
+        text: 'Task 1',
+        location: { name: 'Location 1', coordinates: [2, 0] },
+        startTime: null,
+        duration: 30,
+      },
+      {
+        id: '2',
+        text: 'Task 2',
+        location: { name: 'Location 2', coordinates: [5, 0] },
+        startTime: null,
+        duration: 30,
+      },
+    ];
+
+    const originalTaskIds = tasks.map((task) => task.id);
+    const result = TaskService.travelDistanceAwareReOrder(tasks, startLocation, endLocation);
+    expect(result.tasks.map((task) => task.id)).toEqual(originalTaskIds);
   });
 });

@@ -61,7 +61,7 @@ export default function Calendar() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        const isAuthenticated = await GoogleService.isSignedIn();
+        const isAuthenticated = GoogleService.isSignedIn();
         const storedUserInfo = isAuthenticated ? GoogleService.getUserInfoFromStorage() : null;
 
         setIsLoggedIn(isAuthenticated);

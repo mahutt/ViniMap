@@ -8,9 +8,9 @@ export const useScheduleData = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
-    const checkAuthAndLoadData = async () => {
+    const checkAuthAndLoadData = () => {
       try {
-        const authStatus = await GoogleService.isSignedIn();
+        const authStatus = GoogleService.isSignedIn();
         setIsAuthenticated(authStatus);
 
         const calendarData = GoogleService.getCalendarData();

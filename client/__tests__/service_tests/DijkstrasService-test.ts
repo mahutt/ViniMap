@@ -51,6 +51,77 @@ describe('findShortestPath', () => {
     expect(result).toBeNull();
   });
 
+  test('should return null if start point is not part of any footway', () => {
+    const footways: Feature<LineString>[] = [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [1, 1],
+            [2, 2],
+          ],
+        },
+        properties: {},
+      },
+    ];
+  
+    const result = DijkstraService.findShortestPath([0, 0], [2, 2], footways);
+    expect(result).toBeNull();
+  });
+
+  
+  test('should return null if end point is not part of any footway', () => {
+    const footways: Feature<LineString>[] = [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [0, 0],
+            [1, 1],
+          ],
+        },
+        properties: {},
+      },
+    ];
+  
+    const result = DijkstraService.findShortestPath([0, 0], [3, 3], footways);
+    expect(result).toBeNull();
+  });
+
+  
+  test('should return null if path cannot be found due to disconnection', () => {
+    const footways: Feature<LineString>[] = [
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [0, 0],
+            [1, 1],
+          ],
+        },
+        properties: {},
+      },
+      {
+        type: 'Feature',
+        geometry: {
+          type: 'LineString',
+          coordinates: [
+            [5, 5],
+            [6, 6],
+          ],
+        },
+        properties: {},
+      },
+    ];
+  
+    const result = DijkstraService.findShortestPath([0, 0], [6, 6], footways);
+    expect(result).toBeNull();
+  });
+  
+
   //Single path available
   test('should find path in simple connected network', () => {
     const footways: Feature<LineString>[] = [

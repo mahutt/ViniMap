@@ -138,6 +138,53 @@ describe('findNextClass', () => {
     expect(result).toBeNull();
   });
 
+  test('skips class with missing or invalid time field', () => {
+    const resetDate = mockDate('2023-05-15T10:30:00');
+  
+    const scheduleData: ScheduleData = {
+      '2023-05-15': [
+        { className: 'Missing Time', location: 'Room A', time: undefined as any },
+        { className: 'Non-string Time', location: 'Room B', time: 1234 as any },
+        { className: 'Valid Class', location: 'Room C', time: '11:00 AM - 12:00 PM' },
+      ],
+    };
+  
+    const result = findNextClass(scheduleData);
+  
+    expect(result).toEqual({
+      className: 'Valid Class',
+      location: 'Room C',
+      time: '11:00 AM - 12:00 PM',
+    });
+  
+    resetDate();
+  });
+  
+  test('handles classes spanning multiple dates correctly', () => {
+    const resetDate = mockDate('2023-05-15T23:50:00');
+    
+    const multiDaySchedule: ScheduleData = {
+      '2023-05-15': [
+        { className: 'Math 101', location: 'Room A', time: '9:00 AM - 10:00 AM' },
+      ],
+      '2023-05-16': [
+        { className: 'History 101', location: 'Room B', time: '10:00 AM - 11:00 AM' },
+      ],
+    };
+  
+    const result = findNextClass(multiDaySchedule);
+  
+    // Check that result is not null before accessing properties
+    if (result === null) {
+      fail('No class was found spanning the dates');
+    } else {
+      expect(result.className).toBe('History 101'); // Next available class should be on the next day
+    }
+  
+    resetDate();
+  });
+  
+
   test('returns null for null/undefined schedule data', () => {
     // @ts-ignore - Testing invalid input
     const result = findNextClass(null);

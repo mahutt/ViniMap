@@ -1,20 +1,40 @@
 import { useMap, MapState } from '@/modules/map/MapContext';
 import { useTask } from '@/providers/TaskContext';
 import { Ionicons } from '@expo/vector-icons';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
 export default function TaskRouteHeader() {
   const { selectedTasks } = useTask();
   const { state, setState } = useMap();
 
+  const [done, setDone] = useState(false);
+
   if (state !== MapState.TaskNavigation || selectedTasks.length === 0) {
     return;
   }
 
+  const targetTask = selectedTasks.find((task) => !task.completed);
+  const taskNumber = selectedTasks.findIndex((task) => !task.completed) + 1;
+  if (!targetTask) {
+    if (done) return;
+    setDone(true);
+    Alert.alert('🎉 All done!', "You'll be brought back to the map screen", [
+      {
+        text: 'OK',
+        onPress: () => {
+          setState(MapState.Idle);
+        },
+      },
+    ]);
+  }
+
   return (
     <View style={styles.headerContainer}>
-      <Text style={styles.taskNumber}>1</Text>
-      <Text style={styles.taskText}>{selectedTasks[0].text}</Text>
+      {taskNumber > 0 && <Text style={styles.taskNumber}>{taskNumber}</Text>}
+      <Text style={targetTask ? styles.taskText : styles.completedTaskText}>
+        {targetTask?.text ?? 'Tasks Completed'}
+      </Text>
       <TouchableOpacity onPress={() => setState(MapState.Idle)} testID="close-button">
         <Ionicons name="close-outline" size={28} color="#666" />
       </TouchableOpacity>
@@ -54,6 +74,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
+    flex: 1,
+  },
+  completedTaskText: {
+    fontSize: 16,
+    color: '#666',
     flex: 1,
   },
 });
