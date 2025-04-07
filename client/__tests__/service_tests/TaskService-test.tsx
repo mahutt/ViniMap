@@ -278,11 +278,11 @@ describe('generateTaskRoute', () => {
     const result = await TaskService.generateTaskRoute(startLocation, [...selectedTasks]);
     expect(result.tasks.map((task) => task.id)).toEqual([
       'c1',
-      'c2',
-      'c3',
       'f2',
       'f1',
+      'c2',
       'f3',
+      'c3',
       'c4',
       'c5',
       'c6',
