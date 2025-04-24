@@ -17,7 +17,6 @@ This is the repository for the SOEN 390 Campus Guide project, as carried out by 
 
 1. React Native with Expo Framework
 2. Typescript (FE)
-3. Node.js & Express.js
 
 ## Repo Details
 
